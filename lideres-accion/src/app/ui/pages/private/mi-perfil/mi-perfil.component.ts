@@ -118,7 +118,6 @@ export class MiPerfilComponent implements OnInit {
 
     getIglesiaByDepartamento(departamento_id: number) {
       console.log('iglesia', departamento_id);
-      this.loading = true;
       this.iglesiasService.getIglesiaByDepartamento(departamento_id).subscribe({
         next: (iglesias) => {
           this.iglesias = iglesias.map((iglesia: BaseModel<IglesiaModel>) => ({
@@ -130,9 +129,6 @@ export class MiPerfilComponent implements OnInit {
           console.log(error);
           this.toast.error('Error al cargar las iglesias. Intente nuevamente. ⚠');
         },
-        complete: () => {
-          this.loading = false;
-        }
       });
     }
 
