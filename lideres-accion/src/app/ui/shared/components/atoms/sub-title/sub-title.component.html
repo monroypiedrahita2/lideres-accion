@@ -1,0 +1,8 @@
+<mg-divider></mg-divider>
+<div>
+<p [ngClass]="{
+    'text-red-700' : isAlert,
+    'text-gray-500': !isAlert,
+    'sm:text-sm md:text-md font-poetsen': true 
+}" class="sm:text-sm md:text-md font-poetsen text-gray-500">{{title}}</p>
+</div>

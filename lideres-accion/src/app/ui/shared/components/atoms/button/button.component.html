@@ -1,0 +1,24 @@
+<button (click)="submit()" [disabled]="disabled" [ngClass]="{
+'bg-primary': type == 'submit' && !disabled && !loading,
+'hover:bg-hoverprimary': type == 'submit' && !disabled && !loading,
+'text-white': type == 'submit' && !disabled && !loading,
+
+'hover:bg-gray-300': type == 'reset' && !disabled && !loading,
+'bg-white': type == 'reset' && !disabled && !loading,
+'text-black': type == 'reset' && !disabled && !loading,
+
+'bg-gray-400 text-gray-700 pointer-events-none': disabled || loading,
+
+'tracking-widest font-medium py-2 px-4 rounded-[18px] w-40': true
+}">
+<div class="flex justify-center items-center gap-2">
+    <mat-icon *ngIf="icon && !loading">{{icon}}</mat-icon>
+    <span
+    *ngIf="loading"
+    class="material-symbols-outlined animate-spin"
+  >
+    progress_activity
+  </span>
+   <span *ngIf="!loading">{{text}}</span> 
+</div>
+</button>

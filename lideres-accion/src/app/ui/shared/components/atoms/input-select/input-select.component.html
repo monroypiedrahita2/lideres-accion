@@ -1,0 +1,65 @@
+<mat-form-field class="w-full">
+  <mat-label class="font-primary">{{ label }}</mat-label>
+  @if (multiple) {
+  <mat-select
+    class="font-primary"
+    [compareWith]="compareWith"
+    [multiple]="multiple"
+    [errorStateMatcher]="matcher"
+    [disabled]="disabled"
+    [required]="required"
+    [placeholder]="placeholder"
+    [(ngModel)]="rifInput"
+    [ngModelOptions]="{ standalone: true }"
+    (ngModelChange)="onChange()"
+    (closed)="onTouchedFn()"
+    [id]="id"
+    [name]="id"
+  >
+    @for(item of filteredOptions; track item){
+    <mat-option [value]="item.value">{{
+      item.label
+    }}</mat-option>
+    }
+  </mat-select>
+  } @else {
+  <input
+    #input
+    type="text"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    matInput
+    [errorStateMatcher]="matcher"
+    [(ngModel)]="rifInput"
+    [matAutocomplete]="auto"
+    [ngModelOptions]="{ standalone: true }"
+    (ngModelChange)="onChange()"
+    (input)="filter()"
+    (focus)="filter()"
+    class="font-primary"
+  />
+  <mat-autocomplete
+    (optionSelected)="onChange()"
+    (closed)="onTouchedFn()"
+    [displayWith]="inputLabel"
+    [requireSelection]="true"
+    #auto="matAutocomplete"
+  >
+    @for(item of filteredOptions; track item){
+    <mat-option [value]="item.value">{{ item.label }}</mat-option>
+    }
+  </mat-autocomplete>
+  }
+
+  <button
+    *ngIf="rifInput && !multiple"
+    class="absolute right-2 top-4 text-gray-500"
+    (click)="clearInput()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+
+  @if (showError) {
+  <mat-error>{{ errors[0] }}</mat-error>
+  }
+</mat-form-field>

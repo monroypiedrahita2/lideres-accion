@@ -1,0 +1,15 @@
+<nav [ngClass]="{
+'z-20 fixed w-full top-0 h-[64px] sm:px-4 md:px-6': true,
+'bg-primary': true,
+'shadow-xl': true
+}" >
+  <div class="flex justify-between items-center h-full">
+    <div class="flex justify-center items-center hover:cursor-pointer hover:shadow-xl" [routerLink]="['./settings']">
+      <span class="font-primary text-white text-2xl text-shadow">!Bienvenido!</span>
+    </div>
+    <div class="text-white font-poetsen tracking-widest text-2xl font-medium"></div>
+    <mat-icon class="text-white hover:cursor-pointer text-shadow" [routerLink]="['private/home']">home</mat-icon>
+  </div>
+  <div>
+  </div>
+</nav>

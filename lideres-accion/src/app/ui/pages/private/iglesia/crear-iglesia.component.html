@@ -1,0 +1,29 @@
+<mg-title [title]="'Crear iglesia'"></mg-title>
+
+<form [formGroup]="form">
+    <mg-container-grid (onSubmit)="onSubmit()" [loading]="loading" [disabled]="form.invalid">
+
+      <mg-input-select
+      label="Departamento"
+      [items]="departamentos"
+      formControlName="departamento"
+      id="departamento"
+      >
+
+      </mg-input-select>
+      <mg-input-select
+      label="Municipio"
+      [items]="municipios"
+      formControlName="municipio"
+      id="municipio"
+      >
+      </mg-input-select>
+      <mg-input-text
+      type="text"
+      formControlName="nombre"
+      label="Nombre de la iglesia"
+      id="name"
+    ></mg-input-text>
+      
+    </mg-container-grid>
+</form>

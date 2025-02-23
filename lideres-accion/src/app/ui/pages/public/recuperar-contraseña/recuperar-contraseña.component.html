@@ -1,0 +1,14 @@
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 border border-gray-200 rounded-lg bg-base">
+
+  <div class="bg-white border border-gray-200 rounded-lg p-6">
+    <mg-title title="Recuperar contraseña"></mg-title>
+    <form [formGroup]="form">
+    <mg-input-text type="email" formControlName="email" label="Escriba su correo electrónico" id="email"></mg-input-text>
+    </form>
+
+    <div class="flex justify-center gap-4">
+      <mg-button text="Regresar" [type]="'reset'" (onClick)="back()"></mg-button>
+      <mg-button text="Guardar" [disabled]="form.invalid" (onClick)="recuperar()"></mg-button>
+    </div>
+  </div>
+</div>

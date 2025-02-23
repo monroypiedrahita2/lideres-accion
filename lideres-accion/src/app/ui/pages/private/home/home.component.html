@@ -1,0 +1,13 @@
+
+<div class="grid sm:grid-cols-1 lg:grid-cols-3 gap-3">
+  @for (card of cards; track $index) {
+    <mtt-card-info
+    [routerLink]="card.goTo"
+    [title]="card.title"
+    [textInfo]="card.description"
+    [icon]="card.icon"
+    ></mtt-card-info>
+  }
+</div>
+
+

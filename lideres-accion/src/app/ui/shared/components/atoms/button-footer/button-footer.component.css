@@ -1,0 +1,9 @@
+.active {
+  border-radius: 20px;
+  background-color: #1f2937;
+  color: #ffce00;
+  padding: 0 10px;
+}
+.activeIcon{
+  color: #ffce00;
+}

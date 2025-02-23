@@ -1,0 +1,13 @@
+<mg-title title="Configuraciones"></mg-title>
+<div class="grid grid-col-1 justify-center w-full gap-5 mt-10">
+  <!-- <mg-button-settings class="sm:w-full lg:w-52" text="Cambiar contraseña"></mg-button-settings> -->
+  <mg-button-settings class="sm:w-full lg:w-52 font-primary sm:text-lg lg:text-xl" text="Mi perfil" [routerLink]="['/mi-perfil']"></mg-button-settings>
+  <mg-button-settings class="sm:w-full lg:w-52 font-primary sm:text-lg lg:text-xl" text="Crear colaborador" routerLink="../create-user"></mg-button-settings>
+  <mg-button-settings class="sm:w-full lg:w-52 font-primary sm:text-lg lg:text-xl" text="Control y acceso" ></mg-button-settings>
+  <mg-button-settings class="sm:w-full lg:w-52 font-primary sm:text-lg lg:text-xl" text="Crear equipo de trabajo" [routerLink]="['/create-team']"></mg-button-settings>
+  <mg-button-settings class="sm:w-full lg:w-52 font-primary sm:text-lg lg:text-xl" text="Editar equipo de trabajo" [routerLink]="['/edit-team']"></mg-button-settings>
+  <mg-button-settings class="sm:w-full lg:w-52 font-primary sm:text-lg lg:text-xl" text="Cerrar sesión" (click)="logout()"></mg-button-settings>
+</div>
+
+
+ 

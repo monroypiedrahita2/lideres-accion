@@ -1,0 +1,18 @@
+@if (enableSkeleton) {
+<div
+  class="sm:p-5 lg:p-5 grid sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 sm:gap-4 lg:gap-8"
+>
+  <div
+    *ngFor="let i of [].constructor(num)"
+    class="animate-pulse shadow-lg rounded-lg bg-slate-300 w-full h-16"
+  ></div>
+</div>
+<div class="flex justify-center gap-4 mt-4">
+  <div
+  class="animate-pulse shadow-lg rounded-full w-40 bg-slate-300 h-9"
+  ></div>
+  <div
+  class="animate-pulse shadow-lg rounded-full w-40 bg-slate-300 h-9"
+  ></div>
+</div>
+}
