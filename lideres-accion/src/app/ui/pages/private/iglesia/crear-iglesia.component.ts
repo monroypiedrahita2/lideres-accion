@@ -48,6 +48,7 @@ export class CrearIglesiaComponent implements OnInit {
     private lugarService: LugaresService,
     private toast: ToastrService,
     private location: Location,
+        private auth: AuthService,
     private iglesiaService: IglesiaService,
   ) {
     this.form = this.fb.group({
@@ -117,8 +118,8 @@ export class CrearIglesiaComponent implements OnInit {
         data: this.form.value as IglesiaModel,
         fechaCreacion: new Date().toISOString(),
         creadoPor: {
-            uid: 'Juan Miguel',
-            email: 'monroypiedrahita2@gmail.com'
+          uid: this.auth.uidUser(),
+          email: this.auth.getEmail()
         },
       };
       

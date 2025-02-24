@@ -27,6 +27,10 @@ export const routes: Routes = [
         path: 'crear-iglesia',
         loadComponent: () => import('./iglesia/crear-iglesia.component').then(m => m.CrearIglesiaComponent),
       },
+      {
+        path: 'crear-comuna',
+        loadComponent: () => import('./comuna/comuna.component').then(m => m.ComunaComponent),
+      },
     ]
   },
   {

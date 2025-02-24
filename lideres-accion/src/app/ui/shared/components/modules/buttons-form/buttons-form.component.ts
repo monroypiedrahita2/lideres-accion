@@ -9,7 +9,8 @@ import { ButtonComponent } from '../../atoms/button/button.component';
   imports: [CommonModule, ButtonComponent],
 })
 export class ButtonsFormComponent {
-  @Input() disabled: boolean = false;;
+  @Input() disabled: boolean = false;
+  @Input() hiddenSecundaryBtn: boolean = false;
   @Input() loading: boolean = false;
   @Input() principalText: string = 'Guardar';
   @Input() backText: string = 'Regresar';

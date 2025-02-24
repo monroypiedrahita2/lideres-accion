@@ -1,4 +1,13 @@
-<div class="grid sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:mt-3 lg:mt-5 sm:p-3">
+<div
+  class="grid sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:mt-3 lg:mt-5 sm:p-3"
+>
   <ng-content></ng-content>
 </div>
-<mg-buttons-form [loading]="loading" [disabled]="disabled" [principalText]="principalText" (onSubmit)="clickear()"></mg-buttons-form>
+<mg-buttons-form
+  *ngIf="!hiddenButtons"
+  [loading]="loading"
+  [disabled]="disabled"
+  [principalText]="principalText"
+  (onSubmit)="clickear()"
+  [hiddenSecundaryBtn]="hiddenSecundaryBtn"
+></mg-buttons-form>

@@ -33,7 +33,7 @@ export const CARDS_HOME: CardModel[] = [
         icon: 'church'
     },
     {
-        goTo: 'comunas',
+        goTo: '../crear-comuna',
         title: 'Comunas',
         description: 'Ver y gestionar comunas',
         icon: 'location_city'

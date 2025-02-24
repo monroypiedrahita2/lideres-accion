@@ -9,7 +9,9 @@ import { ButtonsFormComponent } from '../../modules/buttons-form/buttons-form.co
   imports: [CommonModule, ButtonsFormComponent],
 })
 export class ContainerGridComponent {
-  @Input() disabled: boolean = false;;
+  @Input() disabled: boolean = false;
+  @Input() hiddenButtons: boolean = false;
+  @Input() hiddenSecundaryBtn: boolean = false;
   @Input() loading: boolean = false;
   @Input() principalText: string = 'Guardar';
   @Input() backText: string = 'Regresar';

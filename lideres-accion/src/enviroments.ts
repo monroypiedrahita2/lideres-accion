@@ -14,6 +14,7 @@ export const environment = {
       referidos: 'Referidos',
       barrios: 'Barrios',
       comundas: 'Comunas',
-      iglesias: 'Iglesias'
+      iglesias: 'Iglesias',
+      comunas: 'Comunas'
     }
   };
