@@ -1,10 +1,12 @@
+import { DocumentReference } from "@angular/fire/firestore";
+
 export interface BaseModel <T> {
     id?: string;
     data: T;
     fechaCreacion: string;
     fechaModificacion?: string;
-    creadoPor: DataUserModel;
-    modificadoPor?: DataUserModel;
+    creadoPor: string;
+    modificadoPor?: DocumentReference;
 }
 
 export interface DataUserModel {

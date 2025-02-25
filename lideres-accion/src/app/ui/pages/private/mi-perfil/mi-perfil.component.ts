@@ -21,10 +21,11 @@ import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
 import { IglesiaService } from '../../../shared/services/iglesia/iglesia.service';
 import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/sub-title.component';
 import { ButtonsFormComponent } from '../../../shared/components/modules/buttons-form/buttons-form.component';
-import { ComunaModel } from '../../../../models/referidos/referido.model';
 import { LugarModel } from '../../../../models/lugar/lugar.model';
 import { lastValueFrom } from 'rxjs';
 import { LugaresService } from '../../../shared/services/lugares/lugares.service';
+import { ComunaModel } from '../../../../models/comuna/comuna.model';
+import { ComunaService } from '../../../shared/services/comuna/comuna.service';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -47,12 +48,11 @@ export class MiPerfilComponent implements OnInit {
   form!: FormGroup;
   loading: boolean = false;
   enableSkeleton: boolean = true;
-  uid: string = '';
   user!: BaseModel<UsuarioModel>;
   departamentos: SelectOptionModel<LugarModel>[] = [];
   municipios: SelectOptionModel<LugarModel>[] = [];
-  comunas: SelectOptionModel<ComunaModel | undefined>[] = [];
-  barrios: SelectOptionModel<string | undefined>[] = [];
+  comunas: SelectOptionModel<string | undefined>[] = [];
+  barrios: SelectOptionModel<string>[] = [];
   iglesias: SelectOptionModel<string | undefined>[] = [];
 
   constructor(
@@ -63,10 +63,12 @@ export class MiPerfilComponent implements OnInit {
     private toast: ToastrService,
     private iglesiasService: IglesiaService,
     private lugarService: LugaresService,
+    private comunaService: ComunaService,
   ) {
     this.form = this.fb.group({
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
+      documento: ['', Validators.required],
       celular: ['', Validators.required],
       email: ['', Validators.required],
       departamento: ['', Validators.required],
@@ -79,6 +81,7 @@ export class MiPerfilComponent implements OnInit {
   }
 
   async ngOnInit() {
+
     await this.getDepartamentos();
 
     this.form
@@ -93,9 +96,21 @@ export class MiPerfilComponent implements OnInit {
       }
     });
 
-    this.uid = this.auth.uidUser();
+    this.form
+      .get('municipio')
+      ?.valueChanges.subscribe(async (municipio) => {
+        if (municipio) {
+          this.getComunas(municipio.id.toString());
+        } else {
+          this.comunas = [];
+          this.form.patchValue({ comuna: '' });
+        }
+      });
     await this.loadUserProfile();
   }
+
+
+
 
     async getDepartamentos() {
       try {
@@ -110,14 +125,13 @@ export class MiPerfilComponent implements OnInit {
           },
         }));
       } catch (error) {
-        console.log(error);
+        console.error(error);
         this.toast.error('Error al cargar los departamentos');
         this.location.back();
       }
     }
 
     getIglesiaByDepartamento(departamento_id: number) {
-      console.log('iglesia', departamento_id);
       this.iglesiasService.getIglesiaByDepartamento(departamento_id).subscribe({
         next: (iglesias) => {
           this.iglesias = iglesias.map((iglesia: BaseModel<IglesiaModel>) => ({
@@ -126,7 +140,7 @@ export class MiPerfilComponent implements OnInit {
           }));
         },
         error: (error) => {
-          console.log(error);
+          console.error(error);
           this.toast.error('Error al cargar las iglesias. Intente nuevamente. ⚠');
         },
       });
@@ -156,13 +170,15 @@ export class MiPerfilComponent implements OnInit {
 
   private async loadUserProfile() {
     try {
-      const response = await this.perfilService.getMiPerfil(this.uid);
+      const response = await this.perfilService.getMiPerfil(this.auth.uidUser());
+
+      console.log('mi perfil', response)
       if (response) {
         this.form.patchValue(response);
       }
       this.enableSkeleton = false;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.toast.error('Error al cargar el perfil. Intente nuevamente. ⚠');
       this.navigateBack();
     }
@@ -174,23 +190,37 @@ export class MiPerfilComponent implements OnInit {
 
   async onSubmit() {
     this.loading = true;
-    this.user = {
-      data: this.form.value,
-      fechaCreacion: new Date().toISOString(),
-      creadoPor: {
-        uid: this.auth.uidUser(),
-        email: this.auth.getEmail(),
-      },
-    };
     try {
-      await this.perfilService.crearPerfilConUId(this.user, this.uid);
+      await this.perfilService.crearPerfilConUId(this.form.value, this.auth.uidUser());
       this.toast.success('Perfil creado ');
       this.location.back();
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.toast.error('Error al crear el perfil. Intente nuevamente.');
     } finally {
       this.loading = false;
     }
+  }
+
+  getComunas(municipio_id: string) {
+    this.comunaService.getComunaByDepartamento(Number(municipio_id)).subscribe({
+      next: (comunas) => {
+        this.comunas = comunas.map((comuna: BaseModel<ComunaModel>) => ({
+          label: comuna.data.nombre,
+          value: comuna.id,
+        }));
+      this.barrios = comunas.flatMap((comuna: BaseModel<ComunaModel>) =>
+        comuna?.data.barrios.map((barrio: string) => ({
+          label: barrio,
+          value: barrio,
+        }))
+      );
+      },
+      error: (error) => {
+        console.error(error);
+        this.toast.error('Error al cargar las comunas. Intente nuevamente. ���');
+      },
+    })
+
   }
 }

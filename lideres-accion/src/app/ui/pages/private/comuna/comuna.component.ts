@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { LugarModel } from '../../../../models/lugar/lugar.model';
 import { SelectOptionModel } from '../../../../models/base/select-options.model';
 import { BaseModel } from '../../../../models/base/base.model';
-import { ComunaModel } from '../../../../models/referidos/referido.model';
 import {
   FormBuilder,
   FormGroup,
@@ -22,8 +21,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
 import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/sub-title.component';
 import { ButtonsFormComponent } from '../../../shared/components/modules/buttons-form/buttons-form.component';
-import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
-import { ResponsableModel } from '../../../../models/comuna/comuna.model';
+import { ComunaModel } from '../../../../models/comuna/comuna.model';
+import { PerfilService } from '../../../shared/services/perfil/perfil.service';
+import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
+import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-comuna',
@@ -38,8 +39,8 @@ import { ResponsableModel } from '../../../../models/comuna/comuna.model';
     TitleComponent,
     SubTitleComponent,
     ButtonsFormComponent,
-    ButtonComponent,
     ContainerGridComponent,
+    SkeletonComponent
   ],
   providers: [LugaresService],
   templateUrl: './comuna.component.html',
@@ -49,10 +50,11 @@ export class ComunaComponent implements OnInit {
   formBarrios!: FormGroup;
   comuna!: BaseModel<ComunaModel>;
   departamentos: SelectOptionModel<LugarModel>[] = [];
-  municipios: SelectOptionModel<LugarModel>[] = [];
-  usuarios: SelectOptionModel<ResponsableModel>[] = [];
+  municipios: SelectOptionModel<number>[] = [];
+  usuarios: SelectOptionModel<string>[] = [];
   barrios: string[] = [];
   loading: boolean = false;
+  enableSkeleton: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -60,14 +62,14 @@ export class ComunaComponent implements OnInit {
     private toast: ToastrService,
     private location: Location,
     private auth: AuthService,
-    private comunaService: ComunaService
+    private comunaService: ComunaService,
+    private perfilService: PerfilService
   ) {
     this.form = this.fb.group({
       departamento: ['', Validators.required],
       municipio: ['', Validators.required],
       nombre: ['', Validators.required],
       responsable: ['', Validators.required],
-      barrios: ['', Validators.required],
     });
 
     this.formBarrios = this.fb.group({
@@ -76,17 +78,26 @@ export class ComunaComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.getDepartamentos();
+    await this.initComponent()
     this.form
       .get('departamento')
       ?.valueChanges.subscribe(async (departamento) => {
         if (departamento) {
+          this.form.get('municipio')?.enable();
           await this.getMunicipios(departamento.id.toString());
         } else {
+          this.form.get('municipio')?.disable();
           this.municipios = [];
           this.form.patchValue({ municipio: '' });
         }
       });
+  }
+
+  async initComponent() {
+    await this.getDepartamentos();
+    this.getUsuario()
+    this.form.get('municipio')?.disable();
+    this.enableSkeleton = false
   }
 
   async getDepartamentos() {
@@ -132,15 +143,16 @@ export class ComunaComponent implements OnInit {
     this.loading = true;
     try {
       this.comuna = {
-        data: this.form.value as ComunaModel,
-        fechaCreacion: new Date().toISOString(),
-        creadoPor: {
-          uid: this.auth.uidUser(),
-          email: this.auth.getEmail(),
+        data: {
+          nombre: this.form.value.nombre,
+          municipio_id: this.form.value.municipio,
+          barrios: this.barrios
         },
+        fechaCreacion: new Date().toISOString(),
+        creadoPor: this.auth.uidUser(),
       };
 
-      this.comunaService.createComuna(this.comuna);
+      await this.comunaService.createComuna(this.comuna, this.form.value.responsable);
       this.toast.success('comuna creada correctamente');
       this.loading = false;
       this.location.back();
@@ -152,7 +164,7 @@ export class ComunaComponent implements OnInit {
   }
 
   addBarrio(barrio: string) {
-    const delimiters = [',', ';'];
+    const delimiters = [',' , ';', '-'];
     let barrios = [barrio];
 
     delimiters.forEach(delimiter => {
@@ -169,5 +181,28 @@ export class ComunaComponent implements OnInit {
     if (i > -1 && i < this.barrios.length) {
       this.barrios.splice(i, 1);
     }
+  }
+
+  getUsuario() {
+    this.perfilService.getPerfiles().subscribe({
+      next: (response: any) => {
+        this.generateSelectOptionUsuarios(response)
+      },
+      error: (error) => {
+        console.error(error);
+        this.toast.error('Error al cargar los usuarios');
+      },
+      complete: () => {},
+    });
+  }
+
+  generateSelectOptionUsuarios(res: BaseModel<UsuarioModel>[]) {
+    this.usuarios = res.map((item: BaseModel<UsuarioModel>) => {
+      return {
+        label: item?.data?.nombres + ' ' + item?.data?.apellidos + ' ' + item?.data?.documento,
+        value: item.id,
+      } as SelectOptionModel<string>
+    })
+
   }
 }

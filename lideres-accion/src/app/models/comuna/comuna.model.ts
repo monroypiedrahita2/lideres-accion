@@ -1,12 +1,8 @@
+import { DocumentReference } from "@angular/fire/firestore";
+
 export interface ComunaModel {
     nombre: string;
     municipio_id: number;
-    responsable: ResponsableModel
+    responsable?: DocumentReference
     barrios: string[];
-}
-
-export interface ResponsableModel {
-    uid: string;
-    nombre: string;
-    telefono: string;
 }

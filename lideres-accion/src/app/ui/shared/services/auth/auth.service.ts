@@ -11,6 +11,8 @@ import {
   GoogleAuthProvider,
   User
 } from '@angular/fire/auth';
+import { getFirestore } from '@angular/fire/firestore';
+import { doc, getDoc } from '@firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -72,5 +74,6 @@ export class AuthService {
   uidUser(): string {
     return this.getAuth().currentUser?.uid ?? '';
   }
+
 
 }

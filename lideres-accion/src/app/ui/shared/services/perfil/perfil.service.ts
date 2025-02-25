@@ -16,6 +16,8 @@ import { ToastrService } from 'ngx-toastr';
 import { SelectOptionModel } from '../../../../models/base/select-options.model';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
+import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
+import { ComunaModel } from '../../../../models/comuna/comuna.model';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
@@ -27,9 +29,14 @@ export class PerfilService {
     private authService: AuthService
   ) {}
 
-  crearPerfilConUId(data: BaseModel<UsuarioModel>, uid: string): Promise<void> {
+  crearPerfilConUId(data: UsuarioModel, uid: string): Promise<void> {
     const dataRef = doc(this.firestore, this._collection, uid);
-    return setDoc(dataRef, data);
+    const newData = {
+      ...data,
+      comuna: doc(this.firestore,  `Comunas/${data.comuna}`),
+      iglesia: doc(this.firestore, `Iglesias/${data.iglesia}`)
+    };
+    return setDoc(dataRef, newData);
   }
 
   getPerfiles(): Observable<BaseModel<UsuarioModel>> {
@@ -54,7 +61,21 @@ export class PerfilService {
     try {
       const userRef = doc(this.firestore, this._collection, id);
       const snapshot = await getDoc(userRef);
-      return snapshot.data() as any | undefined | null;
+      const data = snapshot.data() as any | undefined | null;
+
+      if (data) {
+        if (data.iglesia) {
+          const iglesiaSnapshot = await getDoc(data.iglesia);
+          data.iglesia = iglesiaSnapshot.data() as any;
+        }
+        if (data.comuna) {
+          const comunaSnapshot = await getDoc(data.comuna);
+          data.comuna = comunaSnapshot.data() as any;
+        }
+      }
+
+      return data;
+
     } catch (error) {
       return null;
     }

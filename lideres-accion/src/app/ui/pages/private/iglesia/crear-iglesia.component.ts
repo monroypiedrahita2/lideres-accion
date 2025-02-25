@@ -117,12 +117,9 @@ export class CrearIglesiaComponent implements OnInit {
       this.iglesia = {
         data: this.form.value as IglesiaModel,
         fechaCreacion: new Date().toISOString(),
-        creadoPor: {
-          uid: this.auth.uidUser(),
-          email: this.auth.getEmail()
-        },
+        creadoPor: this.auth.uidUser(),
       };
-      
+
       this.iglesiaService.createIglesia(this.iglesia)
       this.toast.success('Iglesia creada correctamente')
       this.loading = false;
