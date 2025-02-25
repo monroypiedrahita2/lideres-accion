@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  addDoc,
   collection,
   collectionData,
   deleteDoc,
@@ -16,8 +17,6 @@ import { ToastrService } from 'ngx-toastr';
 import { SelectOptionModel } from '../../../../models/base/select-options.model';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
-import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
-import { ComunaModel } from '../../../../models/comuna/comuna.model';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
@@ -26,18 +25,14 @@ export class PerfilService {
   constructor(
     private firestore: Firestore,
     private toast: ToastrService,
-    private authService: AuthService
   ) {}
 
-  crearPerfilConUId(data: UsuarioModel, uid: string): Promise<void> {
-    const dataRef = doc(this.firestore, this._collection, uid);
-    const newData = {
-      ...data,
-      comuna: doc(this.firestore,  `Comunas/${data.comuna}`),
-      iglesia: doc(this.firestore, `Iglesias/${data.iglesia}`)
-    };
-    return setDoc(dataRef, newData);
+  crearPerfilConUId(data: UsuarioModel, id: string): Promise<void> {
+    const dataRef = doc(this.firestore, this._collection, id);
+    return setDoc(dataRef, data);
   }
+
+
 
   getPerfiles(): Observable<BaseModel<UsuarioModel>> {
     const _collection = collection(this.firestore, this._collection);
@@ -57,29 +52,16 @@ export class PerfilService {
     ) as Observable<SelectOptionModel<any>[]>;
   }
 
-  async getMiPerfil(id: string) {
-    try {
-      const userRef = doc(this.firestore, this._collection, id);
-      const snapshot = await getDoc(userRef);
-      const data = snapshot.data() as any | undefined | null;
-
-      if (data) {
-        if (data.iglesia) {
-          const iglesiaSnapshot = await getDoc(data.iglesia);
-          data.iglesia = iglesiaSnapshot.data() as any;
-        }
-        if (data.comuna) {
-          const comunaSnapshot = await getDoc(data.comuna);
-          data.comuna = comunaSnapshot.data() as any;
-        }
-      }
-
-      return data;
-
-    } catch (error) {
-      return null;
+getMiPerfil(id: string): Promise<UsuarioModel> {
+  const docRef = doc(this.firestore, this._collection, id);
+  return getDoc(docRef).then((docSnap) => {
+    if (docSnap.exists()) {
+      return docSnap.data() as UsuarioModel;
+    } else {
+      throw new Error('No existe o es nuevo');
     }
-  }
+  });
+}
 
   async deleteperfil(id: string) {
     const docRef = doc(this.firestore, `${this._collection}/${id}`);
@@ -95,5 +77,16 @@ export class PerfilService {
   async updateperfilId(id: string, data: any) {
     const docRef = doc(this.firestore, `${this._collection}/${id}`);
     await updateDoc(docRef, data);
+  }
+
+  updatePerfil(uid: string, data: any) {
+    const document = doc(this.firestore, this._collection, uid);
+    return updateDoc(document, data);
+
+  }
+
+  updateDoc(path: string, id: string, newData: any) {
+    const document = doc(this.firestore, path, id);
+    return updateDoc(document, newData);
   }
 }

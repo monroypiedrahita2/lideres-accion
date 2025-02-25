@@ -128,7 +128,7 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
     this.rifInput = '';
     this.filteredOptions = this.items;
     this.onChangeFn(this.rifInput);
-    this.onTouchedFn(); 
+    this.onTouchedFn();
   }
 
 }

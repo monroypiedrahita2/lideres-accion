@@ -28,9 +28,9 @@ export const CARDS_HOME: CardModel[] = [
     },
     {
         goTo: '../crear-iglesia',
-        title: 'Crear iglesia',
+        title: 'Iglesia',
         description: 'Ver y gestionar iglesias',
-        icon: 'church'
+        icon: 'favorite'
     },
     {
         goTo: '../crear-comuna',

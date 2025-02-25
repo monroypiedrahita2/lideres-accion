@@ -23,8 +23,8 @@ export class IglesiaService {
     return collectionData(collectionRef, { idField: 'id' }) as Observable<BaseModel<IglesiaModel>[]>;
   }
 
-  getIglesiaByDepartamento(value: number) {
-    const q = query(collection(this.firestore, this._collection), where('data.departamento.id', '==', value));
+  getIglesiaByDepartamento(value: string) {
+    const q = query(collection(this.firestore, this._collection), where('data.departamento', '==', value));
     const response = collectionData(q, { idField: 'id' }) as Observable<BaseModel<IglesiaModel>[]>;
     return response;
   }

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { LugarModel } from '../../../../models/lugar/lugar.model';
 import { SelectOptionModel } from '../../../../models/base/select-options.model';
 import { BaseModel } from '../../../../models/base/base.model';
 import {
@@ -49,7 +48,7 @@ export class ComunaComponent implements OnInit {
   form!: FormGroup;
   formBarrios!: FormGroup;
   comuna!: BaseModel<ComunaModel>;
-  departamentos: SelectOptionModel<LugarModel>[] = [];
+  departamentos: SelectOptionModel<string>[] = [];
   municipios: SelectOptionModel<number>[] = [];
   usuarios: SelectOptionModel<string>[] = [];
   barrios: string[] = [];
@@ -63,13 +62,11 @@ export class ComunaComponent implements OnInit {
     private location: Location,
     private auth: AuthService,
     private comunaService: ComunaService,
-    private perfilService: PerfilService
   ) {
     this.form = this.fb.group({
       departamento: ['', Validators.required],
       municipio: ['', Validators.required],
       nombre: ['', Validators.required],
-      responsable: ['', Validators.required],
     });
 
     this.formBarrios = this.fb.group({
@@ -84,7 +81,7 @@ export class ComunaComponent implements OnInit {
       ?.valueChanges.subscribe(async (departamento) => {
         if (departamento) {
           this.form.get('municipio')?.enable();
-          await this.getMunicipios(departamento.id.toString());
+          await this.getMunicipios(departamento.split('-')[0]);
         } else {
           this.form.get('municipio')?.disable();
           this.municipios = [];
@@ -95,7 +92,6 @@ export class ComunaComponent implements OnInit {
 
   async initComponent() {
     await this.getDepartamentos();
-    this.getUsuario()
     this.form.get('municipio')?.disable();
     this.enableSkeleton = false
   }
@@ -107,10 +103,7 @@ export class ComunaComponent implements OnInit {
       );
       this.departamentos = response.map((item: any) => ({
         label: item.name,
-        value: {
-          nombre: item.name,
-          id: item.id,
-        },
+        value: item.id + '-' + item.name
       }));
     } catch (error) {
       this.toast.error('Error al cargar los departamentos');
@@ -128,10 +121,7 @@ export class ComunaComponent implements OnInit {
       });
       this.municipios = response.map((item: any) => ({
         label: item.name,
-        value: {
-          nombre: item.name,
-          id: item.id,
-        },
+        value: item.id + '-' + item.name
       }));
     } catch (error) {
       this.toast.error('Error al cargar los municipios');
@@ -145,14 +135,15 @@ export class ComunaComponent implements OnInit {
       this.comuna = {
         data: {
           nombre: this.form.value.nombre,
-          municipio_id: this.form.value.municipio,
+          departamento: this.form.value.departamento,
+          municipio: this.form.value.municipio,
           barrios: this.barrios
         },
         fechaCreacion: new Date().toISOString(),
         creadoPor: this.auth.uidUser(),
       };
 
-      await this.comunaService.createComuna(this.comuna, this.form.value.responsable);
+      await this.comunaService.createComuna(this.comuna);
       this.toast.success('comuna creada correctamente');
       this.loading = false;
       this.location.back();
@@ -181,19 +172,6 @@ export class ComunaComponent implements OnInit {
     if (i > -1 && i < this.barrios.length) {
       this.barrios.splice(i, 1);
     }
-  }
-
-  getUsuario() {
-    this.perfilService.getPerfiles().subscribe({
-      next: (response: any) => {
-        this.generateSelectOptionUsuarios(response)
-      },
-      error: (error) => {
-        console.error(error);
-        this.toast.error('Error al cargar los usuarios');
-      },
-      complete: () => {},
-    });
   }
 
   generateSelectOptionUsuarios(res: BaseModel<UsuarioModel>[]) {

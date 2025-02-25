@@ -10,7 +10,6 @@ import { ContainerGridComponent } from '../../../shared/components/atoms/contain
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { LugaresService } from '../../../shared/services/lugares/lugares.service';
 import { lastValueFrom } from 'rxjs';
-import { LugarModel } from '../../../../models/lugar/lugar.model';
 import { SelectOptionModel } from '../../../../models/base/select-options.model';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
@@ -38,8 +37,8 @@ import { AuthService } from '../../../shared/services/auth/auth.service';
 })
 export class CrearIglesiaComponent implements OnInit {
   form!: FormGroup;
-  departamentos: SelectOptionModel<LugarModel>[] = [];
-  municipios: SelectOptionModel<LugarModel>[] = [];
+  departamentos: SelectOptionModel<string>[] = [];
+  municipios: SelectOptionModel<string>[] = [];
   iglesia!: BaseModel<IglesiaModel>;
   loading: boolean = false;
 
@@ -60,12 +59,15 @@ export class CrearIglesiaComponent implements OnInit {
 
   async ngOnInit() {
     await this.getDepartamentos();
+    this.form.get('municipio')?.disable();
     this.form
       .get('departamento')
       ?.valueChanges.subscribe(async (departamento) => {
         if (departamento) {
-          await this.getMunicipios(departamento.id.toString());
+          this.form.get('municipio')?.enable();
+          await this.getMunicipios(departamento.split('-')[0]);
         } else {
+          this.form.get('municipio')?.disable();
           this.municipios = [];
           this.form.patchValue({ municipio: '' });
         }
@@ -79,10 +81,7 @@ export class CrearIglesiaComponent implements OnInit {
       );
       this.departamentos = response.map((item: any) => ({
         label: item.name,
-        value: {
-          nombre: item.name,
-          id: item.id,
-        },
+        value: item.id + '-' + item.name
       }));
     } catch (error) {
       this.toast.error('Error al cargar los departamentos');
@@ -100,10 +99,8 @@ export class CrearIglesiaComponent implements OnInit {
       });
       this.municipios = response.map((item: any) => ({
         label: item.name,
-        value: {
-          nombre: item.name,
-          id: item.id,
-        },
+        value: item.id + '-' + item.name
+        ,
       }));
     } catch (error) {
       this.toast.error('Error al cargar los municipios');
@@ -115,12 +112,15 @@ export class CrearIglesiaComponent implements OnInit {
     this.loading = true;
     try {
       this.iglesia = {
-        data: this.form.value as IglesiaModel,
+        data: {
+          nombre: this.form.value.nombre,
+          departamento: this.form.value.departamento,
+          municipio: this.form.value.municipio,
+        },
         fechaCreacion: new Date().toISOString(),
         creadoPor: this.auth.uidUser(),
       };
-
-      this.iglesiaService.createIglesia(this.iglesia)
+      await this.iglesiaService.createIglesia(this.iglesia)
       this.toast.success('Iglesia creada correctamente')
       this.loading = false;
       this.location.back()

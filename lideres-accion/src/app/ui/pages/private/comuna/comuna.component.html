@@ -26,14 +26,6 @@
               label="Nombre de la comuna"
               id="nombre"
           ></mg-input-text>
-          <mg-input-select
-            *ngIf="usuarios.length > 0"
-              label="Líder responsable de la comuna"
-              [items]="usuarios"
-              formControlName="responsable"
-              id="lider"
-          >
-          </mg-input-select>
       </mg-container-grid>
   </form>
 

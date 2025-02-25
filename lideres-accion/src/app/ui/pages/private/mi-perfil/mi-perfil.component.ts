@@ -21,8 +21,7 @@ import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
 import { IglesiaService } from '../../../shared/services/iglesia/iglesia.service';
 import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/sub-title.component';
 import { ButtonsFormComponent } from '../../../shared/components/modules/buttons-form/buttons-form.component';
-import { LugarModel } from '../../../../models/lugar/lugar.model';
-import { lastValueFrom } from 'rxjs';
+import { distinctUntilChanged, lastValueFrom } from 'rxjs';
 import { LugaresService } from '../../../shared/services/lugares/lugares.service';
 import { ComunaModel } from '../../../../models/comuna/comuna.model';
 import { ComunaService } from '../../../shared/services/comuna/comuna.service';
@@ -48,9 +47,9 @@ export class MiPerfilComponent implements OnInit {
   form!: FormGroup;
   loading: boolean = false;
   enableSkeleton: boolean = true;
-  user!: BaseModel<UsuarioModel>;
-  departamentos: SelectOptionModel<LugarModel>[] = [];
-  municipios: SelectOptionModel<LugarModel>[] = [];
+  user!: UsuarioModel | undefined;
+  departamentos: SelectOptionModel<string>[] = [];
+  municipios: SelectOptionModel<string>[] = [];
   comunas: SelectOptionModel<string | undefined>[] = [];
   barrios: SelectOptionModel<string>[] = [];
   iglesias: SelectOptionModel<string | undefined>[] = [];
@@ -63,7 +62,7 @@ export class MiPerfilComponent implements OnInit {
     private toast: ToastrService,
     private iglesiasService: IglesiaService,
     private lugarService: LugaresService,
-    private comunaService: ComunaService,
+    private comunaService: ComunaService
   ) {
     this.form = this.fb.group({
       nombres: ['', Validators.required],
@@ -81,117 +80,116 @@ export class MiPerfilComponent implements OnInit {
   }
 
   async ngOnInit() {
-
     await this.getDepartamentos();
+    await this.loadUserProfile()
+    if (this.user) {
+      await this.getMunicipios(this.user.departamento.split('-')[0]);
+      this.getComunas(this.user.municipio)
+      this.getIglesiaByDepartamento(this.user.departamento)
+    }
 
-    this.form
-    .get('departamento')
-    ?.valueChanges.subscribe(async (departamento) => {
-      if (departamento) {
-        await this.getMunicipios(departamento.id.toString());
-        this.getIglesiaByDepartamento(Number(departamento.id));
-      } else {
-        this.municipios = [];
-        this.form.patchValue({ municipio: '' });
-      }
-    });
+    this.form.get('departamento')?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+        console.log(value)
 
-    this.form
-      .get('municipio')
-      ?.valueChanges.subscribe(async (municipio) => {
-        if (municipio) {
-          this.getComunas(municipio.id.toString());
+        if (value == ''){
+          this.form.get('municipio')?.setValue('');
+          this.form.get('comuna')?.setValue('');
+          this.form.get('barrio')?.setValue('');
+          this.form.get('iglesia')?.setValue('');
         } else {
-          this.comunas = [];
-          this.form.patchValue({ comuna: '' });
+          this.getMunicipios(value.split('-')[0]);
+          this.getIglesiaByDepartamento(value);
         }
       });
-    await this.loadUserProfile();
+
+      this.form.get('municipio')?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+        if (value == '') {
+          this.form.get('comuna')?.setValue('');
+          this.form.get('barrio')?.setValue('');
+          this.form.get('iglesia')?.setValue('');
+        } else {
+          this.getComunas(value);
+
+        }
+      });
   }
 
+  async initComponent() {
+    await this.loadUserProfile();
 
+    this.form.patchValue({
+      email: this.auth.getEmail(),
+    });
+    this.form.get('email')?.disable();
+  }
 
+  async getDepartamentos() {
+    try {
+      const response = await lastValueFrom(
+        this.lugarService.getDepartamentos()
+      );
+      this.departamentos = response.map((item: any) => ({
+        label: item.name,
+        value: item.id + '-' + item.name,
+      }));
+    } catch (error) {
+      console.error(error);
+      this.toast.error('Error al cargar los departamentos');
+      this.location.back();
+    }
+  }
 
-    async getDepartamentos() {
-      try {
-        const response = await lastValueFrom(
-          this.lugarService.getDepartamentos()
-        );
-        this.departamentos = response.map((item: any) => ({
-          label: item.name,
-          value: {
-            nombre: item.name,
-            id: item.id,
-          },
+  getIglesiaByDepartamento(departamento_id: string) {
+    this.iglesiasService.getIglesiaByDepartamento(departamento_id).subscribe({
+      next: (iglesias) => {
+        this.iglesias = iglesias.map((iglesia: BaseModel<IglesiaModel>) => ({
+          label: iglesia.data.nombre,
+          value: iglesia.id,
         }));
-      } catch (error) {
+        if (this.user) {
+          this.form.patchValue(this.user);
+        }
+      this.user = undefined
+      },
+      error: (error) => {
         console.error(error);
-        this.toast.error('Error al cargar los departamentos');
-        this.location.back();
-      }
-    }
+        this.toast.error('Error al cargar las iglesias. Intente nuevamente. ⚠');
+      },
+    });
+  }
 
-    getIglesiaByDepartamento(departamento_id: number) {
-      this.iglesiasService.getIglesiaByDepartamento(departamento_id).subscribe({
-        next: (iglesias) => {
-          this.iglesias = iglesias.map((iglesia: BaseModel<IglesiaModel>) => ({
-        label: `${iglesia.data.municipio.nombre}-${iglesia.data.nombre}`,
-        value: iglesia?.id,
-          }));
-        },
-        error: (error) => {
-          console.error(error);
-          this.toast.error('Error al cargar las iglesias. Intente nuevamente. ⚠');
-        },
-      });
+  async getMunicipios(departamento_id: string) {
+    try {
+      const response = await lastValueFrom(
+        this.lugarService.getMunicipios(departamento_id)
+      );
+      this.municipios = response.map((item: any) => ({
+        label: item.name,
+        value: item.id + '-' + item.name,
+      }));
+    } catch (error) {
+      this.toast.error('Error al cargar los municipios');
+      this.location.back();
     }
-
-
-    async getMunicipios(departamento_id: string) {
-      try {
-        const response = await lastValueFrom(
-          this.lugarService.getMunicipios(departamento_id)
-        );
-        this.form.patchValue({
-          municipio: '',
-        });
-        this.municipios = response.map((item: any) => ({
-          label: item.name,
-          value: {
-            nombre: item.name,
-            id: item.id,
-          },
-        }));
-      } catch (error) {
-        this.toast.error('Error al cargar los municipios');
-        this.location.back()
-      }
-    }
+  }
 
   private async loadUserProfile() {
     try {
-      const response = await this.perfilService.getMiPerfil(this.auth.uidUser());
-
-      console.log('mi perfil', response)
-      if (response) {
-        this.form.patchValue(response);
-      }
+      this.user = await this.perfilService.getMiPerfil(this.auth.uidUser());
       this.enableSkeleton = false;
     } catch (error) {
       console.error(error);
-      this.toast.error('Error al cargar el perfil. Intente nuevamente. ⚠');
-      this.navigateBack();
+      this.enableSkeleton = false;
     }
-  }
-
-  private navigateBack() {
-    this.location.back();
   }
 
   async onSubmit() {
     this.loading = true;
     try {
-      await this.perfilService.crearPerfilConUId(this.form.value, this.auth.uidUser());
+      await this.perfilService.crearPerfilConUId(
+        this.form.value,
+        this.auth.uidUser()
+      );
       this.toast.success('Perfil creado ');
       this.location.back();
     } catch (error) {
@@ -203,24 +201,30 @@ export class MiPerfilComponent implements OnInit {
   }
 
   getComunas(municipio_id: string) {
-    this.comunaService.getComunaByDepartamento(Number(municipio_id)).subscribe({
+    this.comunaService.getComunaByMunicipio(municipio_id).subscribe({
       next: (comunas) => {
         this.comunas = comunas.map((comuna: BaseModel<ComunaModel>) => ({
           label: comuna.data.nombre,
           value: comuna.id,
         }));
-      this.barrios = comunas.flatMap((comuna: BaseModel<ComunaModel>) =>
-        comuna?.data.barrios.map((barrio: string) => ({
-          label: barrio,
-          value: barrio,
-        }))
-      );
+        this.barrios = comunas.flatMap((comuna: BaseModel<ComunaModel>) =>
+          comuna?.data.barrios.map((barrio: string) => ({
+            label: barrio,
+            value: barrio,
+          }))
+        );
       },
       error: (error) => {
         console.error(error);
-        this.toast.error('Error al cargar las comunas. Intente nuevamente. ���');
+        this.toast.error(
+          'Error al cargar las comunas. Intente nuevamente. ���'
+        );
       },
-    })
+    });
+  }
+
+
+  updateUser() {
 
   }
 }

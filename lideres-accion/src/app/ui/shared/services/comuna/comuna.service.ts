@@ -15,19 +15,9 @@ export class ComunaService {
 
 
 
-  createComuna(comuna: BaseModel<ComunaModel>,
-     responsableId: string) {
+  createComuna(comuna: BaseModel<ComunaModel>) {
     const collectionRef = collection(this.firestore, this._collection);
-    const responsableRef = doc(this.firestore, `Perfiles/${responsableId}`);
-    const comunaData: BaseModel<ComunaModel> = {
-      ...comuna,
-      data: {
-        ...comuna.data,
-        responsable: responsableRef
-      }
-    };
-
-    return addDoc(collectionRef, comunaData);
+    return addDoc(collectionRef, comuna);
   }
 
   getComunas() {
@@ -35,8 +25,8 @@ export class ComunaService {
     return collectionData(collectionRef, { idField: 'id' }) as Observable<BaseModel<ComunaModel>[]>;
   }
 
-  getComunaByDepartamento(value: number) {
-    const q = query(collection(this.firestore, this._collection), where('data.municipio_id.id', '==', value));
+  getComunaByMunicipio(value: string) {
+    const q = query(collection(this.firestore, this._collection), where('data.municipio', '==', value));
     const response = collectionData(q, { idField: 'id' }) as Observable<BaseModel<ComunaModel>[]>;
     return response;
   }

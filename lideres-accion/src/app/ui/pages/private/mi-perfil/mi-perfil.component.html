@@ -3,7 +3,7 @@
 
   @if (!enableSkeleton) {
     <mg-title title="Mi perfil"></mg-title>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="form">
       <div class="grid sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:mt-3 lg:mt-5 sm:p-3">
         <mg-input-text type="text" formControlName="nombres" id="names" label="Nombres"></mg-input-text>
         <mg-input-text type="text" formControlName="apellidos" id="lastNames" label="Apellidos"></mg-input-text>
@@ -20,12 +20,11 @@
         <mg-input-select formControlName="municipio" [label]="'Municipio'" id="municipio" [items]="municipios"></mg-input-select>
         <mg-input-select formControlName="comuna" [label]="'Comuna'" id="comuna" [items]="comunas"></mg-input-select>
         <mg-input-select formControlName="barrio" [label]="'Barrio'" id="barrio" [items]="barrios"></mg-input-select>
-
         <mg-input-text type="text" formControlName="direccion" id="adress" label="Dirección de residencia"></mg-input-text>
         <mg-input-select formControlName="iglesia" [label]="'Iglesia dónde se congrega'" id="iglesia" [items]="iglesias"></mg-input-select>
       </div>
 
-      <mg-buttons-form [disabled]="form.invalid" [loading]="loading"></mg-buttons-form>
+      <mg-buttons-form [disabled]="form.invalid" [loading]="loading" (onSubmit)="onSubmit()"></mg-buttons-form>
     </form>
   }
 
