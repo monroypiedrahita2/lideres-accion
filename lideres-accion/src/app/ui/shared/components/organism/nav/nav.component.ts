@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { NAME_APP } from '../../../const/name-app.const';
+import { LogoComponent } from '../../atoms/logo/logo.component';
 
 
 @Component({
@@ -11,9 +12,10 @@ import { NAME_APP } from '../../../const/name-app.const';
 
   standalone: true,
     imports: [
-    CommonModule, 
-    MatIconModule,    
-    RouterModule
+    CommonModule,
+    MatIconModule,
+    RouterModule,
+    LogoComponent
   ],
 })
 export class NavComponent  {
