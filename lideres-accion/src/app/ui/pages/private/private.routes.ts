@@ -31,6 +31,10 @@ export const routes: Routes = [
         path: 'crear-comuna',
         loadComponent: () => import('./comuna/comuna.component').then(m => m.ComunaComponent),
       },
+      {
+        path: 'crear-referido',
+        loadComponent: () => import('./referido/create-referido.component').then(m => m.CreateReferidoComponent),
+      },
     ]
   },
   {
