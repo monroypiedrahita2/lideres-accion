@@ -53,6 +53,7 @@ export class MiPerfilComponent implements OnInit {
   comunas: SelectOptionModel<string | undefined>[] = [];
   barrios: SelectOptionModel<string>[] = [];
   iglesias: SelectOptionModel<string | undefined>[] = [];
+  accion: 'create' | 'edit' = 'create';
 
   constructor(
     private fb: FormBuilder,
@@ -81,17 +82,21 @@ export class MiPerfilComponent implements OnInit {
 
   async ngOnInit() {
     await this.getDepartamentos();
-    await this.loadUserProfile()
+    await this.loadUserProfile();
     if (this.user) {
+      this.accion = 'edit';
       await this.getMunicipios(this.user.departamento.split('-')[0]);
-      this.getComunas(this.user.municipio)
-      this.getIglesiaByDepartamento(this.user.departamento)
+      this.getComunas(this.user.municipio);
+      this.getIglesiaByDepartamento(this.user.departamento);
     }
 
-    this.form.get('departamento')?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
-        console.log(value)
+    this.form
+      .get('departamento')
+      ?.valueChanges.pipe(distinctUntilChanged())
+      .subscribe((value) => {
+        console.log(value);
 
-        if (value == ''){
+        if (value == '') {
           this.form.get('municipio')?.setValue('');
           this.form.get('comuna')?.setValue('');
           this.form.get('barrio')?.setValue('');
@@ -102,14 +107,16 @@ export class MiPerfilComponent implements OnInit {
         }
       });
 
-      this.form.get('municipio')?.valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+    this.form
+      .get('municipio')
+      ?.valueChanges.pipe(distinctUntilChanged())
+      .subscribe((value) => {
         if (value == '') {
           this.form.get('comuna')?.setValue('');
           this.form.get('barrio')?.setValue('');
           this.form.get('iglesia')?.setValue('');
         } else {
           this.getComunas(value);
-
         }
       });
   }
@@ -149,7 +156,7 @@ export class MiPerfilComponent implements OnInit {
         if (this.user) {
           this.form.patchValue(this.user);
         }
-      this.user = undefined
+        this.user = undefined;
       },
       error: (error) => {
         console.error(error);
@@ -185,6 +192,11 @@ export class MiPerfilComponent implements OnInit {
 
   async onSubmit() {
     this.loading = true;
+    if (this.accion == 'edit') {
+      await this.updateUser();
+      return;
+    }
+
     try {
       await this.perfilService.crearPerfilConUId(
         this.form.value,
@@ -223,8 +235,14 @@ export class MiPerfilComponent implements OnInit {
     });
   }
 
-
-  updateUser() {
-
+  async updateUser() {
+    try {
+      await this.perfilService.updateDoc(this.auth.uidUser(), this.form.value);
+      this.toast.success('Usuario actualizado');
+      this.location.back();
+    } catch {
+      this.toast.error('Error al actualizar el usuario. Intente nuevamente.');
+      this.loading = false;
+    }
   }
 }

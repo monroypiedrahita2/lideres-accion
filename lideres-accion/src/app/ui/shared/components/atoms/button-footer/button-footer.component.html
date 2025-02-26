@@ -1,20 +1,20 @@
 <button
   [routerLink]="goTo"
-  class="flex flex-col justify-center items-center w-20 mb-3 mt-2"
+  class="flex justify-center align-baseline gap-2 min-w-20 mb-3 mt-2"
 >
   <mat-icon
     routerLinkActive="activeIcon"
-    class="text-white text-center"
+    class="text-white text-center pt-1"
     aria-hidden="false"
     aria-label="Example home icon"
     [fontIcon]="icon"
   ></mat-icon>
-  <p
+  <span
     mat-button
     [routerLink]="goTo"
     routerLinkActive="active"
-    class="text-white font-kalam"
+    class="text-white font-primary text-xl"
   >
     {{ option }}
-  </p>
+  </span>
 </button>

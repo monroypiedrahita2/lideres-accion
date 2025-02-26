@@ -85,8 +85,8 @@ getMiPerfil(id: string): Promise<UsuarioModel> {
 
   }
 
-  updateDoc(path: string, id: string, newData: any) {
-    const document = doc(this.firestore, path, id);
-    return updateDoc(document, newData);
+  updateDoc(id: string, newData: UsuarioModel) {
+    const document = doc(this.firestore, this._collection, id);
+    return updateDoc(document, { ...newData });
   }
 }

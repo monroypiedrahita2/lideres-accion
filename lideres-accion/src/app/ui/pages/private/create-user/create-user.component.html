@@ -14,7 +14,7 @@
         label="Crear clave de acceso"
         id="password"
       ></mg-input-text>
-      <span *ngIf="form.get('password')?.touched && form.get('password')?.invalid" class="font-primary">
+      <span *ngIf="form.get('password')?.touched && form.get('password')?.invalid" class="font-primary text-red-600">
         La contraseña debe contener mayúsculas, minúsculas y números
       </span>
     </div>

@@ -9,7 +9,6 @@ import {
 } from '@angular/forms';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -32,11 +31,11 @@ export class CreateUserComponent {
     private location: Location,
     private authService: AuthService,
     private toast: ToastrService
-    
+
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)]],
+      password: ['', [Validators.required]],
     });
   }
 
@@ -45,6 +44,12 @@ export class CreateUserComponent {
   }
 
   async createUser() {
+    const passwordControl = this.form.get('password');
+    passwordControl?.setValidators([
+      Validators.required,
+      Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)
+    ]);
+    passwordControl?.updateValueAndValidity();
     if (this.form.invalid) {
       return;
     }

@@ -9,7 +9,7 @@
 
 'bg-gray-400 text-gray-700 pointer-events-none': disabled || loading,
 
-'tracking-widest font-medium py-2 px-4 rounded-[18px] w-40': true
+'tracking-widest font-medium py-2 px-4 rounded-[18px] w-40 font-primary': true
 }">
 <div class="flex justify-center items-center gap-2">
     <mat-icon *ngIf="icon && !loading">{{icon}}</mat-icon>
@@ -19,6 +19,6 @@
   >
     progress_activity
   </span>
-   <span *ngIf="!loading">{{text}}</span> 
+   <span *ngIf="!loading">{{text}}</span>
 </div>
 </button>
