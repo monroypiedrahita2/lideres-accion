@@ -88,6 +88,12 @@ export class MiPerfilComponent implements OnInit {
       await this.getMunicipios(this.user.departamento.split('-')[0]);
       this.getComunas(this.user.municipio);
       this.getIglesiaByDepartamento(this.user.departamento);
+    } else {
+      this.accion = 'create';
+      this.form.patchValue({
+        email: this.auth.getEmail()
+      })
+      this.form.get('email')?.disable();
     }
 
     this.form
@@ -155,6 +161,7 @@ export class MiPerfilComponent implements OnInit {
         }));
         if (this.user) {
           this.form.patchValue(this.user);
+          this.form.get('email')?.disable();
         }
         this.user = undefined;
       },

@@ -23,7 +23,7 @@ export const CARDS_HOME: CardModel[] = [
     {
         goTo: '../settings',
         title: 'Configuraciones',
-        description: 'Ajustar las configuraciones de la aplicación',
+        description: 'Más ajustes de la aplicación',
         icon: 'settings'
     },
     {

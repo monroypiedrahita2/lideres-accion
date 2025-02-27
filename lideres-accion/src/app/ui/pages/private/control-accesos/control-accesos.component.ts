@@ -32,45 +32,43 @@ export class ControlAccesosComponent {
   constructor(private location: Location, private fb: FormBuilder) {
     this.form = this.fb.group({
       usuario: ['', [Validators.required]],
+      rol: ['', [Validators.required]],
 
     })
     // Usuarios
     this.formPermisos = this.fb.group({
-      UsuariosTodos: [false],
-      UsuariosDepartamento: [false],
-      UsuariosMunicipio: [false],
-      UsuariosIglesia: [false],
-      UsuariosComuna: [false],
+      UsuariosTodos: [true],
+      UsuariosDepartamento: [true],
+      UsuariosMunicipio: [true],
+      UsuariosIglesia: [true],
+      UsuariosComuna: [true],
 
       // Refridos
-      ReferidosTodos: [false],
-      ReferidosDepartamento: [false],
-      ReferidosMunicipio: [false],
-      ReferidosIglesia: [false],
-      ReferidosComuna: [false],
+      ReferidosTodos: [true],
+      ReferidosDepartamento: [true],
+      ReferidosMunicipio: [true],
+      ReferidosIglesia: [true],
+      ReferidosComuna: [true],
 
 
 
       // Permisos
-      PermisosTodos: [false],
-      PermisosDepartamento: [false],
-      PermisosMunicipio: [false],
-      PermisosIglesia: [false],
-      PermisosComuna: [false],
+      PermisosTodos: [true],
+      PermisosDepartamento: [true],
+      PermisosMunicipio: [true],
+      PermisosIglesia: [true],
+      PermisosComuna: [true],
 
       //Iglesias
-      IglesiasTodos: [false],
-      IglesiasDepartamento: [false],
-      IglesiasMunicipio: [false],
-      IglesiasIglesia: [false],
-      IglesiasComuna: [false],
+      IglesiasTodas: [true],
+      IglesiasDepartamento: [true],
+      IglesiasMunicipio: [true],
+      IglesiasComuna: [true],
 
       //Comunas
-      ComunasTodos: [false],
-      ComunasDepartamento: [false],
-      ComunasMunicipio: [false],
-      ComunasIglesia: [false],
-      ComunasComuna: [false],
+      ComunasTodas: [true],
+      ComunasDepartamento: [true],
+      ComunasMunicipio: [true],
     })
 
 

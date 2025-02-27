@@ -1,10 +1,10 @@
 <nav [ngClass]="{
-'z-20 fixed w-full top-0 h-[64px] sm:px-4 md:px-6': true,
+'z-20 fixed w-full top-0 h-[64px]': true,
 'bg-primary': true,
 'shadow-xl': true
 }" >
   <div class="flex justify-between items-center h-full">
-    <div class=" flex items-center justify-center gap-2 hover:cursor-pointer hover:shadow-xl" [routerLink]="['./settings']">
+    <div class=" flex items-center justify-center gap-2 hover:cursor-pointer hover:shadow-xl pl-4" [routerLink]="['./settings']">
       <div class="bg-white flex items-center justify-center rounded-md h-[50px]">
         <mg-logo></mg-logo>
       </div>
@@ -12,8 +12,7 @@
     <div class="w-full text-center">
       <span class="font-primary text-white text-2xl text-shadow block">Líderes en acción</span>
     </div>
-    <div class="text-white font-poetsen tracking-widest text-2xl font-medium"></div>
-    <mat-icon class="text-white hover:cursor-pointer text-shadow" [routerLink]="['private/home']">home</mat-icon>
+    <mat-icon class="text-white hover:cursor-pointer text-center w-full text-shadow pr-8" [routerLink]="['private/home']">home</mat-icon>
   </div>
   <div>
   </div>
