@@ -37,38 +37,37 @@ export class ControlAccesosComponent {
     })
     // Usuarios
     this.formPermisos = this.fb.group({
-      UsuariosTodos: [true],
-      UsuariosDepartamento: [true],
-      UsuariosMunicipio: [true],
-      UsuariosIglesia: [true],
-      UsuariosComuna: [true],
+      usuariosTodos: [false],
+      usuariosDepartamento: [false],
+      usuariosMunicipio: [false],
+      usuariosIglesia: [false],
+      usuariosComuna: [false],
 
       // Refridos
-      ReferidosTodos: [true],
-      ReferidosDepartamento: [true],
-      ReferidosMunicipio: [true],
-      ReferidosIglesia: [true],
-      ReferidosComuna: [true],
+      referidosTodos: [false],
+      referidosDepartamento: [false],
+      referidosMunicipio: [false],
+      referidosIglesia: [false],
+      referidosComuna: [false],
 
 
 
       // Permisos
-      PermisosTodos: [true],
-      PermisosDepartamento: [true],
-      PermisosMunicipio: [true],
-      PermisosIglesia: [true],
-      PermisosComuna: [true],
+      permisosTodos: [false],
+      permisosDepartamento: [false],
+      permisosMunicipio: [false],
+      permisosIglesia: [false],
+      permisosComuna: [false],
 
       //Iglesias
-      IglesiasTodas: [true],
-      IglesiasDepartamento: [true],
-      IglesiasMunicipio: [true],
-      IglesiasComuna: [true],
+      crearIglesias: [false],
+      editarIglesias: [false],
+      eliminarIglesias: [false],
 
       //Comunas
-      ComunasTodas: [true],
-      ComunasDepartamento: [true],
-      ComunasMunicipio: [true],
+      crearComunas: [false],
+      editarComunas: [false],
+      eliminarComunas: [false],
     })
 
 

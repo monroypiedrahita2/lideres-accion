@@ -39,9 +39,9 @@ export const CARDS_HOME: CardModel[] = [
         icon: 'location_city'
     },
     {
-        goTo: '../grupo-de-seguridad',
-        title: 'Seguridad',
-        description: 'Administrar grupos de permisos',
+        goTo: '../roles',
+        title: 'Roles',
+        description: 'Administrar roles',
         icon: 'location_city'
     }
 ]
