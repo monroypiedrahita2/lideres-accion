@@ -35,6 +35,10 @@ export const routes: Routes = [
         path: 'crear-referido',
         loadComponent: () => import('./referido/create-referido.component').then(m => m.CreateReferidoComponent),
       },
+      {
+        path: 'control-accesos',
+        loadComponent: () => import('./control-accesos/control-accesos.component').then(m => m.ControlAccesosComponent),
+      },
     ]
   },
   {

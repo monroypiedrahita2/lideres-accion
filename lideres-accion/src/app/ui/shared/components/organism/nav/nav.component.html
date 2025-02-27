@@ -4,11 +4,13 @@
 'shadow-xl': true
 }" >
   <div class="flex justify-between items-center h-full">
-    <div class="flex justify-center items-center hover:cursor-pointer hover:shadow-xl" [routerLink]="['./settings']">
-      <span class="font-primary text-white text-2xl text-shadow">Líderes en acción</span>
+    <div class=" flex items-center justify-center gap-2 hover:cursor-pointer hover:shadow-xl" [routerLink]="['./settings']">
+      <div class="bg-white flex items-center justify-center rounded-md h-[50px]">
+        <mg-logo></mg-logo>
+      </div>
     </div>
-    <div class="bg-white flex justify-center rounded-md">
-      <mg-logo></mg-logo>
+    <div class="w-full text-center">
+      <span class="font-primary text-white text-2xl text-shadow block">Líderes en acción</span>
     </div>
     <div class="text-white font-poetsen tracking-widest text-2xl font-medium"></div>
     <mat-icon class="text-white hover:cursor-pointer text-shadow" [routerLink]="['private/home']">home</mat-icon>

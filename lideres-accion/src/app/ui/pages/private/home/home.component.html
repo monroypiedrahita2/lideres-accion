@@ -1,13 +1,13 @@
 
-<div class="grid sm:grid-cols-1 lg:grid-cols-3 gap-3">
-  @for (card of cards; track $index) {
+<div class="grid sm:grid-cols-1 lg:grid-cols-2 gap-3 justify-center min-h-[calc(100vh-160px)]">
+  <ng-container *ngFor="let card of cards; let i = index">
     <mtt-card-info
-    [routerLink]="card.goTo"
-    [title]="card.title"
-    [textInfo]="card.description"
-    [icon]="card.icon"
+      [routerLink]="card.goTo"
+      [title]="card.title"
+      [textInfo]="card.description"
+      [icon]="card.icon"
     ></mtt-card-info>
-  }
+  </ng-container>
 </div>
 
 

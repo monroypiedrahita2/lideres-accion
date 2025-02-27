@@ -15,7 +15,7 @@ export const CARDS_HOME: CardModel[] = [
         activePoint: false
     },
     {
-        goTo: 'control-y-accesos',
+        goTo: '../control-accesos',
         title: 'Control y accesos',
         description: 'Gestionar el control y los accesos',
         icon: 'lock'
@@ -36,6 +36,12 @@ export const CARDS_HOME: CardModel[] = [
         goTo: '../crear-comuna',
         title: 'Comunas',
         description: 'Ver y gestionar comunas',
+        icon: 'location_city'
+    },
+    {
+        goTo: '../grupo-de-seguridad',
+        title: 'Seguridad',
+        description: 'Administrar grupos de permisos',
         icon: 'location_city'
     }
 ]

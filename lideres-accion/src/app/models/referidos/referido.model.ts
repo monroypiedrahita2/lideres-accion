@@ -1,5 +1,3 @@
-import { LugarModel } from "../lugar/lugar.model";
-
 export interface ReferidoModel {
     nombre: string;
     apellido: string;
@@ -7,14 +5,13 @@ export interface ReferidoModel {
     telefono: string;
     direccion?: string;
     barrio: string;
-    apoya: ApoyoModel
+    candidaturas: string[],
+    departamento: string
+
 
 }
 
-export interface ApoyoModel {
-    senado: boolean;
-    camara: boolean;
-}
+
 
 
 

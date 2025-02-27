@@ -1,1 +1,27 @@
-<p>create-referido works!</p>
+<form [formGroup]="form">
+  <mg-title [title]="title"></mg-title>
+  <mg-sub-title title="Datos generales"></mg-sub-title>
+  <mg-container-grid [hiddenButtons]="true">
+    <mg-input-text type="text" formControlName="nombre" id="name" label="Nombres de referido"></mg-input-text>
+    <mg-input-text type="text" formControlName="apellido" id="apellido" label="Apellidos de referido"></mg-input-text>
+    <mg-input-text type="email" formControlName="email" id="email" label="Correo electrónico"></mg-input-text>
+  </mg-container-grid>
+  <mg-input-text type="tel" formControlName="telefono" id="telefono" label="Teléfono"></mg-input-text>
+
+  <!-- <mg-input-select formControlName="departamento" [label]="'Departamento'" id="departamento" [items]="departamentos"></mg-input-select> -->
+
+  <mg-sub-title title="Lugar de residencia"></mg-sub-title>
+
+  <mg-input-select formControlName="departamento" [label]="'Departamento'" id="departamento" [items]="departamentos"></mg-input-select>
+  <mg-input-select formControlName="municipio" [label]="'Municipio'" id="municipio" [items]="municipios"></mg-input-select>
+  <mg-input-text type="text" formControlName="direccion" id="direccion" label="Dirección"></mg-input-text>
+
+  <mg-sub-title title="Candidaturas a apoyar"></mg-sub-title>
+
+  <mg-input-select formControlName="candidaturas" [label]="'Candidaturas a apoyar'" [items]="candidaturas"></mg-input-select>
+
+
+</form>
+
+
+

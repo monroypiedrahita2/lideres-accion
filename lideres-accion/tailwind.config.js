@@ -61,6 +61,7 @@ module.exports = {
       colors: {
         'primary': '#1c202a',
         'secundary': '#101828',
+        'tertiary': '#ffce00',
         'base': "#fafafa",
       },
       backgroundImage: {
