@@ -205,6 +205,7 @@ export class MiPerfilComponent implements OnInit {
     }
 
     try {
+      this.form.get('email')?.enable();
       await this.perfilService.crearPerfilConUId(
         this.form.value,
         this.auth.uidUser()

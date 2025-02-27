@@ -7,8 +7,10 @@ import {
   doc,
   Firestore,
   getDoc,
+  query,
   setDoc,
   updateDoc,
+  where,
 } from '@angular/fire/firestore';
 import { BaseModel } from '../../../../models/base/base.model';
 import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
@@ -34,23 +36,27 @@ export class PerfilService {
 
 
 
-  getPerfiles(): Observable<BaseModel<UsuarioModel>> {
+  getPerfiles(): Observable<any> {
     const _collection = collection(this.firestore, this._collection);
     return collectionData(_collection, { idField: 'id' }) as Observable<any>;
   }
 
-  getPerfilesSelectOption() {
-    const _collection = collection(this.firestore, this._collection);
-    return collectionData(_collection, { idField: 'id' }).pipe(
-      map((perfiles: any[]) =>
-        perfiles.map((perfil) => ({
-          value: perfil.id,
-          label:
-            perfil.documentNumber + ' ' + perfil.names + ' ' + perfil.lastNames,
-        }))
-      )
-    ) as Observable<SelectOptionModel<any>[]>;
+
+
+  getPerfilByEmailoCC(value: string){
+    if(value.includes('@')){
+    const q = query(collection(this.firestore, this._collection), where('email', '==', value));
+    const response = collectionData(q, { idField: 'id' }) as Observable<UsuarioModel[]>;
+    return response;
+    } else {
+      const q = query(collection(this.firestore, this._collection), where('documento', '==', value));
+      const response = collectionData(q, { idField: 'id' }) as Observable<UsuarioModel[]>;
+      return response;
+    }
   }
+
+
+
 
 getMiPerfil(id: string): Promise<UsuarioModel> {
   const docRef = doc(this.firestore, this._collection, id);

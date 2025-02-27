@@ -1,4 +1,4 @@
-<div class="flex flex-row-reverse justify-center gap-4 pt-10">
+<div class="flex flex-row-reverse justify-center gap-4 sm:pt-5 lg:pt-8">
   <mg-button [text]="principalText" [loading]="loading" [disabled]="disabled" (onClick)="clickear()"></mg-button>
   <mg-button *ngIf="!hiddenSecundaryBtn" [text]="backText" [type]="'reset'" (onClick)="back()"></mg-button>
 </div>

@@ -15,6 +15,7 @@ export const environment = {
       barrios: 'Barrios',
       comundas: 'Comunas',
       iglesias: 'Iglesias',
-      comunas: 'Comunas'
+      comunas: 'Comunas',
+      roles: 'Roles'
     }
   };

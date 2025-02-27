@@ -11,14 +11,13 @@ import {
   GoogleAuthProvider,
   User
 } from '@angular/fire/auth';
-import { getFirestore } from '@angular/fire/firestore';
-import { doc, getDoc } from '@firebase/firestore';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth, private router: Router) {}
 
   createUserWithEmailAndPassword(email: string, password: string) {
     return createUserWithEmailAndPassword(
@@ -33,6 +32,7 @@ export class AuthService {
   }
 
   logout() {
+    this.router.navigate(['/public/login']);
     return signOut(this.auth);
   }
 

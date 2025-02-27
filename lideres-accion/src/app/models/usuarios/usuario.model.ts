@@ -1,9 +1,8 @@
-import { DocumentReference } from '@angular/fire/firestore';
 import { RolesModel } from '../roles/roles.model';
-import { LugarModel } from '../lugar/lugar.model';
 
 
 export interface UsuarioModel {
+  id?: string;
   nombres: string;
   apellidos: string;
   documento: string;
@@ -13,7 +12,7 @@ export interface UsuarioModel {
   barrio: string;
   direccion: string;
   celular: string;
-  email?: string;
+  email: string;
   iglesia?: string;
   rol?: RolesModel;
 }

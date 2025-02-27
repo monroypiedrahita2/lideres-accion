@@ -1,42 +1,42 @@
+import { UsuarioModel } from './../usuarios/usuario.model';
 export interface RolesModel {
     nombre: string;
+    nivel: number;
     permisos: PermisosModel;
 }
 
 
 
 export interface PermisosModel {
-      UsuariosTodos?: boolean;
-      UsuariosDepartamento?: boolean;
-      UsuariosMunicipio?: boolean;
-      UsuariosIglesia?: boolean;
-      UsuariosComuna?: boolean;
+  // Usuarios
+  usuariosTodos?: boolean;
+  usuariosDepartamento?: boolean;
+  usuariosMunicipio?: boolean;
+  usuariosIglesia?: boolean;
+  usuariosComuna?: boolean;
 
-      // Refridos
-      ReferidosTodos?: boolean;
-      ReferidosDepartamento?: boolean;
-      ReferidosMunicipio?: boolean;
-      ReferidosIglesia?: boolean;
-      ReferidosComuna?: boolean;
+  // Referidos
+  referidosTodos?: boolean;
+  referidosDepartamento?: boolean;
+  referidosMunicipio?: boolean;
+  referidosIglesia?: boolean;
+  referidosComuna?: boolean;
 
+  // Permisos
+  permisosTodos?: boolean;
+  permisosDepartamento?: boolean;
+  permisosMunicipio?: boolean;
+  permisosIglesia?: boolean;
+  permisosComuna?: boolean;
 
+  // Iglesias
+  crearIglesias?: boolean;
+  editarIglesias?: boolean;
+  eliminarIglesias?: boolean;
 
-      // Permisos
-      PermisosTodos?: boolean;
-      PermisosDepartamento?: boolean;
-      PermisosMunicipio?: boolean;
-      PermisosIglesia?: boolean;
-      PermisosComuna?: boolean;
-
-      //Iglesias
-      IglesiasTodas?: boolean;
-      IglesiasDepartamento?: boolean;
-      IglesiasMunicipio?: boolean;
-      IglesiasComuna?: boolean;
-
-      //Comunas
-      ComunasTodas?: boolean;
-      ComunasDepartamento?: boolean;
-      ComunasMunicipio?: boolean;
+  // Comunas
+  crearComunas?: boolean;
+  editarComunas?: boolean;
+  eliminarComunas?: boolean;
 
 }
