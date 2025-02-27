@@ -69,7 +69,7 @@ export class MiPerfilComponent implements OnInit {
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
       documento: ['', Validators.required],
-      celular: ['', Validators.required],
+      celular: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
       email: ['', Validators.required],
       departamento: ['', Validators.required],
       municipio: ['', Validators.required],

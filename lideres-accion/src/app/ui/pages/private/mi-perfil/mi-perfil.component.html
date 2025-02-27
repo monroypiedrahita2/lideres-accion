@@ -8,7 +8,7 @@
         <mg-input-text type="text" formControlName="nombres" id="names" label="Nombres"></mg-input-text>
         <mg-input-text type="text" formControlName="apellidos" id="lastNames" label="Apellidos"></mg-input-text>
         <mg-input-text type="text" formControlName="documento" id="document" label="Número de cédula"></mg-input-text>
-        <mg-input-text type="phone" formControlName="celular" id="phone" label="Célular"></mg-input-text>
+        <mg-input-text type="phone" formControlName="celular" id="phone" label="Célular o télefono" [minlength]="10" [maxlength]="10"></mg-input-text>
         <mg-input-text type="text" formControlName="email" id="email" label="Correo electrónico"></mg-input-text>
       </div>
 
