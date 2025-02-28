@@ -4,7 +4,7 @@ const screens = {
   sm: [
     {
       min: "300px",
-      max: "479px",
+      max: "599px",
     },
     {
       min: "300px",
@@ -12,11 +12,11 @@ const screens = {
   ],
   md: [
     {
-      min: "480px",
+      min: "600px",
       max: "767px",
     },
     {
-      min: "480px",
+      min: "600px",
     },
   ],
   lg: [
