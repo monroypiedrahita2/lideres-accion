@@ -44,7 +44,7 @@ import { ContainerGridComponent } from '../../../shared/components/atoms/contain
 })
 export class UsuarioComponent implements OnInit, OnChanges {
   form!: FormGroup;
-  user!: UsuarioModel;
+  user: UsuarioModel | undefined;
   principalText: 'Crear' | 'Editar' = 'Crear';
   departamentos: SelectOptionModel<string>[] = [];
   municipios: SelectOptionModel<string>[] = [];
@@ -225,6 +225,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
         }));
         if (this.user) {
           this.form.patchValue(this.user);
+          this.user = undefined
         }
       },
       error: (error) => {
