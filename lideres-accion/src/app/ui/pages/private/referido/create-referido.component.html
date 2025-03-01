@@ -11,10 +11,14 @@
   <!-- <mg-input-select formControlName="departamento" [label]="'Departamento'" id="departamento" [items]="departamentos"></mg-input-select> -->
 
   <mg-sub-title title="Lugar de residencia"></mg-sub-title>
+  <mg-container-grid [hiddenButtons]="true">
 
-  <mg-input-select formControlName="departamento" [label]="'Departamento'" id="departamento" [items]="departamentos"></mg-input-select>
-  <mg-input-select formControlName="municipio" [label]="'Municipio'" id="municipio" [items]="municipios"></mg-input-select>
-  <mg-input-text type="text" formControlName="direccion" id="direccion" label="Dirección"></mg-input-text>
+    <mg-input-select formControlName="departamento" [label]="'Departamento'" id="departamento" [items]="departamentos"></mg-input-select>
+    <mg-input-select formControlName="municipio" [label]="'Municipio'" id="municipio" [items]="municipios"></mg-input-select>
+    <mg-input-text type="text" formControlName="direccion" id="direccion" label="Dirección"></mg-input-text>
+
+
+  </mg-container-grid>
 
   <mg-sub-title title="Candidaturas a apoyar"></mg-sub-title>
 

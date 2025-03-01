@@ -6,5 +6,4 @@ export const LIST_ROLES: {label: string, value: string}[] = [
   { label: 'Coordinador de iglesia', value: 'Coordinador de iglesia' },
   { label: 'Apoyo de iglesia', value: 'Apoyo de iglesia' },
   { label: 'Coordinador de comuna', value: 'Coordinador de comuna' },
-  { label: 'Líder', value: 'Líder' },
 ]

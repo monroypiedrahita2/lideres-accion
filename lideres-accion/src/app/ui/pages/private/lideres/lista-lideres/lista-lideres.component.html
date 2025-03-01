@@ -1,0 +1,8 @@
+<mg-title [title]="'LISTA DE LÍDERES'"></mg-title>
+<mg-sub-title title="Filtrar por"></mg-sub-title>
+<form [formGroup]="form">
+  <mg-container-grid [principalText]="'Buscar'">
+    <mg-input-select formControlName="busqueda" [label]="'Buscar por'" id="busqueda" [items]="busqueda"></mg-input-select>
+    <mg-input-select formControlName="atributo" [label]="'Seleccione filtro'" id="atributo" [items]="atributo"></mg-input-select>
+  </mg-container-grid>
+</form>

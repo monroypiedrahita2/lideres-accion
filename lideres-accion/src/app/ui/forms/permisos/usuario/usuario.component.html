@@ -1,0 +1,26 @@
+
+    <mg-title title="Mi perfil"></mg-title>
+    <form [formGroup]="form">
+      <mg-container-grid [hiddenButtons]="true">
+        <mg-input-text type="text" formControlName="nombres" id="names" label="Nombres"></mg-input-text>
+        <mg-input-text type="text" formControlName="apellidos" id="lastNames" label="Apellidos"></mg-input-text>
+        <mg-input-text type="text" formControlName="documento" id="document" label="Número de cédula"></mg-input-text>
+        <mg-input-text type="phone" formControlName="celular" id="phone" label="Célular o télefono" [minlength]="10" [maxlength]="10"></mg-input-text>
+        <mg-input-text type="text" formControlName="email" id="email" label="Correo electrónico"></mg-input-text>
+      </mg-container-grid>
+
+      <div class="pt-5 px-2">
+        <mg-sub-title title="Datos de residencia"></mg-sub-title>
+      </div>
+      <mg-container-grid [principalText]="accion" [loading]="loading" [disabled]="form.invalid"  (onSubmit)="onSubmit()">
+        <mg-input-select formControlName="departamento" [label]="'Departamento'" id="departamento" [items]="departamentos"></mg-input-select>
+        <mg-input-select formControlName="municipio" [label]="'Municipio'" id="municipio" [items]="municipios"></mg-input-select>
+        <mg-input-select formControlName="comuna" [label]="'Comuna'" id="comuna" [items]="comunas"></mg-input-select>
+        <mg-input-select formControlName="barrio" [label]="'Barrio'" id="barrio" [items]="barrios"></mg-input-select>
+        <mg-input-text type="text" formControlName="direccion" id="adress" label="Dirección de residencia"></mg-input-text>
+        <mg-input-select formControlName="iglesia" [label]="'Iglesia dónde se congrega'" id="iglesia" [items]="iglesias"></mg-input-select>
+      </mg-container-grid>
+
+    </form>
+  
+

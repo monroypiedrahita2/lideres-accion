@@ -16,6 +16,7 @@ export const environment = {
       comundas: 'Comunas',
       iglesias: 'Iglesias',
       comunas: 'Comunas',
-      roles: 'Roles'
+      roles: 'Roles',
+      lideres: 'lideres'
     }
   };
