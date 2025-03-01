@@ -1,1 +1,16 @@
-<app-form-usuario></app-form-usuario>
+<mg-skeleton [enableSkeleton]="enableSkeleton" [num]="5"></mg-skeleton>
+
+
+@if (!enableSkeleton) {  
+  
+  <app-form-usuario
+  [data]="user"
+  [emailEnabled]="true"
+  [accion]="accion"
+  [title]="title" 
+  [loading]="loading"
+  [autoCompliteEmail]="true"
+  (onUserEvent)="onSubmit($event)"
+></app-form-usuario>
+
+}

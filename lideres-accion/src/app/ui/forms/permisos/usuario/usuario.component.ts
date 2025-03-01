@@ -55,6 +55,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
   @Input() loading: boolean = false;
   @Input() data!: UsuarioModel;
   @Input() accion!: 'Crear' | 'Editar';
+  @Input() title: string = 'MI PERFIL';
   @Input() emailEnabled: boolean = true;
   @Input() autoCompliteEmail: boolean = false;
   @Output() onUserEvent: EventEmitter<UsuarioModel> = new EventEmitter();
@@ -94,10 +95,13 @@ export class UsuarioComponent implements OnInit, OnChanges {
       this.getIglesiaByDepartamento(this.user.departamento);
     } else {
       this.accion = 'Crear';
-      this.form.patchValue({
-        email: this.auth.getEmail()
-      })
-      this.form.get('email')?.disable();
+      if (!this.emailEnabled) {
+        this.form.patchValue({
+          email: this.auth.getEmail()
+        })
+        this.form.get('email')?.disable();
+      }
+
     }
 
     this.form

@@ -31,7 +31,6 @@ export class MiPerfilComponent implements OnInit {
   async ngOnInit() {
     try {
       this.user = await this.perfilService.getMiPerfil(this.auth.uidUser());
-      console.log('mi-perfil', this.user);
       this.accion = this.user ? 'Editar' : 'Crear';
       this.enableSkeleton = false;
       this.emailEnabled = false;
@@ -60,7 +59,7 @@ export class MiPerfilComponent implements OnInit {
 
   async updateUser(data: UsuarioModel) {
     try {
-      await this.perfilService.updateDoc(this.auth.uidUser(), data);
+      await this.perfilService.updatePerfil(this.auth.uidUser(), data);
       this.toast.success('Usuario actualizado');
       this.location.back();
     } catch {

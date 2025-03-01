@@ -17,6 +17,6 @@ export const environment = {
       iglesias: 'Iglesias',
       comunas: 'Comunas',
       roles: 'Roles',
-      lideres: 'lideres'
+      lideres: 'Lideres'
     }
   };

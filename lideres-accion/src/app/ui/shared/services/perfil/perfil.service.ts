@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  addDoc,
   collection,
   collectionData,
   deleteDoc,
@@ -12,12 +11,9 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { BaseModel } from '../../../../models/base/base.model';
 import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
-import { AuthService } from '../auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { SelectOptionModel } from '../../../../models/base/select-options.model';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
 
 @Injectable({ providedIn: 'root' })
@@ -80,18 +76,7 @@ getMiPerfil(id: string): Promise<UsuarioModel> {
     }
   }
 
-  async updateperfilId(id: string, data: any) {
-    const docRef = doc(this.firestore, `${this._collection}/${id}`);
-    await updateDoc(docRef, data);
-  }
-
-  updatePerfil(uid: string, data: any) {
-    const document = doc(this.firestore, this._collection, uid);
-    return updateDoc(document, data);
-
-  }
-
-  updateDoc(id: string, newData: UsuarioModel) {
+  updatePerfil(id: string, newData: UsuarioModel) {
     const document = doc(this.firestore, this._collection, id);
     return updateDoc(document, { ...newData });
   }

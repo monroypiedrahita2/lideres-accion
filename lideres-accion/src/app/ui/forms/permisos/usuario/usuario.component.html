@@ -1,5 +1,5 @@
 
-    <mg-title title="Mi perfil"></mg-title>
+    <mg-title [title]="title"></mg-title>
     <form [formGroup]="form">
       <mg-container-grid [hiddenButtons]="true">
         <mg-input-text type="text" formControlName="nombres" id="names" label="Nombres"></mg-input-text>
