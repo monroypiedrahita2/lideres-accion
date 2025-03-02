@@ -63,6 +63,7 @@ module.exports = {
         'secundary': '#2a2e38',
         'tertiary': '#ffce00',
         'base': "#fafafa",
+        'base-two': "gray-500",
       },
       backgroundImage: {
         'azulmira-gradient': 'linear-gradient(to bottom, white 5%, #your-azulmira-color 5%)',

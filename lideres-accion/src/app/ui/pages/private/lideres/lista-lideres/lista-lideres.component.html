@@ -1,8 +1,22 @@
 <mg-title [title]="'LISTA DE LÍDERES'"></mg-title>
-<mg-sub-title title="Filtrar por"></mg-sub-title>
 <form [formGroup]="form">
-  <mg-container-grid [principalText]="'Buscar'">
-    <mg-input-select formControlName="busqueda" [label]="'Buscar por'" id="busqueda" [items]="busqueda"></mg-input-select>
-    <mg-input-select formControlName="atributo" [label]="'Seleccione filtro'" id="atributo" [items]="atributo"></mg-input-select>
+  <mg-container-grid [principalText]="'Buscar'" (onSubmit)="onSubmit()">
+    <mg-input-text
+      formControlName="busqueda"
+      [label]="'Nombre o documento'"
+      id="busqueda"
+    ></mg-input-text>
   </mg-container-grid>
 </form>
+
+<mg-container-grid [hiddenButtons]="true">
+  @for (lider of lideres; track lider.id) {
+  <azul-card-contacto
+  [titleL]="lider.data.nombres"
+  [subTitleL]="lider.data.apellidos"
+  [titleR]="lider.data.departamento.split('-')[1]"
+  [subTitleR]="lider.data.municipio.split('-')[1]"
+  > </azul-card-contacto>
+
+  }
+</mg-container-grid>
