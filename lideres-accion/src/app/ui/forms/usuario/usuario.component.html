@@ -1,5 +1,22 @@
+<mg-title [title]="title"></mg-title>
 
-    <mg-title [title]="title"></mg-title>
+
+@if(spinner) {
+  <div class="fixed top-0 left-0 z-40 w-full h-dvh bg-neutral-200 bg-opacity-45 flex flex-col justify-center items-center">
+    <div class="relative">
+      <span class="material-symbols-outlined animate-spin text-primary font-extralight text-9xl">
+          progress_activity
+       </span>
+      <span class="material-symbols-outlined animate-spin text-tertiary font-normal text-[104px] absolute top-3 left-3">
+        progress_activity
+     </span>
+    </div>
+    <span class="text-center font-primary text-2xl mt-4">Cargando información...</span>
+  </div>
+
+}
+
+@if(!showLugarVotacion) {
     <form [formGroup]="form">
       <mg-container-grid [hiddenButtons]="true">
         <mg-input-text type="text" formControlName="nombres" id="names" label="Nombres"></mg-input-text>
@@ -12,7 +29,7 @@
       <div class="pt-5 px-2">
         <mg-sub-title title="Datos de residencia"></mg-sub-title>
       </div>
-      <mg-container-grid [hiddenButtons]="true">
+      <mg-container-grid [principalText]="accion" [loading]="loading" [disabled]="form.invalid"  (onSubmit)="onSubmit()">
         <mg-input-select formControlName="departamento" [label]="'Departamento'" id="departamento" [items]="departamentos"></mg-input-select>
         <mg-input-select formControlName="municipio" [label]="'Municipio'" id="municipio" [items]="municipios"></mg-input-select>
         <mg-input-select formControlName="comuna" [label]="'Comuna'" id="comuna" [items]="comunas"></mg-input-select>
@@ -22,18 +39,53 @@
       </mg-container-grid>
     </form>
 
+
+  }
+
+
+    @if(showLugarVotacion) {
+      <form [formGroup]="form">
+        <mg-container-grid [hiddenButtons]="true">
+          <mg-input-text type="text" formControlName="nombres" id="names" label="Nombres"></mg-input-text>
+          <mg-input-text type="text" formControlName="apellidos" id="lastNames" label="Apellidos"></mg-input-text>
+          <mg-input-text type="text" formControlName="documento" id="document" label="Número de cédula"></mg-input-text>
+          <mg-input-text type="phone" formControlName="celular" id="phone" label="Célular o télefono" [minlength]="10" [maxlength]="10"></mg-input-text>
+          <mg-input-text type="text" formControlName="email" id="email" label="Correo electrónico"></mg-input-text>
+        </mg-container-grid>
+
+        <div class="pt-5 px-2">
+          <mg-sub-title title="Datos de residencia"></mg-sub-title>
+        </div>
+        <mg-container-grid [hiddenButtons]="true">
+          <mg-input-select formControlName="departamento" [label]="'Departamento'" id="departamento" [items]="departamentos"></mg-input-select>
+          <mg-input-select formControlName="municipio" [label]="'Municipio'" id="municipio" [items]="municipios"></mg-input-select>
+          <mg-input-select formControlName="comuna" [label]="'Comuna'" id="comuna" [items]="comunas"></mg-input-select>
+          <mg-input-select formControlName="barrio" [label]="'Barrio'" id="barrio" [items]="barrios"></mg-input-select>
+          <mg-input-text type="text" formControlName="direccion" id="adress" label="Dirección de residencia"></mg-input-text>
+          <mg-input-select formControlName="iglesia" [label]="'Iglesia dónde se congrega'" id="iglesia" [items]="iglesias"></mg-input-select>
+        </mg-container-grid>
+      </form>
       <div class="pt-5 px-2">
         <mg-sub-title title="Lugar de votación (Opcional)"></mg-sub-title>
-      </div>
 
-      <form [formGroup]="formVotacion">
-        <mg-container-grid [principalText]="accion" [loading]="loading" [disabled]="form.invalid"  (onSubmit)="onSubmit()">
-          <mg-input-select formControlName="departamento" [label]="'Departamento dónde vota'" id="departamentoVotacion" [items]="departamentos"></mg-input-select>
-          <mg-input-select formControlName="municipio" [label]="'Municipio dónde vota'" id="municipioVotacion" [items]="municipiosVotacion"></mg-input-select>
-          <mg-input-text type="text" formControlName="lugar" id="lugar" label="lugar de votación"></mg-input-text>
-          <mg-input-text type="text" formControlName="mesa" id="mesa" label="Mesa de votación"></mg-input-text>
-        </mg-container-grid>
-    </form>
+        <div class="flex sm:flex-col md:flex-row md:justify-between items-center sm:gap-2">
+          <mg-button text="Copir documento" icon="content_copy" type="reset" (onClick)="copyDocument()"></mg-button>
+          <mg-button text="Consultar lugar de votación" icon="how_to_vote" (onClick)="goToCenso()"></mg-button>
+        </div>
+
+        <form [formGroup]="formVotacion">
+          <mg-container-grid [principalText]="accion" [loading]="loading" [disabled]="form.invalid"  (onSubmit)="onSubmit()">
+            <mg-input-select formControlName="departamento" [label]="'Departamento dónde vota'" id="departamentoVotacion" [items]="departamentos"></mg-input-select>
+            <mg-input-select formControlName="municipio" [label]="'Municipio dónde vota'" id="municipioVotacion" [items]="municipiosVotacion"></mg-input-select>
+            <mg-input-text type="text" formControlName="lugar" id="lugar" label="Intitución o lugar de votación"></mg-input-text>
+            <mg-input-text type="text" formControlName="mesa" id="mesa" label="Mesa de votación"></mg-input-text>
+          </mg-container-grid>
+        </form>
+      </div>
+    }
+
+
+
 
 
 

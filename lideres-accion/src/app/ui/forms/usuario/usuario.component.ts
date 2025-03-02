@@ -31,6 +31,8 @@ import { LugaresService } from '../../shared/services/lugares/lugares.service';
 import { ComunaModel } from '../../../models/comuna/comuna.model';
 import { ComunaService } from '../../shared/services/comuna/comuna.service';
 import { ContainerGridComponent } from '../../shared/components/atoms/container-grid/container-grid.component';
+import { MatIconModule } from '@angular/material/icon';
+import { ButtonComponent } from '../../shared/components/atoms/button/button.component';
 
 @Component({
   selector: 'app-form-usuario',
@@ -45,6 +47,8 @@ import { ContainerGridComponent } from '../../shared/components/atoms/container-
     InputSelectComponent,
     SubTitleComponent,
     ContainerGridComponent,
+    MatIconModule,
+    ButtonComponent
   ],
   providers: [LugaresService, IglesiaService],
 })
@@ -59,7 +63,9 @@ export class UsuarioComponent implements OnInit, OnChanges {
   iglesias: SelectOptionModel<string | undefined>[] = [];
   comunas: SelectOptionModel<string | undefined>[] = [];
   barrios: SelectOptionModel<string>[] = [];
+  spinner: boolean = true
 
+  @Input() showLugarVotacion: boolean = false;
   @Input() loading: boolean = false;
   @Input() data!: UsuarioModel;
   @Input() accion!: 'Crear' | 'Editar';
@@ -98,12 +104,13 @@ export class UsuarioComponent implements OnInit, OnChanges {
       iglesia: ['', Validators.required],
     });
 
-    this.formVotacion = this.fb.group({
-      departamento: [''],
-      municipio: [''],
-      lugar: [''],
-      mesa: [''],
-    });
+      this.formVotacion = this.fb.group({
+        departamento: [''],
+        municipio: [''],
+        lugar: [''],
+        mesa: [''],
+      });
+
   }
 
   async ngOnInit() {
@@ -142,22 +149,6 @@ export class UsuarioComponent implements OnInit, OnChanges {
         }
       });
 
-    this.formVotacion
-      .get('departamento')
-      ?.valueChanges.pipe(distinctUntilChanged())
-      .subscribe((value) => {
-        if (value == '') {
-          this.formVotacion.get('municipio')?.setValue('');
-          this.formVotacion.get('lugar')?.setValue('');
-          this.formVotacion.get('mesa')?.setValue('');
-          this.municipios = [];
-          this.iglesias = [];
-          this.comunas = [];
-        } else {
-          this.getMunicipios(value.split('-')[0]);
-          this.getIglesiaByDepartamento(value);
-        }
-      });
 
     this.form
       .get('municipio')
@@ -180,6 +171,23 @@ export class UsuarioComponent implements OnInit, OnChanges {
           this.barrios = [];
         }
       });
+
+
+      if (this.showLugarVotacion) {
+        this.formVotacion
+          .get('departamento')
+          ?.valueChanges.pipe(distinctUntilChanged())
+          .subscribe((value) => {
+            if (value == '') {
+              this.formVotacion.get('municipio')?.setValue('');
+              this.formVotacion.get('lugar')?.setValue('');
+              this.formVotacion.get('mesa')?.setValue('');
+            } else {
+              this.getMunicipios(value.split('-')[0]);
+              this.getIglesiaByDepartamento(value);
+            }
+          });
+      }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -201,6 +209,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
         label: item.name,
         value: item.id + '-' + item.name,
       }));
+      this.municipiosVotacion = this.municipios
     } catch (error) {
       this.toast.error('Error al cargar los municipios');
       this.location.back();
@@ -216,6 +225,9 @@ export class UsuarioComponent implements OnInit, OnChanges {
         label: item.name,
         value: item.id + '-' + item.name,
       }));
+      if (!this.user) {
+        this.spinner = false
+      }
     } catch (error) {
       console.error(error);
       this.toast.error('Error al cargar los departamentos');
@@ -265,6 +277,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
         if (this.user) {
           this.form.patchValue(this.user);
           this.user = undefined;
+          this.spinner = false
         }
       },
       error: (error) => {
@@ -276,7 +289,30 @@ export class UsuarioComponent implements OnInit, OnChanges {
 
   async onSubmit() {
     this.form.get('email')?.enable();
-    this.onUserEvent.emit(this.form.value);
+    if (this.showLugarVotacion) {
+    this.onUserEvent.emit({...this.form.value, lugarVotacion: this.formVotacion.value});
+    } else {
+      this.onUserEvent.emit(this.form.value);
+    }
     this.form.get('email')?.disable();
+  }
+
+  goToCenso() {
+    window.open('https://wsp.registraduria.gov.co/censo/consultar/', '_blank');
+  }
+
+  copyDocument() {
+    const documento = this.form.get('documento')?.value;
+    navigator.clipboard.writeText(documento).then(() => {
+      if (documento == '') {
+        this.toast.warning( 'Diligencia primero los campos');
+
+      } else {
+        this.toast.success( documento + ' copiado al portapapeles');
+      }
+    }).catch(err => {
+      this.toast.error('Error al copiar el número de documento');
+      console.error('Error al copiar el número de documento: ', err);
+    });
   }
 }

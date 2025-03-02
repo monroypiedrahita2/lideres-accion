@@ -9,6 +9,7 @@ import { SkeletonComponent } from '../../../../shared/components/organism/skelet
 import { LiderService } from '../../../../shared/services/lider/lider.service';
 import { BaseModel } from '../../../../../models/base/base.model';
 import { AuthService } from '../../../../shared/services/auth/auth.service';
+import { LiderModel } from '../../../../../models/lider/lider.model';
 
 @Component({
   selector: 'app-create-lider',
@@ -43,8 +44,8 @@ export class CreateLiderComponent implements OnInit {
     }
   }
 
-  async onSubmit(data: UsuarioModel) {
-    const user: BaseModel<UsuarioModel> = {
+  async onSubmit(data: LiderModel) {
+    const user: BaseModel<LiderModel> = {
       data: data,
       fechaCreacion: new Date().toISOString(),
       creadoPor: this.auth.uidUser(),
