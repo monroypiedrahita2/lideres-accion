@@ -1,6 +1,14 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { TitleComponent } from '../../shared/components/atoms/title/title.component';
 import { RouterModule } from '@angular/router';
 import {
   FormBuilder,
@@ -8,23 +16,21 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
-import { PerfilService } from '../../../shared/services/perfil/perfil.service';
-import { AuthService } from '../../../shared/services/auth/auth.service';
+import { InputTextComponent } from '../../shared/components/atoms/input-text/input-text.component';
+import { AuthService } from '../../shared/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
-import { SelectOptionModel } from '../../../../models/base/select-options.model';
-import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
-import { InputSelectComponent } from '../../../shared/components/atoms/input-select/input-select.component';
-import { BaseModel } from '../../../../models/base/base.model';
-import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
-import { IglesiaService } from '../../../shared/services/iglesia/iglesia.service';
-import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/sub-title.component';
+import { SelectOptionModel } from '../../../models/base/select-options.model';
+import { IglesiaModel } from '../../../models/iglesia/iglesia.model';
+import { InputSelectComponent } from '../../shared/components/atoms/input-select/input-select.component';
+import { BaseModel } from '../../../models/base/base.model';
+import { UsuarioModel } from '../../../models/usuarios/usuario.model';
+import { IglesiaService } from '../../shared/services/iglesia/iglesia.service';
+import { SubTitleComponent } from '../../shared/components/atoms/sub-title/sub-title.component';
 import { distinctUntilChanged, lastValueFrom } from 'rxjs';
-import { LugaresService } from '../../../shared/services/lugares/lugares.service';
-import { ComunaModel } from '../../../../models/comuna/comuna.model';
-import { ComunaService } from '../../../shared/services/comuna/comuna.service';
-import { ContainerGridComponent } from '../../../shared/components/atoms/container-grid/container-grid.component';
+import { LugaresService } from '../../shared/services/lugares/lugares.service';
+import { ComunaModel } from '../../../models/comuna/comuna.model';
+import { ComunaService } from '../../shared/services/comuna/comuna.service';
+import { ContainerGridComponent } from '../../shared/components/atoms/container-grid/container-grid.component';
 
 @Component({
   selector: 'app-form-usuario',
@@ -38,16 +44,18 @@ import { ContainerGridComponent } from '../../../shared/components/atoms/contain
     InputTextComponent,
     InputSelectComponent,
     SubTitleComponent,
-    ContainerGridComponent
+    ContainerGridComponent,
   ],
   providers: [LugaresService, IglesiaService],
 })
 export class UsuarioComponent implements OnInit, OnChanges {
   form!: FormGroup;
+  formVotacion!: FormGroup;
   user: UsuarioModel | undefined;
   principalText: 'Crear' | 'Editar' = 'Crear';
   departamentos: SelectOptionModel<string>[] = [];
   municipios: SelectOptionModel<string>[] = [];
+  municipiosVotacion: SelectOptionModel<string>[] = [];
   iglesias: SelectOptionModel<string | undefined>[] = [];
   comunas: SelectOptionModel<string | undefined>[] = [];
   barrios: SelectOptionModel<string>[] = [];
@@ -62,7 +70,6 @@ export class UsuarioComponent implements OnInit, OnChanges {
 
   constructor(
     private fb: FormBuilder,
-    private perfilService: PerfilService,
     private location: Location,
     private auth: AuthService,
     private toast: ToastrService,
@@ -74,7 +81,14 @@ export class UsuarioComponent implements OnInit, OnChanges {
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
       documento: ['', Validators.required],
-      celular: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]],
+      celular: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(10),
+          Validators.minLength(10),
+        ],
+      ],
       email: [''],
       departamento: ['', Validators.required],
       municipio: ['', Validators.required],
@@ -82,6 +96,13 @@ export class UsuarioComponent implements OnInit, OnChanges {
       barrio: ['', Validators.required],
       direccion: ['', Validators.required],
       iglesia: ['', Validators.required],
+    });
+
+    this.formVotacion = this.fb.group({
+      departamento: [''],
+      municipio: [''],
+      lugar: [''],
+      mesa: [''],
     });
   }
 
@@ -97,27 +118,41 @@ export class UsuarioComponent implements OnInit, OnChanges {
       this.accion = 'Crear';
       if (!this.emailEnabled) {
         this.form.patchValue({
-          email: this.auth.getEmail()
-        })
+          email: this.auth.getEmail(),
+        });
         this.form.get('email')?.disable();
       }
-
     }
 
     this.form
       .get('departamento')
       ?.valueChanges.pipe(distinctUntilChanged())
       .subscribe((value) => {
-
         if (value == '') {
           this.form.get('municipio')?.setValue('');
           this.form.get('comuna')?.setValue('');
           this.form.get('barrio')?.setValue('');
           this.form.get('iglesia')?.setValue('');
-          this.municipios = []
+          this.municipios = [];
           this.iglesias = [];
           this.comunas = [];
+        } else {
+          this.getMunicipios(value.split('-')[0]);
+          this.getIglesiaByDepartamento(value);
+        }
+      });
 
+    this.formVotacion
+      .get('departamento')
+      ?.valueChanges.pipe(distinctUntilChanged())
+      .subscribe((value) => {
+        if (value == '') {
+          this.formVotacion.get('municipio')?.setValue('');
+          this.formVotacion.get('lugar')?.setValue('');
+          this.formVotacion.get('mesa')?.setValue('');
+          this.municipios = [];
+          this.iglesias = [];
+          this.comunas = [];
         } else {
           this.getMunicipios(value.split('-')[0]);
           this.getIglesiaByDepartamento(value);
@@ -142,7 +177,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
       .subscribe((value) => {
         if (value == '') {
           this.form.get('barrio')?.setValue('');
-          this.barrios = []
+          this.barrios = [];
         }
       });
   }
@@ -190,8 +225,8 @@ export class UsuarioComponent implements OnInit, OnChanges {
 
   private async loadUserProfile() {
     try {
-      this.user = this.data
-      this.user ? this.accion = 'Crear' : this.accion = 'Editar'
+      this.user = this.data;
+      this.user ? (this.accion = 'Crear') : (this.accion = 'Editar');
     } catch (error) {
       console.error(error);
     }
@@ -229,7 +264,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
         }));
         if (this.user) {
           this.form.patchValue(this.user);
-          this.user = undefined
+          this.user = undefined;
         }
       },
       error: (error) => {
@@ -238,9 +273,6 @@ export class UsuarioComponent implements OnInit, OnChanges {
       },
     });
   }
-
-
-
 
   async onSubmit() {
     this.form.get('email')?.enable();

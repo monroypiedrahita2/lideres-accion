@@ -5,7 +5,7 @@ import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
-import { UsuarioComponent } from '../../../forms/permisos/usuario/usuario.component';
+import { UsuarioComponent } from '../../../forms/usuario/usuario.component';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
 
 @Component({

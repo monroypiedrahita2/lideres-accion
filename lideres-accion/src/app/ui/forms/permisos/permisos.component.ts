@@ -1,6 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { InputSelectComponent } from '../../shared/components/atoms/input-select/input-select.component';
 import { TitleComponent } from '../../shared/components/atoms/title/title.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ContainerGridComponent } from '../../shared/components/atoms/container-grid/container-grid.component';
@@ -12,7 +11,6 @@ import { PermisosModel } from '../../../models/roles/roles.model';
   standalone: true,
   imports: [
     CommonModule,
-    InputSelectComponent,
     TitleComponent,
     SubTitleComponent,
     ReactiveFormsModule,

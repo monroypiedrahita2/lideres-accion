@@ -12,7 +12,7 @@
       <div class="pt-5 px-2">
         <mg-sub-title title="Datos de residencia"></mg-sub-title>
       </div>
-      <mg-container-grid [principalText]="accion" [loading]="loading" [disabled]="form.invalid"  (onSubmit)="onSubmit()">
+      <mg-container-grid [hiddenButtons]="true">
         <mg-input-select formControlName="departamento" [label]="'Departamento'" id="departamento" [items]="departamentos"></mg-input-select>
         <mg-input-select formControlName="municipio" [label]="'Municipio'" id="municipio" [items]="municipios"></mg-input-select>
         <mg-input-select formControlName="comuna" [label]="'Comuna'" id="comuna" [items]="comunas"></mg-input-select>
@@ -20,7 +20,20 @@
         <mg-input-text type="text" formControlName="direccion" id="adress" label="Dirección de residencia"></mg-input-text>
         <mg-input-select formControlName="iglesia" [label]="'Iglesia dónde se congrega'" id="iglesia" [items]="iglesias"></mg-input-select>
       </mg-container-grid>
-
     </form>
-  
+
+      <div class="pt-5 px-2">
+        <mg-sub-title title="Lugar de votación (Opcional)"></mg-sub-title>
+      </div>
+
+      <form [formGroup]="formVotacion">
+        <mg-container-grid [principalText]="accion" [loading]="loading" [disabled]="form.invalid"  (onSubmit)="onSubmit()">
+          <mg-input-select formControlName="departamento" [label]="'Departamento dónde vota'" id="departamentoVotacion" [items]="departamentos"></mg-input-select>
+          <mg-input-select formControlName="municipio" [label]="'Municipio dónde vota'" id="municipioVotacion" [items]="municipiosVotacion"></mg-input-select>
+          <mg-input-text type="text" formControlName="lugar" id="lugar" label="lugar de votación"></mg-input-text>
+          <mg-input-text type="text" formControlName="mesa" id="mesa" label="Mesa de votación"></mg-input-text>
+        </mg-container-grid>
+    </form>
+
+
 
