@@ -1,20 +1,8 @@
 <mg-title [title]="title"></mg-title>
 
 
-@if(spinner) {
-  <div class="fixed top-0 left-0 z-40 w-full h-dvh bg-neutral-200 bg-opacity-45 flex flex-col justify-center items-center">
-    <div class="relative">
-      <span class="material-symbols-outlined animate-spin text-primary font-extralight text-9xl">
-          progress_activity
-       </span>
-      <span class="material-symbols-outlined animate-spin text-tertiary font-normal text-[104px] absolute top-3 left-3">
-        progress_activity
-     </span>
-    </div>
-    <span class="text-center font-primary text-2xl mt-4">Cargando información...</span>
-  </div>
+  <app-spinner [showSpinner]="spinner"></app-spinner>
 
-}
 
 @if(!showLugarVotacion) {
     <form [formGroup]="form">
@@ -69,8 +57,8 @@
         <mg-sub-title title="Lugar de votación (Opcional)"></mg-sub-title>
 
         <div class="flex sm:flex-col md:flex-row md:justify-between items-center sm:gap-2">
-          <mg-button text="Copir documento" icon="content_copy" type="reset" (onClick)="copyDocument()"></mg-button>
-          <mg-button text="Consultar lugar de votación" icon="how_to_vote" (onClick)="goToCenso()"></mg-button>
+          <mg-button text="Policia Nacional (confirmar nombre)" icon="local_police" type="reset" (onClick)="goToPage('https://antecedentes.policia.gov.co:7005/WebJudicial/antecedentes.xhtml')"></mg-button>
+          <mg-button text="Consultar lugar de votación" icon="how_to_vote" (onClick)="goToPage('https://wsp.registraduria.gov.co/censo/consultar/')"></mg-button>
         </div>
 
         <form [formGroup]="formVotacion">

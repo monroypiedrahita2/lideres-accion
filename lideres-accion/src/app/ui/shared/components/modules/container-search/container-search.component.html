@@ -1,0 +1,22 @@
+<form [formGroup]="form">
+  <mg-container-grid [principalText]="'Buscar'" [disabled]="form.invalid" (onSubmit)="onSubmit()">
+    <mg-input-select
+    formControlName="filter"
+    [label]="'Filtrar por'"
+    id="filter"
+    [items]="filter"
+    ></mg-input-select>
+
+    @if (form.value.filter != 'todos') {
+      <mg-input-select
+      formControlName="atribute"
+      [label]="'Seleccionar opción'"
+      id="filter"
+      [items]="atribute"
+      ></mg-input-select>
+    }
+  </mg-container-grid>
+</form>
+
+
+

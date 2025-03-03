@@ -13,7 +13,7 @@ export interface UsuarioModel {
   direccion: string;
   celular: string;
   email: string;
-  iglesia?: string;
+  iglesia: string;
   rol?: RolesModel;
 }
 

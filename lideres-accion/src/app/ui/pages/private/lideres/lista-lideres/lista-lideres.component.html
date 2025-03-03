@@ -1,22 +1,16 @@
+<app-spinner [showSpinner]="spinner"></app-spinner>
+
 <mg-title [title]="'LISTA DE LÍDERES'"></mg-title>
-<form [formGroup]="form">
-  <mg-container-grid [principalText]="'Buscar'" (onSubmit)="onSubmit()">
-    <mg-input-text
-      formControlName="busqueda"
-      [label]="'Nombre o documento'"
-      id="busqueda"
-    ></mg-input-text>
-  </mg-container-grid>
-</form>
+<app-container-search [data]="lideres" (onSubmitSearch)="onSearch($event)"></app-container-search>
 
 <mg-container-grid [hiddenButtons]="true">
-  @for (lider of lideres; track lider.id) {
+  @for (lider of data; track lider.id) {
   <azul-card-contacto
-  [titleL]="lider.data.nombres"
-  [subTitleL]="lider.data.apellidos"
-  [titleR]="lider.data.departamento.split('-')[1]"
-  [subTitleR]="lider.data.municipio.split('-')[1]"
-  > </azul-card-contacto>
-
+    [titleL]="lider.data.nombres"
+    [subTitleL]="lider.data.apellidos"
+    [titleR]="lider.data.barrio"
+    [subTitleR]="lider.data.iglesia.split('-')[0]"
+  >
+  </azul-card-contacto>
   }
 </mg-container-grid>

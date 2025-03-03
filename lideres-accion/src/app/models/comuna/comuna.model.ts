@@ -2,7 +2,7 @@
 export interface ComunaModel {
     nombre: string;
     departamento: string;
-    municipio: number;
+    municipio: string;
     barrios: string[];
 }
 

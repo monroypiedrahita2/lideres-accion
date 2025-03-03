@@ -33,6 +33,7 @@ import { ComunaService } from '../../shared/services/comuna/comuna.service';
 import { ContainerGridComponent } from '../../shared/components/atoms/container-grid/container-grid.component';
 import { MatIconModule } from '@angular/material/icon';
 import { ButtonComponent } from '../../shared/components/atoms/button/button.component';
+import { SpinnerComponent } from '../../shared/components/modules/spinner/spinner.component';
 
 @Component({
   selector: 'app-form-usuario',
@@ -48,9 +49,10 @@ import { ButtonComponent } from '../../shared/components/atoms/button/button.com
     SubTitleComponent,
     ContainerGridComponent,
     MatIconModule,
-    ButtonComponent
+    ButtonComponent,
+    SpinnerComponent
   ],
-  providers: [LugaresService, IglesiaService],
+  providers: [LugaresService],
 })
 export class UsuarioComponent implements OnInit, OnChanges {
   form!: FormGroup;
@@ -158,6 +160,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
           this.form.get('comuna')?.setValue('');
           this.form.get('barrio')?.setValue('');
           this.form.get('iglesia')?.setValue('');
+          this.barrios = []
         } else {
           this.getComunas(value);
         }
@@ -168,7 +171,9 @@ export class UsuarioComponent implements OnInit, OnChanges {
       .subscribe((value) => {
         if (value == '') {
           this.form.get('barrio')?.setValue('');
-          this.barrios = [];
+         this.form.patchValue({
+          barrio: ''
+         })
         }
       });
 
@@ -249,12 +254,12 @@ export class UsuarioComponent implements OnInit, OnChanges {
       next: (comunas) => {
         this.comunas = comunas.map((comuna: BaseModel<ComunaModel>) => ({
           label: comuna.data.nombre,
-          value: comuna.id,
+          value: comuna.data.nombre + '-' + comuna.data.municipio.split('-')[1],
         }));
         this.barrios = comunas.flatMap((comuna: BaseModel<ComunaModel>) =>
           comuna?.data.barrios.map((barrio: string) => ({
             label: barrio,
-            value: barrio,
+            value: barrio + '-' + comuna.data.municipio.split('-')[1],
           }))
         );
       },
@@ -272,7 +277,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
       next: (iglesias) => {
         this.iglesias = iglesias.map((iglesia: BaseModel<IglesiaModel>) => ({
           label: iglesia.data.nombre,
-          value: iglesia.id,
+          value: iglesia.data.nombre + '-' + iglesia.data.municipio.split('-')[1],
         }));
         if (this.user) {
           this.form.patchValue(this.user);
@@ -297,22 +302,27 @@ export class UsuarioComponent implements OnInit, OnChanges {
     this.form.get('email')?.disable();
   }
 
-  goToCenso() {
-    window.open('https://wsp.registraduria.gov.co/censo/consultar/', '_blank');
+  async goToPage(page: string) {
+    await this.copyDocument()
+    window.open(page, '_blank');
   }
 
-  copyDocument() {
+  async copyDocument() {
     const documento = this.form.get('documento')?.value;
-    navigator.clipboard.writeText(documento).then(() => {
-      if (documento == '') {
-        this.toast.warning( 'Diligencia primero los campos');
+    if (documento == '') {
+      this.toast.warning('Flata diligenciar el número de documento');
 
+    }
+    try {
+      await navigator.clipboard.writeText(documento);
+      if (documento == '') {
+        this.toast.warning('Diligencia primero los campos');
       } else {
-        this.toast.success( documento + ' copiado al portapapeles');
+        this.toast.success(documento + ' copiado al portapapeles');
       }
-    }).catch(err => {
+    } catch (err) {
       this.toast.error('Error al copiar el número de documento');
       console.error('Error al copiar el número de documento: ', err);
-    });
+    }
   }
 }
