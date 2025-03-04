@@ -164,6 +164,19 @@ export class UsuarioComponent implements OnInit, OnChanges {
         }
       });
 
+      this.formVotacion
+      .get('departamento')
+      ?.valueChanges.pipe(distinctUntilChanged())
+      .subscribe((value) => {
+        if (value == '') {
+          this.formVotacion.get('municipio')?.setValue('');
+          this.municipiosVotacion = [];
+        } else {
+          this.getMunicipios(value.split('-')[0]);
+          this.getIglesiaByDepartamento(value);
+        }
+      });
+
 
     this.form
       .get('municipio')
@@ -228,6 +241,21 @@ export class UsuarioComponent implements OnInit, OnChanges {
         value: item.id + '-' + item.name,
       }));
       this.municipiosVotacion = this.municipios
+    } catch (error) {
+      this.toast.error('Error al cargar los municipios');
+      this.location.back();
+    }
+  }
+
+  async getMunicipiosVotacion(departamento_id: string) {
+    try {
+      const response = await lastValueFrom(
+        this.lugarService.getMunicipios(departamento_id)
+      );
+      this.municipiosVotacion = response.map((item: any) => ({
+        label: item.name,
+        value: item.id + '-' + item.name,
+      }));
     } catch (error) {
       this.toast.error('Error al cargar los municipios');
       this.location.back();
