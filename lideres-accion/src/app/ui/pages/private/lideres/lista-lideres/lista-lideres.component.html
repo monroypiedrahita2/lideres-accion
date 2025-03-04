@@ -23,8 +23,16 @@
 @if (data.length > 0) {
 
 <div class="sm:hidden lg:block">
-  <div class="font-primary text-lg">
-    Total registros: {{ data.length }} líderes
+
+  <div class="flex justify-between items-end">
+
+    <div class="font-primary text-lg">
+      Total registros: {{ data.length }} líderes
+    </div>
+    <div class="p-4">
+      <mg-button (onClick)="descargar(data)" icon="cloud_download" text="Descargar"></mg-button>
+    </div>
+
   </div>
 
   <!-- TABLE  -->
@@ -63,6 +71,9 @@
               Lugar de votación
             </th>
             <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Mesa
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
               Total referidos
             </th>
             <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
@@ -97,10 +108,13 @@
               {{ lider.data.barrio }}
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-              {{ lider.data.lugarVotacion?.municipio }}
+              {{ lider.data.lugarVotacion?.municipio}}
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
               {{ lider.data.lugarVotacion?.lugar }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ lider.data.lugarVotacion?.mesa}}
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
               3
@@ -117,9 +131,7 @@
     </div>
   </div>
 
-  <div class="p-4">
-    <mg-button icon="cloud_download" text="Descargar"></mg-button>
-  </div>
+
 </div>
 
 }

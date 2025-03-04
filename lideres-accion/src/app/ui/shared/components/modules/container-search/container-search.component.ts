@@ -1,20 +1,18 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
 } from '@angular/forms';
-import { InputTextComponent } from '../../atoms/input-text/input-text.component';
 import { InputSelectComponent } from '../../atoms/input-select/input-select.component';
 import { ContainerGridComponent } from '../../atoms/container-grid/container-grid.component';
 import { SelectOptionModel } from '../../../../../models/base/select-options.model';
 import { LugaresService } from '../../../services/lugares/lugares.service';
 import { distinctUntilChanged } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
 import { BaseModel } from '../../../../../models/base/base.model';
 import { LiderModel } from '../../../../../models/lider/lider.model';
+import { ButtonComponent } from '../../atoms/button/button.component';
 
 @Component({
   selector: 'app-container-search',
@@ -22,9 +20,9 @@ import { LiderModel } from '../../../../../models/lider/lider.model';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    InputTextComponent,
     InputSelectComponent,
     ContainerGridComponent,
+    ButtonComponent
   ],
   providers: [LugaresService],
   templateUrl: './container-search.component.html',
@@ -48,8 +46,6 @@ export class ContainerSearchComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private lugarService: LugaresService,
-    private location: Location
   ) {
     this.form = this.fb.group({
       filter: [''],

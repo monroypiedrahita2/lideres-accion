@@ -254,7 +254,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
       );
       this.municipiosVotacion = response.map((item: any) => ({
         label: item.name,
-        value: item.id + '-' + item.name,
+        value: item.name,
       }));
     } catch (error) {
       this.toast.error('Error al cargar los municipios');
@@ -322,6 +322,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
         }));
         if (this.user) {
           this.form.patchValue(this.user);
+          this.formVotacion.patchValue(this.user);
           this.user = undefined;
           this.spinner = false
         }
