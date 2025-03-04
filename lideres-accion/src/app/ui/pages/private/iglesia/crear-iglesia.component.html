@@ -24,12 +24,73 @@
       label="Nombre de la iglesia"
       id="name"
     ></mg-input-text>
-      <mg-input-text
+      <mg-input-select
       type="text"
       formControlName="horario"
       label="horario del culto"
       id="horario"
-    ></mg-input-text>
+      [items]="horarios"
+    ></mg-input-select>
 
     </mg-container-grid>
 </form>
+
+
+<div class="relative overflow-x-auto mt-10">
+  <div>
+    <table
+      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+    >
+      <thead
+        class="text-sm text-white uppercase bg-primary dark:bg-primary dark:text-gray-400 font-primary"
+      >
+        <tr>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Departamento
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Municipio
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Nombre
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Culto
+          </th>
+          <!-- <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Acciones
+          </th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let iglesia of iglesias"
+          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-100"
+        >
+          <th
+            scope="row"
+            class="px-6 py-4 font-medium whitespace-nowrap text-black dark:text-white"
+          >
+            {{ iglesia.data.departamento.split("-")[1] }}
+          </th>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{ iglesia.data.municipio.split("-")[1] }}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{ iglesia.data.nombre.split(' - ')[0] }}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{ iglesia.data.nombre.split(' - ')[1] }}
+          </td>
+          <!-- <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            <div class="flex justify-center gap-4">
+              <span class="material-icons text-primary">delete</span>
+            </div>
+          </td> -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<app-spinner [showSpinner]="spinner"></app-spinner>

@@ -72,7 +72,6 @@ export class ContainerSearchComponent implements OnInit {
   }
 
   getSelectOfData(atribute: string) {
-    console.log(this.data);
     console.log('form', this.form.value.filter);
     this.atribute = this.data.map((item: any) => ({
       label: item.data[atribute],

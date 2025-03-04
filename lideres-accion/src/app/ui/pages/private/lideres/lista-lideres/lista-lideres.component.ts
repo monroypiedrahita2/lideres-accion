@@ -11,6 +11,7 @@ import { LiderModel } from '../../../../../models/lider/lider.model';
 import { CardContactoComponent } from '../../../../shared/components/organism/card-contact/card-contacto.component';
 import { SpinnerComponent } from '../../../../shared/components/modules/spinner/spinner.component';
 import { ContainerSearchComponent } from '../../../../shared/components/modules/container-search/container-search.component';
+import { ButtonComponent } from '../../../../shared/components/atoms/button/button.component';
 
 @Component({
   selector: 'app-lista-lideres',
@@ -23,7 +24,8 @@ import { ContainerSearchComponent } from '../../../../shared/components/modules/
     CardContactoComponent,
     ContainerGridComponent,
     SpinnerComponent,
-    ContainerSearchComponent
+    ContainerSearchComponent,
+    ButtonComponent
   ],
   providers: [LugaresService],
   templateUrl: './lista-lideres.component.html',
