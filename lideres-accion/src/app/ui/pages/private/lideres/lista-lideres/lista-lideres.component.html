@@ -3,14 +3,108 @@
 <mg-title [title]="'LISTA DE LÍDERES'"></mg-title>
 <app-container-search [data]="lideres" (onSubmitSearch)="onSearch($event)"></app-container-search>
 
-<mg-container-grid [hiddenButtons]="true">
-  @for (lider of data; track lider.id) {
-  <azul-card-contacto
-    [titleL]="lider.data.nombres"
-    [subTitleL]="lider.data.apellidos"
-    [titleR]="lider.data.barrio"
-    [subTitleR]="lider.data.iglesia.split('-')[0]"
-  >
-  </azul-card-contacto>
-  }
-</mg-container-grid>
+<div class="sm:block lg:hidden">
+  <mg-container-grid [hiddenButtons]="true">
+    @for (lider of data; track lider.id) {
+    <azul-card-contacto
+      [titleL]="lider.data.nombres"
+      [subTitleL]="lider.data.apellidos"
+      [titleR]="lider.data.barrio"
+      [subTitleR]="lider.data.iglesia.split('-')[0]"
+    >
+    </azul-card-contacto>
+    }
+  </mg-container-grid>
+</div>
+
+
+
+@if (data.length > 0) {
+
+  <div class="font-primary text-lg">
+    Total registros:  {{data.length}} líderes
+  </div>
+
+
+
+<!-- TABLE  -->
+
+<div class="relative overflow-x-auto">
+  <div>
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead class="text-sm text-white uppercase bg-primary dark:bg-primary dark:text-gray-400 font-primary">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Departamento
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Municipio
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Iglesia
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Documento
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Nombres
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Barrio
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Municipio de votación
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Lugar de votación
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Total referidos
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Acciones
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let lider of data" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-100">
+          <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap text-black dark:text-white">
+            {{lider.data.departamento.split('-')[1]}}
+          </th>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{lider.data.municipio.split('-')[1]}}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{lider.data.iglesia.split('-')[0]}}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{lider.data.documento}}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{lider.data.nombres + ' ' + lider.data.apellidos}}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{lider.data.barrio}}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{lider.data.lugarVotacion?.municipio}}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{lider.data.lugarVotacion?.lugar}}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            3
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            <div class="flex gap-4">
+              <span class="material-icons text-primary">edit</span>
+              <span class="material-icons text-primary">delete</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+}

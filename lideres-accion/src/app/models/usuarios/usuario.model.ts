@@ -9,11 +9,13 @@ export interface UsuarioModel {
   departamento: string;
   municipio: string;
   comuna: string;
+  // comuna_id: string;
   barrio: string;
   direccion: string;
   celular: string;
   email: string;
   iglesia: string;
+  // iglesia_id: string;
   rol?: RolesModel;
 }
 

@@ -54,6 +54,7 @@ export class CrearIglesiaComponent implements OnInit {
       nombre: ['', Validators.required],
       departamento: ['', Validators.required],
       municipio: ['', Validators.required],
+      horario: ['', Validators.required],
     });
   }
 
@@ -113,7 +114,7 @@ export class CrearIglesiaComponent implements OnInit {
     try {
       this.iglesia = {
         data: {
-          nombre: this.form.value.nombre,
+          nombre: this.form.value.nombre + ' - ' + this.form.value.horario,
           departamento: this.form.value.departamento,
           municipio: this.form.value.municipio,
         },

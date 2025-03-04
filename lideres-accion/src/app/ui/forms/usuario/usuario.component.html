@@ -53,6 +53,20 @@
           <mg-input-select formControlName="iglesia" [label]="'Iglesia dónde se congrega'" id="iglesia" [items]="iglesias"></mg-input-select>
         </mg-container-grid>
       </form>
+
+
+      <div class="pt-5 px-2">
+        <mg-sub-title title="Otros datos (Opcional)"></mg-sub-title>
+        <form [formGroup]="formOtrosDatos">
+          <mg-container-grid [hiddenButtons]="true">
+            <mg-input-select formControlName="esEmprendedor" [label]="'El lider tiene emprendimiento'" id="emprendiimiento" [items]="esEmprendedor"></mg-input-select>
+            <mg-input-text type="date" formControlName="fechaNacimiento" id="dateBorn" label="Fecha de nacimiento"></mg-input-text>
+          </mg-container-grid>
+        </form>
+      </div>
+
+
+
       <div class="pt-5 px-2">
         <mg-sub-title title="Lugar de votación (Opcional)"></mg-sub-title>
 
@@ -60,6 +74,7 @@
           <mg-button text="Policia Nacional (confirmar nombre)" icon="local_police" type="reset" (onClick)="goToPage('https://antecedentes.policia.gov.co:7005/WebJudicial/antecedentes.xhtml')"></mg-button>
           <mg-button text="Consultar lugar de votación" icon="how_to_vote" (onClick)="goToPage('https://wsp.registraduria.gov.co/censo/consultar/')"></mg-button>
         </div>
+
 
         <form [formGroup]="formVotacion">
           <mg-container-grid [principalText]="accion" [loading]="loading" [disabled]="form.invalid"  (onSubmit)="onSubmit()">
@@ -71,6 +86,10 @@
         </form>
       </div>
     }
+
+
+
+
 
 
 

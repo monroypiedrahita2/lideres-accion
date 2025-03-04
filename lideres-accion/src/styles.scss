@@ -8,4 +8,27 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .text-shadow {
     text-shadow: 1px 1px 2px black;
   }
-  
+
+
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* Estilo para la pista de la barra de desplazamiento */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  /* Estilo para el pulgar de la barra de desplazamiento */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+
+  /* Estilo para el pulgar de la barra de desplazamiento al pasar el mouse */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+

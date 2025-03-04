@@ -57,6 +57,7 @@ import { SpinnerComponent } from '../../shared/components/modules/spinner/spinne
 export class UsuarioComponent implements OnInit, OnChanges {
   form!: FormGroup;
   formVotacion!: FormGroup;
+  formOtrosDatos!: FormGroup;
   user: UsuarioModel | undefined;
   principalText: 'Crear' | 'Editar' = 'Crear';
   departamentos: SelectOptionModel<string>[] = [];
@@ -66,6 +67,11 @@ export class UsuarioComponent implements OnInit, OnChanges {
   comunas: SelectOptionModel<string | undefined>[] = [];
   barrios: SelectOptionModel<string>[] = [];
   spinner: boolean = true
+
+  esEmprendedor: SelectOptionModel<boolean>[] = [
+    { label: 'No', value: false },
+    { label: 'Sí', value: true },
+  ]
 
   @Input() showLugarVotacion: boolean = false;
   @Input() loading: boolean = false;
@@ -112,6 +118,13 @@ export class UsuarioComponent implements OnInit, OnChanges {
         lugar: [''],
         mesa: [''],
       });
+
+      this.formOtrosDatos = this.fb.group({
+        esEmprendedor: [''],
+        actividadEconomica: [''],
+        fechaNacimiento: ['']
+      })
+
 
   }
 
@@ -292,15 +305,6 @@ export class UsuarioComponent implements OnInit, OnChanges {
     });
   }
 
-  async onSubmit() {
-    this.form.get('email')?.enable();
-    if (this.showLugarVotacion) {
-    this.onUserEvent.emit({...this.form.value, lugarVotacion: this.formVotacion.value});
-    } else {
-      this.onUserEvent.emit(this.form.value);
-    }
-    this.form.get('email')?.disable();
-  }
 
   async goToPage(page: string) {
     await this.copyDocument()
@@ -324,5 +328,16 @@ export class UsuarioComponent implements OnInit, OnChanges {
       this.toast.error('Error al copiar el número de documento');
       console.error('Error al copiar el número de documento: ', err);
     }
+  }
+
+
+  async onSubmit() {
+    this.form.get('email')?.enable();
+    if (this.showLugarVotacion) {
+    this.onUserEvent.emit({...this.form.value, lugarVotacion: this.formVotacion.value, ...this.formOtrosDatos.value});
+    } else {
+      this.onUserEvent.emit(this.form.value);
+    }
+    this.form.get('email')?.disable();
   }
 }
