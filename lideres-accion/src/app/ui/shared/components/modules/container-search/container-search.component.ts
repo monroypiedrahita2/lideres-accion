@@ -30,6 +30,7 @@ import { ButtonComponent } from '../../atoms/button/button.component';
 export class ContainerSearchComponent implements OnInit {
   form!: FormGroup;
   filter: SelectOptionModel<string>[] = [
+    { label: 'Todo', value: 'todo' },
     { label: 'Por departamento', value: 'departamento' },
     { label: 'Por municipio', value: 'municipio' },
     { label: 'Por iglesia', value: 'iglesia' },
@@ -67,6 +68,11 @@ export class ContainerSearchComponent implements OnInit {
       });
   }
 
+  clear() {
+    this.form.patchValue({ filter: '', atribute: '' });
+    this.onSubmitSearch.emit([]);
+  }
+
   getSelectOfData(atribute: string) {
     console.log('form', this.form.value.filter);
     this.atribute = this.data.map((item: any) => ({
@@ -80,7 +86,7 @@ export class ContainerSearchComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.form.value.filter == '') {
+    if (this.form.value.filter == 'todo') {
       this.onSubmitSearch.emit(this.data);
       return;
     }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 
@@ -16,6 +16,21 @@ export class CardContactoComponent {
   @Input() subTitleL: string = 'subTitleL';
   @Input() description: string = 'description';
   @Input() id!: string;
+  @Input() telefono!: string;
+  @Output() eventEdit: EventEmitter<any> = new EventEmitter
+
+    call() {
+      window.open(`tel:${this.telefono}`, '_self');
+    }
+
+    chat() {
+      window.open(`https://wa.me/${this.telefono}`, '_blank');
+    }
+
+    edit() {
+      this.eventEdit.emit(this.id);
+    }
+
 
 
 }
