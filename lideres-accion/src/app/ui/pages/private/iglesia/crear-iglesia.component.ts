@@ -10,7 +10,9 @@ import { ContainerGridComponent } from '../../../shared/components/atoms/contain
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { LugaresService } from '../../../shared/services/lugares/lugares.service';
 import { lastValueFrom } from 'rxjs';
-import { SelectOptionModel, SelectOptionsModel } from '../../../../models/base/select-options.model';
+import {
+  SelectOptionModel,
+} from '../../../../models/base/select-options.model';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
 import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
@@ -20,6 +22,8 @@ import { IglesiaService } from '../../../shared/services/iglesia/iglesia.service
 import { BaseModel } from '../../../../models/base/base.model';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { SpinnerComponent } from '../../../shared/components/modules/spinner/spinner.component';
+import { ContainerSearchComponent } from '../../../shared/components/modules/container-search/container-search.component';
+import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/sub-title.component';
 
 @Component({
   selector: 'app-iglesias',
@@ -32,7 +36,9 @@ import { SpinnerComponent } from '../../../shared/components/modules/spinner/spi
     InputSelectComponent,
     HttpClientModule,
     TitleComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    ContainerSearchComponent,
+    SubTitleComponent
   ],
   providers: [LugaresService, IglesiaService],
   templateUrl: './crear-iglesia.component.html',
@@ -44,20 +50,21 @@ export class CrearIglesiaComponent implements OnInit {
   iglesia!: BaseModel<IglesiaModel>;
   loading: boolean = false;
   spinner: boolean = true;
-  iglesias: BaseModel<IglesiaModel>[] = []
+  iglesias: BaseModel<IglesiaModel>[] = [];
+  data: BaseModel<IglesiaModel>[] = [];
   horarios: SelectOptionModel<string>[] = [
     { value: '7:00 AM', label: '7:00 AM' },
     { value: '5:00 PM', label: '5:00 PM' },
     { value: '6:30 PM', label: '6:30 PM' },
-  ]
+  ];
 
   constructor(
     private fb: FormBuilder,
     private lugarService: LugaresService,
     private toast: ToastrService,
     private location: Location,
-        private auth: AuthService,
-    private iglesiaService: IglesiaService,
+    private auth: AuthService,
+    private iglesiaService: IglesiaService
   ) {
     this.form = this.fb.group({
       nombre: ['', Validators.required],
@@ -69,7 +76,7 @@ export class CrearIglesiaComponent implements OnInit {
 
   async ngOnInit() {
     await this.getDepartamentos();
-    this.getIglesias()
+    this.getIglesias();
     this.form.get('municipio')?.disable();
     this.form
       .get('departamento')
@@ -92,7 +99,7 @@ export class CrearIglesiaComponent implements OnInit {
       );
       this.departamentos = response.map((item: any) => ({
         label: item.name,
-        value: item.id + '-' + item.name
+        value: item.id + '-' + item.name,
       }));
     } catch (error) {
       this.toast.error('Error al cargar los departamentos');
@@ -110,12 +117,11 @@ export class CrearIglesiaComponent implements OnInit {
       });
       this.municipios = response.map((item: any) => ({
         label: item.name,
-        value: item.id + '-' + item.name
-        ,
+        value: item.id + '-' + item.name,
       }));
     } catch (error) {
       this.toast.error('Error al cargar los municipios');
-      this.location.back()
+      this.location.back();
     }
   }
 
@@ -131,31 +137,34 @@ export class CrearIglesiaComponent implements OnInit {
         fechaCreacion: new Date().toISOString(),
         creadoPor: this.auth.uidUser(),
       };
-      await this.iglesiaService.createIglesia(this.iglesia)
-      this.toast.success('Iglesia creada correctamente')
+      await this.iglesiaService.createIglesia(this.iglesia);
+      this.toast.success('Iglesia creada correctamente');
       this.loading = false;
-      this.location.back()
+      this.location.back();
     } catch (error) {
-      console.error(error)
+      console.error(error);
       this.toast.error('Error al crear la iglesia. Intente nuevamente.');
       this.loading = false;
     }
   }
 
- async getIglesias() {
-   console.log('this.iglesias')
+  async getIglesias() {
+    console.log('this.iglesias');
     this.iglesiaService.getIglesias().subscribe({
       next: (iglesias) => {
-        this.iglesias = iglesias
-        this.spinner = false
+        this.iglesias = iglesias;
+        this.spinner = false;
       },
       error: (error) => {
         console.error(error);
-        this.toast.error('Error al cargar las iglesias')
-        this.spinner = false
+        this.toast.error('Error al cargar las iglesias');
+        this.spinner = false;
       },
-    })
+    });
   }
 
+    onSearch(data: BaseModel<IglesiaModel>[]) {
+      this.data = data
+    }
 
 }

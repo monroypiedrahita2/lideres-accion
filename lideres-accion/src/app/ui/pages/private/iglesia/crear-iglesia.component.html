@@ -1,42 +1,55 @@
 <mg-title [title]="'Crear iglesia'"></mg-title>
+<div class="flex justify-center w-full">
+  <span class="text-center w-full">Antes de crear tu iglesia, valida que no exista</span>
+</div>
 
 <form [formGroup]="form">
-    <mg-container-grid (onSubmit)="onSubmit()" [loading]="loading" [disabled]="form.invalid">
-
-      <mg-input-select
+  <mg-container-grid
+    (onSubmit)="onSubmit()"
+    [loading]="loading"
+    [disabled]="form.invalid"
+  >
+    <mg-input-select
       label="Departamento"
       [items]="departamentos"
       formControlName="departamento"
       id="departamento"
-      >
-
-      </mg-input-select>
-      <mg-input-select
+    >
+    </mg-input-select>
+    <mg-input-select
       label="Municipio"
       [items]="municipios"
       formControlName="municipio"
       id="municipio"
-      >
-      </mg-input-select>
-      <mg-input-text
+    >
+    </mg-input-select>
+    <mg-input-text
       type="text"
       formControlName="nombre"
       label="Nombre de la iglesia"
       id="name"
     ></mg-input-text>
-      <mg-input-select
+    <mg-input-select
       type="text"
       formControlName="horario"
       label="horario del culto"
       id="horario"
       [items]="horarios"
     ></mg-input-select>
-
-    </mg-container-grid>
+  </mg-container-grid>
 </form>
 
+<mg-sub-title title="Lista de iglesias"></mg-sub-title>
 
-<div class="relative overflow-x-auto mt-10">
+<app-container-search
+  [data]="iglesias"
+  (onSubmitSearch)="onSearch($event)"
+></app-container-search>
+
+<div class="font-primary text-lg">
+  Total registros: {{ data.length }} iglesias
+</div>
+<div class="relative overflow-x-auto mt-10" *ngIf="data.length > 0">
   <div>
     <table
       class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -64,12 +77,12 @@
       </thead>
       <tbody>
         <tr
-          *ngFor="let iglesia of iglesias"
+          *ngFor="let iglesia of data"
           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-100"
         >
           <th
             scope="row"
-            class="px-6 py-4 font-medium whitespace-nowrap text-black dark:text-white"
+            class="px-6 py-4 font-medium whitespace-nowrap text-black text-center"
           >
             {{ iglesia.data.departamento.split("-")[1] }}
           </th>
@@ -77,10 +90,10 @@
             {{ iglesia.data.municipio.split("-")[1] }}
           </td>
           <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-            {{ iglesia.data.nombre.split(' - ')[0] }}
+            {{ iglesia.data.nombre.split(" - ")[0] }}
           </td>
           <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-            {{ iglesia.data.nombre.split(' - ')[1] }}
+            {{ iglesia.data.nombre.split(" - ")[1] }}
           </td>
           <!-- <td class="px-6 py-4 text-center whitespace-nowrap text-black">
             <div class="flex justify-center gap-4">

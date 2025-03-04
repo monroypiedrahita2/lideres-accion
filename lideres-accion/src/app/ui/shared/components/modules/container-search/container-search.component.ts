@@ -4,9 +4,9 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { InputSelectComponent } from '../../atoms/input-select/input-select.component';
-import { ContainerGridComponent } from '../../atoms/container-grid/container-grid.component';
 import { SelectOptionModel } from '../../../../../models/base/select-options.model';
 import { LugaresService } from '../../../services/lugares/lugares.service';
 import { distinctUntilChanged } from 'rxjs';
@@ -21,7 +21,6 @@ import { ButtonComponent } from '../../atoms/button/button.component';
     CommonModule,
     ReactiveFormsModule,
     InputSelectComponent,
-    ContainerGridComponent,
     ButtonComponent
   ],
   providers: [LugaresService],
@@ -49,8 +48,8 @@ export class ContainerSearchComponent implements OnInit {
     private fb: FormBuilder,
   ) {
     this.form = this.fb.group({
-      filter: [''],
-      atribute: [''],
+      filter: ['', Validators.required],
+      atribute: ['', Validators.required],
     });
   }
 
@@ -62,6 +61,11 @@ export class ContainerSearchComponent implements OnInit {
         if (value == '') {
           this.atribute = [];
           this.form.get('atribute')?.setValue('');
+          return;
+        }
+        if (value == 'todo') {
+          this.form.get('atribute')?.clearValidators();
+          this.form.get('atribute')?.updateValueAndValidity();
           return;
         }
         this.getSelectOfData(value);
