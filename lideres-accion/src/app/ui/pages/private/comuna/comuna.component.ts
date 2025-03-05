@@ -21,7 +21,6 @@ import { TitleComponent } from '../../../shared/components/atoms/title/title.com
 import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/sub-title.component';
 import { ButtonsFormComponent } from '../../../shared/components/modules/buttons-form/buttons-form.component';
 import { ComunaModel } from '../../../../models/comuna/comuna.model';
-import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
 
@@ -66,7 +65,7 @@ export class ComunaComponent implements OnInit {
     this.form = this.fb.group({
       departamento: ['', Validators.required],
       municipio: ['', Validators.required],
-      nombre: ['', Validators.required],
+      nombre: ['', [Validators.required, Validators.pattern(/^[^-]*$/)]],
     });
 
     this.formBarrios = this.fb.group({

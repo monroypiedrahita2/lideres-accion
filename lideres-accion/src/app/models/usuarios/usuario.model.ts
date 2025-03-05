@@ -8,6 +8,7 @@ export interface UsuarioModel {
   documento: string;
   departamento: string;
   municipio: string;
+  comuna: string;
   barrio: string;
   direccion: string;
   celular: string;

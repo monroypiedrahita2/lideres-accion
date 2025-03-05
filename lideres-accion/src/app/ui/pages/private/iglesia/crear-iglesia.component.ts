@@ -69,7 +69,7 @@ export class CrearIglesiaComponent implements OnInit {
     private iglesiaService: IglesiaService
   ) {
     this.form = this.fb.group({
-      nombre: ['', Validators.required],
+      nombre: ['', [Validators.required, Validators.pattern(/^[^-]*$/)]],
       departamento: ['', Validators.required],
       municipio: ['', Validators.required],
       horario: ['', Validators.required],

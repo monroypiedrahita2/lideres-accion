@@ -95,14 +95,15 @@ export class UsuarioComponent implements OnInit, OnChanges {
     this.form = this.fb.group({
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
-      documento: ['', Validators.required],
+      documento: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       celular: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(10),
-          Validators.minLength(10),
-        ],
+      '',
+      [
+        Validators.required,
+        Validators.maxLength(10),
+        Validators.minLength(10),
+        Validators.pattern('^[0-9]*$')
+      ],
       ],
       email: [''],
       departamento: ['', Validators.required],
@@ -295,7 +296,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
       next: (comunas) => {
         this.barrios = comunas.flatMap((comuna: BaseModel<ComunaModel>) =>
           comuna?.data.barrios.map((barrio: string) => ({
-            label: comuna.data.nombre + ' - ' + barrio,
+            label:   barrio + ' - ' + comuna.data.nombre,
             value: comuna.data.nombre + '-' + barrio
           }))
         );
@@ -357,11 +358,24 @@ export class UsuarioComponent implements OnInit, OnChanges {
 
 
   async onSubmit() {
+    const usuario = {
+      nombres: this.form.get('nombres')?.value,
+      apellidos: this.form.get('apellidos')?.value,
+      documento: this.form.get('documento')?.value,
+      departamento: this.form.get('departamento')?.value.split('-')[1],
+      municipio: this.form.get('municipio')?.value,
+      comuna: this.form.get('barrio')?.value.split('-')[0],
+      barrio: this.form.get('barrio')?.value.split('-')[1],
+      direccion: this.form.get('direccion')?.value,
+      celular: this.form.get('celular')?.value,
+      email: this.form.get('email')?.value,
+      iglesia: this.form.get('iglesia')?.value,
+    }
     this.form.get('email')?.enable();
     if (this.showLugarVotacion) {
-    this.onUserEvent.emit({...this.form.value, lugarVotacion: this.formVotacion.value, ...this.formOtrosDatos.value});
+    this.onUserEvent.emit({...usuario, lugarVotacion: this.formVotacion.value, ...this.formOtrosDatos.value});
     } else {
-      this.onUserEvent.emit(this.form.value);
+      this.onUserEvent.emit(usuario);
     }
     this.form.get('email')?.disable();
   }
