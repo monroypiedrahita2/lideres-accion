@@ -53,9 +53,11 @@ export class CrearIglesiaComponent implements OnInit {
   iglesias: BaseModel<IglesiaModel>[] = [];
   data: BaseModel<IglesiaModel>[] = [];
   horarios: SelectOptionModel<string>[] = [
+    { value: 'Externo', label: 'Externo' },
     { value: '7:00 AM', label: '7:00 AM' },
     { value: '5:00 PM', label: '5:00 PM' },
     { value: '6:30 PM', label: '6:30 PM' },
+    { value: '7:00 PM', label: '7:00 PM' },
   ];
 
   constructor(
@@ -140,7 +142,11 @@ export class CrearIglesiaComponent implements OnInit {
       await this.iglesiaService.createIglesia(this.iglesia);
       this.toast.success('Iglesia creada correctamente');
       this.loading = false;
-      this.location.back();
+      // this.location.back();
+      this.form.patchValue({
+        nombre: '',
+        horario: '',
+      })
     } catch (error) {
       console.error(error);
       this.toast.error('Error al crear la iglesia. Intente nuevamente.');
@@ -154,6 +160,7 @@ export class CrearIglesiaComponent implements OnInit {
       next: (iglesias) => {
         this.iglesias = iglesias;
         this.spinner = false;
+        this.data = [...this.iglesias]
       },
       error: (error) => {
         console.error(error);

@@ -9,7 +9,8 @@ import { environment } from '../../../../../enviroments';
   providedIn: 'root'
 })
 export class IglesiaService {
-  _collection: string = environment.collections.iglesias
+  _collection: string = environment.production ? environment.collections.iglesias : environment.collectionsDev.iglesias;
+
 
   constructor(private firestore: Firestore) { }
 

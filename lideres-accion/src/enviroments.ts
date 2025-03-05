@@ -18,5 +18,15 @@ export const environment = {
       comunas: 'Comunas',
       roles: 'Roles',
       lideres: 'Lideres'
+    },
+    collectionsDev: {
+      perfiles: 'PerfilesDEV',
+      referidos: 'ReferidosDEV',
+      barrios: 'BarriosDEV',
+      comundas: 'ComunasDEV',
+      iglesias: 'IglesiasDEV',
+      comunas: 'ComunasDEV',
+      roles: 'RolesDEV',
+      lideres: 'LideresDEV'
     }
   };

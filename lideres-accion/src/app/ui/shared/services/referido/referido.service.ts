@@ -1,4 +1,4 @@
-import { BaseModel } from './../../../../models/base/base.model';
+import { BaseModel } from '../../../../models/base/base.model';
 import { Injectable } from '@angular/core';
 import {
   collection,
@@ -16,24 +16,26 @@ import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
+import { ReferidoModel } from '../../../../models/referidos/referido.model';
 
 @Injectable({ providedIn: 'root' })
-export class LiderService {
-  _collection: string = environment.production ? environment.collections.lideres : environment.collectionsDev.lideres;
+export class ReferidoService {
+  _collection: string = environment.production ? environment.collections.referidos : environment.collectionsDev.referidos;
+
 
   constructor(private firestore: Firestore, private toast: ToastrService) {}
 
-  crearLiderConIdDocumento(data: BaseModel<UsuarioModel>, id: string): Promise<void> {
+  crearReferidoConIdDocumento(data: BaseModel<ReferidoModel>, id: string): Promise<void> {
     const dataRef = doc(this.firestore, this._collection, id);
     return setDoc(dataRef, data);
   }
 
-  getLideres(): Observable<any> {
+  getReferidos(): Observable<any> {
     const _collection = collection(this.firestore, this._collection);
     return collectionData(_collection, { idField: 'id' }) as Observable<any>;
   }
 
-  getLiderByEmailoCC(value: string) {
+  getReferidoByEmailoCC(value: string) {
     if (value.includes('@')) {
       const q = query(
         collection(this.firestore, this._collection),
@@ -55,7 +57,7 @@ export class LiderService {
     }
   }
 
-  getLider(id: string): Promise<UsuarioModel> {
+  getReferido(id: string): Promise<UsuarioModel> {
     const docRef = doc(this.firestore, this._collection, id);
     return getDoc(docRef).then((docSnap) => {
       if (docSnap.exists()) {
@@ -66,7 +68,7 @@ export class LiderService {
     });
   }
 
-  async deleteLider(id: string) {
+  async deleteReferido(id: string) {
     const docRef = doc(this.firestore, `${this._collection}/${id}`);
     try {
       await deleteDoc(docRef);
@@ -77,7 +79,7 @@ export class LiderService {
     }
   }
 
-  updateLider(id: string, newData: UsuarioModel) {
+  updateReferido(id: string, newData: UsuarioModel) {
     const document = doc(this.firestore, this._collection, id);
     return updateDoc(document, { ...newData });
   }

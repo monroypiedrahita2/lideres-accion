@@ -55,7 +55,7 @@
       </form>
 
 
-      <div class="pt-5 px-2">
+      <div class="pt-5 px-2" *ngIf="!hiddenOtrosDatos">
         <mg-sub-title title="Otros datos (Opcional)"></mg-sub-title>
         <form [formGroup]="formOtrosDatos">
           <mg-container-grid [hiddenButtons]="true">

@@ -75,12 +75,13 @@ export class UsuarioComponent implements OnInit, OnChanges {
 
   @Input() showLugarVotacion: boolean = false;
   @Input() loading: boolean = false;
+  @Input() hiddenOtrosDatos: boolean = false;
   @Input() data!: UsuarioModel;
   @Input() accion!: 'Crear' | 'Editar';
   @Input() title: string = 'MI PERFIL';
   @Input() emailEnabled: boolean = true;
   @Input() autoCompliteEmail: boolean = false;
-  @Output() onUserEvent: EventEmitter<UsuarioModel> = new EventEmitter();
+  @Output() onUserEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private fb: FormBuilder,
@@ -312,6 +313,11 @@ export class UsuarioComponent implements OnInit, OnChanges {
       },
     });
   }
+
+  // getComunas(municipio_id: string){
+
+
+  // }
 
   getIglesiaByDepartamento(departamento_id: string) {
     this.iglesiasService.getIglesiaByDepartamento(departamento_id).subscribe({

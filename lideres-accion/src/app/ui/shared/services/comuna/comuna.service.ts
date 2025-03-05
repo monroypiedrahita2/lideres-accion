@@ -9,7 +9,7 @@ import { ComunaModel } from '../../../../models/comuna/comuna.model';
   providedIn: 'root'
 })
 export class ComunaService {
-  _collection: string = environment.collections.comunas
+  _collection: string = environment.production ? environment.collections.comunas : environment.collectionsDev.comunas;
 
   constructor(private firestore: Firestore) { }
 
