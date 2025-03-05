@@ -107,7 +107,6 @@ export class UsuarioComponent implements OnInit, OnChanges {
       email: [''],
       departamento: ['', Validators.required],
       municipio: ['', Validators.required],
-      comuna: ['', Validators.required],
       barrio: ['', Validators.required],
       direccion: ['', Validators.required],
       iglesia: ['', Validators.required],
@@ -294,14 +293,10 @@ export class UsuarioComponent implements OnInit, OnChanges {
   getComunas(municipio_id: string) {
     this.comunaService.getComunaByMunicipio(municipio_id).subscribe({
       next: (comunas) => {
-        this.comunas = comunas.map((comuna: BaseModel<ComunaModel>) => ({
-          label: comuna.data.nombre,
-          value: comuna.data.nombre + '-' + comuna.data.municipio.split('-')[1],
-        }));
         this.barrios = comunas.flatMap((comuna: BaseModel<ComunaModel>) =>
           comuna?.data.barrios.map((barrio: string) => ({
-            label: barrio,
-            value: barrio + '-' + comuna.data.municipio.split('-')[1],
+            label: comuna.data.nombre + ' - ' + barrio,
+            value: comuna.data.nombre + '-' + barrio
           }))
         );
       },
@@ -313,11 +308,6 @@ export class UsuarioComponent implements OnInit, OnChanges {
       },
     });
   }
-
-  // getComunas(municipio_id: string){
-
-
-  // }
 
   getIglesiaByDepartamento(departamento_id: string) {
     this.iglesiasService.getIglesiaByDepartamento(departamento_id).subscribe({
