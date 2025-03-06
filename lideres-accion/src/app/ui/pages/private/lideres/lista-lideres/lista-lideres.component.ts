@@ -184,18 +184,34 @@ export class ListaLideresComponent implements OnInit {
 
   }
 
-cargar() {
+async cargar() {
+  this.toast.warning('Cargando datos, por favor espere');
   this.spinner = true;
-  this.loadData.forEach((data, index) => {
-    setTimeout(() => {
-      this.liderService.crearLiderConIdDocumento(data, data.data.documento).finally(() => {
-        if (index === this.loadData.length - 1) {
-          this.getLideres();
-          this.spinner = false;
-        }
-      });
-    }, index * 200);
-  });
+
+  for (const lider of this.loadData) {
+    await this.cargarLider({
+      ...lider,
+      data: {
+        ...lider.data,
+        documento: lider.data.documento.toString(),
+        fechaNacimiento: lider.data.fechaNacimiento ? lider.data.fechaNacimiento.toString() : ''
+      }
+    });
+  }
+
+
+  this.spinner = false;
+  this.toast.success('Datos cargados exitosamente');
+}
+
+async cargarLider(data: BaseModel<LiderModel>) {
+  try {
+    console.log('data', data);
+    await this.liderService.crearLiderConIdDocumento(data, data.data.documento);
+  } catch (error) {
+    console.error('Error al cargar líder:', error);
+    this.toast.error('Error al cargar líder');
+  }
 }
 
 
