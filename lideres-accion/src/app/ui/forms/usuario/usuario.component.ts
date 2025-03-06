@@ -259,6 +259,12 @@ export class UsuarioComponent implements OnInit, OnChanges {
       if (!this.user) {
         this.spinner = false;
       }
+      if (this.accion == 'Crear'){
+        this.form.patchValue({
+          departamento: '26-Risaralda'
+        })
+        this.getMunicipios('26');
+      }
     } catch (error) {
       console.error(error);
       this.toast.error('Error al cargar los departamentos');
