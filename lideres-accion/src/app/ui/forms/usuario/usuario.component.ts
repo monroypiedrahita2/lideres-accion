@@ -263,6 +263,9 @@ export class UsuarioComponent implements OnInit, OnChanges {
         this.form.patchValue({
           departamento: '26-Risaralda'
         })
+        this.formVotacion.patchValue({
+          departamento: '26-Risaralda'
+        })
         this.getMunicipios('26');
       }
     } catch (error) {
