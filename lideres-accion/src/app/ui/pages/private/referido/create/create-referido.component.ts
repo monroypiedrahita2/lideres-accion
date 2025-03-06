@@ -103,8 +103,11 @@ export class CreateReferidoComponent implements OnInit {
       data: {
         ...user.data,
         referidoPor: this.form.value.referidoPor,
+        senado: this.form.value.senado,
+        camara: this.form.value.camara,
       },
     };
+    console.log('referido', referido);
     try {
       await this.referidoService.crearReferidoConIdDocumento(
         referido,

@@ -51,6 +51,7 @@ export class CreateLiderComponent implements OnInit {
       creadoPor: this.auth.uidUser(),
     };
     try {
+      console.log(user);
       if (user) {
         await this.liderService.crearLiderConIdDocumento(user, user.data.documento);
         this.location.back();
@@ -59,6 +60,7 @@ export class CreateLiderComponent implements OnInit {
         this.toast.error('Error en crear el líder');
       }
     } catch (error) {
+      console.error(error);
       this.toast.error('El líder ya existe o inténtelo más tarde');
     }
   }

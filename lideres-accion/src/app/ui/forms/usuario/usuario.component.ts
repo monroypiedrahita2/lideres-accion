@@ -167,7 +167,6 @@ export class UsuarioComponent implements OnInit, OnChanges {
       .get('municipio')
       ?.valueChanges.pipe(distinctUntilChanged())
       .subscribe((value) => {
-        console.log(value);
         if (value == '') {
           this.form.get('comuna')?.setValue('');
           this.form.get('barrio')?.setValue('');
@@ -267,6 +266,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
           departamento: '26-Risaralda'
         })
         this.getMunicipios('26');
+        this.getIglesiaByDepartamento('26-Risaralda');
       }
     } catch (error) {
       console.error(error);
@@ -285,7 +285,6 @@ export class UsuarioComponent implements OnInit, OnChanges {
   }
 
   getComunas(municipio_id: string) {
-    console.log(municipio_id);
     this.comunaService.getComunaByMunicipio(municipio_id).subscribe({
       next: (comunas) => {
         const response = comunas.flatMap((comuna: BaseModel<ComunaModel>) =>
@@ -386,7 +385,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
       });
     } else {
       this.onUserEvent.emit(usuario);
+      this.form.get('email')?.disable();
     }
-    this.form.get('email')?.disable();
   }
 }
