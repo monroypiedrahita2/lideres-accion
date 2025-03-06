@@ -163,23 +163,11 @@ export class UsuarioComponent implements OnInit, OnChanges {
         }
       });
 
-    this.formVotacion
-      .get('departamento')
-      ?.valueChanges.pipe(distinctUntilChanged())
-      .subscribe((value) => {
-        if (value == '') {
-          this.formVotacion.get('municipio')?.setValue('');
-          this.municipiosVotacion = [];
-        } else {
-          this.getMunicipios(value.split('-')[0]);
-          this.getIglesiaByDepartamento(value);
-        }
-      });
-
     this.form
       .get('municipio')
       ?.valueChanges.pipe(distinctUntilChanged())
       .subscribe((value) => {
+        console.log(value);
         if (value == '') {
           this.form.get('comuna')?.setValue('');
           this.form.get('barrio')?.setValue('');
@@ -288,15 +276,16 @@ export class UsuarioComponent implements OnInit, OnChanges {
   }
 
   getComunas(municipio_id: string) {
+    console.log(municipio_id);
     this.comunaService.getComunaByMunicipio(municipio_id).subscribe({
       next: (comunas) => {
         const response = comunas.flatMap((comuna: BaseModel<ComunaModel>) =>
           comuna?.data.barrios.map((barrio: string) => ({
             label: barrio + ' - ' + comuna.data.nombre,
-            value: comuna.data.nombre + '-' + barrio,
+            value: barrio + '-' + comuna.data.nombre,
           }))
         );
-        this.comunas = [
+        this.barrios = [
           {
             label: 'Otro',
             value: 'Otro',
@@ -372,8 +361,8 @@ export class UsuarioComponent implements OnInit, OnChanges {
       documento: this.form.get('documento')?.value,
       departamento: this.form.get('departamento')?.value,
       municipio: this.form.get('municipio')?.value,
-      comuna: this.form.get('barrio')?.value.split('-')[0],
-      barrio: this.form.get('barrio')?.value.split('-')[1],
+      comuna: this.form.get('barrio')?.value.split('-')[1],
+      barrio: this.form.get('barrio')?.value.split('-')[0],
       direccion: this.form.get('direccion')?.value,
       celular: this.form.get('celular')?.value,
       email: this.form.get('email')?.value,
