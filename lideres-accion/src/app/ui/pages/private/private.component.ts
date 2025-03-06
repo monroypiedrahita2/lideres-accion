@@ -21,6 +21,7 @@ export class PrivateComponent implements OnInit {
   ngOnInit(): void {
     const usuarioData = localStorage.getItem('usuario');
     if (usuarioData) {
+      console.log(usuarioData)
       this.usuario = JSON.parse(usuarioData);
     } else {
       this.getusuario(this.auth.uidUser())

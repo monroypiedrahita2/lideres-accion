@@ -32,10 +32,11 @@ export class MiPerfilComponent implements OnInit {
     try {
       this.user = await this.perfilService.getMiPerfil(this.auth.uidUser());
       this.accion = this.user ? 'Editar' : 'Crear';
-      this.enableSkeleton = false;
       this.emailEnabled = false;
+      this.enableSkeleton = false;
     } catch (error) {
       console.error(error);
+      this.enableSkeleton = false;
     }
   }
 

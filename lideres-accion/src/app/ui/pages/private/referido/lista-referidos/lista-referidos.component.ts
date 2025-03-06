@@ -83,7 +83,7 @@ export class ListaReridosComponent implements OnInit {
       'Departamento',
       'Municipio',
       'Iglesia',
-      'Jornada',
+      'Horario',
       'Documento',
       'Nombres',
       'Comuna',
@@ -92,6 +92,7 @@ export class ListaReridosComponent implements OnInit {
       'Municipio de votación',
       'Lugar de votación',
       'Mesa',
+      'Líder',
     ]);
 
     referidos.forEach(referido => {
@@ -112,6 +113,7 @@ export class ListaReridosComponent implements OnInit {
         lugarVotacion.municipio.split('-')[1],
         lugarVotacion.lugar,
         lugarVotacion.mesa,
+        referidoData.referidoPor
       ]);
     });
 
