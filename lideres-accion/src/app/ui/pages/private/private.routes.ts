@@ -1,3 +1,4 @@
+import { ListaReridosComponent } from './referido/lista-referidos/lista-referidos.component';
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { Routes } from '@angular/router';
 
@@ -33,11 +34,11 @@ export const routes: Routes = [
       },
       {
         path: 'crear-referido',
-        loadComponent: () => import('./referido/create-referido.component').then(m => m.CreateReferidoComponent),
+        loadComponent: () => import('./referido/create/create-referido.component').then(m => m.CreateReferidoComponent),
       },
       {
-        path: 'listar-referido',
-        loadComponent: () => import('./referido/create-referido.component').then(m => m.CreateReferidoComponent),
+        path: 'listar-referidos',
+        loadComponent: () => import('./referido/lista-referidos/lista-referidos.component').then(m => m.ListaReridosComponent),
       },
       {
         path: 'control-accesos',

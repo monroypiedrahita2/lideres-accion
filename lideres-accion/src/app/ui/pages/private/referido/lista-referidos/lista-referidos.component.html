@@ -1,8 +1,8 @@
 <app-spinner [showSpinner]="spinner"></app-spinner>
 
-<mg-title [title]="'LISTA DE LÍDERES'"></mg-title>
+<mg-title [title]="'LISTA DE REFERIDOS'"></mg-title>
 <app-container-search
-  [data]="lideres"
+  [data]="referidos"
   (onSubmitSearch)="onSearch($event)"
 ></app-container-search>
 
@@ -11,13 +11,13 @@
     Total registros: {{ data.length }} líderes
   </div>
   <mg-container-grid [hiddenButtons]="true">
-    @for (lider of data; track lider.id) {
+    @for (referido of data; track referido.id) {
     <azul-card-contacto
-      [titleL]="lider.data.nombres"
-      [subTitleL]="lider.data.apellidos"
-      [titleR]="lider.data.barrio"
-      [subTitleR]="lider.data.iglesia.split('-')[0]"
-      [telefono]="lider.data.celular"
+      [titleL]="referido.data.nombres"
+      [subTitleL]="referido.data.apellidos"
+      [titleR]="referido.data.barrio"
+      [subTitleR]="referido.data.iglesia.split('-')[0]"
+      [telefono]="referido.data.celular"
     >
     </azul-card-contacto>
     }
@@ -78,9 +78,6 @@
               Mesa
             </th>
             <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
-              Total referidos
-            </th>
-            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
               Acciones
             </th>
           </tr>
@@ -116,9 +113,6 @@
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
               {{ lider.data.lugarVotacion?.mesa}}
-            </td>
-            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-              3
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
               <div class="flex gap-4">
