@@ -290,12 +290,18 @@ export class UsuarioComponent implements OnInit, OnChanges {
   getComunas(municipio_id: string) {
     this.comunaService.getComunaByMunicipio(municipio_id).subscribe({
       next: (comunas) => {
-        this.barrios = comunas.flatMap((comuna: BaseModel<ComunaModel>) =>
+        const response = comunas.flatMap((comuna: BaseModel<ComunaModel>) =>
           comuna?.data.barrios.map((barrio: string) => ({
             label: barrio + ' - ' + comuna.data.nombre,
             value: comuna.data.nombre + '-' + barrio,
           }))
         );
+        this.comunas = [
+          {
+            label: 'Otro',
+            value: 'Otro',
+          },
+          ...response];
       },
       error: (error) => {
         console.error(error);
