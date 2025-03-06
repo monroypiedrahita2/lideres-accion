@@ -50,7 +50,7 @@ import { SpinnerComponent } from '../../shared/components/modules/spinner/spinne
     ContainerGridComponent,
     MatIconModule,
     ButtonComponent,
-    SpinnerComponent
+    SpinnerComponent,
   ],
   providers: [LugaresService],
 })
@@ -66,12 +66,12 @@ export class UsuarioComponent implements OnInit, OnChanges {
   iglesias: SelectOptionModel<string | undefined>[] = [];
   comunas: SelectOptionModel<string | undefined>[] = [];
   barrios: SelectOptionModel<string>[] = [];
-  spinner: boolean = true
+  spinner: boolean = true;
 
   esEmprendedor: SelectOptionModel<boolean>[] = [
     { label: 'No', value: false },
     { label: 'Sí', value: true },
-  ]
+  ];
 
   @Input() showLugarVotacion: boolean = false;
   @Input() loading: boolean = false;
@@ -97,13 +97,13 @@ export class UsuarioComponent implements OnInit, OnChanges {
       apellidos: ['', Validators.required],
       documento: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       celular: [
-      '',
-      [
-        Validators.required,
-        Validators.maxLength(10),
-        Validators.minLength(10),
-        Validators.pattern('^[0-9]*$')
-      ],
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(10),
+          Validators.minLength(10),
+          Validators.pattern('^[0-9]*$'),
+        ],
       ],
       email: [''],
       departamento: ['', Validators.required],
@@ -113,20 +113,18 @@ export class UsuarioComponent implements OnInit, OnChanges {
       iglesia: ['', Validators.required],
     });
 
-      this.formVotacion = this.fb.group({
-        departamento: [''],
-        municipio: [''],
-        lugar: [''],
-        mesa: [''],
-      });
+    this.formVotacion = this.fb.group({
+      departamento: [''],
+      municipio: [''],
+      lugar: [''],
+      mesa: [''],
+    });
 
-      this.formOtrosDatos = this.fb.group({
-        esEmprendedor: [''],
-        actividadEconomica: [''],
-        fechaNacimiento: ['']
-      })
-
-
+    this.formOtrosDatos = this.fb.group({
+      esEmprendedor: [''],
+      actividadEconomica: [''],
+      fechaNacimiento: [''],
+    });
   }
 
   async ngOnInit() {
@@ -165,7 +163,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
         }
       });
 
-      this.formVotacion
+    this.formVotacion
       .get('departamento')
       ?.valueChanges.pipe(distinctUntilChanged())
       .subscribe((value) => {
@@ -178,7 +176,6 @@ export class UsuarioComponent implements OnInit, OnChanges {
         }
       });
 
-
     this.form
       .get('municipio')
       ?.valueChanges.pipe(distinctUntilChanged())
@@ -187,7 +184,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
           this.form.get('comuna')?.setValue('');
           this.form.get('barrio')?.setValue('');
           this.form.get('iglesia')?.setValue('');
-          this.barrios = []
+          this.barrios = [];
         } else {
           this.getComunas(value);
         }
@@ -198,28 +195,27 @@ export class UsuarioComponent implements OnInit, OnChanges {
       .subscribe((value) => {
         if (value == '') {
           this.form.get('barrio')?.setValue('');
-         this.form.patchValue({
-          barrio: ''
-         })
+          this.form.patchValue({
+            barrio: '',
+          });
         }
       });
 
-
-      if (this.showLugarVotacion) {
-        this.formVotacion
-          .get('departamento')
-          ?.valueChanges.pipe(distinctUntilChanged())
-          .subscribe((value) => {
-            if (value == '') {
-              this.formVotacion.get('municipio')?.setValue('');
-              this.formVotacion.get('lugar')?.setValue('');
-              this.formVotacion.get('mesa')?.setValue('');
-            } else {
-              this.getMunicipios(value.split('-')[0]);
-              this.getIglesiaByDepartamento(value);
-            }
-          });
-      }
+    if (this.showLugarVotacion) {
+      this.formVotacion
+        .get('departamento')
+        ?.valueChanges.pipe(distinctUntilChanged())
+        .subscribe((value) => {
+          if (value == '') {
+            this.formVotacion.get('municipio')?.setValue('');
+            this.formVotacion.get('lugar')?.setValue('');
+            this.formVotacion.get('mesa')?.setValue('');
+          } else {
+            this.getMunicipios(value.split('-')[0]);
+            this.getIglesiaByDepartamento(value);
+          }
+        });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -241,7 +237,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
         label: item.name,
         value: item.id + '-' + item.name,
       }));
-      this.municipiosVotacion = this.municipios
+      this.municipiosVotacion = this.municipios;
     } catch (error) {
       this.toast.error('Error al cargar los municipios');
       this.location.back();
@@ -273,7 +269,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
         value: item.id + '-' + item.name,
       }));
       if (!this.user) {
-        this.spinner = false
+        this.spinner = false;
       }
     } catch (error) {
       console.error(error);
@@ -296,8 +292,8 @@ export class UsuarioComponent implements OnInit, OnChanges {
       next: (comunas) => {
         this.barrios = comunas.flatMap((comuna: BaseModel<ComunaModel>) =>
           comuna?.data.barrios.map((barrio: string) => ({
-            label:   barrio + ' - ' + comuna.data.nombre,
-            value: comuna.data.nombre + '-' + barrio
+            label: barrio + ' - ' + comuna.data.nombre,
+            value: comuna.data.nombre + '-' + barrio,
           }))
         );
       },
@@ -313,15 +309,24 @@ export class UsuarioComponent implements OnInit, OnChanges {
   getIglesiaByDepartamento(departamento_id: string) {
     this.iglesiasService.getIglesiaByDepartamento(departamento_id).subscribe({
       next: (iglesias) => {
-        this.iglesias = iglesias.map((iglesia: BaseModel<IglesiaModel>) => ({
+        const response = iglesias.map((iglesia: BaseModel<IglesiaModel>) => ({
           label: iglesia.data.nombre,
-          value: iglesia.data.nombre + '-' + iglesia.data.municipio.split('-')[1],
+          value:
+            iglesia.data.nombre + '-' + iglesia.data.municipio.split('-')[1],
         }));
+        this.iglesias = [
+          {
+            label: 'Externo',
+            value: 'Externo',
+          },
+          ...response,
+        ];
+
         if (this.user) {
           this.form.patchValue(this.user);
           this.formVotacion.patchValue(this.user);
           this.user = undefined;
-          this.spinner = false
+          this.spinner = false;
         }
       },
       error: (error) => {
@@ -331,9 +336,8 @@ export class UsuarioComponent implements OnInit, OnChanges {
     });
   }
 
-
   async goToPage(page: string) {
-    await this.copyDocument()
+    await this.copyDocument();
     window.open(page, '_blank');
   }
 
@@ -341,7 +345,6 @@ export class UsuarioComponent implements OnInit, OnChanges {
     const documento = this.form.get('documento')?.value;
     if (documento == '') {
       this.toast.warning('Flata diligenciar el número de documento');
-
     }
     try {
       await navigator.clipboard.writeText(documento);
@@ -356,13 +359,12 @@ export class UsuarioComponent implements OnInit, OnChanges {
     }
   }
 
-
   async onSubmit() {
     const usuario = {
       nombres: this.form.get('nombres')?.value,
       apellidos: this.form.get('apellidos')?.value,
       documento: this.form.get('documento')?.value,
-      departamento: this.form.get('departamento')?.value.split('-')[1],
+      departamento: this.form.get('departamento')?.value,
       municipio: this.form.get('municipio')?.value,
       comuna: this.form.get('barrio')?.value.split('-')[0],
       barrio: this.form.get('barrio')?.value.split('-')[1],
@@ -370,10 +372,14 @@ export class UsuarioComponent implements OnInit, OnChanges {
       celular: this.form.get('celular')?.value,
       email: this.form.get('email')?.value,
       iglesia: this.form.get('iglesia')?.value,
-    }
+    };
     this.form.get('email')?.enable();
     if (this.showLugarVotacion) {
-    this.onUserEvent.emit({...usuario, lugarVotacion: this.formVotacion.value, ...this.formOtrosDatos.value});
+      this.onUserEvent.emit({
+        ...usuario,
+        lugarVotacion: this.formVotacion.value,
+        ...this.formOtrosDatos.value,
+      });
     } else {
       this.onUserEvent.emit(usuario);
     }

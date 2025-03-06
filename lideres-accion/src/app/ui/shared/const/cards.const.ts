@@ -2,18 +2,6 @@ import { CardModel } from "../../../models/utils/card.model";
 
 export const CARDS_HOME: CardModel[] = [
   {
-    goTo: '../crear-referido',
-    title: 'Crear referido',
-    description: 'Crear un referido a voluntario',
-    icon: 'person_add'
-  },
-  {
-    goTo: '../listar-referido',
-    title: 'Crear referido',
-    description: 'Crear un referido a voluntario',
-    icon: 'person_add'
-  },
-  {
     goTo: '../mi-perfil',
     title: 'Mi perfil',
     description: 'Ver y editar tu perfil',
@@ -51,14 +39,14 @@ export const CARDS_HOME: CardModel[] = [
   },
   {
     goTo: '../listar-lideres',
-    title: 'Mis líderes',
+    title: 'Listar líderes',
     description: 'Administrar de líderes',
-    icon: 'group'
+    icon: 'groups'
   },
   {
     goTo: '../crear-lider',
     title: 'Crear líder',
     description: 'Crear líderes',
-    icon: 'group'
+    icon: 'person_add'
   }
 ]

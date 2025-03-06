@@ -17,7 +17,6 @@ import { InputSelectComponent } from '../../../shared/components/atoms/input-sel
 import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/sub-title.component';
 import { SelectOptionModel } from '../../../../models/base/select-options.model';
 import { LiderModel } from '../../../../models/lider/lider.model';
-import { CandidatoModel } from '../../../../models/candidato.model';
 
 @Component({
   selector: 'app-create-referido',
@@ -102,11 +101,12 @@ export class CreateReferidoComponent implements OnInit {
 
   async saveReferido(user: BaseModel<ReferidoModel>) {
     const referido: BaseModel<ReferidoModel> = {
-        ...user,
-        data: {
-            ...user.data,
-            referidoPor: this.form.value.referidoPor
-        }
+          fechaCreacion: user.fechaCreacion,
+          creadoPor: user.creadoPor,
+      data: {
+        ...user.data,
+        referidoPor: this.form.value.referidoPor
+      }
     }
        try {
         await this.referidoService.crearReferidoConIdDocumento(referido, referido.data.documento);

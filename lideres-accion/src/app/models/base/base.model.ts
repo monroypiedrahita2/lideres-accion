@@ -6,7 +6,7 @@ export interface BaseModel <T> {
     fechaCreacion: string;
     fechaModificacion?: string;
     creadoPor: string;
-    modificadoPor?: DocumentReference;
+    modificadoPor?: string;
 }
 
 export interface DataUserModel {

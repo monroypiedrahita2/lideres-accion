@@ -49,11 +49,10 @@ export class CreateLiderComponent implements OnInit {
       data: data,
       fechaCreacion: new Date().toISOString(),
       creadoPor: this.auth.uidUser(),
-      id: data.documento,
     };
     try {
-      if (user.id) {
-        await this.liderService.crearLiderConIdDocumento(user, user.id);
+      if (user) {
+        await this.liderService.crearLiderConIdDocumento(user, user.data.documento);
         this.location.back();
         this.toast.success('Líder creado correctamente');
       } else {
