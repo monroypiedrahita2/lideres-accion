@@ -189,16 +189,16 @@ async cargar() {
   this.spinner = true;
 
   for (const lider of this.loadData) {
+    await new Promise(resolve => setTimeout(resolve, 200));
     await this.cargarLider({
       ...lider,
       data: {
-        ...lider.data,
-        documento: lider.data.documento.toString(),
-        fechaNacimiento: lider.data.fechaNacimiento ? lider.data.fechaNacimiento.toString() : ''
+      ...lider.data,
+      documento: lider.data.documento.toString(),
+      fechaNacimiento: lider.data.fechaNacimiento ? lider.data.fechaNacimiento.toString() : ''
       }
     });
   }
-
 
   this.spinner = false;
   this.toast.success('Datos cargados exitosamente');
@@ -208,6 +208,7 @@ async cargarLider(data: BaseModel<LiderModel>) {
   try {
     console.log('data', data);
     await this.liderService.crearLiderConIdDocumento(data, data.data.documento);
+    this.toast.success('Líder cargado exitosamente');
   } catch (error) {
     console.error('Error al cargar líder:', error);
     this.toast.error('Error al cargar líder');
