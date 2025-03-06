@@ -106,7 +106,7 @@ export class ListaReridosComponent implements OnInit {
         referidoData.iglesia.split('-')[0],
         referidoData.iglesia.split('-')[1],
         referidoData.documento,
-        referidoData.nombres + '' + referidoData.apellidos ,
+        referidoData.nombres + ' ' + referidoData.apellidos ,
         referidoData.comuna,
         referidoData.barrio,
         lugarVotacion.departamento.split('-')[1],

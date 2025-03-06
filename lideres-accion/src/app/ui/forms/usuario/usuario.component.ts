@@ -122,7 +122,6 @@ export class UsuarioComponent implements OnInit, OnChanges {
 
     this.formOtrosDatos = this.fb.group({
       esEmprendedor: [''],
-      actividadEconomica: [''],
       fechaNacimiento: [''],
     });
   }
@@ -315,7 +314,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
         const response = iglesias.map((iglesia: BaseModel<IglesiaModel>) => ({
           label: iglesia.data.nombre,
           value:
-            iglesia.data.nombre + '-' + iglesia.data.municipio.split('-')[1],
+            iglesia.data.nombre,
         }));
         this.iglesias = [
           {

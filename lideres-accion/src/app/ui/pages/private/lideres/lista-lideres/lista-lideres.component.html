@@ -135,4 +135,10 @@
 
 </div>
 
+
 }
+
+<div class="flex justify-around gap-5 p-10">
+  <input type="file" (change)="onFileChange($event)" />
+    <mg-button *ngIf="loadData.length > 0" (onClick)="cargar()" icon="cloud_download" text="Descargar"></mg-button>
+</div>
