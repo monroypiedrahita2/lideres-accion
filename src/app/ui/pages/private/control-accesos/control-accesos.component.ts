@@ -45,7 +45,7 @@ export class ControlAccesosComponent {
   usuario: UsuarioModel | undefined
   rol: BaseModel<RolesModel> | undefined
   disabled: boolean = false
-  permisos!: PermisosModel
+  permisos!: any
   desabledSwitchs = false
 
   constructor(
@@ -66,7 +66,7 @@ export class ControlAccesosComponent {
     getRoles(name: string) {
       this.rolesService.getRoleByName(name).subscribe({
         next: (response: BaseModel<RolesModel>[]) => {
-          this.permisos = response[0].data.permisos;
+          this.permisos = response[0]?.data?.permisos;
           this.rol = response[0]
           this.loandingOff()
         },

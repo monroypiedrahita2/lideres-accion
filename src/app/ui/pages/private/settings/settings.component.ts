@@ -1,18 +1,24 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
-import { ButtonSettingsComponent } from '../../../shared/components/atoms/button-settings/button-settings.component';
 import { AuthService } from '../../../shared/services/auth/auth.service';
+import { CARDS_HOME } from '../../../shared/const/cards.const';
+import { CardModel } from '../../../../models/utils/card.model';
+import { CardInfoComponent } from '../../../shared/components/modules/card-info/card-info.component';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [RouterModule, ButtonSettingsComponent, TitleComponent],
+  imports: [CommonModule, RouterModule, CardInfoComponent],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
 })
 export class SettingsComponent {
-  constructor(private auth: AuthService, private router: Router) {}
+  cards: CardModel[] = CARDS_HOME;
+  constructor(
+    private readonly auth: AuthService,
+    private readonly router: Router
+  ) {}
 
   async logout() {
     try {

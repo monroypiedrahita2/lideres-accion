@@ -1,4 +1,3 @@
-import { ListaReridosComponent } from './referido/lista-referidos/lista-referidos.component';
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { Routes } from '@angular/router';
 

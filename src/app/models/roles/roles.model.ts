@@ -2,7 +2,7 @@ import { UsuarioModel } from './../usuarios/usuario.model';
 export interface RolesModel {
     nombre: string;
     nivel: number;
-    permisos: PermisosModel;
+    permisos?: PermisosModel;
 }
 
 
