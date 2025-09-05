@@ -19,9 +19,9 @@ import { environment } from '../../../../../enviroments';
 
 @Injectable({ providedIn: 'root' })
 export class LiderService {
-  _collection: string = environment.production ? environment.collections.lideres : environment.collectionsDev.lideres;
+  _collection: string = environment.collections.lideres
 
-  constructor(private firestore: Firestore, private toast: ToastrService) {}
+  constructor(private readonly firestore: Firestore, private readonly toast: ToastrService) {}
 
   crearLiderConIdDocumento(data: BaseModel<UsuarioModel>, id: string): Promise<void> {
     const dataRef = doc(this.firestore, this._collection, id);

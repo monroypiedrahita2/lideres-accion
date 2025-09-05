@@ -9,10 +9,10 @@ import { environment } from '../../../../../enviroments';
   providedIn: 'root'
 })
 export class IglesiaService {
-  _collection: string = environment.production ? environment.collections.iglesias : environment.collectionsDev.iglesias;
+  _collection: string = environment.collections.iglesias
 
 
-  constructor(private firestore: Firestore) { }
+  constructor(private readonly firestore: Firestore) { }
 
   createIglesia(iglesia: BaseModel<IglesiaModel>) {
     const collectionRef = collection(this.firestore, this._collection);

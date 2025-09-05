@@ -1,32 +1,22 @@
 export const environment = {
-    production: false,
-    firebase: {
-      projectId: 'lida-f59df',
-        appId: '1:410795238641:web:d7c476ab836ea7becfb550',
-        storageBucket: 'lida-f59df.firebasestorage.app',
-        apiKey: 'AIzaSyAIdIAaoUZgpHsBqbl2FIcLVRYGnDYSe0w',
-        authDomain: 'lida-f59df.firebaseapp.com',
-        messagingSenderId: '410795238641',
-        measurementId: 'G-QMPFXEBJFG',
-    },
-    collections: {
-      perfiles: 'Perfiles',
-      referidos: 'Referidos',
-      barrios: 'Barrios',
-      comundas: 'Comunas',
-      iglesias: 'Iglesias',
-      comunas: 'Comunas',
-      roles: 'Roles',
-      lideres: 'Lideres'
-    },
-    collectionsDev: {
-      perfiles: 'PerfilesDEV',
-      referidos: 'ReferidosDEV',
-      barrios: 'BarriosDEV',
-      comundas: 'ComunasDEV',
-      iglesias: 'IglesiasDEV',
-      comunas: 'ComunasDEV',
-      roles: 'RolesDEV',
-      lideres: 'LideresDEV'
-    }
-  };
+  production: true,
+  firebase: {
+    apiKey: 'AIzaSyD99fV1NqUuQ_wRJ5UlGLNipMMHIJnvip4',
+    authDomain: 'lideres-accion.firebaseapp.com',
+    projectId: 'lideres-accion',
+    storageBucket: 'lideres-accion.firebasestorage.app',
+    messagingSenderId: '986787431137',
+    appId: '1:986787431137:web:175d57ce13025e8c362da0',
+    measurementId: 'G-6BP19Y34VD',
+  },
+  collections: {
+    perfiles: 'Perfiles',
+    referidos: 'Referidos',
+    barrios: 'Barrios',
+    comundas: 'Comunas',
+    iglesias: 'Iglesias',
+    comunas: 'Comunas',
+    roles: 'Roles',
+    lideres: 'Lideres',
+  },
+};

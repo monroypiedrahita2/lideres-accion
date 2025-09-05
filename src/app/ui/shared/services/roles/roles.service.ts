@@ -9,9 +9,9 @@ import { RolesModel } from '../../../../models/roles/roles.model';
   providedIn: 'root'
 })
 export class RolesService {
-  _collection: string = environment.production ? environment.collections.roles : environment.collectionsDev.roles;
+  _collection: string = environment.collections.roles;
 
-  constructor(private firestore: Firestore) { }
+  constructor(private readonly firestore: Firestore) { }
 
   createRole(role: BaseModel<RolesModel>) {
     const collectionRef = collection(this.firestore, this._collection);

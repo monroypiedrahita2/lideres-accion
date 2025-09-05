@@ -18,12 +18,12 @@ import { environment } from '../../../../../enviroments';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
-  _collection: string = environment.production ? environment.collections.perfiles : environment.collectionsDev.perfiles;
+  _collection: string = environment.collections.perfiles;
 
 
   constructor(
-    private firestore: Firestore,
-    private toast: ToastrService,
+    private readonly firestore: Firestore,
+    private readonly toast: ToastrService,
   ) {}
 
   crearPerfilConUId(data: UsuarioModel, id: string): Promise<void> {

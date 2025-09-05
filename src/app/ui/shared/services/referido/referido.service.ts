@@ -20,10 +20,10 @@ import { ReferidoModel } from '../../../../models/referidos/referido.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReferidoService {
-  _collection: string = environment.production ? environment.collections.referidos : environment.collectionsDev.referidos;
+  _collection: string = environment.collections.referidos;
 
 
-  constructor(private firestore: Firestore, private toast: ToastrService) {}
+  constructor(private readonly firestore: Firestore, private readonly toast: ToastrService) {}
 
   crearReferidoConIdDocumento(data: BaseModel<ReferidoModel>, id: string): Promise<void> {
     const dataRef = doc(this.firestore, this._collection, id);
