@@ -21,7 +21,6 @@ import { TitleComponent } from '../../../shared/components/atoms/title/title.com
 import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/sub-title.component';
 import { ButtonsFormComponent } from '../../../shared/components/modules/buttons-form/buttons-form.component';
 import { ComunaModel } from '../../../../models/comuna/comuna.model';
-import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
 
 @Component({
@@ -55,12 +54,12 @@ export class ComunaComponent implements OnInit {
   enableSkeleton: boolean = true;
 
   constructor(
-    private fb: FormBuilder,
-    private lugarService: LugaresService,
-    private toast: ToastrService,
-    private location: Location,
-    private auth: AuthService,
-    private comunaService: ComunaService,
+    private readonly fb: FormBuilder,
+    private readonly lugarService: LugaresService,
+    private readonly toast: ToastrService,
+    private readonly location: Location,
+    private readonly auth: AuthService,
+    private readonly comunaService: ComunaService,
   ) {
     this.form = this.fb.group({
       departamento: ['', Validators.required],
@@ -73,8 +72,8 @@ export class ComunaComponent implements OnInit {
     });
   }
 
-  async ngOnInit() {
-    await this.initComponent()
+  ngOnInit(): void {
+    this.initComponent();
     this.form
       .get('departamento')
       ?.valueChanges.subscribe(async (departamento) => {
@@ -105,6 +104,7 @@ export class ComunaComponent implements OnInit {
         value: item.id + '-' + item.name
       }));
     } catch (error) {
+      console.error('Error al cargar los departamentos:', error);
       this.toast.error('Error al cargar los departamentos');
       this.location.back();
     }
@@ -123,6 +123,7 @@ export class ComunaComponent implements OnInit {
         value: item.id + '-' + item.name
       }));
     } catch (error) {
+      console.error('Error al cargar los municipios:', error);
       this.toast.error('Error al cargar los municipios');
       this.location.back();
     }
@@ -173,8 +174,8 @@ export class ComunaComponent implements OnInit {
     }
   }
 
-  generateSelectOptionUsuarios(res: BaseModel<UsuarioModel>[]) {
-    this.usuarios = res.map((item: BaseModel<UsuarioModel>) => {
+  generateSelectOptionUsuarios(res: BaseModel<any>[]) {
+    this.usuarios = res.map((item: BaseModel<any>) => {
       return {
         label: item?.data?.nombres + ' ' + item?.data?.apellidos + ' ' + item?.data?.documento,
         value: item.id,

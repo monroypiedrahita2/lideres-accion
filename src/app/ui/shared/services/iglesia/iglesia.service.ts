@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, docData, getDoc, query, where } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, query, where } from '@angular/fire/firestore';
 import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';

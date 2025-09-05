@@ -23,7 +23,6 @@ import { SelectOptionModel } from '../../../models/base/select-options.model';
 import { IglesiaModel } from '../../../models/iglesia/iglesia.model';
 import { InputSelectComponent } from '../../shared/components/atoms/input-select/input-select.component';
 import { BaseModel } from '../../../models/base/base.model';
-import { UsuarioModel } from '../../../models/usuarios/usuario.model';
 import { IglesiaService } from '../../shared/services/iglesia/iglesia.service';
 import { SubTitleComponent } from '../../shared/components/atoms/sub-title/sub-title.component';
 import { distinctUntilChanged, lastValueFrom } from 'rxjs';
@@ -58,7 +57,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
   form!: FormGroup;
   formVotacion!: FormGroup;
   formOtrosDatos!: FormGroup;
-  user: UsuarioModel | undefined;
+  user: any | undefined;
   principalText: 'Crear' | 'Editar' = 'Crear';
   departamentos: SelectOptionModel<string>[] = [];
   municipios: SelectOptionModel<string>[] = [];
@@ -76,7 +75,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
   @Input() showLugarVotacion: boolean = false;
   @Input() loading: boolean = false;
   @Input() hiddenOtrosDatos: boolean = false;
-  @Input() data!: UsuarioModel;
+  @Input() data!: any;
   @Input() accion!: 'Crear' | 'Editar';
   @Input() title: string = 'MI PERFIL';
   @Input() emailEnabled: boolean = true;
@@ -84,13 +83,13 @@ export class UsuarioComponent implements OnInit, OnChanges {
   @Output() onUserEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(
-    private fb: FormBuilder,
-    private location: Location,
-    private auth: AuthService,
-    private toast: ToastrService,
-    private iglesiasService: IglesiaService,
-    private lugarService: LugaresService,
-    private comunaService: ComunaService
+    private readonly fb: FormBuilder,
+    private readonly location: Location,
+    private readonly auth: AuthService,
+    private readonly toast: ToastrService,
+    private readonly iglesiasService: IglesiaService,
+    private readonly lugarService: LugaresService,
+    private readonly comunaService: ComunaService
   ) {
     this.form = this.fb.group({
       nombres: ['', Validators.required],
@@ -126,23 +125,25 @@ export class UsuarioComponent implements OnInit, OnChanges {
     });
   }
 
-  async ngOnInit() {
-    await this.getDepartamentos();
-    await this.loadUserProfile();
-    if (this.user) {
-      this.accion = 'Editar';
-      await this.getMunicipios(this.user.departamento.split('-')[0]);
-      this.getComunas(this.user.municipio);
-      this.getIglesiaByDepartamento(this.user.departamento);
-    } else {
-      this.accion = 'Crear';
-      if (!this.emailEnabled) {
-        this.form.patchValue({
-          email: this.auth.getEmail(),
-        });
-        this.form.get('email')?.disable();
+  ngOnInit(): void {
+    (async () => {
+      await this.getDepartamentos();
+      await this.loadUserProfile();
+      if (this.user) {
+        this.accion = 'Editar';
+        await this.getMunicipios(this.user.departamento.split('-')[0]);
+        this.getComunas(this.user.municipio);
+        this.getIglesiaByDepartamento(this.user.departamento);
+      } else {
+        this.accion = 'Crear';
+        if (!this.emailEnabled) {
+          this.form.patchValue({
+            email: this.auth.getEmail(),
+          });
+          this.form.get('email')?.disable();
+        }
       }
-    }
+    })();
 
     this.form
       .get('departamento')
@@ -224,7 +225,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
         value: item.id + '-' + item.name,
       }));
       this.municipiosVotacion = this.municipios;
-    } catch (error) {
+    } catch {
       this.toast.error('Error al cargar los municipios');
       this.location.back();
     }
@@ -239,7 +240,7 @@ export class UsuarioComponent implements OnInit, OnChanges {
         label: item.name,
         value: item.name,
       }));
-    } catch (error) {
+    } catch {
       this.toast.error('Error al cargar los municipios');
       this.location.back();
     }
@@ -277,7 +278,11 @@ export class UsuarioComponent implements OnInit, OnChanges {
   private async loadUserProfile() {
     try {
       this.user = this.data;
-      this.user ? (this.accion = 'Crear') : (this.accion = 'Editar');
+      if (this.user) {
+        this.accion = 'Crear';
+      } else {
+        this.accion = 'Editar';
+      }
     } catch (error) {
       console.error(error);
     }

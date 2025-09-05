@@ -6,13 +6,12 @@ import { ContainerGridComponent } from '../../../../shared/components/atoms/cont
 import { ToastrService } from 'ngx-toastr';
 import { LugaresService } from '../../../../shared/services/lugares/lugares.service';
 import { BaseModel } from '../../../../../models/base/base.model';
-import { LugarVotacionModel } from '../../../../../models/lider/lider.model';
+import { LugarVotacionModel, ReferidoModel } from '../../../../../models/referido/referido.model';
 import { CardContactoComponent } from '../../../../shared/components/organism/card-contact/card-contacto.component';
 import { SpinnerComponent } from '../../../../shared/components/modules/spinner/spinner.component';
 import { ContainerSearchComponent } from '../../../../shared/components/modules/container-search/container-search.component';
 import { ButtonComponent } from '../../../../shared/components/atoms/button/button.component';
 import * as XLSX from 'xlsx';
-import { ReferidoModel } from '../../../../../models/referidos/referido.model';
 import { ReferidoService } from '../../../../shared/services/referido/referido.service';
 
 @Component({
@@ -105,7 +104,7 @@ export class ListaReridosComponent implements OnInit {
         referidoData.municipio.split('-')[1],
         referidoData.iglesia.split('-')[0],
         referidoData.iglesia.split('-')[1],
-        referidoData.documento,
+        referidoData.id,
         referidoData.nombres + ' ' + referidoData.apellidos ,
         referidoData.comuna,
         referidoData.barrio,

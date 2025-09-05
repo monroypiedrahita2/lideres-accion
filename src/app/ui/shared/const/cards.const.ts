@@ -14,12 +14,6 @@ export const CARDS_HOME: CardModel[] = [
     icon: 'lock'
   },
   {
-    goTo: '../settings',
-    title: 'Configuraciones',
-    description: 'Más ajustes de la aplicación',
-    icon: 'settings'
-  },
-  {
     goTo: '../crear-iglesia',
     title: 'Iglesia',
     description: 'Ver y gestionar iglesias',
@@ -31,18 +25,18 @@ export const CARDS_HOME: CardModel[] = [
     description: 'Ver y gestionar comunas',
     icon: 'location_city'
   },
-  {
-    goTo: '../roles',
-    title: 'Roles',
-    description: 'Administrar roles',
-    icon: 'supervisor_account'
-  },
-  {
-    goTo: '../listar-lideres',
-    title: 'Listar líderes',
-    description: 'Administrar de líderes',
-    icon: 'groups'
-  },
+  // {
+  //   goTo: '../roles',
+  //   title: 'Roles',
+  //   description: 'Administrar roles',
+  //   icon: 'supervisor_account'
+  // },
+  // {
+  //   goTo: '../listar-lideres',
+  //   title: 'Listar líderes',
+  //   description: 'Administrar de líderes',
+  //   icon: 'groups'
+  // },
   {
     goTo: '../crear-lider',
     title: 'Crear líder',

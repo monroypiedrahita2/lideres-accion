@@ -12,7 +12,6 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
@@ -23,7 +22,7 @@ export class LiderService {
 
   constructor(private readonly firestore: Firestore, private readonly toast: ToastrService) {}
 
-  crearLiderConIdDocumento(data: BaseModel<UsuarioModel>, id: string): Promise<void> {
+  crearLiderConIdDocumento(data: BaseModel<any>, id: string): Promise<void> {
     const dataRef = doc(this.firestore, this._collection, id);
     return setDoc(dataRef, data);
   }
@@ -40,7 +39,7 @@ export class LiderService {
         where('email', '==', value)
       );
       const response = collectionData(q, { idField: 'id' }) as Observable<
-        UsuarioModel[]
+        any[]
       >;
       return response;
     } else {
@@ -49,17 +48,17 @@ export class LiderService {
         where('documento', '==', value)
       );
       const response = collectionData(q, { idField: 'id' }) as Observable<
-        UsuarioModel[]
+        any[]
       >;
       return response;
     }
   }
 
-  getLider(id: string): Promise<UsuarioModel> {
+  getLider(id: string): Promise<any> {
     const docRef = doc(this.firestore, this._collection, id);
     return getDoc(docRef).then((docSnap) => {
       if (docSnap.exists()) {
-        return docSnap.data() as UsuarioModel;
+        return docSnap.data() as any;
       } else {
         throw new Error('No existe o permisos insuficientes');
       }
@@ -77,7 +76,7 @@ export class LiderService {
     }
   }
 
-  updateLider(id: string, newData: UsuarioModel) {
+  updateLider(id: string, newData: any) {
     const document = doc(this.firestore, this._collection, id);
     return updateDoc(document, { ...newData });
   }

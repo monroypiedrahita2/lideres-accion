@@ -6,7 +6,7 @@
   <form [formGroup]="form">
     <mg-sub-title title="Selecciona el lider a quién pertenece el referido"></mg-sub-title>
     <mg-container-grid [hiddenButtons]="true">
-      <mg-input-select formControlName="referidoPor" [label]="'Seleccina el líder'" id="referidoPor" [items]="lideres"></mg-input-select>
+      <mg-input-select formControlName="referidoPor" [label]="'Seleccina el líder'" id="referidoPor" [items]="referidos"></mg-input-select>
     </mg-container-grid>
 
     <mg-sub-title title="Candidatos a apoyar"></mg-sub-title>

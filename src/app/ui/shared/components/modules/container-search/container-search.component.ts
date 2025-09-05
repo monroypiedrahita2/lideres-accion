@@ -11,7 +11,6 @@ import { SelectOptionModel } from '../../../../../models/base/select-options.mod
 import { LugaresService } from '../../../services/lugares/lugares.service';
 import { distinctUntilChanged } from 'rxjs';
 import { BaseModel } from '../../../../../models/base/base.model';
-import { LiderModel } from '../../../../../models/lider/lider.model';
 import { ButtonComponent } from '../../atoms/button/button.component';
 
 @Component({
@@ -94,8 +93,8 @@ export class ContainerSearchComponent implements OnInit {
       this.onSubmitSearch.emit(this.data);
       return;
     }
-    const result = this.data.filter((item: BaseModel<LiderModel>) => (
-      item.data[this.form.value.filter as keyof LiderModel] == this.form.value.atribute
+    const result = this.data.filter((item: BaseModel<any>) => (
+      item.data[this.form.value.filter as keyof any] == this.form.value.atribute
     ));
     console.log('result', result);
     this.onSubmitSearch.emit(result);

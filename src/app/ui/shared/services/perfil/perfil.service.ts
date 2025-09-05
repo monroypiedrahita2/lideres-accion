@@ -11,14 +11,13 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
-  _collection: string = environment.collections.perfiles;
+  _collection: string = environment.collections.referidos;
 
 
   constructor(
@@ -26,7 +25,7 @@ export class PerfilService {
     private readonly toast: ToastrService,
   ) {}
 
-  crearPerfilConUId(data: UsuarioModel, id: string): Promise<void> {
+  crearPerfilConUId(data: any, id: string): Promise<void> {
     const dataRef = doc(this.firestore, this._collection, id);
     return setDoc(dataRef, data);
   }
@@ -43,11 +42,11 @@ export class PerfilService {
   getPerfilByEmailoCC(value: string){
     if(value.includes('@')){
     const q = query(collection(this.firestore, this._collection), where('email', '==', value));
-    const response = collectionData(q, { idField: 'id' }) as Observable<UsuarioModel[]>;
+    const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
     return response;
     } else {
       const q = query(collection(this.firestore, this._collection), where('documento', '==', value));
-      const response = collectionData(q, { idField: 'id' }) as Observable<UsuarioModel[]>;
+      const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
       return response;
     }
   }
@@ -55,11 +54,11 @@ export class PerfilService {
 
 
 
-getMiPerfil(id: string): Promise<UsuarioModel> {
+getMiPerfil(id: string): Promise<any> {
   const docRef = doc(this.firestore, this._collection, id);
   return getDoc(docRef).then((docSnap) => {
     if (docSnap.exists()) {
-      return docSnap.data() as UsuarioModel;
+      return docSnap.data() as any;
     } else {
       throw new Error('No existe o es nuevo');
     }
@@ -77,7 +76,7 @@ getMiPerfil(id: string): Promise<UsuarioModel> {
     }
   }
 
-  updatePerfil(id: string, newData: UsuarioModel) {
+  updatePerfil(id: string, newData: any) {
     const document = doc(this.firestore, this._collection, id);
     return updateDoc(document, { ...newData });
   }

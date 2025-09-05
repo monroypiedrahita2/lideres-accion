@@ -48,10 +48,6 @@ export const routes: Routes = [
         loadComponent: () => import('./roles/roles.component').then(m => m.RolesComponent),
       },
       {
-        path: 'listar-lideres',
-        loadComponent: () => import('./lideres/lista-lideres/lista-lideres.component').then(m => m.ListaLideresComponent),
-      },
-      {
         path: 'crear-lider',
         loadComponent: () => import('./lideres/create-lider/create-lider.component').then(m => m.CreateLiderComponent),
       },

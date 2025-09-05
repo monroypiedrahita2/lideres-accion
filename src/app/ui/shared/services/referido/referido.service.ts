@@ -12,11 +12,10 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
-import { ReferidoModel } from '../../../../models/referidos/referido.model';
+import { ReferidoModel } from '../../../../models/referido/referido.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReferidoService {
@@ -42,7 +41,7 @@ export class ReferidoService {
         where('email', '==', value)
       );
       const response = collectionData(q, { idField: 'id' }) as Observable<
-        UsuarioModel[]
+        any[]
       >;
       return response;
     } else {
@@ -51,17 +50,17 @@ export class ReferidoService {
         where('documento', '==', value)
       );
       const response = collectionData(q, { idField: 'id' }) as Observable<
-        UsuarioModel[]
+        any[]
       >;
       return response;
     }
   }
 
-  getReferido(id: string): Promise<UsuarioModel> {
+  getReferido(id: string): Promise<any> {
     const docRef = doc(this.firestore, this._collection, id);
     return getDoc(docRef).then((docSnap) => {
       if (docSnap.exists()) {
-        return docSnap.data() as UsuarioModel;
+        return docSnap.data() as any;
       } else {
         throw new Error('No existe o permisos insuficientes');
       }
@@ -79,7 +78,7 @@ export class ReferidoService {
     }
   }
 
-  updateReferido(id: string, newData: UsuarioModel) {
+  updateReferido(id: string, newData: any) {
     const document = doc(this.firestore, this._collection, id);
     return updateDoc(document, { ...newData });
   }

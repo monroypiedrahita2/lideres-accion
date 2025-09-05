@@ -10,13 +10,11 @@ export const environment = {
     measurementId: 'G-6BP19Y34VD',
   },
   collections: {
-    perfiles: 'Perfiles',
-    referidos: 'Referidos',
-    barrios: 'Barrios',
-    comundas: 'Comunas',
-    iglesias: 'Iglesias',
     comunas: 'Comunas',
+    referidos: 'Referidos',
+    iglesias: 'Iglesias',
     roles: 'Roles',
     lideres: 'Lideres',
+    barrios: 'Barrios',
   },
 };

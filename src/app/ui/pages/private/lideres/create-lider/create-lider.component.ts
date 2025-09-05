@@ -2,14 +2,13 @@ import { Component, OnInit } from '@angular/core';
 
 import { LugaresService } from '../../../../shared/services/lugares/lugares.service';
 import { UsuarioComponent } from '../../../../forms/usuario/usuario.component';
-import { UsuarioModel } from '../../../../../models/usuarios/usuario.model';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule, Location } from '@angular/common';
 import { SkeletonComponent } from '../../../../shared/components/organism/skeleton/skeleton.component';
 import { LiderService } from '../../../../shared/services/lider/lider.service';
 import { BaseModel } from '../../../../../models/base/base.model';
 import { AuthService } from '../../../../shared/services/auth/auth.service';
-import { LiderModel } from '../../../../../models/lider/lider.model';
+import { ReferidoModel } from '../../../../../models/referido/referido.model';
 
 @Component({
   selector: 'app-create-lider',
@@ -19,7 +18,7 @@ import { LiderModel } from '../../../../../models/lider/lider.model';
   templateUrl: './create-lider.component.html',
 })
 export class CreateLiderComponent implements OnInit {
-  user!: UsuarioModel;
+  user!: any;
   loading: boolean = false;
   accion: 'Crear' | 'Editar' = 'Crear';
   enableSkeleton: boolean = true;
@@ -27,13 +26,13 @@ export class CreateLiderComponent implements OnInit {
   title: string = this.accion + ' ' + 'líder';
 
   constructor(
-    private location: Location,
-    private toast: ToastrService,
-    private liderService: LiderService,
-    private auth: AuthService
+    private readonly location: Location,
+    private readonly toast: ToastrService,
+    private readonly liderService: LiderService,
+    private readonly auth: AuthService
   ) {}
 
-  async ngOnInit() {
+  ngOnInit(): void {
     try {
       this.accion = 'Crear';
       this.enableSkeleton = false;
@@ -44,8 +43,8 @@ export class CreateLiderComponent implements OnInit {
     }
   }
 
-  async onSubmit(data: LiderModel) {
-    const user: BaseModel<LiderModel> = {
+  async onSubmit(data: ReferidoModel) {
+    const user: BaseModel<ReferidoModel> = {
       data: data,
       fechaCreacion: new Date().toISOString(),
       creadoPor: this.auth.uidUser(),
@@ -53,7 +52,7 @@ export class CreateLiderComponent implements OnInit {
     try {
       console.log(user);
       if (user) {
-        await this.liderService.crearLiderConIdDocumento(user, user.data.documento);
+        await this.liderService.crearLiderConIdDocumento(user, user.data.id);
         this.location.back();
         this.toast.success('Líder creado correctamente');
       } else {

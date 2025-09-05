@@ -1,8 +1,12 @@
-import { UsuarioModel } from './../../../../models/usuarios/usuario.model';
 import { BaseModel } from './../../../../models/base/base.model';
 import { CommonModule, Location } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
 import { ContainerGridComponent } from '../../../shared/components/atoms/container-grid/container-grid.component';
@@ -12,7 +16,10 @@ import { PermisosComponent } from '../../../forms/permisos/permisos.component';
 import { RolesService } from '../../../shared/services/roles/roles.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../shared/services/auth/auth.service';
-import { PermisosModel, RolesModel } from '../../../../models/roles/roles.model';
+import {
+  PermisosModel,
+  RolesModel,
+} from '../../../../models/roles/roles.model';
 
 @Component({
   selector: 'app-roles',
@@ -24,7 +31,7 @@ import { PermisosModel, RolesModel } from '../../../../models/roles/roles.model'
     InputSelectComponent,
     TitleComponent,
     ContainerGridComponent,
-    PermisosComponent
+    PermisosComponent,
   ],
   templateUrl: './roles.component.html',
 })
@@ -49,44 +56,39 @@ export class RolesComponent {
     // { label: 'Apoyo de iglesias', value: 6 },
     // { label: 'Coordinador de comuna', value: 7 },
     // { label: 'Líder', value: 8 },
-  ]
+  ];
 
-  constructor(private location: Location, private fb: FormBuilder, private rolesService: RolesService,
-     private authService: AuthService,
-    private toast: ToastrService) {
+  constructor(
+    private readonly location: Location,
+    private readonly fb: FormBuilder,
+    private readonly rolesService: RolesService,
+    private readonly authService: AuthService,
+    private readonly toast: ToastrService
+  ) {
     this.form = this.fb.group({
       nombre: ['', [Validators.required]],
       nivel: ['', [Validators.required]],
-    })
-
+    });
   }
 
-
-
-
   async onSubmit(data: PermisosModel) {
-
     const rol: BaseModel<RolesModel> = {
       data: {
         nombre: this.form.value.nombre,
         nivel: this.form.value.nivel,
-        permisos: data
+        permisos: data,
       },
       fechaCreacion: new Date().toISOString(),
       creadoPor: this.authService.uidUser(),
+    };
 
-    }
-
-
-    console.log(rol)
+    console.log(rol);
     try {
-      await this.rolesService.createRole(rol)
+      await this.rolesService.createRole(rol);
       this.toast.success('Rol creado correctamente');
-
     } catch (error) {
       console.error(error);
       this.toast.error('Error al crear el rol. No tienes permisos.');
     }
-
   }
 }

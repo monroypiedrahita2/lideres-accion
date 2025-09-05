@@ -61,12 +61,12 @@ export class CrearIglesiaComponent implements OnInit {
   ];
 
   constructor(
-    private fb: FormBuilder,
-    private lugarService: LugaresService,
-    private toast: ToastrService,
-    private location: Location,
-    private auth: AuthService,
-    private iglesiaService: IglesiaService
+    private readonly fb: FormBuilder,
+    private readonly lugarService: LugaresService,
+    private readonly toast: ToastrService,
+    private readonly location: Location,
+    private readonly auth: AuthService,
+    private readonly iglesiaService: IglesiaService
   ) {
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.pattern(/^[^-]*$/)]],
@@ -76,16 +76,18 @@ export class CrearIglesiaComponent implements OnInit {
     });
   }
 
-  async ngOnInit() {
-    await this.getDepartamentos();
+  ngOnInit(): void {
+    this.getDepartamentos().then(() => {
+      // departamentos loaded
+    });
     this.getIglesias();
     this.form.get('municipio')?.disable();
     this.form
       .get('departamento')
-      ?.valueChanges.subscribe(async (departamento) => {
+      ?.valueChanges.subscribe((departamento) => {
         if (departamento) {
           this.form.get('municipio')?.enable();
-          await this.getMunicipios(departamento.split('-')[0]);
+          this.getMunicipios(departamento.split('-')[0]);
         } else {
           this.form.get('municipio')?.disable();
           this.municipios = [];
@@ -103,7 +105,7 @@ export class CrearIglesiaComponent implements OnInit {
         label: item.name,
         value: item.id + '-' + item.name,
       }));
-    } catch (error) {
+    } catch {
       this.toast.error('Error al cargar los departamentos');
       this.location.back();
     }
@@ -121,7 +123,7 @@ export class CrearIglesiaComponent implements OnInit {
         label: item.name,
         value: item.id + '-' + item.name,
       }));
-    } catch (error) {
+    } catch {
       this.toast.error('Error al cargar los municipios');
       this.location.back();
     }
@@ -142,7 +144,6 @@ export class CrearIglesiaComponent implements OnInit {
       await this.iglesiaService.createIglesia(this.iglesia);
       this.toast.success('Iglesia creada correctamente');
       this.loading = false;
-      // this.location.back();
       this.form.patchValue({
         nombre: '',
         horario: '',

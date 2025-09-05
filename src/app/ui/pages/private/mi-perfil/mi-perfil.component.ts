@@ -4,7 +4,6 @@ import { Component, OnInit } from '@angular/core';
 import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
 import { UsuarioComponent } from '../../../forms/usuario/usuario.component';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
 
@@ -15,32 +14,34 @@ import { SkeletonComponent } from '../../../shared/components/organism/skeleton/
   imports: [CommonModule, UsuarioComponent, SkeletonComponent],
 })
 export class MiPerfilComponent implements OnInit {
-  user!: UsuarioModel;
+  user!: any;
   loading: boolean = false;
   accion: 'Crear' | 'Editar' = 'Crear';
   enableSkeleton: boolean = true;
   emailEnabled: boolean = true;
 
   constructor(
-    private perfilService: PerfilService,
-    private location: Location,
-    private auth: AuthService,
-    private toast: ToastrService
+    private readonly perfilService: PerfilService,
+    private readonly location: Location,
+    private readonly auth: AuthService,
+    private readonly toast: ToastrService
   ) {}
 
-  async ngOnInit() {
-    try {
-      this.user = await this.perfilService.getMiPerfil(this.auth.uidUser());
-      this.accion = this.user ? 'Editar' : 'Crear';
-      this.emailEnabled = false;
-      this.enableSkeleton = false;
-    } catch (error) {
-      console.error(error);
-      this.enableSkeleton = false;
-    }
+  ngOnInit() {
+    (async () => {
+      try {
+        this.user = await this.perfilService.getMiPerfil(this.auth.uidUser());
+        this.accion = this.user ? 'Editar' : 'Crear';
+        this.emailEnabled = false;
+        this.enableSkeleton = false;
+      } catch (error) {
+        console.error(error);
+        this.enableSkeleton = false;
+      }
+    })();
   }
 
-  async onSubmit(data: UsuarioModel) {
+  async onSubmit(data: any) {
     this.loading = true;
     if (this.accion == 'Editar') {
       await this.updateUser(data);
@@ -58,7 +59,7 @@ export class MiPerfilComponent implements OnInit {
     }
   }
 
-  async updateUser(data: UsuarioModel) {
+  async updateUser(data: any) {
     try {
       await this.perfilService.updatePerfil(this.auth.uidUser(), data);
       this.toast.success('Usuario actualizado');

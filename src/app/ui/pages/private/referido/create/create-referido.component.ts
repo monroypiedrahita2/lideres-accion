@@ -1,11 +1,9 @@
 import { ReferidoService } from '../../../../shared/services/referido/referido.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { UsuarioModel } from '../../../../../models/usuarios/usuario.model';
 import { ToastrService } from 'ngx-toastr';
 import { LiderService } from '../../../../shared/services/lider/lider.service';
 import { AuthService } from '../../../../shared/services/auth/auth.service';
-import { ReferidoModel } from '../../../../../models/referidos/referido.model';
 import { BaseModel } from '../../../../../models/base/base.model';
 import { UsuarioComponent } from '../../../../forms/usuario/usuario.component';
 import { SkeletonComponent } from '../../../../shared/components/organism/skeleton/skeleton.component';
@@ -14,7 +12,7 @@ import { ContainerGridComponent } from '../../../../shared/components/atoms/cont
 import { InputSelectComponent } from '../../../../shared/components/atoms/input-select/input-select.component';
 import { SubTitleComponent } from '../../../../shared/components/atoms/sub-title/sub-title.component';
 import { SelectOptionModel } from '../../../../../models/base/select-options.model';
-import { LiderModel } from '../../../../../models/lider/lider.model';
+import { ReferidoModel } from '../../../../../models/referido/referido.model';
 
 @Component({
   selector: 'app-create-referido',
@@ -31,22 +29,22 @@ import { LiderModel } from '../../../../../models/lider/lider.model';
   templateUrl: './create-referido.component.html',
 })
 export class CreateReferidoComponent implements OnInit {
-  user!: UsuarioModel;
+  user!: any;
   loading: boolean = false;
   accion: 'Crear' | 'Editar' = 'Crear';
   enableSkeleton: boolean = true;
   emailEnabled: boolean = true;
   title: string = this.accion + ' ' + 'referido';
   form!: FormGroup;
-  lideres: SelectOptionModel<string>[] = [];
+  referidos: SelectOptionModel<string>[] = [];
 
   constructor(
-    private location: Location,
-    private toast: ToastrService,
-    private referidoService: ReferidoService,
-    private auth: AuthService,
-    private fb: FormBuilder,
-    private liderService: LiderService
+    private readonly location: Location,
+    private readonly toast: ToastrService,
+    private readonly referidoService: ReferidoService,
+    private readonly auth: AuthService,
+    private readonly fb: FormBuilder,
+    private readonly liderService: LiderService
   ) {
     this.form = this.fb.group({
       referidoPor: [''],
@@ -55,9 +53,9 @@ export class CreateReferidoComponent implements OnInit {
     });
   }
 
-  async ngOnInit() {
+  ngOnInit(): void {
     try {
-      this.getLideres();
+      this.getReferidos();
       this.accion = 'Crear';
       this.enableSkeleton = false;
       this.emailEnabled = false;
@@ -67,12 +65,12 @@ export class CreateReferidoComponent implements OnInit {
     }
   }
 
-  getLideres() {
+  getReferidos() {
     this.liderService.getLideres().subscribe({
       next: (res) => {
-        this.lideres = res.map((lider: BaseModel<LiderModel>) => ({
+        this.referidos = res.map((lider: BaseModel<ReferidoModel>) => ({
           label:
-            lider.data.documento +
+            lider.data.id +
             ' - ' +
             lider.data.nombres +
             ' ' +
@@ -103,15 +101,13 @@ export class CreateReferidoComponent implements OnInit {
       data: {
         ...user.data,
         referidoPor: this.form.value.referidoPor,
-        senado: this.form.value.senado,
-        camara: this.form.value.camara,
       },
     };
     console.log('referido', referido);
     try {
       await this.referidoService.crearReferidoConIdDocumento(
         referido,
-        referido.data.documento
+        referido.data.id
       );
       this.location.back();
       this.toast.success('Referido creado correctamente');

@@ -14,13 +14,11 @@ import { ContainerGridComponent } from '../../../shared/components/atoms/contain
 import { PermisosComponent } from '../../../forms/permisos/permisos.component';
 import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { ToastrService } from 'ngx-toastr';
-import { UsuarioModel } from '../../../../models/usuarios/usuario.model';
 import { RolesService } from '../../../shared/services/roles/roles.service';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
 import { LIST_ROLES } from '../../../shared/const/Permisos/list-roles.const';
-import { PermisosModel, RolesModel } from '../../../../models/roles/roles.model';
-import { disableDebugTools } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-control-accesos',
@@ -42,18 +40,18 @@ export class ControlAccesosComponent {
   form!: FormGroup;
   rolesSelectOptions: SelectOptionModel<string>[] = LIST_ROLES;
   loading: boolean = false;
-  usuario: UsuarioModel | undefined
-  rol: BaseModel<RolesModel> | undefined
+  usuario: any | undefined
+  rol: BaseModel<any> | undefined
   disabled: boolean = false
   permisos!: any
   desabledSwitchs = false
 
   constructor(
-    private location: Location,
-    private fb: FormBuilder,
-    private perfilService: PerfilService,
-    private troastService: ToastrService,
-    private rolesService: RolesService
+    private readonly location: Location,
+    private readonly fb: FormBuilder,
+    private readonly perfilService: PerfilService,
+    private readonly troastService: ToastrService,
+    private readonly rolesService: RolesService
   ) {
     this.form = this.fb.group({
       usuario: ['', [Validators.required]],
@@ -65,7 +63,7 @@ export class ControlAccesosComponent {
 
     getRoles(name: string) {
       this.rolesService.getRoleByName(name).subscribe({
-        next: (response: BaseModel<RolesModel>[]) => {
+        next: (response: BaseModel<any>[]) => {
           this.permisos = response[0]?.data?.permisos;
           this.rol = response[0]
           this.loandingOff()
@@ -81,7 +79,7 @@ export class ControlAccesosComponent {
 
   getPerfil(value: string) {
     this.perfilService.getPerfilByEmailoCC(value).subscribe({
-      next: (response: UsuarioModel[]) => {
+      next: (response: any[]) => {
         if (response.length > 0) {
           this.usuario = response[0];
           this.desabledSwitchs = true
@@ -110,7 +108,6 @@ export class ControlAccesosComponent {
     this.loading = true;
     this.getPerfil(data.usuario)
     this.getRoles(data.rol)
-    return;
   }
 
   loandingOff() {

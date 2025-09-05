@@ -70,15 +70,15 @@
           <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
             Culto
           </th>
-          <!-- <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
             Acciones
-          </th> -->
+          </th>
         </tr>
       </thead>
       <tbody>
         <tr
           *ngFor="let iglesia of data"
-          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-100"
+          class="bg-white border-b dark:bg-base dark:border-gray-700 border-gray-200 hover:bg-gray-300"
         >
           <th
             scope="row"
@@ -95,11 +95,12 @@
           <td class="px-6 py-4 text-center whitespace-nowrap text-black">
             {{ iglesia.data.nombre.split(" - ")[1] }}
           </td>
-          <!-- <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
             <div class="flex justify-center gap-4">
-              <span class="material-icons text-primary">delete</span>
+              <span class="material-icons text-primary hover:cursor-pointer">edit</span>
+              <span class="material-icons text-primary hover:cursor-pointer">delete</span>
             </div>
-          </td> -->
+          </td>
         </tr>
       </tbody>
     </table>
