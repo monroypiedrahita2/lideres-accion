@@ -3,9 +3,9 @@ import { RolesModel } from '../roles/roles.model';
 export interface ReferidoModel {
   id: string; // documento de identidad
   isInterno: boolean;
-  iglesia: string;  // Iglesia que le cuenta
   nombres: string;
   apellidos: string;
+  iglesia: string;  // Iglesia que le cuenta
   departamento: string;
   municipio: string;
   comuna: string;
@@ -18,7 +18,7 @@ export interface ReferidoModel {
   fechaNacimiento?: string;
   lugarVotacion?: LugarVotacionModel;
   referidoPor: string; // id / documento de identidad de quien lo refirio
-  votaraPor: string[];
+  votaraPor: VotalModel;
 }
 
 export interface LugarVotacionModel {
@@ -26,4 +26,9 @@ export interface LugarVotacionModel {
   municipio: string;
   lugar: string;
   mesa: string;
+}
+
+export interface VotalModel {
+  senado: boolean;
+  camara: boolean;
 }

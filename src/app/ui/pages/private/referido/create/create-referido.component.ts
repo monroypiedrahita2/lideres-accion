@@ -7,23 +7,24 @@ import { AuthService } from '../../../../shared/services/auth/auth.service';
 import { BaseModel } from '../../../../../models/base/base.model';
 import { UsuarioComponent } from '../../../../forms/usuario/usuario.component';
 import { SkeletonComponent } from '../../../../shared/components/organism/skeleton/skeleton.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ContainerGridComponent } from '../../../../shared/components/atoms/container-grid/container-grid.component';
 import { InputSelectComponent } from '../../../../shared/components/atoms/input-select/input-select.component';
 import { SubTitleComponent } from '../../../../shared/components/atoms/sub-title/sub-title.component';
 import { SelectOptionModel } from '../../../../../models/base/select-options.model';
 import { ReferidoModel } from '../../../../../models/referido/referido.model';
+import { InputTextComponent } from '../../../../shared/components/atoms/input-text/input-text.component';
 
 @Component({
   selector: 'app-create-referido',
   standalone: true,
   imports: [
     CommonModule,
-    UsuarioComponent,
     SkeletonComponent,
     ReactiveFormsModule,
     ContainerGridComponent,
     InputSelectComponent,
+    InputTextComponent,
     SubTitleComponent,
   ],
   templateUrl: './create-referido.component.html',
@@ -47,9 +48,25 @@ export class CreateReferidoComponent implements OnInit {
     private readonly liderService: LiderService
   ) {
     this.form = this.fb.group({
-      referidoPor: [''],
-      senado: [false],
-      camara: [false],
+      documento: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      isInterno: [false, Validators.required],
+      nombres: ['', Validators.required],
+      apellidos: ['', Validators.required],
+      celular: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(10),
+          Validators.minLength(10),
+          Validators.pattern('^[0-9]*$'),
+        ],
+      ],
+      email: [''],
+      departamento: ['', Validators.required],
+      municipio: ['', Validators.required],
+      barrio: ['', Validators.required],
+      direccion: ['', Validators.required],
+      iglesia: ['', Validators.required],
     });
   }
 

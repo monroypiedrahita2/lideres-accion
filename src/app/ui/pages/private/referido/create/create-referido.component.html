@@ -1,10 +1,68 @@
 <mg-skeleton [enableSkeleton]="enableSkeleton" [num]="5"></mg-skeleton>
 
-
 @if (!enableSkeleton) {
 
-  <form [formGroup]="form">
-    <mg-sub-title title="Selecciona el lider a quién pertenece el referido"></mg-sub-title>
+<form [formGroup]="form">
+  <mg-sub-title title="Datos del referido"></mg-sub-title>
+  <mg-input-text
+    type="text"
+    formControlName="documento"
+    id="document"
+    label="Número de cédula"
+  ></mg-input-text>
+  <mg-input-select
+    formControlName="isInterno"
+    [label]="'¿El referido es de la iglesia?'"
+    id="isInterno"
+    [items]="referidos"
+  ></mg-input-select>
+  <mg-input-text
+    type="text"
+    formControlName="nombres"
+    id="names"
+    label="Nombres"
+  ></mg-input-text>
+  <mg-input-text
+    type="text"
+    formControlName="apellidos"
+    id="lastNames"
+    label="Apellidos"
+  ></mg-input-text>
+  <mg-input-text
+    type="phone"
+    formControlName="celular"
+    id="phone"
+    label="Célular o télefono"
+    [minlength]="10"
+    [maxlength]="10"
+  ></mg-input-text>
+  <mg-input-text
+    type="text"
+    formControlName="email"
+    id="email"
+    label="Correo electrónico"
+  ></mg-input-text>
+  <mg-sub-title title="Lugar donde vive el referido"></mg-sub-title>
+    <mg-input-select
+    formControlName="Departamento"
+    [label]="'¿El referido es de la iglesia?'"
+    id="isInterno"
+    [items]="referidos"
+  ></mg-input-select>
+</form>
+<!-- <app-form-usuario
+  [showLugarVotacion]="true"
+  [hiddenOtrosDatos]="true"
+  [data]="user"
+  [emailEnabled]="true"
+  [accion]="accion"
+  [title]="title"
+  [loading]="loading"
+  [autoCompliteEmail]="true"
+  (onUserEvent)="onSubmit($event)"
+></app-form-usuario> -->
+
+<!-- <mg-sub-title title="Selecciona el lider a quién pertenece el referido"></mg-sub-title>
     <mg-container-grid [hiddenButtons]="true">
       <mg-input-select formControlName="referidoPor" [label]="'Seleccina el líder'" id="referidoPor" [items]="referidos"></mg-input-select>
     </mg-container-grid>
@@ -24,27 +82,13 @@
         </label>
       </mg-container-grid>
     </div>
-  </form>
 
-  <app-form-usuario
-  [showLugarVotacion]="true"
-  [hiddenOtrosDatos]="true"
-  [data]="user"
-  [emailEnabled]="true"
-  [accion]="accion"
-  [title]="title"
-  [loading]="loading"
-  [autoCompliteEmail]="true"
-  (onUserEvent)="onSubmit($event)"
-></app-form-usuario>
-
-
-
-
-
-
+    <mg-container-grid [hiddenButtons]="true">
+      <mg-input-text type="text" formControlName="nombres" id="names" label="Nombres"></mg-input-text>
+      <mg-input-text type="text" formControlName="apellidos" id="lastNames" label="Apellidos"></mg-input-text>
+      <mg-input-text type="text" formControlName="documento" id="document" label="Número de cédula"></mg-input-text>
+      <mg-input-text type="phone" formControlName="celular" id="phone" label="Célular o télefono" [minlength]="10" [maxlength]="10"></mg-input-text>
+      <mg-input-text type="text" formControlName="email" id="email" label="Correo electrónico"></mg-input-text>
+    </mg-container-grid> -->
 
 }
-
-
-
