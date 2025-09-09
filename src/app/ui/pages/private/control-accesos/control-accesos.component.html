@@ -2,20 +2,15 @@
 
 <form [formGroup]="form">
   <mg-container-grid [hiddenButtons]="true" principalText="Buscar">
-    <mg-input-text formControlName="usuario" id="users" label="Buscar por CC o email"></mg-input-text>
+    <mg-input-select formControlName="usuario" [label]="'Usuarios'" id="user" [items]="usersSelectOptions"></mg-input-select>
     <mg-input-select formControlName="rol" [label]="'Asignar rol'" id="rol" [items]="rolesSelectOptions"></mg-input-select>
   </mg-container-grid>
   <div class="flex flex-row-reverse justify-center gap-4 sm:pt-5 lg:pt-8">
-    <mg-button [text]="'Buscar'" [loading]="loading" [disabled]="disabled" (onClick)="search(this.form.value)"></mg-button>
+    <mg-button [text]="'Asignar rol'" [loading]="loading" [disabled]="form.invalid" (onClick)="asignarRol()"></mg-button>
     <mg-button [text]="'Limpiar'" [type]="'reset'" (onClick)="clear()"></mg-button>
   </div>
 </form>
 
-
-@if(this.usuario && this.rol) {
-
-  <app-permisos [title]="usuario.nombres + ' ' + usuario.apellidos" [disabled]="desabledSwitchs" [permisos]="permisos"></app-permisos>
-}
 
 
 

@@ -39,6 +39,7 @@ export class PerfilService {
 
 
 
+
   getPerfilByEmailoCC(value: string){
     if(value.includes('@')){
     const q = query(collection(this.firestore, this._collection), where('email', '==', value));
@@ -50,6 +51,13 @@ export class PerfilService {
       return response;
     }
   }
+  getPerfilesByIglesia(value: string){
+    const q = query(collection(this.firestore, this._collection), where('iglesia', '==', value));
+    const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
+    return response;
+
+  }
+
 
 
 

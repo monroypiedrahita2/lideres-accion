@@ -1,12 +1,12 @@
 import { CardModel } from "../../../models/utils/card.model";
 
 export const CARDS_HOME: CardModel[] = [
-  {
-    goTo: '../mi-perfil',
-    title: 'Mi perfil',
-    description: 'Ver y editar tu perfil',
-    icon: 'person'
-  },
+  // {
+  //   goTo: '../mi-perfil',
+  //   title: 'Mi perfil',
+  //   description: 'Ver y editar tu perfil',
+  //   icon: 'person'
+  // },
   {
     goTo: '../control-accesos',
     title: 'Control y accesos',
@@ -37,10 +37,10 @@ export const CARDS_HOME: CardModel[] = [
   //   description: 'Administrar de líderes',
   //   icon: 'groups'
   // },
-  {
-    goTo: '../crear-lider',
-    title: 'Crear líder',
-    description: 'Crear líderes',
-    icon: 'person_add'
-  }
+  // {
+  //   goTo: '../crear-lider',
+  //   title: 'Crear líder',
+  //   description: 'Crear líderes',
+  //   icon: 'person_add'
+  // }
 ]

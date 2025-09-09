@@ -105,6 +105,8 @@ export class NuevaCuentaComponent implements OnInit {
         {
           nombres: this.form.value.nombres,
           apellidos: this.form.value.apellidos,
+          iglesia: this.form.value.iglesia,
+          email: this.form.value.email,
         },
         uid
       );
