@@ -35,6 +35,7 @@ import { SelectOptionModel } from '../../../../models/base/select-options.model'
 export class NuevaCuentaComponent implements OnInit {
   form!: FormGroup;
   iglesias: SelectOptionModel<string>[] = [];
+  disableBtn: boolean = false;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -74,6 +75,7 @@ export class NuevaCuentaComponent implements OnInit {
   }
 
   async crear() {
+    this.disableBtn = true;
     if (
       this.form.invalid &&
       this.form.value.password !== this.form.value.confirm
@@ -93,6 +95,7 @@ export class NuevaCuentaComponent implements OnInit {
       this.toast.error(
         'Error al crear la cuenta. Intente nuevamente. Ya existe una cuenta con ese correo.'
       );
+      this.disableBtn = false;
     }
   }
 
@@ -109,6 +112,7 @@ export class NuevaCuentaComponent implements OnInit {
       this.location.back();
     } catch {
       this.toast.error('Error al crear el perfil. Intente nuevamente.');
+        this.disableBtn = false;
     }
   }
 

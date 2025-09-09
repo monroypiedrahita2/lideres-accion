@@ -20,7 +20,7 @@
 
     <div class="flex justify-center gap-4">
       <mg-button text="Regresar" [type]="'reset'" (onClick)="back()"></mg-button>
-      <mg-button text="Crear" [disabled]="form.invalid" (onClick)="crear()"></mg-button>
+      <mg-button text="Crear" [loading]="disableBtn" [disabled]="form.invalid || form.get('password')?.value !== form.get('confirm')?.value || form.get('password')?.value?.length < 6" (onClick)="crear()"></mg-button>
     </div>
   </div>
 </div>
