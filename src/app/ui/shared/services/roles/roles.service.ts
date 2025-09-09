@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   collection,
   collectionData,
+  deleteDoc,
   doc,
   Firestore,
   query,
@@ -29,18 +30,16 @@ export class RolesService {
   getRoles() {
     const collectionRef = collection(this.firestore, this._collection);
     return collectionData(collectionRef, { idField: 'id' }) as Observable<
-      BaseModel<RolesModel>[]
+      RolesModel[]
     >;
   }
 
-  getRoleByName(value: string) {
-    const q = query(
-      collection(this.firestore, this._collection),
-      where('data.nombre', '==', value)
-    );
-    const response = collectionData(q, { idField: 'id' }) as Observable<
-      BaseModel<RolesModel>[]
-    >;
-    return response;
-  }
+    async deleteRole(id: string) {
+      const docRef = doc(this.firestore, `${this._collection}/${id}`);
+        await deleteDoc(docRef);
+    }
+
+
+
+
 }

@@ -20,5 +20,4 @@ import { ButtonFooterComponent } from '../../atoms/button-footer/button-footer.c
 export class FooterComponent {
   title: string = NAME_APP;
 
-
 }

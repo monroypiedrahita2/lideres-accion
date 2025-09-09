@@ -1,4 +1,3 @@
-import { DocumentReference } from "@angular/fire/firestore";
 
 export interface BaseModel <T> {
     id?: string;

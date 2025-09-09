@@ -1,34 +1,21 @@
-import { RolesModel } from '../roles/roles.model';
 
 export interface ReferidoModel {
-  id: string; // documento de identidad
+  id?: string; // documento de identidad
   isInterno: boolean;
+  documento: string;
   nombres: string;
   apellidos: string;
-  iglesia: string;  // Iglesia que le cuenta
-  departamento: string;
-  municipio: string;
+  celular: string;
+  email?: string;
+  esEmprendedor?: boolean;
   comuna: string;
   barrio: string;
   direccion: string;
-  celular: string;
-  email?: string;
-  rol?: RolesModel;
-  esEmprendedor?: boolean;
+  iglesia: string;  // Iglesia que tiene la cuenta
   fechaNacimiento?: string;
-  lugarVotacion?: LugarVotacionModel;
+  lugarVotacion?: string;
+  mesaVotacion?: string;
   referidoPor: string; // id / documento de identidad de quien lo refirio
-  votaraPor: VotalModel;
-}
-
-export interface LugarVotacionModel {
-  departamento: string;
-  municipio: string;
-  lugar: string;
-  mesa: string;
-}
-
-export interface VotalModel {
   senado: boolean;
   camara: boolean;
 }

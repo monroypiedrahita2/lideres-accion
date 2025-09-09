@@ -5,15 +5,21 @@ import { ToastrService } from 'ngx-toastr';
 import { LiderService } from '../../../../shared/services/lider/lider.service';
 import { AuthService } from '../../../../shared/services/auth/auth.service';
 import { BaseModel } from '../../../../../models/base/base.model';
-import { UsuarioComponent } from '../../../../forms/usuario/usuario.component';
 import { SkeletonComponent } from '../../../../shared/components/organism/skeleton/skeleton.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ContainerGridComponent } from '../../../../shared/components/atoms/container-grid/container-grid.component';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { InputSelectComponent } from '../../../../shared/components/atoms/input-select/input-select.component';
 import { SubTitleComponent } from '../../../../shared/components/atoms/sub-title/sub-title.component';
 import { SelectOptionModel } from '../../../../../models/base/select-options.model';
 import { ReferidoModel } from '../../../../../models/referido/referido.model';
 import { InputTextComponent } from '../../../../shared/components/atoms/input-text/input-text.component';
+import { ComunaService } from '../../../../shared/services/comuna/comuna.service';
+import { ComunaModel } from '../../../../../models/comuna/comuna.model';
+import { ButtonComponent } from '../../../../shared/components/atoms/button/button.component';
 
 @Component({
   selector: 'app-create-referido',
@@ -22,34 +28,47 @@ import { InputTextComponent } from '../../../../shared/components/atoms/input-te
     CommonModule,
     SkeletonComponent,
     ReactiveFormsModule,
-    ContainerGridComponent,
     InputSelectComponent,
     InputTextComponent,
     SubTitleComponent,
+    ButtonComponent,
   ],
   templateUrl: './create-referido.component.html',
 })
 export class CreateReferidoComponent implements OnInit {
-  user!: any;
+  iglesia: string = JSON.parse(localStorage.getItem('usuario')|| '{}').iglesia;
   loading: boolean = false;
   accion: 'Crear' | 'Editar' = 'Crear';
   enableSkeleton: boolean = true;
   emailEnabled: boolean = true;
   title: string = this.accion + ' ' + 'referido';
   form!: FormGroup;
-  referidos: SelectOptionModel<string>[] = [];
+  spinner: boolean = true;
+  departamentos: SelectOptionModel<string>[] = [];
+  municipios: SelectOptionModel<string>[] = [];
+  referidos: SelectOptionModel<any>[] = [];
+  esEmprendedor: SelectOptionModel<string>[] = [
+    { label: 'Si', value: 'Si' },
+    { label: 'No', value: 'No' },
+  ];
+  barrios: SelectOptionModel<any>[] = [];
+  isInternoSelect: SelectOptionModel<string>[] = [
+    { label: 'Si', value: 'Interno' },
+    { label: 'No', value: 'Externo' },
+  ];
 
   constructor(
     private readonly location: Location,
     private readonly toast: ToastrService,
     private readonly referidoService: ReferidoService,
+    private readonly comunasService: ComunaService,
     private readonly auth: AuthService,
     private readonly fb: FormBuilder,
-    private readonly liderService: LiderService
   ) {
     this.form = this.fb.group({
-      documento: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      referidoPor: [''],
       isInterno: [false, Validators.required],
+      documento: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
       celular: [
@@ -62,17 +81,24 @@ export class CreateReferidoComponent implements OnInit {
         ],
       ],
       email: [''],
-      departamento: ['', Validators.required],
-      municipio: ['', Validators.required],
-      barrio: ['', Validators.required],
-      direccion: ['', Validators.required],
-      iglesia: ['', Validators.required],
+      esEmprendedor: [false],
+      comuna: [''],
+      barrio: [''],
+      direccion: [''],
+      camara: [true],
+      senado: [true],
+      iglesia: [''],
+      lugarVotacion: [''],
+      mesaVotacion: [''],
     });
   }
 
   ngOnInit(): void {
+    this.enableSkeleton = true;
+    this.getReferidos();
+    console.log(this.iglesia);
+    this.getComunas();
     try {
-      this.getReferidos();
       this.accion = 'Crear';
       this.enableSkeleton = false;
       this.emailEnabled = false;
@@ -82,18 +108,51 @@ export class CreateReferidoComponent implements OnInit {
     }
   }
 
+  async goToPage(page: string) {
+    await this.copyDocument(page);
+  }
+
+  async copyDocument(page: string) {
+    const documento = this.form.get('documento')?.value;
+    if (documento.length <= 0) {
+      this.toast.warning('Flata diligenciar el número de documento');
+      return;
+    }
+    this.toast.info('Número de documento copiado al portapapeles');
+    try {
+      await navigator.clipboard.writeText(documento);
+      window.open(page, '_blank');
+    } catch {
+      this.toast.error('Error al copiar el número de documento');
+    }
+  }
+
+  back() {
+    this.location.back();
+  }
+
+  getComunas() {
+    this.comunasService.getComunas().subscribe({
+      next: (res: BaseModel<ComunaModel>[]) => {
+        this.barrios = res.flatMap((comuna: BaseModel<ComunaModel>) =>
+          comuna.data.barrios.map((barrio: string) => ({
+            label: comuna.data.nombre + ' - ' + barrio,
+            value: barrio,
+          }))
+        );
+      },
+    });
+  }
+
   getReferidos() {
-    this.liderService.getLideres().subscribe({
+    this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
       next: (res) => {
-        this.referidos = res.map((lider: BaseModel<ReferidoModel>) => ({
-          label:
-            lider.data.id +
-            ' - ' +
-            lider.data.nombres +
-            ' ' +
-            lider.data.apellidos,
-          value: lider.id,
+        this.referidos = res.map((referido: BaseModel<ReferidoModel>) => ({
+          label: referido.data.nombres + ' ' + referido.data.apellidos + ' - ' + referido.id,
+          value: referido.id,
         }));
+        this.enableSkeleton = false;
+        console.log(this.referidos);
       },
       error: (err) => {
         console.error('Error getting lideres', err);
@@ -102,29 +161,25 @@ export class CreateReferidoComponent implements OnInit {
     });
   }
 
-  async onSubmit(data: ReferidoModel) {
-    const user: BaseModel<ReferidoModel> = {
-      data: data,
-      fechaCreacion: new Date().toISOString(),
-      creadoPor: this.auth.uidUser(),
-    };
-    console.log('referido', user);
-    await this.saveReferido(user);
+  async onSubmit() {
+    if (this.form.invalid) {
+      this.toast.warning('Falta diligenciar campos obligatorios');
+      return;
+    }
+    await this.saveReferido();
   }
 
-  async saveReferido(user: BaseModel<ReferidoModel>) {
+  async saveReferido() {
     const referido: BaseModel<ReferidoModel> = {
-      ...user,
-      data: {
-        ...user.data,
-        referidoPor: this.form.value.referidoPor,
-      },
+      fechaCreacion: new Date().toISOString(),
+      creadoPor: this.auth.uidUser(),
+      data: {...this.form.value, iglesia: this.iglesia},
     };
-    console.log('referido', referido);
     try {
+      const { documento, ...referidoSinDocumento } = referido as any;
       await this.referidoService.crearReferidoConIdDocumento(
-        referido,
-        referido.data.id
+        referidoSinDocumento,
+        this.form.get('documento')?.value
       );
       this.location.back();
       this.toast.success('Referido creado correctamente');

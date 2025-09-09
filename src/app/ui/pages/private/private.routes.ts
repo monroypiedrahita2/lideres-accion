@@ -43,10 +43,6 @@ export const routes: Routes = [
         path: 'control-accesos',
         loadComponent: () => import('./control-accesos/control-accesos.component').then(m => m.ControlAccesosComponent),
       },
-      {
-        path: 'crear-lider',
-        loadComponent: () => import('./lideres/create-lider/create-lider.component').then(m => m.CreateLiderComponent),
-      },
     ]
   },
   {

@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 import { RolesService } from '../../../shared/services/roles/roles.service';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
 import { LIST_ROLES } from '../../../shared/const/Permisos/list-roles.const';
-import { lastValueFrom } from 'rxjs';
+import { RolesModel, UsuarioModel } from '../../../../models/roles/roles.model';
 
 
 @Component({
@@ -38,12 +38,14 @@ export class ControlAccesosComponent implements OnInit {
   usuarioData = localStorage.getItem('usuario');
   rolesSelectOptions: SelectOptionModel<string>[] = LIST_ROLES;
   usersSelectOptions: SelectOptionModel<string>[] = [];
+  usuarios: UsuarioModel[] = []
   loading: boolean = false;
   usuario: any
   rol: BaseModel<any> | undefined
   disabled: boolean = false
   permisos!: any
   desabledSwitchs = false
+  roles: RolesModel[] = []
 
   constructor(
     private readonly location: Location,
@@ -59,16 +61,18 @@ export class ControlAccesosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.usuarioData) {
-      const iglesia = JSON.parse(this.usuarioData).iglesia;
-      this.getPerfilByIglesia(iglesia);
-    }
+    this.getAllRoles();
+
   }
 
   getPerfilByIglesia(iglesia: string) {
     this.perfilService.getPerfilesByIglesia(iglesia).subscribe({
       next: (response: any[]) => {
         if (response.length > 0) {
+          this.usuarios = response.map((item: any) => {
+            const rol = this.roles.find(r => r.id === item.id)
+            return { ...item, rol: rol ? rol.rol : 'Sin rol asignado' }
+          })
           this.usersSelectOptions = response.map((item: any) => {
             return { label: item.nombres + ' ' + item.apellidos, value: item.id }
           })
@@ -78,24 +82,31 @@ export class ControlAccesosComponent implements OnInit {
 
   }
 
+  getAllRoles() {
+    this.rolesService.getRoles().subscribe({
+      next: (response) => {
+        this.roles = response
+      if (this.usuarioData) {
+      const iglesia = JSON.parse(this.usuarioData).iglesia;
+      this.getPerfilByIglesia(iglesia);
+    }
+      }
+
+    })
+  }
+
   async asignarRol() {
     try {
-      console.log('asignar rol', this.form.value)
       await this.rolesService.createRole({rol: this.form.value.rol}, this.form.value.usuario)
       this.troastService.success('Rol asignado correctamente', 'Éxito')
-    } catch (error) {
-      console.log(error)
-      this.troastService.error(error as string, 'Error')
+    } catch {
+      this.troastService.error('Error al asignar el rol', 'Error')
     }
   }
 
-  loandingOff() {
-    if(this.usuario && this.rol) {
-      this.loading = false
-      this.disabled = true
-    }
-    console.log('this.rol', this.rol)
-    console.log('this.permisos', this.permisos)
+  async deleteRol(user: UsuarioModel) {
+    this.rolesService.deleteRole(user.id)
+    this.troastService.success('Rol eliminado correctamente', 'Éxito')
   }
 
   clear() {
