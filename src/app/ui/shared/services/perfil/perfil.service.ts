@@ -17,7 +17,7 @@ import { environment } from '../../../../../enviroments';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
-  _collection: string = environment.collections.referidos;
+  _collection: string = environment.collections.perfil;
 
 
   constructor(

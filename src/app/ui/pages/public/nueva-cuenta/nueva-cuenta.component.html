@@ -1,0 +1,26 @@
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 border border-gray-200 rounded-lg bg-base">
+
+  <div class="bg-white border border-gray-200 rounded-lg p-6">
+    <mg-title title="Crear cuenta nueva"></mg-title>
+    <form [formGroup]="form">
+    <mg-input-text type="name" formControlName="nombres" label="Nombres" id="nombres"></mg-input-text>
+    <mg-input-text type="lastmane" formControlName="apellidos" label="Apellidos" id="apellidos"></mg-input-text>
+    <mg-input-select formControlName="iglesia" [label]="'Iglesia a la que pertenece'" id="departamento" [items]="iglesias"></mg-input-select>
+    <mg-input-text type="email" formControlName="email" label="Escriba su correo electrónico" id="email"></mg-input-text>
+    <mg-input-text type="password" formControlName="password" label="Clave" id="password"></mg-input-text>
+    <mg-input-text type="password" formControlName="confirm" label="Confirme la calve" id="confirm"></mg-input-text>
+
+    <p *ngIf="form.get('password')?.value !== form.get('confirm')?.value && form.get('confirm')?.touched" class="text-red-500 font-bold text-sm mt-2">
+      Las constraseñas no coinciden
+    </p>
+    <p *ngIf="form.get('password')?.value?.length > 0 && form.get('password')?.value?.length < 6 && form.get('password')?.touched" class="text-red-500 font-bold text-sm mt-2">
+      Debe de contener más de 6 caracteres
+    </p>
+    </form>
+
+    <div class="flex justify-center gap-4">
+      <mg-button text="Regresar" [type]="'reset'" (onClick)="back()"></mg-button>
+      <mg-button text="Crear" [disabled]="form.invalid" (onClick)="crear()"></mg-button>
+    </div>
+  </div>
+</div>
