@@ -25,7 +25,6 @@ export class PrivateComponent implements OnInit {
     if (usuarioData) {
       this.usuario = JSON.parse(usuarioData);
     } else {
-      console.log('No user data in local storage, fetching from service...');
       this.getusuario(this.auth.uidUser());
     }
   }

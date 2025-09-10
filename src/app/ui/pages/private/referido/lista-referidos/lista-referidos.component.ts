@@ -88,7 +88,6 @@ export class ListaReridosComponent implements OnInit {
   }
 
   onSearch(data: string) {
-    console.log(data);
     this.referidos = this.data.filter(
       (referido) =>
         referido.data.nombres.toLowerCase().includes(data.toLowerCase()) ||
@@ -143,25 +142,5 @@ export class ListaReridosComponent implements OnInit {
     });
 
     return datos;
-  }
-
-  processExcelData(data: any[][]): void {
-    // Aquí puedes manipular los datos cargados del archivo Excel
-    console.log(data);
-    // Ejemplo: convertir los datos a un formato específico
-    const usuarios = data.slice(1).map((row) => ({
-      departamento: '26-' + row[0],
-      municipio: '897-' + row[1],
-      iglesia: row[2] + '-' + row[3],
-      documento: row[4],
-      nombres: row[5],
-      apellidos: '',
-      comuna: row[5],
-      barrio: row[6],
-      direccion: row[7],
-      celular: row[8],
-      email: row[9],
-    }));
-    console.log(usuarios);
   }
 }

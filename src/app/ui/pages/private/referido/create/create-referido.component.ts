@@ -129,7 +129,6 @@ export class CreateReferidoComponent implements OnInit {
         lugarVotacion: res.data.lugarVotacion,
         mesaVotacion: res.data.mesaVotacion,
       });
-      console.log(res);
     });
 
   }
@@ -194,7 +193,22 @@ export class CreateReferidoComponent implements OnInit {
       this.toast.warning('Falta diligenciar campos obligatorios');
       return;
     }
+    if (this.accion == 'Editar') {
+      await this.editReferido();
+      return
+    }
     await this.saveReferido();
+  }
+
+  async editReferido() {
+    try {
+      await this.referidoService.updateReferido(this.id!, this.form.value);
+      this.location.back();
+      this.toast.success('Referido actualizado correctamente');
+    } catch (error) {
+      console.error(error);
+      this.toast.error('Error al actualizar el referido. Intente nuevamente.');
+    }
   }
 
   async saveReferido() {
@@ -206,7 +220,6 @@ export class CreateReferidoComponent implements OnInit {
         barrio: this.form.get('barrio')?.value.split(' - ')[1].trim(),
       },
     };
-    console.log(referido);
     try {
       const { documento, ...referidoSinDocumento } = referido as any;
       await this.referidoService.crearReferidoConIdDocumento(

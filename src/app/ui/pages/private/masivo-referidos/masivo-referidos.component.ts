@@ -116,7 +116,6 @@ export class MasivoReferidosComponent {
             fechaCreacion: new Date().toISOString(),
             creadoPor: this.usuario.id,
           }
-        console.log('Guardando referido:', ref);
         try {
           await this.referidoService.crearReferidoConIdDocumento(
             ref,

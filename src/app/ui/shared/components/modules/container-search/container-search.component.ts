@@ -70,7 +70,6 @@ export class ContainerSearchComponent implements OnInit {
   }
 
   getSelectOfData(atribute: string) {
-    console.log('form', this.form.value.filter);
     this.atribute = this.data.map((item: any) => ({
       label: item.data[atribute],
       value: item.data[atribute],
@@ -89,7 +88,6 @@ export class ContainerSearchComponent implements OnInit {
     const result = this.data.filter((item: BaseModel<any>) => (
       item.data[this.form.value.filter as keyof any] == this.form.value.atribute
     ));
-    console.log('result', result);
     this.onSubmitSearch.emit(result);
   }
 }
