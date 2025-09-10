@@ -25,12 +25,6 @@ export const CARDS_HOME: CardModel[] = [
     description: 'Ver y gestionar comunas',
     icon: 'location_city'
   },
-  {
-    goTo: '../crear-referido',
-    title: 'Referidos',
-    description: 'Ver y gestionar referidos',
-    icon: 'location_city'
-  },
   // {
   //   goTo: '../roles',
   //   title: 'Roles',

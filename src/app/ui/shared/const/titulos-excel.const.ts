@@ -28,7 +28,7 @@ export const DESCRIPCION_EXCEL: string[] = [
   'Comuna donde reside el referido',
   'Barrio donde reside el referido',
   'Dirección del referido',
-  'Fecha de nacimiento del referido',
+  'formato (1991-09-10) (AAAA-MM-DD)',
   'Lugar de votación del referido',
   'Mesa de votación del referido',
   'Apoyará con el voto por SENADO (SI/NO)',
