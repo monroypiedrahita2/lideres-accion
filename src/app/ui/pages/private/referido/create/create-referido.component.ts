@@ -160,15 +160,17 @@ export class CreateReferidoComponent implements OnInit {
 
   getComunas() {
     this.comunasService.getComunas().subscribe({
-      next: (res: BaseModel<ComunaModel>[]) => {
-        this.barrios = res.flatMap((comuna: BaseModel<ComunaModel>) =>
-          comuna.data.barrios.map((barrio: string) => ({
-            label: comuna.data.nombre.trim() + ' - ' + barrio.trim(),
-            value: comuna.data.nombre.trim() + ' - ' + barrio.trim(),
-          }))
-        );
+      next: (res) => {
+        this.barrios = res.map((comuna: BaseModel<ComunaModel>) => ({
+          label: comuna.data.barrio,
+          value: comuna.data.barrio,
+        }))
       },
-    });
+      error: (err) => {
+        console.error('Error getting lideres', err);
+      },
+      complete: () => {},
+    })
   }
 
   getReferidos() {

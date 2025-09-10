@@ -1,10 +1,9 @@
-import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
-import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
 import { TITULOS_EXCEL } from '../../../shared/const/titulos-excel.const';
 import { ReferidoService } from '../../../shared/services/referido/referido.service';
@@ -15,9 +14,9 @@ import { BaseModel } from '../../../../models/base/base.model';
   selector: 'app-masivo-referidos',
   templateUrl: './masivo-referidos.component.html',
   standalone: true,
-  imports: [CommonModule, SkeletonComponent, ButtonComponent],
+  imports: [CommonModule, ButtonComponent],
 })
-export class MasivoReferidosComponent implements OnInit {
+export class MasivoReferidosComponent {
   iglesia: any = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
   loading: boolean = false;
@@ -32,7 +31,6 @@ export class MasivoReferidosComponent implements OnInit {
     private readonly toast: ToastrService
   ) {}
 
-  ngOnInit() {}
 
   onFileChange(event: any): void {
     const target: DataTransfer = <DataTransfer>event.target;
@@ -131,7 +129,6 @@ export class MasivoReferidosComponent implements OnInit {
         } catch (error) {
           this.toast.error(`Error al guardar el referido ${ref.data.nombres} ${ref.data.apellidos}`);
           referido.guardado = 'error';
-
           console.error(error);
         }
 
