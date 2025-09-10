@@ -37,12 +37,18 @@ export const CARDS_HOME: CardModel[] = [
   //   description: 'Administrar roles',
   //   icon: 'supervisor_account'
   // },
-  // {
-  //   goTo: '../listar-lideres',
-  //   title: 'Listar líderes',
-  //   description: 'Administrar de líderes',
-  //   icon: 'groups'
-  // },
+  {
+    goTo: '../listar-referidos',
+    title: 'Listar refereidos',
+    description: 'Administrar de referidos',
+    icon: 'groups'
+  },
+  {
+    goTo: '../masivo-referidos',
+    title: 'Carga masiva',
+    description: 'A través de un archivo Excel',
+    icon: 'upload_file'
+  },
   // {
   //   goTo: '../crear-lider',
   //   title: 'Crear líder',

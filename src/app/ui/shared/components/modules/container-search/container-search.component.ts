@@ -27,14 +27,7 @@ import { ButtonComponent } from '../../atoms/button/button.component';
 })
 export class ContainerSearchComponent implements OnInit {
   form!: FormGroup;
-  filter: SelectOptionModel<string>[] = [
-    { label: 'Todo', value: 'todo' },
-    { label: 'Por departamento', value: 'departamento' },
-    { label: 'Por municipio', value: 'municipio' },
-    { label: 'Por iglesia', value: 'iglesia' },
-    { label: 'Por comuna', value: 'comuna' },
-    { label: 'Por barrio', value: 'barrio' },
-  ];
+  filter: SelectOptionModel<string>[] = []
 
   @Input() atribute: SelectOptionModel<string>[] = [];
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');

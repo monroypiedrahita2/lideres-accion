@@ -20,6 +20,7 @@ import { InputTextComponent } from '../../../../shared/components/atoms/input-te
 import { ComunaService } from '../../../../shared/services/comuna/comuna.service';
 import { ComunaModel } from '../../../../../models/comuna/comuna.model';
 import { ButtonComponent } from '../../../../shared/components/atoms/button/button.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create-referido',
@@ -36,6 +37,7 @@ import { ButtonComponent } from '../../../../shared/components/atoms/button/butt
   templateUrl: './create-referido.component.html',
 })
 export class CreateReferidoComponent implements OnInit {
+  id!: string | null;
   iglesia: string = JSON.parse(localStorage.getItem('usuario')|| '{}').iglesia;
   loading: boolean = false;
   accion: 'Crear' | 'Editar' = 'Crear';
@@ -52,9 +54,9 @@ export class CreateReferidoComponent implements OnInit {
     { label: 'No', value: 'No' },
   ];
   barrios: SelectOptionModel<any>[] = [];
-  isInternoSelect: SelectOptionModel<string>[] = [
-    { label: 'Si', value: 'Interno' },
-    { label: 'No', value: 'Externo' },
+  isInternoSelect: SelectOptionModel<any>[] = [
+    { label: 'Si', value: true },
+    { label: 'No', value: false },
   ];
 
   constructor(
@@ -64,7 +66,9 @@ export class CreateReferidoComponent implements OnInit {
     private readonly comunasService: ComunaService,
     private readonly auth: AuthService,
     private readonly fb: FormBuilder,
+    private readonly router: ActivatedRoute
   ) {
+     this.id = this.router.snapshot.paramMap.get('id')
     this.form = this.fb.group({
       referidoPor: [''],
       isInterno: [false, Validators.required],
@@ -81,8 +85,8 @@ export class CreateReferidoComponent implements OnInit {
         ],
       ],
       email: [''],
+      fechaNacimiento: [''],
       esEmprendedor: [false],
-      comuna: [''],
       barrio: [''],
       direccion: [''],
       camara: [true],
@@ -96,16 +100,38 @@ export class CreateReferidoComponent implements OnInit {
   ngOnInit(): void {
     this.enableSkeleton = true;
     this.getReferidos();
-    console.log(this.iglesia);
     this.getComunas();
-    try {
-      this.accion = 'Crear';
-      this.enableSkeleton = false;
-      this.emailEnabled = false;
-    } catch (error) {
-      console.error(error);
-      this.enableSkeleton = false;
+    if (this.id) {
+      this.accion = 'Editar';
+      this.title = this.accion + ' ' + 'referido';
+      this.getReferido(this.id);
     }
+  }
+
+  getReferido(documento: string) {
+    this.referidoService.getReferido(documento).then((res: BaseModel<ReferidoModel>) => {
+      this.form.patchValue({
+        referidoPor: res.data.referidoPor,
+        isInterno: res.data.isInterno,
+        documento: res.data.documento,
+        nombres: res.data.nombres,
+        apellidos: res.data.apellidos,
+        celular: res.data.celular,
+        email: res.data.email,
+        fechaNacimiento: res.data.fechaNacimiento,
+        esEmprendedor: res.data.esEmprendedor,
+        comuna: res.data.comuna,
+        barrio: res.data.comuna + ' - ' + res.data.barrio,
+        direccion: res.data.direccion,
+        camara: res.data.camara,
+        senado: res.data.senado,
+        iglesia: res.data.iglesia,
+        lugarVotacion: res.data.lugarVotacion,
+        mesaVotacion: res.data.mesaVotacion,
+      });
+      console.log(res);
+    });
+
   }
 
   async goToPage(page: string) {
@@ -131,13 +157,14 @@ export class CreateReferidoComponent implements OnInit {
     this.location.back();
   }
 
+
   getComunas() {
     this.comunasService.getComunas().subscribe({
       next: (res: BaseModel<ComunaModel>[]) => {
         this.barrios = res.flatMap((comuna: BaseModel<ComunaModel>) =>
           comuna.data.barrios.map((barrio: string) => ({
-            label: comuna.data.nombre + ' - ' + barrio,
-            value: barrio,
+            label: comuna.data.nombre.trim() + ' - ' + barrio.trim(),
+            value: comuna.data.nombre.trim() + ' - ' + barrio.trim(),
           }))
         );
       },
@@ -152,7 +179,6 @@ export class CreateReferidoComponent implements OnInit {
           value: referido.id,
         }));
         this.enableSkeleton = false;
-        console.log(this.referidos);
       },
       error: (err) => {
         console.error('Error getting lideres', err);
@@ -173,8 +199,12 @@ export class CreateReferidoComponent implements OnInit {
     const referido: BaseModel<ReferidoModel> = {
       fechaCreacion: new Date().toISOString(),
       creadoPor: this.auth.uidUser(),
-      data: {...this.form.value, iglesia: this.iglesia},
+      data: {...this.form.value, iglesia: this.iglesia,
+        comuna: this.form.get('barrio')?.value.split(' - ')[0].trim(),
+        barrio: this.form.get('barrio')?.value.split(' - ')[1].trim(),
+      },
     };
+    console.log(referido);
     try {
       const { documento, ...referidoSinDocumento } = referido as any;
       await this.referidoService.crearReferidoConIdDocumento(

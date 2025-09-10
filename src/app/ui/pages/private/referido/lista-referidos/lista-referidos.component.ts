@@ -1,56 +1,82 @@
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TitleComponent } from '../../../../shared/components/atoms/title/title.component';
-import { ContainerGridComponent } from '../../../../shared/components/atoms/container-grid/container-grid.component';
 import { ToastrService } from 'ngx-toastr';
 import { LugaresService } from '../../../../shared/services/lugares/lugares.service';
 import { BaseModel } from '../../../../../models/base/base.model';
 import { ReferidoModel } from '../../../../../models/referido/referido.model';
-import { CardContactoComponent } from '../../../../shared/components/organism/card-contact/card-contacto.component';
 import { SpinnerComponent } from '../../../../shared/components/modules/spinner/spinner.component';
-import { ContainerSearchComponent } from '../../../../shared/components/modules/container-search/container-search.component';
 import { ButtonComponent } from '../../../../shared/components/atoms/button/button.component';
 import * as XLSX from 'xlsx';
 import { ReferidoService } from '../../../../shared/services/referido/referido.service';
+import { InputTextComponent } from '../../../../shared/components/atoms/input-text/input-text.component';
+import { FormsModule } from '@angular/forms';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { TITULOS_EXCEL } from '../../../../shared/const/titulos-excel.const';
+import { PrivateRoutingModule } from "../../private-routing.module";
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-lista-referidos',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
+    FormsModule,
     TitleComponent,
-    ContainerGridComponent,
-    CardContactoComponent,
-    ContainerGridComponent,
     SpinnerComponent,
-    ContainerSearchComponent,
-    ButtonComponent
-  ],
+    InputTextComponent,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    ButtonComponent,
+    PrivateRoutingModule,
+    RouterModule
+],
   providers: [LugaresService],
   templateUrl: './lista-referidos.component.html',
 })
 export class ListaReridosComponent implements OnInit {
+  iglesia: any = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
   referidos: BaseModel<ReferidoModel>[] = [];
   data: BaseModel<ReferidoModel>[] = [];
   spinner: boolean = true;
+  searchText: string = '';
 
+  length = 50;
+  pageSize = 10;
+  pageIndex = 0;
+  pageSizeOptions = [5, 10, 25];
+
+  hidePageSize = false;
+  showPageSizeOptions = true;
+  showFirstLastButtons = true;
+  disabled = false;
+  pageEvent: PageEvent | undefined = undefined;
 
   constructor(
-    private referidoService: ReferidoService,
-    private toast: ToastrService
-  ) {
-
-  }
+    private readonly referidoService: ReferidoService,
+    private readonly toast: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.getReferidos();
   }
 
-  getReferidos(){
-    this.referidoService.getReferidos().subscribe({
+  handlePageEvent(e: PageEvent) {
+    this.pageEvent = e;
+    this.length = e.length;
+    this.pageSize = e.pageSize;
+    this.pageIndex = e.pageIndex;
+  }
+
+  getReferidos() {
+    this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
       next: (data) => {
+        this.data = data;
         this.referidos = data;
         this.spinner = false;
       },
@@ -61,108 +87,81 @@ export class ListaReridosComponent implements OnInit {
     });
   }
 
-  onSearch(data: BaseModel<ReferidoModel>[]) {
-    this.data = data
-
+  onSearch(data: string) {
+    console.log(data);
+    this.referidos = this.data.filter(
+      (referido) =>
+        referido.data.nombres.toLowerCase().includes(data.toLowerCase()) ||
+        referido.data.apellidos.toLowerCase().includes(data.toLowerCase()) ||
+        referido.data.celular.toLowerCase().includes(data.toLowerCase()) ||
+        referido.id?.toLowerCase().includes(data.toLowerCase() || '')
+    );
   }
 
-  // descargar (referidos: BaseModel<ReferidoModel>[]) {
-  //   // const datos = this.transformarDatos(referidos);
-  //   const libro = XLSX.utils.book_new();
-  //   // const hoja = XLSX.utils.aoa_to_sheet(datos);
-  //   XLSX.utils.book_append_sheet(libro, hoja, 'Referidos');
-  //   XLSX.writeFile(libro, 'referidos.xlsx');
-  // }
+  clear() {
+    this.searchText = '';
+    this.referidos = this.data;
+  }
 
-//   transformarDatos(referidos: BaseModel<ReferidoModel>[]): any[][] {
-//     const datos: any[][] = [];
+  descargar(referidos: BaseModel<ReferidoModel>[]) {
+    const datos = this.transformarDatos(referidos);
+    const libro = XLSX.utils.book_new();
+    const hoja = XLSX.utils.aoa_to_sheet(datos);
+    XLSX.utils.book_append_sheet(libro, hoja, 'Referidos');
+    XLSX.writeFile(libro, 'referidos.xlsx');
+  }
 
-//       // Encabezados
-//     datos.push([
-//       'Departamento',
-//       'Municipio',
-//       'Iglesia',
-//       'Horario',
-//       'Documento',
-//       'Nombres',
-//       'Comuna',
-//       'Barrio',
-//       'Departamento de votación',
-//       'Municipio de votación',
-//       'Lugar de votación',
-//       'Mesa',
-//       'Líder',
-//     ]);
+  transformarDatos(referidos: BaseModel<ReferidoModel>[]): any[][] {
+    const datos: any[][] = [];
 
-//     referidos.forEach(referido => {
-//       const referidoData = referido.data;
-//       const lugarVotacion = referidoData.lugarVotacion; // Manejo de lugarVotacion opcional
+    // Encabezados
+    datos.push(TITULOS_EXCEL);
 
-//       // ROWS
-//     //   datos.push([
+    referidos.forEach((referido) => {
+      const referidoData = referido.data;
+      const documento = referido.id;
 
-//     //     referidoData.iglesia.split('-')[0],
-//     //     referidoData.iglesia.split('-')[1],
-//     //     referidoData.id,
-//     //     referidoData.nombres + ' ' + referidoData.apellidos ,
-//     //     referidoData.comuna,
-//     //     referidoData.barrio,
-//     //     lugarVotacion.departamento.split('-')[1],
-//     //     lugarVotacion.municipio.split('-')[1],
-//     //     lugarVotacion.lugar,
-//     //     lugarVotacion.mesa,
-//     //     referidoData.referidoPor
-//     //   ]);
-//     // });
+      // ROWS
+      datos.push([
+        referidoData.isInterno,
+        documento,
+        referidoData.nombres,
+        referidoData.apellidos,
+        referidoData.celular,
+        referidoData.email,
+        referidoData.esEmprendedor ? 'SI' : 'NO',
+        referidoData.comuna,
+        referidoData.barrio,
+        referidoData.direccion,
+        referidoData.fechaNacimiento,
+        referidoData.lugarVotacion,
+        referidoData.mesaVotacion,
+        referidoData.senado ? 'SI' : 'NO',
+        referidoData.camara ? 'SI' : 'NO',
+        referidoData.referidoPor,
+      ]);
+    });
 
+    return datos;
+  }
 
-//     return datos;
-//   }
-
-
-
-//   // onFileChange(event: any): void {
-//   //   const target: DataTransfer = <DataTransfer>(event.target);
-//   //   if (target.files.length !== 1) {
-//   //     this.toast.error('Solo se puede cargar un archivo a la vez');
-//   //     return;
-//   //   }
-
-//   //   const reader: FileReader = new FileReader();
-//   //   reader.onload = (e: any) => {
-//   //     const bstr: string = e.target.result;
-//   //     const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
-//   //     const wsname: string = wb.SheetNames[0];
-//   //     const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-//   //     const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-//   //     this.processExcelData(data as any[][]);
-//   //   };
-//   //   reader.readAsBinaryString(target.files[0]);
-//   // }
-
-//   // processExcelData(data: any[][]): void {
-//   //   // Aquí puedes manipular los datos cargados del archivo Excel
-//   //   console.log(data);
-//   //   // Ejemplo: convertir los datos a un formato específico
-//   //   const usuarios = data.slice(1).map(row => ({
-//   //     departamento: '26-' + row[0],
-//   //     municipio: '897-' + row[1],
-//   //     iglesia: row[2] + '-' + row[3],
-//   //     documento: row[4],
-//   //     nombres: row[5],
-//   //     apellidos: '',
-//   //     comuna: row[5],
-//   //     barrio: row[6],
-//   //     direccion: row[7],
-//   //     celular: row[8],
-//   //     email: row[9],
-//   //   }));
-//   //   console.log(usuarios);
-//   // }
-
-
-
-
-
-
+  processExcelData(data: any[][]): void {
+    // Aquí puedes manipular los datos cargados del archivo Excel
+    console.log(data);
+    // Ejemplo: convertir los datos a un formato específico
+    const usuarios = data.slice(1).map((row) => ({
+      departamento: '26-' + row[0],
+      municipio: '897-' + row[1],
+      iglesia: row[2] + '-' + row[3],
+      documento: row[4],
+      nombres: row[5],
+      apellidos: '',
+      comuna: row[5],
+      barrio: row[6],
+      direccion: row[7],
+      celular: row[8],
+      email: row[9],
+    }));
+    console.log(usuarios);
+  }
 }

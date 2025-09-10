@@ -1,0 +1,115 @@
+<!-- <mg-skeleton [enableSkeleton]="enableSkeleton" [num]="5"></mg-skeleton> -->
+
+<label
+*ngIf="referidos.length == 0"
+  class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
+>
+  <div class="flex flex-col items-center justify-center pt-5 pb-6">
+    <svg
+      class="w-8 h-8 mb-4 text-gray-400"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M7 16V4a1 1 0 011-1h8a1 1 0 011 1v12m-5 4h.01M12 16v4m0 0H8m4 0h4"
+      ></path>
+    </svg>
+    <p class="mb-2 text-sm text-gray-500">
+      <span class="font-semibold">Haz clic para subir archivo</span> o
+      arrástralo aquí
+    </p>
+    <p class="text-xs text-gray-500">CSV, XLSX, PDF, etc.</p>
+  </div>
+  <input type="file" class="hidden" (change)="onFileChange($event)" />
+</label>
+
+<div class="p-4 flex justify-center gap-4">
+  <mg-button
+    *ngIf="referidos.length == 0"
+    (onClick)="descargar()"
+    icon="cloud_download"
+    text="Plantilla"
+  ></mg-button>
+  <mg-button
+    *ngIf="referidos.length > 0"
+    [loading]="loading"
+    (onClick)="save()"
+    icon="save"
+    text="Guardar masivo"
+  ></mg-button>
+  <mg-button
+    *ngIf="referidos.length > 0"
+    (onClick)="clear()"
+    icon="clear"
+    text="Borrar recarga"
+    type="reset"
+  ></mg-button>
+</div>
+
+<div class="sm:hidden lg:block" *ngIf="referidos.length > 0">
+  <div class="relative overflow-x-auto">
+    <div>
+      <table
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead
+          class="text-sm text-white uppercase bg-primary dark:bg-primary dark:text-gray-400 font-primary"
+        >
+          <tr>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              ¿Es interno?
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Documento
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Nombres
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Lugar de votación
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Mesa
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let referido of referidos"
+            class="bg-white border-b border-gray-200 hover:bg-gray-200"
+          >
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.isInterno ? "SI" : "NO" }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.documento }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.nombres + " " + referido.apellidos }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.lugarVotacion }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.mesaVotacion }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-black">
+              <div class="flex items-center justify-center h-full">
+                <span class="material-icons text-primary cursor-pointer" *ngIf="!referido.guardado" (click)="guardarReferido(referido)" (keyup)="guardarReferido(referido)">save</span>
+                <span class="material-icons text-primary cursor-pointer" *ngIf="referido.guardado == true" >done</span>
+                <span class="material-icons text-primary cursor-pointer" *ngIf="referido.guardado == 'error'" >warning</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -33,7 +33,7 @@ export class PrivateComponent implements OnInit {
   async getusuario(id: string) {
     try {
       this.usuario = await this.perfilService.getMiPerfil(id);
-      localStorage.setItem('usuario', JSON.stringify(this.usuario));
+      localStorage.setItem('usuario', JSON.stringify({...this.usuario, id: id}));
     } catch (error) {
       console.error(error);
     }

@@ -49,6 +49,12 @@
     id="email"
     label="Correo electrónico (opcional)"
   ></mg-input-text>
+  <mg-input-text
+    type="date"
+    formControlName="fechaNacimiento"
+    id="date"
+    label="Fecha de nacimiento (opcional)"
+  ></mg-input-text>
     <label class="inline-flex mb-3 gap-2 items-center justify-between p-2 cursor-pointer min-w-3">
       <span class="ms-3 text-sm font-medium text-black dark:text-black">¿Es emprendedor?</span>
       <input type="checkbox" [value]="true" class="sr-only peer" formControlName="esEmprendedor">

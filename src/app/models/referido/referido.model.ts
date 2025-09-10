@@ -7,7 +7,7 @@ export interface ReferidoModel {
   apellidos: string;
   celular: string;
   email?: string;
-  esEmprendedor?: boolean;
+  esEmprendedor?: boolean | string;
   comuna: string;
   barrio: string;
   direccion: string;
@@ -16,6 +16,7 @@ export interface ReferidoModel {
   lugarVotacion?: string;
   mesaVotacion?: string;
   referidoPor: string; // id / documento de identidad de quien lo refirio
-  senado: boolean;
-  camara: boolean;
+  senado: boolean | string;
+  camara: boolean | string;
+  guardado?: 'error' | boolean;
 }

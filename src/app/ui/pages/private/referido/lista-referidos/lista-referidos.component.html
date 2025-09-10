@@ -1,46 +1,58 @@
-<!-- <app-spinner [showSpinner]="spinner"></app-spinner>
+<app-spinner [showSpinner]="spinner"></app-spinner>
 
 <mg-title [title]="'LISTA DE REFERIDOS'"></mg-title>
-<app-container-search
-  [data]="referidos"
-  (onSubmitSearch)="onSearch($event)"
-></app-container-search>
-
-<div class="sm:block lg:hidden">
-  <div class="font-primary text-lg">
-    Total registros: {{ data.length }} líderes
+<div class="grid grid-cols-12 w-full gap-4">
+  <div class="col-span-8">
+    <mg-input-text
+      class="w-full"
+      type="text"
+      [(ngModel)]="searchText"
+      id="lastNames"
+      label="Buscar por nombre o documento"
+      (keyup)="onSearch(searchText)"
+    ></mg-input-text>
   </div>
-  <mg-container-grid [hiddenButtons]="true">
-    @for (referido of data; track referido.id) {
-    <azul-card-contacto
-      [titleL]="referido.data.nombres"
-      [subTitleL]="referido.data.apellidos"
-      [titleR]="referido.data.barrio"
-      [subTitleR]="referido.data.iglesia.split('-')[0]"
-      [telefono]="referido.data.celular"
-    >
-    </azul-card-contacto>
-    }
-  </mg-container-grid>
+  <div class="col-span-4 flex items-center justify-end">
+    <mg-button
+      (onClick)="clear()"
+      icon="cloud_download"
+      text="Limpiar"
+      type="reset"
+    ></mg-button>
+  </div>
 </div>
 
-@if (data.length > 0) {
+
+
+<div class="flex justify-between items-end">
+  <div class="font-primary text-lg">
+    Total registros: {{ referidos.length }} líderes
+  </div>
+  <div class="p-4">
+    <mg-button
+      (onClick)="descargar(referidos)"
+      icon="cloud_download"
+      text="Descargar"
+    ></mg-button>
+  </div>
+</div>
+
+<!-- <mat-paginator
+  #paginator
+  class="demo-paginator"
+  (page)="handlePageEvent($event)"
+  [length]="length"
+  [pageSize]="pageSize"
+  [disabled]="disabled"
+  [showFirstLastButtons]="showFirstLastButtons"
+  [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+  [hidePageSize]="hidePageSize"
+  [pageIndex]="pageIndex"
+  aria-label="Select page"
+>
+</mat-paginator> -->
 
 <div class="sm:hidden lg:block">
-
-  <div class="flex justify-between items-end">
-
-    <div class="font-primary text-lg">
-      Total registros: {{ data.length }} líderes
-    </div>
-    <div class="p-4">
-      <mg-button (onClick)="descargar(data)" icon="cloud_download" text="Descargar"></mg-button>
-    </div>
-
-  </div>
-
-
-
   <div class="relative overflow-x-auto">
     <div>
       <table
@@ -51,25 +63,10 @@
         >
           <tr>
             <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
-              Departamento
-            </th>
-            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
-              Municipio
-            </th>
-            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
-              Iglesia
-            </th>
-            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
               Documento
             </th>
             <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
               Nombres
-            </th>
-            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
-              Barrio
-            </th>
-            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
-              Municipio de votación
             </th>
             <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
               Lugar de votación
@@ -84,34 +81,26 @@
         </thead>
         <tbody>
           <tr
-            *ngFor="let lider of data"
-            class="bg-white border-b  border-gray-200 hover:bg-gray-200"
+            *ngFor="let referido of referidos"
+            class="bg-white border-b border-gray-200 hover:bg-gray-200"
           >
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-              {{ lider.data.iglesia.split("-")[0] }}
+              {{ referido.id }}
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-              {{ lider.data.id }}
+              {{ referido.data.nombres + " " + referido.data.apellidos }}
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-              {{ lider.data.nombres + " " + lider.data.apellidos }}
+              {{ referido.data.lugarVotacion }}
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-              {{ lider.data.barrio.split('-')[0] }}
+              {{ referido.data.mesaVotacion }}
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-              {{ lider.data.lugarVotacion ? lider.data.lugarVotacion.municipio.split('-')[1] : null}}
-            </td>
-            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-              {{ lider.data.lugarVotacion?.lugar }}
-            </td>
-            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-              {{ lider.data.lugarVotacion?.mesa}}
-            </td>
-            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-              <div class="flex gap-4">
-                <span class="material-icons text-primary">edit</span>
-                <span class="material-icons text-primary">delete</span>
+              <div class="flex items-center justify-center gap-4">
+                <span class="material-icons text-primary cursor-pointer" [routerLink]="['../editar-referido', referido.id]">edit</span>
+                <!-- <span class="material-icons text-primary cursor-pointer">delete</span> -->
+
               </div>
             </td>
           </tr>
@@ -119,10 +108,6 @@
       </table>
     </div>
   </div>
-
-
 </div>
 
-}
-
-<input type="file" (change)="onFileChange($event)" /> -->
+<!-- <input type="file" (change)="onFileChange($event)" /> -->
