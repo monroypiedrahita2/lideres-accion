@@ -6,6 +6,4 @@ export const LIST_ROLES: {label: string, value: string, nivel: number}[] = [
   { label: 'Pastor', value: 'Pastor', nivel: 60 },
   { label: 'Coordinador de iglesia', value: 'Coordinador de iglesia', nivel: 50 },
   { label: 'Lider', value: 'Lider', nivel: 40 },
-  { label: 'Referido', value: 'Referido', nivel: 10 },
-  { label: 'Ninguno', value: 'Ninguno', nivel: 0 },
 ]
