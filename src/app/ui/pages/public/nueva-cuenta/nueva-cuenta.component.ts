@@ -18,6 +18,7 @@ import { InputSelectComponent } from '../../../shared/components/atoms/input-sel
 import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
 import { BaseModel } from '../../../../models/base/base.model';
 import { SelectOptionModel } from '../../../../models/base/select-options.model';
+import { PerfilModel } from '../../../../models/perfil/perfil.model';
 
 @Component({
   selector: 'app-nueva-cuenta',
@@ -83,13 +84,20 @@ export class NuevaCuentaComponent implements OnInit {
       return;
     }
     try {
+      const user: PerfilModel = {
+        nombres: this.form.value.nombres,
+        apellidos: this.form.value.apellidos,
+        iglesia: this.form.value.iglesia,
+        email: this.form.value.email,
+        rol: null,
+      }
       await this.authService
         .createUserWithEmailAndPassword(
           this.form.value.email,
           this.form.value.password
         )
         .then(async (userCredential) => {
-          await this.crearNuevaCuenta(userCredential.user.uid);
+          await this.crearNuevaCuenta(user, userCredential.user.uid);
         });
     } catch {
       this.toast.error(
@@ -99,15 +107,10 @@ export class NuevaCuentaComponent implements OnInit {
     }
   }
 
-  async crearNuevaCuenta(uid: string) {
+  async crearNuevaCuenta(user: PerfilModel, uid: string) {
     try {
       await this.perfilService.crearPerfilConUId(
-        {
-          nombres: this.form.value.nombres,
-          apellidos: this.form.value.apellidos,
-          iglesia: this.form.value.iglesia,
-          email: this.form.value.email,
-        },
+        user,
         uid
       );
       this.toast.success('Cuenta creada exitosamente');

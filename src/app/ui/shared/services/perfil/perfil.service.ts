@@ -14,6 +14,7 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
+import { PerfilModel } from '../../../../models/perfil/perfil.model';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
@@ -25,14 +26,14 @@ export class PerfilService {
     private readonly toast: ToastrService,
   ) {}
 
-  crearPerfilConUId(data: any, id: string): Promise<void> {
+  crearPerfilConUId(data: PerfilModel, id: string): Promise<void> {
     const dataRef = doc(this.firestore, this._collection, id);
     return setDoc(dataRef, data);
   }
 
 
 
-  getPerfiles(): Observable<any> {
+  getPerfiles(): Observable<PerfilModel[]> {
     const _collection = collection(this.firestore, this._collection);
     return collectionData(_collection, { idField: 'id' }) as Observable<any>;
   }
