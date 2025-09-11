@@ -54,7 +54,7 @@ export class PerfilService {
   }
   getPerfilesByIglesia(value: string){
     const q = query(collection(this.firestore, this._collection), where('iglesia', '==', value));
-    const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
+    const response = collectionData(q, { idField: 'id' }) as Observable<PerfilModel[]>;
     return response;
 
   }
