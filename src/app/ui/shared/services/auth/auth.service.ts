@@ -9,7 +9,7 @@ import {
   sendPasswordResetEmail,
   signInWithPopup,
   GoogleAuthProvider,
-  User
+  User,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 
@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private auth: Auth, private router: Router) {}
+  constructor(private readonly auth: Auth, private readonly router: Router) {}
 
   createUserWithEmailAndPassword(email: string, password: string) {
     return createUserWithEmailAndPassword(
@@ -37,7 +37,6 @@ export class AuthService {
     return signOut(this.auth);
   }
 
-
   loginWithGoogle() {
     return signInWithPopup(this.auth, new GoogleAuthProvider());
   }
@@ -50,14 +49,13 @@ export class AuthService {
     return updatePassword(user, newPassword);
   }
 
-  getAuth(){
+  getAuth() {
     return getAuth();
   }
 
   deleteUser() {
     return this.auth.currentUser?.delete();
   }
-
 
   isAuthenticated(): boolean {
     const user = this.auth.currentUser;
@@ -75,6 +73,4 @@ export class AuthService {
   uidUser(): string {
     return this.getAuth().currentUser?.uid ?? '';
   }
-
-
 }

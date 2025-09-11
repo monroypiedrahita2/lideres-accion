@@ -156,7 +156,6 @@ export class CrearIglesiaComponent implements OnInit {
   }
 
   async getIglesias() {
-    console.log('this.iglesias');
     this.iglesiaService.getIglesias().subscribe({
       next: (iglesias) => {
         this.iglesias = iglesias;

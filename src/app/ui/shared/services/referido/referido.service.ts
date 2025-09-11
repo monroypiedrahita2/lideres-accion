@@ -21,10 +21,15 @@ import { ReferidoModel } from '../../../../models/referido/referido.model';
 export class ReferidoService {
   _collection: string = environment.collections.referidos;
 
+  constructor(
+    private readonly firestore: Firestore,
+    private readonly toast: ToastrService
+  ) {}
 
-  constructor(private readonly firestore: Firestore, private readonly toast: ToastrService) {}
-
-  crearReferidoConIdDocumento(data: BaseModel<ReferidoModel>, id: string): Promise<void> {
+  crearReferidoConIdDocumento(
+    data: BaseModel<ReferidoModel>,
+    id: string
+  ): Promise<void> {
     const dataRef = doc(this.firestore, this._collection, id);
     return setDoc(dataRef, data);
   }
@@ -55,6 +60,13 @@ export class ReferidoService {
       return response;
     }
   }
+  getReferidoByIglesia(iglesia: string): Observable<any[]> {
+    const q = query(
+      collection(this.firestore, this._collection),
+      where('data.iglesia', '==', iglesia)
+    );
+    return collectionData(q, { idField: 'id' }) as Observable<any[]>;
+  }
 
   getReferido(id: string): Promise<any> {
     const docRef = doc(this.firestore, this._collection, id);
@@ -73,7 +85,7 @@ export class ReferidoService {
       await deleteDoc(docRef);
       this.toast.success('perfil eliminado correctamente');
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.toast.success('Error al eliminar el perfil');
     }
   }

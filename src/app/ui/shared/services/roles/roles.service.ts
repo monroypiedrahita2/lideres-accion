@@ -1,33 +1,45 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, docData, getDoc, query, where } from '@angular/fire/firestore';
+import {
+  collection,
+  collectionData,
+  deleteDoc,
+  doc,
+  Firestore,
+  query,
+  setDoc,
+  where,
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
 import { environment } from '../../../../../enviroments';
 import { RolesModel } from '../../../../models/roles/roles.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RolesService {
   _collection: string = environment.collections.roles;
 
-  constructor(private readonly firestore: Firestore) { }
+  constructor(private readonly firestore: Firestore) {}
 
-  createRole(role: BaseModel<RolesModel>) {
-    const collectionRef = collection(this.firestore, this._collection);
-    return addDoc(collectionRef, role);
+  createRole(data: any, id: string): Promise<void> {
+    const dataRef = doc(this.firestore, this._collection, id);
+    return setDoc(dataRef, data);
   }
 
   getRoles() {
     const collectionRef = collection(this.firestore, this._collection);
-    return collectionData(collectionRef, { idField: 'id' }) as Observable<BaseModel<RolesModel>[]>;
+    return collectionData(collectionRef, { idField: 'id' }) as Observable<
+      RolesModel[]
+    >;
   }
 
-  getRoleByName(value: string) {
-    const q = query(collection(this.firestore, this._collection), where('data.nombre', '==', value));
-    const response = collectionData(q, { idField: 'id' }) as Observable<BaseModel<RolesModel>[]>;
-    return response;
-  }
+    async deleteRole(id: string) {
+      const docRef = doc(this.firestore, `${this._collection}/${id}`);
+        await deleteDoc(docRef);
+    }
+
+
 
 
 }

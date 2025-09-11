@@ -27,10 +27,10 @@ import { ToastrService } from 'ngx-toastr';
 export class CreateUserComponent {
   form!: FormGroup;
   constructor(
-    private fb: FormBuilder,
-    private location: Location,
-    private authService: AuthService,
-    private toast: ToastrService
+    private readonly fb: FormBuilder,
+    private readonly location: Location,
+    private readonly authService: AuthService,
+    private readonly toast: ToastrService
 
   ) {
     this.form = this.fb.group({
@@ -65,8 +65,5 @@ export class CreateUserComponent {
       console.error(error);
       this.toast.error('Error, inténtelo de nuevo')
     }
-  }
-
-  openSnackBar(text: string) {
   }
 }

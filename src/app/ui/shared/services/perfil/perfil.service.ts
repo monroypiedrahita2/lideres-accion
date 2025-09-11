@@ -14,10 +14,11 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
+import { PerfilModel } from '../../../../models/perfil/perfil.model';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
-  _collection: string = environment.collections.referidos;
+  _collection: string = environment.collections.perfil;
 
 
   constructor(
@@ -25,17 +26,18 @@ export class PerfilService {
     private readonly toast: ToastrService,
   ) {}
 
-  crearPerfilConUId(data: any, id: string): Promise<void> {
+  crearPerfilConUId(data: PerfilModel, id: string): Promise<void> {
     const dataRef = doc(this.firestore, this._collection, id);
     return setDoc(dataRef, data);
   }
 
 
 
-  getPerfiles(): Observable<any> {
+  getPerfiles(): Observable<PerfilModel[]> {
     const _collection = collection(this.firestore, this._collection);
     return collectionData(_collection, { idField: 'id' }) as Observable<any>;
   }
+
 
 
 
@@ -50,6 +52,13 @@ export class PerfilService {
       return response;
     }
   }
+  getPerfilesByIglesia(value: string){
+    const q = query(collection(this.firestore, this._collection), where('iglesia', '==', value));
+    const response = collectionData(q, { idField: 'id' }) as Observable<PerfilModel[]>;
+    return response;
+
+  }
+
 
 
 
@@ -71,8 +80,8 @@ getMiPerfil(id: string): Promise<any> {
       await deleteDoc(docRef);
       this.toast.success('perfil eliminado correctamente');
     } catch (error) {
-      console.log(error);
       this.toast.success('Error al eliminar el perfil');
+      console.error(error);
     }
   }
 

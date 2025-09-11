@@ -16,14 +16,6 @@ export const routes: Routes = [
         loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
       },
       {
-        path: 'create-user',
-        loadComponent: () => import('./create-user/create-user.component').then(m => m.CreateUserComponent),
-      },
-      {
-        path: 'mi-perfil',
-        loadComponent: () => import('./mi-perfil/mi-perfil.component').then(m => m.MiPerfilComponent),
-      },
-      {
         path: 'crear-iglesia',
         loadComponent: () => import('./iglesia/crear-iglesia.component').then(m => m.CrearIglesiaComponent),
       },
@@ -36,6 +28,10 @@ export const routes: Routes = [
         loadComponent: () => import('./referido/create/create-referido.component').then(m => m.CreateReferidoComponent),
       },
       {
+        path: 'editar-referido/:id',
+        loadComponent: () => import('./referido/create/create-referido.component').then(m => m.CreateReferidoComponent),
+      },
+      {
         path: 'listar-referidos',
         loadComponent: () => import('./referido/lista-referidos/lista-referidos.component').then(m => m.ListaReridosComponent),
       },
@@ -44,12 +40,8 @@ export const routes: Routes = [
         loadComponent: () => import('./control-accesos/control-accesos.component').then(m => m.ControlAccesosComponent),
       },
       {
-        path: 'roles',
-        loadComponent: () => import('./roles/roles.component').then(m => m.RolesComponent),
-      },
-      {
-        path: 'crear-lider',
-        loadComponent: () => import('./lideres/create-lider/create-lider.component').then(m => m.CreateLiderComponent),
+        path: 'masivo-referidos',
+        loadComponent: () => import('./masivo-referidos/masivo-referidos.component').then(m => m.MasivoReferidosComponent),
       },
     ]
   },

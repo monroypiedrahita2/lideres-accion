@@ -71,7 +71,7 @@ export class LiderService {
       await deleteDoc(docRef);
       this.toast.success('perfil eliminado correctamente');
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.toast.success('Error al eliminar el perfil');
     }
   }

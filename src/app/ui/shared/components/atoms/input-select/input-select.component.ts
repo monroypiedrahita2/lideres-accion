@@ -66,7 +66,6 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
   }
 
   compareWith(o1: any, o2: any) {
-    console.log(o1, o2);
     return o1?.id && o2?.id ? o1.id == o2.id: o1 == o2;
   }
 
