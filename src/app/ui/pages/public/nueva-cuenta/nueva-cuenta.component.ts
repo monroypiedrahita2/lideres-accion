@@ -76,10 +76,11 @@ export class NuevaCuentaComponent {
           this.toast.info('Creando cuenta...');
           await this.crearNuevaCuenta(user, userCredential.user.uid);
         });
-    } catch {
+    } catch (error) {
       this.toast.error(
         'Error al crear la cuenta. Intente nuevamente. Ya existe una cuenta con ese correo.'
       );
+      console.error(error);
       this.disableBtn = false;
     }
   }

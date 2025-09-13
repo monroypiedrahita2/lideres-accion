@@ -1,6 +1,15 @@
 export const environment = {
-  production: true,
-  firebase: {
+  production: false,
+  firebaseDev: {
+    apiKey: 'AIzaSyClvFEPxZZf_q28kiipbROeHzsPbAAdlhk',
+    authDomain: 'lida-dev-f9291.firebaseapp.com',
+    projectId: 'lida-dev-f9291',
+    storageBucket: 'lida-dev-f9291.firebasestorage.app',
+    messagingSenderId: '78286679625',
+    appId: '1:78286679625:web:5621c2157c26df010f1998',
+    measurementId: 'G-JXG93QVL1M',
+  },
+  firebasePDN: {
     apiKey: 'AIzaSyD99fV1NqUuQ_wRJ5UlGLNipMMHIJnvip4',
     authDomain: 'lideres-accion.firebaseapp.com',
     projectId: 'lideres-accion',
@@ -18,4 +27,5 @@ export const environment = {
     barrios: 'Barrios',
     perfil: 'Perfiles',
   },
+  alerts: { timeOut: 3000, preventDuplicates: true },
 };

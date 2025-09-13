@@ -4,6 +4,7 @@ import { NavComponent } from '../../shared/components/organism/nav/nav.component
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { FooterComponent } from '../../shared/components/modules/footer/footer.component';
 import { PerfilService } from '../../shared/services/perfil/perfil.service';
+import { PerfilModel } from '../../../models/perfil/perfil.model';
 
 @Component({
   selector: 'app-private',
@@ -13,7 +14,7 @@ import { PerfilService } from '../../shared/services/perfil/perfil.service';
   styleUrl: './private.component.css',
 })
 export class PrivateComponent implements OnInit {
-  usuario!: any;
+  usuario!: PerfilModel;
 
   constructor(
     private readonly perfilService: PerfilService,

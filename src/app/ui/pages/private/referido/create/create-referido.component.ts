@@ -21,6 +21,7 @@ import { ComunaService } from '../../../../shared/services/comuna/comuna.service
 import { ComunaModel } from '../../../../../models/comuna/comuna.model';
 import { ButtonComponent } from '../../../../shared/components/atoms/button/button.component';
 import { ActivatedRoute } from '@angular/router';
+import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 
 @Component({
   selector: 'app-create-referido',
@@ -38,7 +39,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class CreateReferidoComponent implements OnInit {
   id!: string | null;
-  iglesia: string = JSON.parse(localStorage.getItem('usuario')|| '{}').iglesia;
+  iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
+  userRol: string = JSON.parse(localStorage.getItem('usuario') || '{}').rol;
+  user: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
   loading: boolean = false;
   accion: 'Crear' | 'Editar' = 'Crear';
   enableSkeleton: boolean = true;
@@ -68,10 +71,10 @@ export class CreateReferidoComponent implements OnInit {
     private readonly fb: FormBuilder,
     private readonly router: ActivatedRoute
   ) {
-     this.id = this.router.snapshot.paramMap.get('id')
+    this.id = this.router.snapshot.paramMap.get('id');
     this.form = this.fb.group({
       referidoPor: [''],
-      isInterno: [false, Validators.required],
+      isInterno: [true, Validators.required],
       documento: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
@@ -99,7 +102,13 @@ export class CreateReferidoComponent implements OnInit {
 
   ngOnInit(): void {
     this.enableSkeleton = true;
-    this.getReferidos();
+    console.log(this.userRol);
+    if (this.userRol != 'Líder') {
+      this.getReferidos();
+    } else {
+      this.myData();
+      this.enableSkeleton = false;
+    }
     this.getComunas();
     if (this.id) {
       this.accion = 'Editar';
@@ -108,29 +117,32 @@ export class CreateReferidoComponent implements OnInit {
     }
   }
 
-  getReferido(documento: string) {
-    this.referidoService.getReferido(documento).then((res: BaseModel<ReferidoModel>) => {
-      this.form.patchValue({
-        referidoPor: res.data.referidoPor,
-        isInterno: res.data.isInterno,
-        documento: res.data.documento,
-        nombres: res.data.nombres,
-        apellidos: res.data.apellidos,
-        celular: res.data.celular,
-        email: res.data.email,
-        fechaNacimiento: res.data.fechaNacimiento,
-        esEmprendedor: res.data.esEmprendedor,
-        comuna: res.data.comuna,
-        barrio: res.data.comuna + ' - ' + res.data.barrio,
-        direccion: res.data.direccion,
-        camara: res.data.camara,
-        senado: res.data.senado,
-        iglesia: res.data.iglesia,
-        lugarVotacion: res.data.lugarVotacion,
-        mesaVotacion: res.data.mesaVotacion,
-      });
-    });
+  myData() {}
 
+  getReferido(documento: string) {
+    this.referidoService
+      .getReferido(documento)
+      .then((res: BaseModel<ReferidoModel>) => {
+        this.form.patchValue({
+          referidoPor: res.data.referidoPor,
+          isInterno: res.data.isInterno,
+          documento: res.data.documento,
+          nombres: res.data.nombres,
+          apellidos: res.data.apellidos,
+          celular: res.data.celular,
+          email: res.data.email,
+          fechaNacimiento: res.data.fechaNacimiento,
+          esEmprendedor: res.data.esEmprendedor,
+          comuna: res.data.comuna,
+          barrio: res.data.comuna + ' - ' + res.data.barrio,
+          direccion: res.data.direccion,
+          camara: res.data.camara,
+          senado: res.data.senado,
+          iglesia: res.data.iglesia,
+          lugarVotacion: res.data.lugarVotacion,
+          mesaVotacion: res.data.mesaVotacion,
+        });
+      });
   }
 
   async goToPage(page: string) {
@@ -156,27 +168,31 @@ export class CreateReferidoComponent implements OnInit {
     this.location.back();
   }
 
-
   getComunas() {
     this.comunasService.getComunas().subscribe({
       next: (res) => {
         this.barrios = res.map((comuna: BaseModel<ComunaModel>) => ({
           label: comuna.data.barrio,
           value: comuna.data.barrio,
-        }))
+        }));
       },
       error: (err) => {
         console.error('Error getting lideres', err);
       },
       complete: () => {},
-    })
+    });
   }
 
   getReferidos() {
     this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
       next: (res) => {
         this.referidos = res.map((referido: BaseModel<ReferidoModel>) => ({
-          label: referido.data.nombres + ' ' + referido.data.apellidos + ' - ' + referido.id,
+          label:
+            referido.data.nombres +
+            ' ' +
+            referido.data.apellidos +
+            ' - ' +
+            referido.id,
           value: referido.id,
         }));
         this.enableSkeleton = false;
@@ -195,14 +211,22 @@ export class CreateReferidoComponent implements OnInit {
     }
     if (this.accion == 'Editar') {
       await this.editReferido();
-      return
+      return;
     }
     await this.saveReferido();
   }
 
   async editReferido() {
     try {
-      await this.referidoService.updateReferido(this.id!, this.form.value);
+      await this.referidoService.updateReferido(this.id!, {
+        fechaModificacion: new Date().toISOString(),
+        modificadoPor: this.auth.uidUser(),
+        data: {
+          ...this.form.value,
+          comuna: this.form.get('barrio')?.value.split(' - ')[0].trim(),
+          barrio: this.form.get('barrio')?.value.split(' - ')[1].trim(),
+        },
+      });
       this.location.back();
       this.toast.success('Referido actualizado correctamente');
     } catch (error) {
@@ -215,7 +239,9 @@ export class CreateReferidoComponent implements OnInit {
     const referido: BaseModel<ReferidoModel> = {
       fechaCreacion: new Date().toISOString(),
       creadoPor: this.auth.uidUser(),
-      data: {...this.form.value, iglesia: this.iglesia,
+      data: {
+        ...this.form.value,
+        iglesia: this.iglesia,
         comuna: this.form.get('barrio')?.value.split(' - ')[0].trim(),
         barrio: this.form.get('barrio')?.value.split(' - ')[1].trim(),
       },

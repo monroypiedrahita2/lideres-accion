@@ -15,6 +15,7 @@ import { CardInfoComponent } from '../../../shared/components/modules/card-info/
 })
 export class SettingsComponent {
   cards: CardModel[] = CARDS_HOME;
+  userRol: string = JSON.parse(localStorage.getItem('usuario')|| '{}').rol
   constructor(
     private readonly auth: AuthService,
     private readonly router: Router
@@ -27,5 +28,12 @@ export class SettingsComponent {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  showCard(rol: string[]): boolean {
+    if (rol.includes(this.userRol) || rol.includes('Todos')) {
+      return true
+    }
+    return false
   }
 }

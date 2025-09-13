@@ -1,8 +1,8 @@
 <app-spinner [showSpinner]="spinner"></app-spinner>
 
 <mg-title [title]="'LISTA DE REFERIDOS'"></mg-title>
-<div class="grid grid-cols-12 w-full gap-4">
-  <div class="col-span-8">
+<div class="grid md:grid-cols-1 lg:grid-cols-12 w-full gap-4">
+  <div class="lg:col-span-8">
     <mg-input-text
       class="w-full"
       type="text"
@@ -12,10 +12,9 @@
       (keyup)="onSearch(searchText)"
     ></mg-input-text>
   </div>
-  <div class="col-span-4 flex items-center justify-end">
+  <div class="lg:col-span-4 flex items-center sm:justify-center">
     <mg-button
       (onClick)="clear()"
-      icon="cloud_download"
       text="Limpiar"
       type="reset"
     ></mg-button>
@@ -26,7 +25,7 @@
 
 <div class="flex justify-between items-end">
   <div class="font-primary text-lg">
-    Total registros: {{ referidos.length }} líderes
+    Total registros: {{ referidos.length }} referidos
   </div>
   <div class="p-4">
     <mg-button
@@ -36,21 +35,6 @@
     ></mg-button>
   </div>
 </div>
-
-<!-- <mat-paginator
-  #paginator
-  class="demo-paginator"
-  (page)="handlePageEvent($event)"
-  [length]="length"
-  [pageSize]="pageSize"
-  [disabled]="disabled"
-  [showFirstLastButtons]="showFirstLastButtons"
-  [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
-  [hidePageSize]="hidePageSize"
-  [pageIndex]="pageIndex"
-  aria-label="Select page"
->
-</mat-paginator> -->
 
 <div class="sm:hidden lg:block">
   <div class="relative overflow-x-auto">
@@ -99,7 +83,6 @@
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
               <div class="flex items-center justify-center gap-4">
                 <span class="material-icons text-primary cursor-pointer" [routerLink]="['../editar-referido', referido.id]">edit</span>
-                <!-- <span class="material-icons text-primary cursor-pointer">delete</span> -->
 
               </div>
             </td>
@@ -109,5 +92,3 @@
     </div>
   </div>
 </div>
-
-<!-- <input type="file" (change)="onFileChange($event)" /> -->

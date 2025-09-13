@@ -7,3 +7,8 @@ export interface PerfilModel  {
   email: string;
   rol: string | null;
 }
+
+export interface AsigmentRolePerfilModel {
+  rol: string | null;
+  iglesia: string;
+}

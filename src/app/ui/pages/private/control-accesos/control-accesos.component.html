@@ -11,15 +11,15 @@
     ></mg-input-text>
     <mat-icon
       class="cursor-pointer"
-      (click)="getPerfil(this.form.value.usuario)"
-      (keydown)="getPerfil(this.form.value.usuario)"
+      (click)="getPerfil()"
+      (keydown)="getPerfil()"
       >search</mat-icon
     >
   </div>
   <mg-input-select
     class="w-full"
     formControlName="rol"
-    [label]="'Asignar rol'"
+    [label]="perfilSeleted ? 'Asignar rol a ' + perfilSeleted!.nombres + ' ' + perfilSeleted!.apellidos : 'Usuario no seleccionado'"
     id="rol"
     [items]="rolesSelectOptions"
   ></mg-input-select>
@@ -27,7 +27,7 @@
     <mg-button
       [text]="'Asignar rol'"
       [loading]="loading"
-      [disabled]="form.invalid"
+      [disabled]="form.invalid || perfilSeleted == undefined"
       (onClick)="asignarRol()"
     ></mg-button>
     <mg-button

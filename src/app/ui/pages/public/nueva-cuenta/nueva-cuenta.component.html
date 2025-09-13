@@ -3,7 +3,7 @@
   <div class="bg-white border border-gray-200 rounded-lg p-6">
     <mg-title title="Crear cuenta nueva"></mg-title>
     <form [formGroup]="form" (submit)="crear()">
-    <mg-input-text type="text" formControlName="documento" label="Documento de identidad" id="documento"></mg-input-text>
+    <mg-input-text type="number" formControlName="documento" label="Documento de identidad" id="documento"></mg-input-text>
     <mg-input-text type="name" formControlName="nombres" label="Nombres" id="nombres"></mg-input-text>
     <mg-input-text type="lastmane" formControlName="apellidos" label="Apellidos" id="apellidos"></mg-input-text>
     <mg-input-text type="email" formControlName="email" label="Escriba su correo electrónico" id="email"></mg-input-text>
