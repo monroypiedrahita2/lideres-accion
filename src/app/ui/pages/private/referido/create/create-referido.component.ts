@@ -119,6 +119,14 @@ export class CreateReferidoComponent implements OnInit {
   myData() {
     this.referidoService.getReferidoByDocument(this.user.documento).then((res) => {
       console.log(res);
+         this.referidos.push ({
+           label: res.data.nombres + ' ' + res.data.apellidos,
+           value: res.id
+         })
+    })
+
+    this.form.patchValue({
+      referidoPor: this.user.documento
     })
 
   }
