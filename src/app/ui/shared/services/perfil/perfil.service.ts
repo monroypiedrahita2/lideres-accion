@@ -31,6 +31,12 @@ export class PerfilService {
     return setDoc(dataRef, data);
   }
 
+   getPerfilByDocumento(value: string){
+    const q = query(collection(this.firestore, this._collection), where('documento', '==', value));
+    const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
+    return response;
+  }
+
 
 
   getPerfiles(): Observable<PerfilModel[]> {

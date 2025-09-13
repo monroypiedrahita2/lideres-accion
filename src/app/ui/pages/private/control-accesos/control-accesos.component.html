@@ -1,13 +1,40 @@
 <mg-title title="Control y accesos"></mg-title>
 
 <form [formGroup]="form">
-  <div class="w-full flex justify-between gap-2">
-    <mg-input-select class="w-full" formControlName="usuario" [label]="'Usuarios'" id="user" [items]="usersSelectOptions"></mg-input-select>
-    <mg-input-select class="w-full" formControlName="rol" [label]="'Asignar rol'" id="rol" [items]="rolesSelectOptions"></mg-input-select>
+  <div class="w-full flex items-center justify-between gap-2">
+    <mg-input-text
+      class="w-full"
+      type="text"
+      formControlName="usuario"
+      id="user"
+      label="Documento de identidad"
+    ></mg-input-text>
+    <mat-icon
+      class="cursor-pointer"
+      (click)="getPerfil(this.form.value.usuario)"
+      (keydown)="getPerfil(this.form.value.usuario)"
+      >search</mat-icon
+    >
   </div>
+  <mg-input-select
+    class="w-full"
+    formControlName="rol"
+    [label]="'Asignar rol'"
+    id="rol"
+    [items]="rolesSelectOptions"
+  ></mg-input-select>
   <div class="flex flex-row-reverse justify-center gap-4 sm:pt-5 lg:pt-8">
-    <mg-button [text]="'Asignar rol'" [loading]="loading" [disabled]="form.invalid" (onClick)="asignarRol()"></mg-button>
-    <mg-button [text]="'Limpiar'" [type]="'reset'" (onClick)="clear()"></mg-button>
+    <mg-button
+      [text]="'Asignar rol'"
+      [loading]="loading"
+      [disabled]="form.invalid"
+      (onClick)="asignarRol()"
+    ></mg-button>
+    <mg-button
+      [text]="'Limpiar'"
+      [type]="'reset'"
+      (onClick)="clear()"
+    ></mg-button>
   </div>
 </form>
 
@@ -50,7 +77,13 @@
           </td>
           <td class="px-6 py-4 text-center whitespace-nowrap text-black">
             <div class="flex justify-center gap-4">
-              <span *ngIf="user.rol != 'Sin rol asignado'" class="material-icons text-primary hover:cursor-pointer" (click)="deleteRol(user.id!)" (keydown)="deleteRol(user.id!)">delete</span>
+              <span
+                *ngIf="user.rol != 'Sin rol asignado'"
+                class="material-icons text-primary hover:cursor-pointer"
+                (click)="deleteRol(user.id!)"
+                (keydown)="deleteRol(user.id!)"
+                >delete</span
+              >
             </div>
           </td>
         </tr>
@@ -58,8 +91,3 @@
     </table>
   </div>
 </div>
-
-
-
-
-

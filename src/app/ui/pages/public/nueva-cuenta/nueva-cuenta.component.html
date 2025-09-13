@@ -2,10 +2,10 @@
 
   <div class="bg-white border border-gray-200 rounded-lg p-6">
     <mg-title title="Crear cuenta nueva"></mg-title>
-    <form [formGroup]="form">
+    <form [formGroup]="form" (submit)="crear()">
+    <mg-input-text type="text" formControlName="documento" label="Documento de identidad" id="documento"></mg-input-text>
     <mg-input-text type="name" formControlName="nombres" label="Nombres" id="nombres"></mg-input-text>
     <mg-input-text type="lastmane" formControlName="apellidos" label="Apellidos" id="apellidos"></mg-input-text>
-    <mg-input-select formControlName="iglesia" [label]="'Iglesia a la que pertenece'" id="departamento" [items]="iglesias"></mg-input-select>
     <mg-input-text type="email" formControlName="email" label="Escriba su correo electrónico" id="email"></mg-input-text>
     <mg-input-text type="password" formControlName="password" label="Clave" id="password"></mg-input-text>
     <mg-input-text type="password" formControlName="confirm" label="Confirme la calve" id="confirm"></mg-input-text>

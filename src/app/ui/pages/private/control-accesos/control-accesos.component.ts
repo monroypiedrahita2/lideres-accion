@@ -10,13 +10,15 @@ import {
   Validators,
 } from '@angular/forms';
 import { SelectOptionModel } from '../../../../models/base/select-options.model';
-import { ContainerGridComponent } from '../../../shared/components/atoms/container-grid/container-grid.component';
 import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { ToastrService } from 'ngx-toastr';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
 import { LIST_ROLES } from '../../../shared/const/Permisos/list-roles.const';
 import { RolesModel } from '../../../../models/roles/roles.model';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
+import { distinctUntilChanged } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 
 @Component({
   selector: 'app-control-accesos',
@@ -24,10 +26,12 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
   imports: [
     CommonModule,
     InputSelectComponent,
+    InputTextComponent,
     TitleComponent,
     ReactiveFormsModule,
     CommonModule,
     ButtonComponent,
+    MatIconModule
   ],
   templateUrl: './control-accesos.component.html',
 })
@@ -67,6 +71,14 @@ export class ControlAccesosComponent implements OnInit {
     } else {
       this.getPerfilesByIglesia();
     }
+  }
+
+  getPerfil(uid: string) {
+    this.perfilService.getPerfilByDocumento(this.form.value.usuario).subscribe({
+      next: (response: any) => {
+        this.usuarios = response;
+      },
+    });
   }
 
   getAllPerfiles() {

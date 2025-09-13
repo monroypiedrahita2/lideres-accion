@@ -16,6 +16,6 @@ export const environment = {
     roles: 'Roles',
     lideres: 'Lideres',
     barrios: 'Barrios',
-    perfil: 'Perfil',
+    perfil: 'Perfiles',
   },
 };
