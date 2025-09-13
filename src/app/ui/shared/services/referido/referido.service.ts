@@ -39,27 +39,30 @@ export class ReferidoService {
     return collectionData(_collection, { idField: 'id' }) as Observable<any>;
   }
 
-  getReferidoByEmailoCC(value: string) {
-    if (value.includes('@')) {
-      const q = query(
+  meReferido(documento: string) {
+     const q = query(
         collection(this.firestore, this._collection),
-        where('email', '==', value)
+        where('email', '==', documento)
       );
       const response = collectionData(q, { idField: 'id' }) as Observable<
         any[]
       >;
       return response;
-    } else {
-      const q = query(
-        collection(this.firestore, this._collection),
-        where('documento', '==', value)
-      );
-      const response = collectionData(q, { idField: 'id' }) as Observable<
-        any[]
-      >;
-      return response;
-    }
   }
+
+  getReferidoByDocument(value: string) {
+   const docRef = doc(this.firestore, this._collection, value);
+  return getDoc(docRef).then((docSnap) => {
+    if (docSnap.exists()) {
+      return docSnap.data() as any;
+    } else {
+      throw new Error('No existe o es nuevo');
+    }
+  });
+
+  }
+
+
   getReferidoByIglesia(iglesia: string): Observable<BaseModel<ReferidoModel>[]> {
     const q = query(
       collection(this.firestore, this._collection),

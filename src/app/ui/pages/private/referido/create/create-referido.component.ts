@@ -2,7 +2,6 @@ import { ReferidoService } from '../../../../shared/services/referido/referido.s
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { LiderService } from '../../../../shared/services/lider/lider.service';
 import { AuthService } from '../../../../shared/services/auth/auth.service';
 import { BaseModel } from '../../../../../models/base/base.model';
 import { SkeletonComponent } from '../../../../shared/components/organism/skeleton/skeleton.component';
@@ -117,7 +116,12 @@ export class CreateReferidoComponent implements OnInit {
     }
   }
 
-  myData() {}
+  myData() {
+    this.referidoService.getReferidoByDocument(this.user.documento).then((res) => {
+      console.log(res);
+    })
+
+  }
 
   getReferido(documento: string) {
     this.referidoService
