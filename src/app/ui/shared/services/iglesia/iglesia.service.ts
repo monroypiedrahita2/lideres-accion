@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, query, where } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, getDoc, query, where } from '@angular/fire/firestore';
 import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
@@ -29,6 +29,17 @@ export class IglesiaService {
     const response = collectionData(q, { idField: 'id' }) as Observable<BaseModel<IglesiaModel>[]>;
     return response;
   }
+
+getMyIglesia(id: string): Promise<any> {
+  const docRef = doc(this.firestore, this._collection, id);
+  return getDoc(docRef).then((docSnap) => {
+    if (docSnap.exists()) {
+      return docSnap.data() as any;
+    } else {
+      throw new Error('No existe o es nuevo');
+    }
+  });
+}
 
 
 }
