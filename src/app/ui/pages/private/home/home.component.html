@@ -1,6 +1,7 @@
 
+  <mg-skeleton [enableSkeleton]="skeleton" [num]="5"></mg-skeleton>
 
-@if (usuario) {
+@if (usuario && !skeleton) {
   <div class="p-4 bg-white rounded shadow text-center">
     <p class="text-lg font-bold">Información del usuario</p>
     <div class="mt-2 flex flex-col">
@@ -8,11 +9,13 @@
       <span>{{ usuario.documento}}</span>
       <span>{{ usuario.email }}</span>
       <span>{{ usuario.rol }}</span>
-      <span>{{ iglesiaData?.nombre }}</span>
+      <span>{{ iglesiaData.nombre! }}</span>
     </div>
   </div>
 }
 
-<div *ngIf="!usuario.rol" class="text-center p-4">
-  <span class="text-red-500 font-semibold text-center text-wrap">Debe hablar con el Pastor para obtener permisos.</span>
-</div>
+@if (!skeleton && !usuario.rol) {
+  <div class="text-center p-4">
+    <span class="text-red-500 font-semibold text-center text-wrap">Debe hablar con el Pastor para obtener permisos.</span>
+  </div>
+}

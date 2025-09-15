@@ -26,7 +26,7 @@ export const CARDS_HOME: CardModel[] = [
     title: 'Comunas',
     description: 'Ver y gestionar comunas',
     icon: 'location_city',
-    showIf: ['Todos'],
+    showIf: ['Pastor'],
   },
   // {
   //   goTo: '../roles',
@@ -46,7 +46,7 @@ export const CARDS_HOME: CardModel[] = [
     title: 'Carga masiva',
     description: 'A través de un archivo Excel',
     icon: 'upload_file',
-    showIf: ['Todos'],
+    showIf: ['Super usuario', 'Pastor'],
   },
   // {
   //   goTo: '../crear-lider',

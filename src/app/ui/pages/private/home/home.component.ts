@@ -9,14 +9,16 @@ import { NAME_LONG_APP } from '../../../shared/const/name-app.const';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { AuthService } from '../../../shared/services/auth/auth.service';
+import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, SkeletonComponent],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
+  skeleton: boolean = true;
   cards: CardModel[] = CARDS_HOME;
   nameLong: string = NAME_LONG_APP;
   usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -37,6 +39,7 @@ export class HomeComponent implements OnInit {
       if (!this.iglesiaData) {
         this.getMyIglesia(this.usuario.iglesia!);
       }
+      this.skeleton = false;
     } else {
       this.getusuario(this.auth.uidUser());
     }
@@ -46,6 +49,7 @@ export class HomeComponent implements OnInit {
     const iglesia = await this.IglesiaService.getMyIglesia(i);
     this.iglesiaData = iglesia.data;
     localStorage.setItem('iglesiaData', JSON.stringify(this.iglesiaData));
+    this.skeleton = false;
   }
 
   async getusuario(id: string) {
