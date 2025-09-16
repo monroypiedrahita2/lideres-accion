@@ -158,6 +158,9 @@ export class CreateReferidoComponent implements OnInit {
   }
 
   async goToPage(page: string) {
+    if (this.accion == 'Editar') {
+      this.form.get('documento')?.enable();
+    };
     await this.copyDocument(page);
   }
 
@@ -174,6 +177,9 @@ export class CreateReferidoComponent implements OnInit {
     } catch {
       this.toast.error('Error al copiar el número de documento');
     }
+      if (this.accion == 'Editar') {
+      this.form.get('documento')?.disable();
+    };
   }
 
   back() {

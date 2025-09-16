@@ -10,11 +10,12 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
+import { LogoComponent } from '../../../shared/components/atoms/logo/logo.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, CommonModule, SkeletonComponent],
+  imports: [RouterModule, CommonModule, SkeletonComponent,LogoComponent],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
