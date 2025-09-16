@@ -12,6 +12,7 @@ export class PersonInfoComponent {
   @Input() icon: string = 'edit';
   @Input() title: string = 'title';
   @Input() textInfo: string = 'textInfo';
+  @Input() esInterno: boolean = false;
   @Output() eventEdit: EventEmitter<any> = new EventEmitter
 
 

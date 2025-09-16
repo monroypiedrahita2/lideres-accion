@@ -59,8 +59,8 @@ module.exports = {
     screens: screens,
     extend: {
       colors: {
-        'primary': '#1c202a',
-        'secundary': '#2a2e38',
+        'primary': '#0c82c7',
+        'secundary': '#1ca6e6',
         'tertiary': '#ffce00',
         'base': "#fafafa",
         'base-two': "gray-500",
