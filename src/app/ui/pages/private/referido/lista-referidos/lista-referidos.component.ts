@@ -15,7 +15,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { TITULOS_EXCEL } from '../../../../shared/const/titulos-excel.const';
+import { TITULOS_DESCARGA, TITULOS_EXCEL } from '../../../../shared/const/titulos-excel.const';
 import { PrivateRoutingModule } from "../../private-routing.module";
 import { Router, RouterModule } from '@angular/router';
 import { PersonInfoComponent } from '../../../../shared/components/modules/person-info/person-info.component';
@@ -121,7 +121,7 @@ export class ListaReridosComponent implements OnInit {
     const datos: any[][] = [];
 
     // Encabezados
-    datos.push(TITULOS_EXCEL);
+    datos.push(TITULOS_DESCARGA);
 
     referidos.forEach((referido) => {
       const referidoData = referido.data;
@@ -129,7 +129,7 @@ export class ListaReridosComponent implements OnInit {
 
       // ROWS
       datos.push([
-        referidoData.isInterno,
+        referidoData.isInterno ? 'Interno' : 'Externo',
         documento,
         referidoData.nombres,
         referidoData.apellidos,
@@ -145,6 +145,7 @@ export class ListaReridosComponent implements OnInit {
         referidoData.senado ? 'SI' : 'NO',
         referidoData.camara ? 'SI' : 'NO',
         referidoData.referidoPor,
+        referidos.find((referido) => referido.id === referidoData.referidoPor)?.data.nombres + ' ' + referidos.find((referido) => referido.id === referidoData.referidoPor)?.data.apellidos
       ]);
     });
 

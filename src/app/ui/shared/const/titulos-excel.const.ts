@@ -17,6 +17,11 @@ export const TITULOS_EXCEL: string[] = [
   'REFERIDO POR (CEDULA)',
 ];
 
+export const TITULOS_DESCARGA: string[] = [
+  ... TITULOS_EXCEL,
+  'NOMRE REFERENTE'
+]
+
 export const DESCRIPCION_EXCEL: string[] = [
   '(Interno/Externo)',
   'Número de documento del referido (cedula, sin puntos ni comas)',

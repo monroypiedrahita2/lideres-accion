@@ -1,13 +1,19 @@
 <div
   class="shadow-lg mt-2 hover:shadow-2xl sm:p-2 lg:p-4 pl-5 rounded-lg bg-white w-full h-20 flex items-center cursor-pointer lg:hover:-translate-y-1 relative"
 >
-  <div class="flex justify-between gap-4 p-4 w-full">
-    <div class="grid col-span-4 justify-start items-center">
-      <dl [class]="(esInterno ? 'text-primary' : 'text-black') + ' font-primary text-xl font-semibold text-start'">
+  <div class="flex justify-between p-4 gap-4 w-full">
+    <div class="justify-between items-center w-full">
+      <dl [class]="(esInterno ? 'text-primary' : 'text-black') + ' font-primary text-md font-semibold text-start'">
         {{ title }}
       </dl>
-      <div class="text-base text-start text-gray-600 text-sm font-primary">
-        {{ textInfo }}
+      <div class="flex flex-row justify-between w-full">
+        <div class="text-base text-start text-gray-600 text-sm font-primary w-full">
+          {{ textInfo }}
+        </div>
+        <div class="text-base text-end text-gray-600 text-sm font-primary w-full">
+          {{ textInfo2 }}
+        </div>
+
       </div>
     </div>
 

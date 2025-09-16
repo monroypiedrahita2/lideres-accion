@@ -101,7 +101,6 @@ export class CreateReferidoComponent implements OnInit {
 
   ngOnInit(): void {
     this.enableSkeleton = true;
-    console.log(this.userRol);
     if (this.userRol != 'Líder') {
       this.getReferidos();
     } else {
@@ -111,7 +110,6 @@ export class CreateReferidoComponent implements OnInit {
     this.getComunas();
     if (this.id) {
       this.accion = 'Editar';
-      this.form.get('documento')?.disable();
       this.title = this.accion + ' ' + 'referido';
       this.getReferido(this.id);
     }
@@ -125,9 +123,7 @@ export class CreateReferidoComponent implements OnInit {
          })
     })
 
-    this.form.patchValue({
-      referidoPor: this.user.documento
-    })
+
 
   }
 
@@ -136,9 +132,9 @@ export class CreateReferidoComponent implements OnInit {
       .getReferido(documento)
       .then((res: BaseModel<ReferidoModel>) => {
         this.form.patchValue({
+          documento: this.id,
           referidoPor: res.data.referidoPor,
           isInterno: res.data.isInterno,
-          documento: res.data.documento,
           nombres: res.data.nombres,
           apellidos: res.data.apellidos,
           celular: res.data.celular,
@@ -154,13 +150,14 @@ export class CreateReferidoComponent implements OnInit {
           lugarVotacion: res.data.lugarVotacion,
           mesaVotacion: res.data.mesaVotacion,
         });
+        this.form.get('documento')?.disable();
       });
   }
 
   async goToPage(page: string) {
-    if (this.accion == 'Editar') {
+    if(this.accion == 'Editar' ) {
       this.form.get('documento')?.enable();
-    };
+    }
     await this.copyDocument(page);
   }
 
@@ -170,16 +167,15 @@ export class CreateReferidoComponent implements OnInit {
       this.toast.warning('Flata diligenciar el número de documento');
       return;
     }
-    this.toast.info('Número de documento copiado al portapapeles');
     try {
       await navigator.clipboard.writeText(documento);
       window.open(page, '_blank');
     } catch {
       this.toast.error('Error al copiar el número de documento');
     }
-      if (this.accion == 'Editar') {
+       if(this.accion == 'Editar' ) {
       this.form.get('documento')?.disable();
-    };
+    }
   }
 
   back() {

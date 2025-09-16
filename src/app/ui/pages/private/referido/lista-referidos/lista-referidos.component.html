@@ -12,12 +12,19 @@
       (keyup)="onSearch(searchText)"
     ></mg-input-text>
   </div>
-  <div class="lg:col-span-4 flex items-center sm:justify-center">
+  <div class="lg:col-span-4 flex items-center sm:justify-around">
     <mg-button
       (onClick)="clear()"
       text="Limpiar"
       type="reset"
     ></mg-button>
+      <div class="p-4">
+    <mg-button
+      (onClick)="descargar(referidos)"
+      icon="cloud_download"
+      text="Descargar"
+    ></mg-button>
+  </div>
   </div>
 </div>
 
@@ -27,17 +34,10 @@
   <div class="font-primary text-lg">
     Total registros: {{ referidos.length }} referidos
   </div>
-  <div class="p-4">
-    <mg-button
-      (onClick)="descargar(referidos)"
-      icon="cloud_download"
-      text="Descargar"
-    ></mg-button>
-  </div>
 </div>
 
 @for (referido of referidos; track $index) {
-    <lida-person-info class="sm:block lg:hidden" [esInterno]="referido.data.isInterno" [title]="referido.data.nombres + ' ' + referido.data.apellidos" [textInfo]="referido.id!" (eventEdit)="edit(referido)"></lida-person-info>
+    <lida-person-info class="sm:block lg:hidden" [esInterno]="referido.data.isInterno" [title]="referido.data.nombres + ' ' + referido.data.apellidos" [textInfo]="referido.id!" (eventEdit)="edit(referido)" [textInfo2]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : undefined"></lida-person-info>
 }
 
 <div class="sm:hidden lg:block">
