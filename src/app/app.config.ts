@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -9,6 +9,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideToastr } from 'ngx-toastr';
 import { environment } from '../enviroments';
+import { provideServiceWorker } from '@angular/service-worker';
 
 
 export const appConfig: ApplicationConfig = {
@@ -16,11 +17,13 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideToastr(environment.alerts),
     provideClientHydration(),
-    provideFirebaseApp(() =>
-      initializeApp(environment.production ? environment.firebasePDN : environment.firebaseDev)
-    ),
+    provideFirebaseApp(() => initializeApp(environment.production ? environment.firebasePDN : environment.firebaseDev)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideAnimationsAsync(),
-  ],
+    provideServiceWorker('ngsw-worker.js', {
+        enabled: !isDevMode(),
+        registrationStrategy: 'registerWhenStable:30000'
+    })
+],
 };
