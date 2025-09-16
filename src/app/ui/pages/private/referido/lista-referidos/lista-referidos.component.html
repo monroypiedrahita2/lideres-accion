@@ -37,7 +37,7 @@
 </div>
 
 @for (referido of referidos; track $index) {
-    <lida-person-info class="sm:block lg:hidden" [esInterno]="referido.data.isInterno" [title]="referido.data.nombres + ' ' + referido.data.apellidos" [textInfo]="referido.id!" (eventEdit)="edit(referido)" [textInfo2]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : undefined"></lida-person-info>
+    <lida-person-info class="sm:block lg:hidden" [esInterno]="referido.data.isInterno" [title]="referido.data.nombres + ' ' + referido.data.apellidos" [textInfo]="referido.id!" (eventEdit)="edit(referido)" [textInfo2]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : ''"></lida-person-info>
 }
 
 <div class="sm:hidden lg:block">
