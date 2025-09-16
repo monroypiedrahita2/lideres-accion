@@ -17,7 +17,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TITULOS_EXCEL } from '../../../../shared/const/titulos-excel.const';
 import { PrivateRoutingModule } from "../../private-routing.module";
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { PersonInfoComponent } from '../../../../shared/components/modules/person-info/person-info.component';
 
 @Component({
   selector: 'app-lista-referidos',
@@ -34,7 +35,8 @@ import { RouterModule } from '@angular/router';
     MatSlideToggleModule,
     ButtonComponent,
     PrivateRoutingModule,
-    RouterModule
+    RouterModule,
+    PersonInfoComponent
 ],
   providers: [LugaresService],
   templateUrl: './lista-referidos.component.html',
@@ -59,11 +61,16 @@ export class ListaReridosComponent implements OnInit {
 
   constructor(
     private readonly referidoService: ReferidoService,
-    private readonly toast: ToastrService
+    private readonly toast: ToastrService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
     this.getReferidos();
+  }
+
+  edit(referido: BaseModel<ReferidoModel>) {
+    this.router.navigate(['private/editar-referido', referido.id]);
   }
 
   handlePageEvent(e: PageEvent) {

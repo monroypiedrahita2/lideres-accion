@@ -3,14 +3,14 @@
 'bg-primary': true,
 'shadow-xl': true
 }" >
-  <div class="flex justify-between items-center h-full">
-    <div class=" flex items-center justify-center gap-2 hover:cursor-pointer hover:shadow-xl pl-4">
+  <div class="flex justify-between items-center h-full px-4">
+    <div class=" flex items-center justify-center gap-2 hover:cursor-pointer hover:shadow-xl">
       <mat-icon class="text-white hover:cursor-pointer text-center w-full text-shadow" [routerLink]="['./settings']">menu</mat-icon>
     </div>
     <div class="w-full text-center">
       <span class="font-primary text-white text-2xl text-shadow block uppercase">{{nameApp}}</span>
     </div>
-    <div class="w-[100px] flex justify-end pr-4">
+    <div class="flex justify-end">
       <mat-icon class="text-white hover:cursor-pointer text-center w-full text-shadow" [routerLink]="['private/home']">home</mat-icon>
     </div>
   </div>

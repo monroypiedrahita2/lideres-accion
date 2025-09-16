@@ -3,20 +3,20 @@
 @if (!enableSkeleton) {
 
 <form [formGroup]="form" (onSubmit)="onSubmit()">
-  <mg-sub-title title="Nombre de quien lo refiere"></mg-sub-title>
     <mg-input-select
     formControlName="referidoPor"
     [label]="'Nombre de quien lo refiere'"
     id="isInterno"
     [items]="referidos"
   ></mg-input-select>
-  <mg-sub-title title="Datos del referido"></mg-sub-title>
+  <div class="mt-10">
+    <mg-sub-title title="Datos del referido"></mg-sub-title>
+  </div>
   <div class="w-full flex justify-center">
-    <label class="flex flex-col gap-2 items-center justify-between p-2 cursor-pointer min-w-3">
-      <span class="text-sm text-black dark:text-black">¿Externo o interno?</span>
+    <label class="flex gap-2 items-center p-2 cursor-pointer min-w-3">
       <input type="checkbox" [value]="true" class="sr-only peer" formControlName="isInterno">
       <div class="relative w-11 h-6 bg-gray-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600 dark:peer-checked:bg-blue-400"></div>
-      <span class="text-sm font-medium text-black dark:text-black">{{form.value.isInterno ? 'Interno' : 'Externo'}}</span>
+      <span class="text-sm font-medium text-black dark:text-black">{{form.value.isInterno ? 'Es interno' : 'Es externo'}}</span>
     </label>
   </div>
   <mg-input-text
@@ -113,7 +113,7 @@
         ></mg-input-text>
 
 
-  <div class="flex flex-row-reverse justify-center gap-4 sm:pt-5 lg:pt-4">
+  <div class="flex flex-row-reverse justify-around sm:pt-5 lg:pt-4">
   <mg-button [text]="accion" [loading]="loading" [disabled]="form.invalid" (onClick)="onSubmit()"></mg-button>
   <mg-button [text]="'Regresar'" [type]="'reset'" (onClick)="back()"></mg-button>
 </div>

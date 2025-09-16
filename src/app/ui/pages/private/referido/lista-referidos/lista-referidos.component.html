@@ -36,6 +36,10 @@
   </div>
 </div>
 
+@for (referido of referidos; track $index) {
+    <lida-person-info class="sm:block lg:hidden" [title]="referido.data.nombres + ' ' + referido.data.apellidos" [textInfo]="referido.data.documento" (eventEdit)="edit(referido)"></lida-person-info>
+}
+
 <div class="sm:hidden lg:block">
   <div class="relative overflow-x-auto">
     <div>

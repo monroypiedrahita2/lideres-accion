@@ -111,6 +111,7 @@ export class CreateReferidoComponent implements OnInit {
     this.getComunas();
     if (this.id) {
       this.accion = 'Editar';
+      this.form.get('documento')?.disable();
       this.title = this.accion + ' ' + 'referido';
       this.getReferido(this.id);
     }
@@ -118,7 +119,6 @@ export class CreateReferidoComponent implements OnInit {
 
   myData() {
     this.referidoService.getReferidoByDocument(this.user.documento).then((res) => {
-      console.log(res);
          this.referidos.push ({
            label: res.data.nombres + ' ' + res.data.apellidos,
            value: res.id
@@ -202,9 +202,7 @@ export class CreateReferidoComponent implements OnInit {
           label:
             referido.data.nombres +
             ' ' +
-            referido.data.apellidos +
-            ' - ' +
-            referido.id,
+            referido.data.apellidos,
           value: referido.id,
         }));
         this.enableSkeleton = false;

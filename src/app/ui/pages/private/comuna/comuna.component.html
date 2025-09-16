@@ -1,69 +1,71 @@
 <mg-title [title]="'Crear comuna'"></mg-title>
 
-
 @if (enableSkeleton) {
-  <mg-skeleton [enableSkeleton]="enableSkeleton" [num]="5"></mg-skeleton>
+<mg-skeleton [enableSkeleton]="enableSkeleton" [num]="5"></mg-skeleton>
 } @else {
-  <form [formGroup]="form">
-      <mg-container-grid [hiddenButtons]="true">
-          <mg-input-select
-              label="Departamento"
-              [items]="departamentos"
-              formControlName="departamento"
-              id="departamento"
-          >
-          </mg-input-select>
-          <mg-input-select
-              label="Municipio"
-              [items]="municipios"
-              formControlName="municipio"
-              id="municipio"
-          >
-          </mg-input-select>
-          <mg-input-text
-              type="text"
-              formControlName="nombre"
-              label="Nombre de la comuna"
-              id="nombre"
-          ></mg-input-text>
-      </mg-container-grid>
-  </form>
+<form [formGroup]="form">
+  <mg-container-grid [hiddenButtons]="true">
+    <mg-input-select
+      label="Departamento"
+      [items]="departamentos"
+      formControlName="departamento"
+      id="departamento"
+    >
+    </mg-input-select>
+    <mg-input-select
+      label="Municipio"
+      [items]="municipios"
+      formControlName="municipio"
+      id="municipio"
+    >
+    </mg-input-select>
+    <mg-input-text
+      type="text"
+      formControlName="nombre"
+      label="Nombre de la comuna"
+      id="nombre"
+    ></mg-input-text>
+  </mg-container-grid>
+</form>
 
-  <mg-sub-title title="Agregar barrios de la comuna" class="p-5"></mg-sub-title>
-  <span class="text-gray-500 font-primary">Puedes agregar varios separados por comas</span>
-  <form [formGroup]="formBarrios">
-      <mg-container-grid
-          [disabled]="formBarrios.invalid"
-          [hiddenSecundaryBtn]="true"
-          (onSubmit)="addBarrio(formBarrios.value.barrio)"
-          principalText="Agregar barrio"
-      >
-          <mg-input-text
-              type="text"
-              formControlName="barrio"
-              label="Barrios"
-              id="barrio"
-          ></mg-input-text>
-      </mg-container-grid>
+<mg-sub-title title="Agregar barrios de la comuna" class="p-5"></mg-sub-title>
+<span class="text-gray-500 font-primary"
+  >Puedes agregar varios separados por comas</span
+>
+<form [formGroup]="formBarrios">
+  <mg-container-grid
+    [disabled]="formBarrios.invalid"
+    [hiddenSecundaryBtn]="true"
+    (onSubmit)="addBarrio(formBarrios.value.barrio)"
+    principalText="Agregar barrio"
+  >
+    <mg-input-text
+      type="text"
+      formControlName="barrio"
+      label="Barrios"
+      id="barrio"
+    ></mg-input-text>
+  </mg-container-grid>
+</form>
 
-  </form>
-      <mg-buttons-form
-          [loading]="loading"
-          [disabled]="form.invalid || this.barrios == []"
-          [principalText]="'Crear'"
-          (onSubmit)="onSubmit()"
-      ></mg-buttons-form>
 
-      <div class="pt-10">
-          <span
-          *ngFor="let barrio of barrios; let i = index"
-          (click)="deleteBarrio(i)"
-          (keydown)="deleteBarrio(i)"
-          (keypress)="deleteBarrio(i)"
-          (keyup)="deleteBarrio(i)"
-              class="inline-block bg-blue-100 text-blue-800 text-sm font-semibold mr-2 mb-2 px-3 py-1 rounded-full border border-blue-700 cursor-pointer"
-              >{{ barrio }}</span
-          >
-      </div>
+<div class="pt-10">
+  <span
+    *ngFor="let barrio of barrios; let i = index"
+    (click)="deleteBarrio(i)"
+    (keydown)="deleteBarrio(i)"
+    (keypress)="deleteBarrio(i)"
+    (keyup)="deleteBarrio(i)"
+    class="inline-block bg-blue-100 text-blue-800 text-sm font-semibold mr-2 mb-2 px-3 py-1 rounded-full border border-blue-700 cursor-pointer"
+    >{{ barrio }}</span
+  >
+</div>
+
+<mg-buttons-form
+  [loading]="loading"
+  [disabled]="form.invalid || this.barrios == []"
+  [principalText]="'Crear'"
+  (onSubmit)="onSubmit()"
+></mg-buttons-form>
 
 }
