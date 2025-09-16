@@ -43,15 +43,10 @@
   <mg-sub-title title="Lista de iglesias"></mg-sub-title>
 </div>
 
-<app-container-search
-  [data]="iglesias"
-  (onSubmitSearch)="onSearch($event)"
-></app-container-search>
-
 <div class="font-primary text-lg">
   Total registros: {{ data.length }} iglesias
 </div>
-<div class="relative overflow-x-auto mt-10">
+<div *ngIf="data.length > 0" class="relative overflow-x-auto mt-10">
   <div>
     <table
       class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -99,8 +94,7 @@
           </td>
           <td class="px-6 py-4 text-center whitespace-nowrap text-black">
             <div class="flex justify-center gap-4">
-              <span class="material-icons text-primary hover:cursor-pointer">edit</span>
-              <span class="material-icons text-primary hover:cursor-pointer">delete</span>
+              <span class="material-icons text-primary hover:cursor-pointer" (click)="editarIglesia(iglesia)" (keydown)="editarIglesia(iglesia)">edit</span>
             </div>
           </td>
         </tr>

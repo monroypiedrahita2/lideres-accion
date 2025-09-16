@@ -40,6 +40,10 @@ export const routes: Routes = [
         loadComponent: () => import('./control-accesos/control-accesos.component').then(m => m.ControlAccesosComponent),
       },
       {
+        path: 'crear-pastor',
+        loadComponent: () => import('./crear-pastor/crear-pastor.component').then(m => m.CrearPastorComponent),
+      },
+      {
         path: 'masivo-referidos',
         loadComponent: () => import('./masivo-referidos/masivo-referidos.component').then(m => m.MasivoReferidosComponent),
       },

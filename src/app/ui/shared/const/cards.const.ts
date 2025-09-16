@@ -15,6 +15,13 @@ export const CARDS_HOME: CardModel[] = [
     showIf: ['Pastor', 'Super usuario'],
   },
   {
+    goTo: '../crear-pastor',
+    title: 'Crear pastor',
+    description: 'Asignar un pastor a iglesia',
+    icon: 'record_voice_over',
+    showIf: ['Super usuario'],
+  },
+  {
     goTo: '../crear-iglesia',
     title: 'Iglesia',
     description: 'Ver y gestionar iglesias',

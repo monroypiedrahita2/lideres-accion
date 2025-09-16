@@ -4,6 +4,7 @@ export interface PerfilModel  {
   nombres: string;
   apellidos: string;
   iglesia?: string;
+  nameIglesia?: string;
   email: string;
   rol: string | null;
 }

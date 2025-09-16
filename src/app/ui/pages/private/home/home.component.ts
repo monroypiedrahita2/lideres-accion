@@ -47,6 +47,8 @@ export class HomeComponent implements OnInit {
   }
 
   async getMyIglesia(i: string) {
+        console.log('entra a iglesia 2')
+
     const iglesia = await this.IglesiaService.getMyIglesia(i);
     this.iglesiaData = iglesia.data;
     localStorage.setItem('iglesiaData', JSON.stringify(this.iglesiaData));

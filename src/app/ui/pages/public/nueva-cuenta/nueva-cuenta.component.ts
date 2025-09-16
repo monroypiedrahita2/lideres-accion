@@ -1,4 +1,3 @@
-import { IglesiaService } from './../../../shared/services/iglesia/iglesia.service';
 import { CommonModule, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
@@ -37,7 +36,6 @@ export class NuevaCuentaComponent {
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
     private readonly perfilService: PerfilService,
-    private readonly iglesiaService: IglesiaService,
     private readonly location: Location,
     private readonly toast: ToastrService
   ) {
@@ -52,6 +50,7 @@ export class NuevaCuentaComponent {
   }
 
   async crear() {
+    console.log(this.form.value);
     this.disableBtn = true;
     if (
       this.form.invalid &&
