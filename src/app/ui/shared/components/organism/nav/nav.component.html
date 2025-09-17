@@ -4,11 +4,16 @@
 'shadow-xl': true
 }" >
   <div class="flex justify-between items-center h-full px-4">
-    <div *ngIf="usuario.rol != 'Coordinador de iglesia' && usuario.rol != 'Líder'" class=" flex items-center justify-center gap-2 hover:cursor-pointer hover:shadow-xl">
-      <mat-icon class="text-white hover:cursor-pointer text-center w-full text-shadow" [routerLink]="['./settings']">menu</mat-icon>
+    @if (usuario.rol != 'Coordinador de iglesia' && usuario.rol != 'Líder') {
+      <div  class=" flex items-center justify-center gap-2 hover:cursor-pointer hover:shadow-xl">
+        <mat-icon class="text-white hover:cursor-pointer text-center w-full text-shadow" [routerLink]="['./settings']">menu</mat-icon>
+      </div>
+    }
+    <div class="w-full">
+      <span class="font-primary text-white text-2xl block uppercase text-shadow">{{nameApp}}</span>
     </div>
-    <div class="w-full text-center">
-      <span class="font-primary text-white text-2xl block uppercase">{{nameApp}}</span>
+        <div class=" flex items-center justify-center">
+      <mat-icon class="text-white text-center w-full hover:text-yellow-400 hover:cursor-pointer" [routerLink]="['./settings']">exit_to_app</mat-icon>
     </div>
   </div>
 </nav>
