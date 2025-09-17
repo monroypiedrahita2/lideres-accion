@@ -42,7 +42,7 @@
   [textInfo3]="'Última actualización'"
   [textInfo4]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : referido.fechaCreacion.split('T')[0]"
   [canDelete]="usuario.rol === 'Pastor'"
-  icon2="delete_sweep"
+  (eventDelete)="eliminar(referido.id!)"
 ></lida-person-info>
 }
 

@@ -165,4 +165,13 @@ export class ListaReridosComponent implements OnInit {
     this.referidos = this.data.filter((referido) =>referido.data.referidoPor === id);
     this.btnRecargar = true;
   }
+
+  async eliminar(id: string) {
+    try {
+      await this.referidoService.deleteReferido(id)
+      this.toast.success('Referido eliminado correctamente');
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
