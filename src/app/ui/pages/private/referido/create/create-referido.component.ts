@@ -104,7 +104,6 @@ export class CreateReferidoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.accion = 'Crear';
     this.enableSkeleton = true;
     if (this.userRol != 'Líder') {
       this.getReferidos();
@@ -117,12 +116,27 @@ export class CreateReferidoComponent implements OnInit {
       this.accion = 'Editar';
       this.title = this.accion + ' ' + 'referido';
       this.getReferido(this.id);
+    } else {
+      this.accion = 'Crear';
+      this.loadFormFromLocalStorage();
+      this.enableSkeleton = false;
+      this.form.get('documento')?.valueChanges.subscribe((value) => {
+        this.confirmDocument(value);
+      });
+       this.form.valueChanges.subscribe(value => {
+    localStorage.setItem('form_referido_draft', JSON.stringify(value));
+  });
     }
-
-    this.form.get('documento')?.valueChanges.subscribe((value) => {
-      this.confirmDocument(value);
-    });
   }
+
+  loadFormFromLocalStorage(): void {
+  const savedData = localStorage.getItem('form_referido_draft');
+  if (savedData) {
+    const data = JSON.parse(savedData);
+    this.form.patchValue(data, { emitEvent: false }); // Usamos { emitEvent: false } para evitar un bucle infinito
+    this.toast.info('Se ha recuperado el progreso anterior del formulario.');
+  }
+}
 
   confirmDocument(value: string) {
     if (this.avanceTimeout) {
@@ -264,6 +278,8 @@ export class CreateReferidoComponent implements OnInit {
     } catch (error) {
       console.error(error);
       this.toast.error('Error al actualizar el referido. Intente nuevamente.');
+    this.loading = false;
+
     }
   }
 
@@ -274,21 +290,25 @@ export class CreateReferidoComponent implements OnInit {
       data: {
         ...this.form.value,
         iglesia: this.iglesia,
-        comuna: this.form.get('barrio')?.value.split(' - ')[0].trim(),
-        barrio: this.form.get('barrio')?.value.split(' - ')[1].trim(),
+        comuna: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[0] : '',
+        barrio: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[1] : '',
       },
     };
     try {
       const { documento, ...referidoSinDocumento } = referido as any;
+      console.log(referidoSinDocumento);
       await this.referidoService.crearReferidoConIdDocumento(
         referidoSinDocumento,
         this.form.get('documento')?.value
       );
+      localStorage.removeItem('form_referido_draft');
       this.location.back();
       this.toast.success('Referido creado correctamente');
     } catch (error) {
       this.toast.error('El referido ya existe o inténtelo más tarde');
       console.error(error);
+      this.loading = false;
+
     }
   }
 }

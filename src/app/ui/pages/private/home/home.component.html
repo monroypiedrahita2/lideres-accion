@@ -2,22 +2,19 @@
   <mg-skeleton [enableSkeleton]="skeleton" [num]="5"></mg-skeleton>
 
   @if (usuario && !skeleton) {
-    <div class="p-4 bg-white rounded shadow text-center grid grid-cols-2">
+    <div class="p-4 bg-white rounded shadow text-center flex">
     <mg-logo></mg-logo>
-    <div class="flex justify-center items-center">
-      <div class="mt-2 flex flex-col">
-        <span class="text-lg font-bold col-span-2">{{ usuario.nombres + ' ' + usuario.apellidos }}</span>
-        <span>{{ usuario.documento}}</span>
-        <span>{{ iglesiaData.nombre! }}</span>
+      <div class="mt-2 flex flex-col w-full justify-center items-center">
+        <span class="font-primary font-semibold">{{ usuario.rol }}</span>
+        <span class="text-lg font-bold col-span-2 font-primary">{{ usuario.nombres + ' ' + usuario.apellidos }}</span>
+        <span class="font-primary">{{ usuario.documento}}</span>
+        <span class="font-primary">{{ iglesiaData.nombre! }}</span>
       </div>
-    </div>
-    <span class="text-lg font-bold col-span-2">Información del usuario</span>
-    <span class="col-span-2">{{ usuario.rol }}</span>
   </div>
 }
 
 @if (!skeleton && usuario.rol == 'Pastor' || usuario.rol == 'Super usuario') {
-  
+
 
 }
 
