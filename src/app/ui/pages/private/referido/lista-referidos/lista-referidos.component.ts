@@ -19,6 +19,7 @@ import { TITULOS_DESCARGA, TITULOS_EXCEL } from '../../../../shared/const/titulo
 import { PrivateRoutingModule } from "../../private-routing.module";
 import { Router, RouterModule } from '@angular/router';
 import { PersonInfoComponent } from '../../../../shared/components/modules/person-info/person-info.component';
+import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 
 @Component({
   selector: 'app-lista-referidos',
@@ -42,7 +43,8 @@ import { PersonInfoComponent } from '../../../../shared/components/modules/perso
   templateUrl: './lista-referidos.component.html',
 })
 export class ListaReridosComponent implements OnInit {
-  iglesia: any = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
+  iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
+  usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
   referidos: BaseModel<ReferidoModel>[] = [];
   data: BaseModel<ReferidoModel>[] = [];
   spinner: boolean = true;

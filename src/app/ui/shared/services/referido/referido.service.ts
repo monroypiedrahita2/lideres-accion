@@ -34,6 +34,17 @@ export class ReferidoService {
     return setDoc(dataRef, data);
   }
 
+  async existeReferido(documento: string): Promise<boolean> {
+   const docRef = doc(this.firestore, this._collection, documento);
+  return getDoc(docRef).then((docSnap) => {
+    if (docSnap.exists()) {
+      return true
+    } else {
+      return false
+    }
+  });
+  }
+
   getReferidos(): Observable<any> {
     const _collection = collection(this.firestore, this._collection);
     return collectionData(_collection, { idField: 'id' }) as Observable<any>;

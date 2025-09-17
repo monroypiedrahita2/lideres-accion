@@ -13,22 +13,16 @@
     ></mg-input-text>
   </div>
   <div class="lg:col-span-4 flex items-center sm:justify-around">
-    <mg-button
-      (onClick)="clear()"
-      text="Limpiar"
-      type="reset"
-    ></mg-button>
-      <div class="p-4">
-    <mg-button
-      (onClick)="descargar(referidos)"
-      icon="cloud_download"
-      text="Descargar"
-    ></mg-button>
-  </div>
+    <mg-button (onClick)="clear()" text="Limpiar" type="reset"></mg-button>
+    <div class="p-4">
+      <mg-button
+        (onClick)="descargar(referidos)"
+        icon="cloud_download"
+        text="Descargar"
+      ></mg-button>
+    </div>
   </div>
 </div>
-
-
 
 <div class="flex justify-between items-end">
   <div class="font-primary text-lg">
@@ -37,7 +31,17 @@
 </div>
 
 @for (referido of referidos; track $index) {
-    <lida-person-info class="sm:block lg:hidden" [esInterno]="referido.data.isInterno" [title]="referido.data.nombres + ' ' + referido.data.apellidos" [textInfo]="referido.id!" (eventEdit)="edit(referido)" [textInfo2]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : ''"></lida-person-info>
+<lida-person-info
+  class="sm:block lg:hidden"
+  [esInterno]="referido.data.isInterno"
+  [title]="referido.data.nombres + ' ' + referido.data.apellidos"
+  [textInfo]="referido.id!"
+  (eventEdit)="edit(referido)"
+  [textInfo2]="
+    referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : ''
+  "
+  [canDelete]="usuario.rol === 'Pastor'"
+></lida-person-info>
 }
 
 <div class="sm:hidden lg:block">
@@ -86,8 +90,11 @@
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
               <div class="flex items-center justify-center gap-4">
-                <span class="material-icons text-primary cursor-pointer" [routerLink]="['../editar-referido', referido.id]">edit</span>
-
+                <span
+                  class="material-icons text-primary cursor-pointer"
+                  [routerLink]="['../editar-referido', referido.id]"
+                  >edit</span
+                >
               </div>
             </td>
           </tr>

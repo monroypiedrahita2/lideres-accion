@@ -9,16 +9,24 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './person-info.component.html',
 })
 export class PersonInfoComponent {
+  @Input() canDelete: boolean = false;
   @Input() icon: string = 'edit';
+  @Input() icon2: string = 'delete';
   @Input() title: string = 'title';
   @Input() textInfo: string = 'textInfo';
-  @Input() textInfo2: any = 'textInfo';
+  @Input() textInfo2: any = 'textInfo2';
+  @Input() textInfo3: any = 'textInfo3';
+  @Input() textInfo4: any = 'textInfo4';
   @Input() esInterno: boolean = false;
   @Output() eventEdit: EventEmitter<any> = new EventEmitter
 
 
   edit() {
     this.eventEdit.emit();
+  }
+
+  eliminar() {
+
   }
 
 

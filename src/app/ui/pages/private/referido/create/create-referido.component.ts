@@ -21,6 +21,7 @@ import { ComunaModel } from '../../../../../models/comuna/comuna.model';
 import { ButtonComponent } from '../../../../shared/components/atoms/button/button.component';
 import { ActivatedRoute } from '@angular/router';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
+import { TarjetaInformativaComponent } from '../../../../shared/components/modules/tarjeta-informativa/tarjeta-informativa.component';
 
 @Component({
   selector: 'app-create-referido',
@@ -33,11 +34,13 @@ import { PerfilModel } from '../../../../../models/perfil/perfil.model';
     InputTextComponent,
     SubTitleComponent,
     ButtonComponent,
+    TarjetaInformativaComponent,
   ],
   templateUrl: './create-referido.component.html',
 })
 export class CreateReferidoComponent implements OnInit {
   id!: string | null;
+  existDocument: boolean = false;
   iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
   userRol: string = JSON.parse(localStorage.getItem('usuario') || '{}').rol;
   user: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -60,6 +63,7 @@ export class CreateReferidoComponent implements OnInit {
     { label: 'Si', value: true },
     { label: 'No', value: false },
   ];
+  private avanceTimeout: any;
 
   constructor(
     private readonly location: Location,
@@ -100,6 +104,7 @@ export class CreateReferidoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.accion = 'Crear';
     this.enableSkeleton = true;
     if (this.userRol != 'Líder') {
       this.getReferidos();
@@ -113,18 +118,34 @@ export class CreateReferidoComponent implements OnInit {
       this.title = this.accion + ' ' + 'referido';
       this.getReferido(this.id);
     }
+
+    this.form.get('documento')?.valueChanges.subscribe((value) => {
+      this.confirmDocument(value);
+    });
+  }
+
+  confirmDocument(value: string) {
+    if (this.avanceTimeout) {
+      clearTimeout(this.avanceTimeout);
+    }
+    this.avanceTimeout = setTimeout(() => {
+      this.referidoService.existeReferido(value).then((res) => {
+        if (res) {
+          this.existDocument = res;
+        }
+      });
+    }, 1000);
   }
 
   myData() {
-    this.referidoService.getReferidoByDocument(this.user.documento).then((res) => {
-         this.referidos.push ({
-           label: res.data.nombres + ' ' + res.data.apellidos,
-           value: res.id
-         })
-    })
-
-
-
+    this.referidoService
+      .getReferidoByDocument(this.user.documento)
+      .then((res) => {
+        this.referidos.push({
+          label: res.data.nombres + ' ' + res.data.apellidos,
+          value: res.id,
+        });
+      });
   }
 
   getReferido(documento: string) {
@@ -155,7 +176,7 @@ export class CreateReferidoComponent implements OnInit {
   }
 
   async goToPage(page: string) {
-    if(this.accion == 'Editar' ) {
+    if (this.accion == 'Editar') {
       this.form.get('documento')?.enable();
     }
     await this.copyDocument(page);
@@ -173,7 +194,7 @@ export class CreateReferidoComponent implements OnInit {
     } catch {
       this.toast.error('Error al copiar el número de documento');
     }
-       if(this.accion == 'Editar' ) {
+    if (this.accion == 'Editar') {
       this.form.get('documento')?.disable();
     }
   }
@@ -201,10 +222,7 @@ export class CreateReferidoComponent implements OnInit {
     this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
       next: (res) => {
         this.referidos = res.map((referido: BaseModel<ReferidoModel>) => ({
-          label:
-            referido.data.nombres +
-            ' ' +
-            referido.data.apellidos,
+          label: referido.data.nombres + ' ' + referido.data.apellidos,
           value: referido.id,
         }));
         this.enableSkeleton = false;
@@ -217,8 +235,10 @@ export class CreateReferidoComponent implements OnInit {
   }
 
   async onSubmit() {
+    this.loading = true;
     if (this.form.invalid) {
       this.toast.warning('Falta diligenciar campos obligatorios');
+      this.loading = false;
       return;
     }
     if (this.accion == 'Editar') {

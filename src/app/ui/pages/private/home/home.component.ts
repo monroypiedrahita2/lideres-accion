@@ -63,6 +63,7 @@ export class HomeComponent implements OnInit {
         JSON.stringify({ ...this.usuario, id: id })
       );
         this.getMyIglesia(this.usuario.iglesia!);
+        this.skeleton = false;
     } catch (error) {
       console.error(error);
     }
