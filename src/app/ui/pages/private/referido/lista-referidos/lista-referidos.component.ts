@@ -55,6 +55,8 @@ export class ListaReridosComponent implements OnInit {
   pageIndex = 0;
   pageSizeOptions = [5, 10, 25];
 
+  btnRecargar: boolean = false;
+
   hidePageSize = false;
   showPageSizeOptions = true;
   showFirstLastButtons = true;
@@ -109,6 +111,7 @@ export class ListaReridosComponent implements OnInit {
   clear() {
     this.searchText = '';
     this.referidos = this.data;
+    this.btnRecargar = false
   }
 
   descargar(referidos: BaseModel<ReferidoModel>[]) {
@@ -152,5 +155,14 @@ export class ListaReridosComponent implements OnInit {
     });
 
     return datos;
+  }
+
+  contarReferidos(id: string) {
+    return this.referidos.filter((referido) => referido.data.referidoPor === id).length;
+  }
+
+  filterReferidos(id: string) {
+    this.referidos = this.data.filter((referido) =>referido.data.referidoPor === id);
+    this.btnRecargar = true;
   }
 }

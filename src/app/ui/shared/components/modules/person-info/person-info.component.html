@@ -10,7 +10,7 @@
         <div class="text-base text-start text-gray-600 text-sm font-primary w-full">
           {{ textInfo }}
         </div>
-        <div class="text-base text-end text-gray-600 text-sm font-primary w-full">
+        <div (click)="filterReferidos()" (keydown)="filterReferidos()" class="text-base text-end text-sm font-primary w-full hover:cursor-pointer text-blue-400">
           {{ textInfo2 }}
         </div>
 
@@ -26,12 +26,12 @@
     </div>
 
     <div class="flex flex-col items-center justify-center">
-      <div [class]="(esInterno ? 'bg-primary' : 'bg-black') + ' h-10 w-10 flex items-center justify-center rounded-lg border-2 border-oro'">
+      <div [class]="(esInterno ? 'bg-primary' : 'bg-black') + ' h-10 w-10 flex items-center justify-center rounded-lg border-2'">
         <span class="material-symbols-outlined text-white font-light" (click)="edit()" (keydown)="edit()">
           {{ icon }}
         </span>
       </div>
-      <div *ngIf="canDelete" [class]="'h-10 w-10 flex items-center justify-center rounded-lg border-2 border-oro'">
+      <div *ngIf="canDelete" [class]="'h-10 w-10 flex items-center justify-center rounded-lg border-2 bg-red-400'">
         <span class="material-symbols-outlined text-white font-light" (click)="eliminar()" (keydown)="eliminar()">
           {{ icon2 }}
         </span>

@@ -9,11 +9,11 @@
         <mat-icon class="text-white hover:cursor-pointer text-center w-full text-shadow" [routerLink]="['./settings']">menu</mat-icon>
       </div>
     }
-    <div class="w-full">
+    <div>
       <span class="font-primary text-white text-2xl block uppercase text-shadow">{{nameApp}}</span>
     </div>
         <div class=" flex items-center justify-center">
-      <mat-icon class="text-white text-center w-full hover:text-yellow-400 hover:cursor-pointer" [routerLink]="['./settings']">exit_to_app</mat-icon>
+      <mat-icon class="text-white text-center w-full hover:text-yellow-400 hover:cursor-pointer" (click)="Logout()" (keyup)="Logout()">exit_to_app</mat-icon>
     </div>
   </div>
 </nav>

@@ -13,8 +13,8 @@
     ></mg-input-text>
   </div>
   <div class="lg:col-span-4 flex items-center sm:justify-around">
-    <mg-button (onClick)="clear()" text="Limpiar" type="reset"></mg-button>
-    <div class="p-4">
+    <mg-button (onClick)="clear()" [text]=" btnRecargar ? 'Mostrar todos' : 'Limpiar'" type="reset"></mg-button>
+    <div class="p-4" *ngIf="usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'">
       <mg-button
         (onClick)="descargar(referidos)"
         icon="cloud_download"
@@ -24,7 +24,7 @@
   </div>
 </div>
 
-<div class="flex justify-between items-end">
+<div class="flex justify-between items-end mt-4">
   <div class="font-primary text-lg">
     Total registros: {{ referidos.length }} referidos
   </div>
@@ -37,10 +37,12 @@
   [title]="referido.data.nombres + ' ' + referido.data.apellidos"
   [textInfo]="referido.id!"
   (eventEdit)="edit(referido)"
-  [textInfo2]="
-    referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : ''
-  "
+  [textInfo2]="contarReferidos(referido.id!) + ' referidos'"
+  (evenFilterReferidos)="filterReferidos(referido.id!)"
+  [textInfo3]="'Última actualización'"
+  [textInfo4]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : referido.fechaCreacion.split('T')[0]"
   [canDelete]="usuario.rol === 'Pastor'"
+  icon2="delete_sweep"
 ></lida-person-info>
 }
 

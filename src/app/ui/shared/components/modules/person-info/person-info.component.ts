@@ -19,6 +19,7 @@ export class PersonInfoComponent {
   @Input() textInfo4: any = 'textInfo4';
   @Input() esInterno: boolean = false;
   @Output() eventEdit: EventEmitter<any> = new EventEmitter
+  @Output() evenFilterReferidos: EventEmitter<any> = new EventEmitter
 
 
   edit() {
@@ -26,7 +27,11 @@ export class PersonInfoComponent {
   }
 
   eliminar() {
+    console.log('eliminado')
+  }
 
+  filterReferidos() {
+    this.evenFilterReferidos.emit();
   }
 
 
