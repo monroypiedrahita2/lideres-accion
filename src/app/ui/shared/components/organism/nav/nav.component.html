@@ -6,7 +6,7 @@
   <div class="flex justify-between items-center h-full px-4">
     @if (usuario.rol != 'Coordinador de iglesia' && usuario.rol != 'Líder') {
       <div  class=" flex items-center justify-center gap-2 hover:cursor-pointer hover:shadow-xl">
-        <mat-icon class="text-white hover:cursor-pointer text-center w-full text-shadow" [routerLink]="['./settings']">menu</mat-icon>
+        <mat-icon class="text-white hover:cursor-pointer text-center w-full text-shadow" [routerLink]="['./settings']">settings</mat-icon>
       </div>
     }
     <div>
