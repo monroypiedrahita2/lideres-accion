@@ -252,15 +252,18 @@ export class CreateReferidoComponent implements OnInit {
 
   async editReferido() {
     try {
-      await this.referidoService.updateReferido(this.id!, {
+      const referido = {
         fechaModificacion: new Date().toISOString(),
         modificadoPor: this.auth.uidUser(),
         data: {
           ...this.form.value,
-          comuna: this.form.get('barrio')?.value.split(' - ')[0].trim(),
-          barrio: this.form.get('barrio')?.value.split(' - ')[1].trim(),
+          comuna: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[0] : '',
+          barrio: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[1] : '',
+          referidoPor: this.form.get('referidoPor')?.value ? this.form.get('referidoPor')?.value : '',
         },
-      });
+      }
+      console.log(referido);
+      await this.referidoService.updateReferido(this.id!, referido);
       this.location.back();
       this.toast.success('Referido actualizado correctamente');
     } catch (error) {

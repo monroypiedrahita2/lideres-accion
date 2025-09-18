@@ -1,10 +1,13 @@
 PARA PDN
-
+.firebaserc
 {
   "projects": {
     "default": "lida-f59df"
   }
 }
+
+enviroments 
+production: true
 
 
 PARA DEV
@@ -14,6 +17,9 @@ PARA DEV
     "default": "lida-dev-f9291"
   }
 }
+
+enviroments 
+production: false
 
 
 HOST PDN
@@ -35,5 +41,7 @@ https://lida-dev-f9291.web.app/public/login
 
 
 
+
+Para salir DEV
 
 
