@@ -13,7 +13,6 @@
         <div (click)="filterReferidos()" (keydown)="filterReferidos()" class="text-base text-end text-sm font-primary w-full hover:cursor-pointer text-blue-400">
           {{ textInfo2 }}
         </div>
-
       </dl>
       <dl class="flex flex-row justify-between w-full">
         <div class="text-base text-start text-gray-600 text-sm font-primary w-full">
@@ -22,6 +21,11 @@
         <div class="text-base text-end text-gray-600 text-sm font-primary w-full">
           {{ textInfo4 }}
         </div>
+      </dl>
+      <dl class="flex flex-row justify-start items-end">
+          <span *ngIf="badge" class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">{{textbadge}}</span>
+          <span *ngIf="badge2" class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">{{textbadge2}}</span>
+          <mat-icon *ngIf="votacion" class="text-green-900 bg-green-200 rounded-full">how_to_vote</mat-icon>
       </dl>
     </div>
 
@@ -36,6 +40,7 @@
           {{ icon2 }}
         </span>
       </div>
+
     </div>
   </div>
 </div>

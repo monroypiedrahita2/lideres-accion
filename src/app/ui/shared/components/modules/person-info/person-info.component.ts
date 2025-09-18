@@ -17,7 +17,12 @@ export class PersonInfoComponent {
   @Input() textInfo2: any = 'textInfo2';
   @Input() textInfo3: any = 'textInfo3';
   @Input() textInfo4: any = 'textInfo4';
+  @Input() textbadge: any = 'Senado';
+  @Input() textbadge2: any = 'Camara';
+  @Input() badge: boolean = false;
+  @Input() badge2: boolean = false;
   @Input() esInterno: boolean = false;
+  @Input() votacion: boolean = false;
   @Output() eventEdit: EventEmitter<any> = new EventEmitter
   @Output() evenFilterReferidos: EventEmitter<any> = new EventEmitter
   @Output() eventDelete: EventEmitter<any> = new EventEmitter

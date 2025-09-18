@@ -43,6 +43,9 @@
   [textInfo4]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : referido.fechaCreacion.split('T')[0]"
   [canDelete]="usuario.rol === 'Pastor'"
   (eventDelete)="eliminar(referido.id!)"
+  [badge]="referido.data.senado ? true : false"
+  [badge2]="referido.data.camara ? true : false"
+  [votacion]="referido.data.lugarVotacion && referido.data.mesaVotacion ? true : false"
 ></lida-person-info>
 }
 
