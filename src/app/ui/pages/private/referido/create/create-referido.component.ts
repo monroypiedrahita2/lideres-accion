@@ -108,7 +108,7 @@ export class CreateReferidoComponent implements OnInit {
     if (this.userRol != 'Líder') {
       this.getReferidos();
     } else {
-      this.myData();
+      this.form.patchValue({ referidoPor: this.user.documento });
       this.enableSkeleton = false;
     }
     this.getComunas();
@@ -150,18 +150,6 @@ export class CreateReferidoComponent implements OnInit {
       });
     }, 1000);
   }
-
-  myData() {
-    this.referidoService
-      .getReferidoByDocument(this.user.documento)
-      .then((res) => {
-        this.referidos.push({
-          label: res.data.nombres + ' ' + res.data.apellidos,
-          value: res.id,
-        });
-      });
-  }
-
   getReferido(documento: string) {
     this.referidoService
       .getReferido(documento)

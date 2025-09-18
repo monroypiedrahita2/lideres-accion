@@ -20,6 +20,7 @@ import { PrivateRoutingModule } from "../../private-routing.module";
 import { Router, RouterModule } from '@angular/router';
 import { PersonInfoComponent } from '../../../../shared/components/modules/person-info/person-info.component';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
+import { ConfirmActionComponent } from '../../../../shared/components/modules/modal/confirm-action.component';
 
 @Component({
   selector: 'app-lista-referidos',
@@ -37,7 +38,8 @@ import { PerfilModel } from '../../../../../models/perfil/perfil.model';
     ButtonComponent,
     PrivateRoutingModule,
     RouterModule,
-    PersonInfoComponent
+    PersonInfoComponent,
+    ConfirmActionComponent
 ],
   providers: [LugaresService],
   templateUrl: './lista-referidos.component.html',
@@ -48,7 +50,9 @@ export class ListaReridosComponent implements OnInit {
   referidos: BaseModel<ReferidoModel>[] = [];
   data: BaseModel<ReferidoModel>[] = [];
   spinner: boolean = true;
+  showModal: boolean = false;
   searchText: string = '';
+  dataModal: { name: string; id: string } = { name: '', id: '' };
 
   length = 50;
   pageSize = 10;
@@ -70,7 +74,38 @@ export class ListaReridosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getReferidos();
+    if (this.usuario.rol === 'Líder') {
+      this.misReferidos(this.usuario.documento);
+    } else {
+      this.getReferidos();
+    }
+  }
+
+  misReferidos(documento: string) {
+    this.referidoService.getMyReferidos(documento).subscribe({
+      next: (data) => {
+        this.referidos = data;
+        this.spinner = false;
+      },
+      error: (error) => {
+        console.error(error);
+        this.spinner = false;
+      },
+    });
+  }
+
+    getReferidos() {
+    this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
+      next: (data) => {
+        this.data = data;
+        this.referidos = data;
+        this.spinner = false;
+      },
+      error: (error) => {
+        console.error(error);
+        this.spinner = false;
+      },
+    });
   }
 
   edit(referido: BaseModel<ReferidoModel>) {
@@ -84,19 +119,7 @@ export class ListaReridosComponent implements OnInit {
     this.pageIndex = e.pageIndex;
   }
 
-  getReferidos() {
-    this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
-      next: (data) => {
-        this.data = data;
-        this.referidos = data;
-        this.spinner = false;
-      },
-      error: (error) => {
-        console.error(error);
-        this.spinner = false;
-      },
-    });
-  }
+
 
   onSearch(data: string) {
     this.referidos = this.data.filter(
@@ -173,5 +196,11 @@ export class ListaReridosComponent implements OnInit {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  openModal(data: { name: string; id: string }) {
+    this.showModal = true;
+    this.dataModal = data;
+    return true
   }
 }

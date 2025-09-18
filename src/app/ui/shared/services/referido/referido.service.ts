@@ -79,10 +79,10 @@ export class ReferidoService {
     );
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }
-  getMyReferidos(uid: string): Observable<BaseModel<ReferidoModel>[]> {
+  getMyReferidos(id: string): Observable<BaseModel<ReferidoModel>[]> {
     const q = query(
       collection(this.firestore, this._collection),
-      where('data.referidoPor', '==', uid)
+      where('data.referidoPor', '==', id)
     );
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }
