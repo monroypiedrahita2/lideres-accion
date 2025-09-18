@@ -18,5 +18,6 @@ export interface ReferidoModel {
   referidoPor?: string; // id / documento de identidad de quien lo refirio
   senado: boolean | string;
   camara: boolean | string;
+  cantidadReferidos?: string;
   guardado?: 'error' | boolean;
 }

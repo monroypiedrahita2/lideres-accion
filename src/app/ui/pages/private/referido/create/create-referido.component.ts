@@ -262,7 +262,6 @@ export class CreateReferidoComponent implements OnInit {
           referidoPor: this.form.get('referidoPor')?.value ? this.form.get('referidoPor')?.value : '',
         },
       }
-      console.log(referido);
       await this.referidoService.updateReferido(this.id!, referido);
       this.location.back();
       this.toast.success('Referido actualizado correctamente');

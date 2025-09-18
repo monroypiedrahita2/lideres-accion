@@ -15,7 +15,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { TITULOS_DESCARGA, TITULOS_EXCEL } from '../../../../shared/const/titulos-excel.const';
+import { TITULOS_DESCARGA } from '../../../../shared/const/titulos-excel.const';
 import { PrivateRoutingModule } from "../../private-routing.module";
 import { Router, RouterModule } from '@angular/router';
 import { PersonInfoComponent } from '../../../../shared/components/modules/person-info/person-info.component';
@@ -97,8 +97,17 @@ export class ListaReridosComponent implements OnInit {
     getReferidos() {
     this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
       next: (data) => {
-        this.data = data;
-        this.referidos = data;
+        this.data = data
+        this.referidos = this.data.map((referido: BaseModel<ReferidoModel>) => {
+          return {
+            ...referido,
+            data: {
+              ...referido.data,
+              cantidadReferidos: this.contarReferidos(referido.id!),
+            },
+          }
+        });
+        this.data = this.referidos
         this.spinner = false;
       },
       error: (error) => {
@@ -180,8 +189,11 @@ export class ListaReridosComponent implements OnInit {
     return datos;
   }
 
-  contarReferidos(id: string) {
-    return this.referidos.filter((referido) => referido.data.referidoPor === id).length;
+  contarReferidos(id: string): string {
+    const cuenta = this.data.filter((referido) => referido.data.referidoPor === id).length;
+    const cantidad = cuenta.toString();
+    console.log(cantidad);
+    return cantidad + ' referidos';
   }
 
   filterReferidos(id: string) {

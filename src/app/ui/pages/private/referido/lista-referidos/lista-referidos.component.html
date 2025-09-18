@@ -37,7 +37,7 @@
   [title]="referido.data.nombres + ' ' + referido.data.apellidos"
   [textInfo]="referido.id!"
   (eventEdit)="edit(referido)"
-  [textInfo2]="contarReferidos(referido.id!) + ' referidos'"
+  [textInfo2]="referido.data.cantidadReferidos"
   (evenFilterReferidos)="filterReferidos(referido.id!)"
   [textInfo3]="'Última actualización'"
   [textInfo4]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : referido.fechaCreacion.split('T')[0]"
