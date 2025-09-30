@@ -102,6 +102,16 @@ export class ListaReridosComponent implements OnInit {
       this.getReferidoByDocumentoAndIglesia(value);
     }, 500);
   }
+  getTestigos() {
+    this.referidoService
+      .getTestigos(this.usuario.iglesia!).subscribe({
+
+        next: (res: BaseModel<ReferidoModel>[]) => {
+          this.referidos = res;
+        },
+      })
+      this.optionSelected = 'Todos';
+  }
 
 
   getBySearch(criterio: string, value: string | boolean) {
