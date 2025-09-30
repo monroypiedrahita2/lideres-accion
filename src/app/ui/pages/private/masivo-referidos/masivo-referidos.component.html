@@ -48,6 +48,10 @@
       Este funcionalidad es de uso exclusivo para computadores, no recomendamos utilizarla en dispositivos móviles. </p>
   </div>
 </div>
+          <div *ngIf="referidos.length > 0" class="flex gap-4 mb-2">
+            <span>Total registros: {{ referidos.length + " referidos" }}</span>
+          </div>
+
 
 <div class="sm:hidden lg:block" *ngIf="referidos.length > 0">
   <div class="relative overflow-x-auto">
@@ -69,10 +73,40 @@
               Nombres
             </th>
             <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Célular
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Correo
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Emprendedor
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Comuna
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Barrio
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Dirección
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Fecha de nacimiento
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
               Lugar de votación
             </th>
             <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
               Mesa
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Senado
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Camara
+            </th>
+            <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+              Referido por
             </th>
             <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
               Acciones
@@ -94,10 +128,40 @@
               {{ referido.nombres + " " + referido.apellidos }}
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.celular }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.email }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.esEmprendedor ? "SI" : "NO" }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.comuna }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.barrio }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.direccion }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.fechaNacimiento }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
               {{ referido.lugarVotacion }}
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
               {{ referido.mesaVotacion }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.senado ? "SI" : "NO" }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.camara ? "SI" : "NO" }}
+            </td>
+            <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+              {{ referido.referidoPor }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-black">
               <div class="flex items-center justify-center h-full">

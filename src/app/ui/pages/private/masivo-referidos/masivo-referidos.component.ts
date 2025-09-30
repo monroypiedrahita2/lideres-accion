@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
-import { AuthService } from '../../../shared/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
@@ -26,7 +25,8 @@ export class MasivoReferidosComponent {
   accion: 'Crear' | 'Editar' = 'Crear';
   enableSkeleton: boolean = true;
   emailEnabled: boolean = true;
-  referidos: any[] = [];
+  referidos: ReferidoModel[] = [];
+  contador: number = 0;
 
   constructor(
     private readonly referidoService: ReferidoService,
@@ -59,22 +59,22 @@ export class MasivoReferidosComponent {
   processExcelData(data: any[][]): void {
     const usuarios = data.slice(1).map((row) => ({
       isInterno: row[0] === 'Interno',
-      documento: String(row[1] ?? 'sin dato'),
-      nombres: String(row[2] ?? 'sin dato'),
-      apellidos: String(row[3] ?? 'sin dato'),
-      celular: String(row[4] ?? 'sin dato'),
-      email: String(row[5] ?? 'sin dato'),
+      documento: String(row[1] ?? ''),
+      nombres: String(row[2] ?? ''),
+      apellidos: String(row[3] ?? ''),
+      celular: String(row[4] ?? ''),
+      email: String(row[5] ?? ''),
       esEmprendedor: row[6] === 'SI',
-      comuna: String(row[7] ?? 'sin dato'),
-      barrio: String(row[8] ?? 'sin dato'),
-      direccion: String(row[9] ?? 'sin dato'),
+      comuna: String(row[7] ?? ''),
+      barrio: String(row[8] ?? ''),
+      direccion: String(row[9] ?? ''),
       iglesia: String(this.iglesia),
-      fechaNacimiento: String(row[10] ?? 'sin dato'),
-      lugarVotacion: String(row[11] ?? 'sin dato'),
-      mesaVotacion: String(row[12] ?? 'sin dato'),
+      fechaNacimiento: String(row[10] ?? ''),
+      lugarVotacion: String(row[11] ?? ''),
+      mesaVotacion: String(row[12] ?? ''),
       senado: row[13] === 'SI',
       camara: row[14] === 'SI',
-      referidoPorCedula: String(row[15] ?? 'sin dato'),
+      referidoPor: String(row[15] ?? ''),
     }));
     this.referidos = usuarios;
   }
@@ -107,11 +107,13 @@ export class MasivoReferidosComponent {
     });
     Promise.all(promises)
       .then(() => {
-        this.toast.success('Referidos guardados exitosamente');
+        this.toast.info('Iniciando a guardar');
       })
-      .catch((error) => {})
+      .catch((error) => {
+        this.toast.error('Vuelva a intentarlo más tarde');
+
+      })
       .finally(() => {
-        this.loading = false;
       });
   }
 
@@ -123,11 +125,16 @@ export class MasivoReferidosComponent {
       creadoPor: this.usuario.id,
     };
     try {
-      await this.referidoService.crearReferidoConIdDocumento(ref, ref.id!);
+      await this.referidoService.crearReferidoConIdDocumento(ref, ref.id!)
+      this.contador++;
       referido.guardado = true;
       this.toast.success(
         `Referido ${ref.data.nombres} ${ref.data.apellidos} guardado exitosamente`
       );
+            if (this.contador === this.referidos.length) {
+        this.toast.info('Se termino el guardado');
+        this.loading = false;
+      }
     } catch (error) {
       this.toast.error(
         `Error al guardar el referido ${ref.data.nombres} ${ref.data.apellidos}`
@@ -137,7 +144,13 @@ export class MasivoReferidosComponent {
     }
   }
 
+
+
+
+
   clear() {
     this.referidos = [];
   }
+
+
 }

@@ -45,3 +45,8 @@ https://lida-dev-f9291.web.app/public/login
 Para salir DEV
 
 
+Comando para hacer el PWA 
+
+ng add @angular/pwa
+
+
