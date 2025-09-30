@@ -34,36 +34,55 @@ export class ReferidoService {
     return setDoc(dataRef, data);
   }
 
+  async existeReferido(documento: string): Promise<boolean> {
+    const docRef = doc(this.firestore, this._collection, documento);
+    return getDoc(docRef).then((docSnap) => {
+      if (docSnap.exists()) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+
   getReferidos(): Observable<any> {
     const _collection = collection(this.firestore, this._collection);
     return collectionData(_collection, { idField: 'id' }) as Observable<any>;
   }
 
-  getReferidoByEmailoCC(value: string) {
-    if (value.includes('@')) {
-      const q = query(
-        collection(this.firestore, this._collection),
-        where('email', '==', value)
-      );
-      const response = collectionData(q, { idField: 'id' }) as Observable<
-        any[]
-      >;
-      return response;
-    } else {
-      const q = query(
-        collection(this.firestore, this._collection),
-        where('documento', '==', value)
-      );
-      const response = collectionData(q, { idField: 'id' }) as Observable<
-        any[]
-      >;
-      return response;
-    }
+  meReferido(documento: string) {
+    const q = query(
+      collection(this.firestore, this._collection),
+      where('email', '==', documento)
+    );
+    const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
+    return response;
   }
-  getReferidoByIglesia(iglesia: string): Observable<any[]> {
+
+  getReferidoByDocument(value: string) {
+    const docRef = doc(this.firestore, this._collection, value);
+    return getDoc(docRef).then((docSnap) => {
+      if (docSnap.exists()) {
+        return docSnap.data() as any;
+      } else {
+        throw new Error('No existe o es nuevo');
+      }
+    });
+  }
+
+  getReferidoByIglesia(
+    iglesia: string
+  ): Observable<BaseModel<ReferidoModel>[]> {
     const q = query(
       collection(this.firestore, this._collection),
       where('data.iglesia', '==', iglesia)
+    );
+    return collectionData(q, { idField: 'id' }) as Observable<any[]>;
+  }
+  getMyReferidos(id: string): Observable<BaseModel<ReferidoModel>[]> {
+    const q = query(
+      collection(this.firestore, this._collection),
+      where('data.referidoPor', '==', id)
     );
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }
@@ -81,13 +100,7 @@ export class ReferidoService {
 
   async deleteReferido(id: string) {
     const docRef = doc(this.firestore, `${this._collection}/${id}`);
-    try {
-      await deleteDoc(docRef);
-      this.toast.success('perfil eliminado correctamente');
-    } catch (error) {
-      console.error(error);
-      this.toast.success('Error al eliminar el perfil');
-    }
+    await deleteDoc(docRef);
   }
 
   updateReferido(id: string, newData: any) {

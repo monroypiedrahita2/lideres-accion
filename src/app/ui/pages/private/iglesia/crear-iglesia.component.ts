@@ -10,9 +10,7 @@ import { ContainerGridComponent } from '../../../shared/components/atoms/contain
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { LugaresService } from '../../../shared/services/lugares/lugares.service';
 import { lastValueFrom } from 'rxjs';
-import {
-  SelectOptionModel,
-} from '../../../../models/base/select-options.model';
+import { SelectOptionModel } from '../../../../models/base/select-options.model';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
 import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
@@ -22,8 +20,8 @@ import { IglesiaService } from '../../../shared/services/iglesia/iglesia.service
 import { BaseModel } from '../../../../models/base/base.model';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { SpinnerComponent } from '../../../shared/components/modules/spinner/spinner.component';
-import { ContainerSearchComponent } from '../../../shared/components/modules/container-search/container-search.component';
 import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/sub-title.component';
+
 
 @Component({
   selector: 'app-iglesias',
@@ -37,8 +35,7 @@ import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/su
     HttpClientModule,
     TitleComponent,
     SpinnerComponent,
-    ContainerSearchComponent,
-    SubTitleComponent
+    SubTitleComponent,
   ],
   providers: [LugaresService, IglesiaService],
   templateUrl: './crear-iglesia.component.html',
@@ -48,6 +45,7 @@ export class CrearIglesiaComponent implements OnInit {
   departamentos: SelectOptionModel<string>[] = [];
   municipios: SelectOptionModel<string>[] = [];
   iglesia!: BaseModel<IglesiaModel>;
+  perfiles: SelectOptionModel<string>[] = [];
   loading: boolean = false;
   spinner: boolean = true;
   iglesias: BaseModel<IglesiaModel>[] = [];
@@ -66,7 +64,7 @@ export class CrearIglesiaComponent implements OnInit {
     private readonly toast: ToastrService,
     private readonly location: Location,
     private readonly auth: AuthService,
-    private readonly iglesiaService: IglesiaService
+    private readonly iglesiaService: IglesiaService,
   ) {
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.pattern(/^[^-]*$/)]],
@@ -77,23 +75,30 @@ export class CrearIglesiaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getDepartamentos().then(() => {
-      // departamentos loaded
-    });
+    this.getDepartamentos();
     this.getIglesias();
     this.form.get('municipio')?.disable();
-    this.form
-      .get('departamento')
-      ?.valueChanges.subscribe((departamento) => {
-        if (departamento) {
-          this.form.get('municipio')?.enable();
-          this.getMunicipios(departamento.split('-')[0]);
-        } else {
-          this.form.get('municipio')?.disable();
-          this.municipios = [];
-          this.form.patchValue({ municipio: '' });
-        }
-      });
+    this.form.get('departamento')?.valueChanges.subscribe((departamento) => {
+      if (departamento) {
+        this.form.get('municipio')?.enable();
+        this.getMunicipios(departamento.split('-')[0]);
+      } else {
+        this.form.get('municipio')?.disable();
+        this.municipios = [];
+        this.form.patchValue({ municipio: '' });
+      }
+    });
+  }
+
+
+
+  editarIglesia(iglesia: BaseModel<IglesiaModel>) {
+    this.form.patchValue({
+      nombre: iglesia.data.nombre.split(' - ')[0],
+      departamento: iglesia.data.departamento,
+      municipio: iglesia.data.municipio,
+      horario: iglesia.data.nombre.split(' - ')[1],
+    });
   }
 
   async getDepartamentos() {
@@ -141,13 +146,14 @@ export class CrearIglesiaComponent implements OnInit {
         fechaCreacion: new Date().toISOString(),
         creadoPor: this.auth.uidUser(),
       };
-      await this.iglesiaService.createIglesia(this.iglesia);
+      const response =await this.iglesiaService.createIglesia(this.iglesia);
+      console.log(response);
       this.toast.success('Iglesia creada correctamente');
       this.loading = false;
       this.form.patchValue({
         nombre: '',
         horario: '',
-      })
+      });
     } catch (error) {
       console.error(error);
       this.toast.error('Error al crear la iglesia. Intente nuevamente.');
@@ -160,7 +166,7 @@ export class CrearIglesiaComponent implements OnInit {
       next: (iglesias) => {
         this.iglesias = iglesias;
         this.spinner = false;
-        this.data = [...this.iglesias]
+        this.data = [...this.iglesias];
       },
       error: (error) => {
         console.error(error);
@@ -170,8 +176,7 @@ export class CrearIglesiaComponent implements OnInit {
     });
   }
 
-    onSearch(data: BaseModel<IglesiaModel>[]) {
-      this.data = data
-    }
-
+  onSearch(data: BaseModel<IglesiaModel>[]) {
+    this.data = data;
+  }
 }

@@ -1,7 +1,5 @@
-import { lastValueFrom } from 'rxjs';
-import { IglesiaService } from './../../../shared/services/iglesia/iglesia.service';
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import {
   FormBuilder,
@@ -14,9 +12,6 @@ import { TitleComponent } from '../../../shared/components/atoms/title/title.com
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { PerfilService } from '../../../shared/services/perfil/perfil.service';
-import { InputSelectComponent } from '../../../shared/components/atoms/input-select/input-select.component';
-import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
-import { BaseModel } from '../../../../models/base/base.model';
 import { SelectOptionModel } from '../../../../models/base/select-options.model';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 
@@ -28,12 +23,11 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
     CommonModule,
     TitleComponent,
     InputTextComponent,
-    InputSelectComponent,
     ReactiveFormsModule,
     ButtonComponent,
   ],
 })
-export class NuevaCuentaComponent implements OnInit {
+export class NuevaCuentaComponent {
   form!: FormGroup;
   iglesias: SelectOptionModel<string>[] = [];
   disableBtn: boolean = false;
@@ -42,40 +36,21 @@ export class NuevaCuentaComponent implements OnInit {
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
     private readonly perfilService: PerfilService,
-    private readonly iglesiaService: IglesiaService,
     private readonly location: Location,
     private readonly toast: ToastrService
   ) {
     this.form = this.fb.group({
+      documento: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       email: ['', [Validators.required, Validators.email]],
       nombres: ['', [Validators.required]],
       apellidos: ['', [Validators.required]],
-      iglesia: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(5)]],
       confirm: ['', [Validators.required, Validators.minLength(5)]],
     });
   }
 
-  ngOnInit(): void {
-    this.getIglesias();
-  }
-
-  getIglesias() {
-    this.iglesiaService.getIglesias().subscribe({
-      next: (resp) => {
-        this.iglesias = resp.map((iglesia: BaseModel<IglesiaModel>) => ({
-          label: iglesia.data.nombre,
-          value: iglesia.id!,
-        }));
-      },
-      error: (error) => {
-        console.error(error);
-        this.toast.error('Error al cargar las iglesias');
-      },
-    });
-  }
-
   async crear() {
+    console.log(this.form.value);
     this.disableBtn = true;
     if (
       this.form.invalid &&
@@ -85,9 +60,9 @@ export class NuevaCuentaComponent implements OnInit {
     }
     try {
       const user: PerfilModel = {
+        documento: this.form.value.documento,
         nombres: this.form.value.nombres,
         apellidos: this.form.value.apellidos,
-        iglesia: this.form.value.iglesia,
         email: this.form.value.email,
         rol: null,
       }
@@ -97,12 +72,14 @@ export class NuevaCuentaComponent implements OnInit {
           this.form.value.password
         )
         .then(async (userCredential) => {
+          this.toast.info('Creando cuenta...');
           await this.crearNuevaCuenta(user, userCredential.user.uid);
         });
-    } catch {
+    } catch (error) {
       this.toast.error(
         'Error al crear la cuenta. Intente nuevamente. Ya existe una cuenta con ese correo.'
       );
+      console.error(error);
       this.disableBtn = false;
     }
   }

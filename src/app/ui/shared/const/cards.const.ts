@@ -1,4 +1,4 @@
-import { CardModel } from "../../../models/utils/card.model";
+import { CardModel } from '../../../models/utils/card.model';
 
 export const CARDS_HOME: CardModel[] = [
   // {
@@ -11,19 +11,29 @@ export const CARDS_HOME: CardModel[] = [
     goTo: '../control-accesos',
     title: 'Control y accesos',
     description: 'Gestionar el control y los accesos',
-    icon: 'lock'
+    icon: 'lock',
+    showIf: ['Pastor', 'Super usuario'],
+  },
+  {
+    goTo: '../crear-pastor',
+    title: 'Crear pastor',
+    description: 'Asignar un pastor a iglesia',
+    icon: 'record_voice_over',
+    showIf: ['Super usuario'],
   },
   {
     goTo: '../crear-iglesia',
     title: 'Iglesia',
     description: 'Ver y gestionar iglesias',
-    icon: 'favorite'
+    icon: 'favorite',
+    showIf: ['Super usuario'],
   },
   {
     goTo: '../crear-comuna',
     title: 'Comunas',
     description: 'Ver y gestionar comunas',
-    icon: 'location_city'
+    icon: 'location_city',
+    showIf: ['Pastor'],
   },
   // {
   //   goTo: '../roles',
@@ -35,13 +45,15 @@ export const CARDS_HOME: CardModel[] = [
     goTo: '../listar-referidos',
     title: 'Listar refereidos',
     description: 'Administrar de referidos',
-    icon: 'groups'
+    icon: 'groups',
+    showIf: ['Todos'],
   },
   {
     goTo: '../masivo-referidos',
     title: 'Carga masiva',
     description: 'A través de un archivo Excel',
-    icon: 'upload_file'
+    icon: 'upload_file',
+    showIf: ['Super usuario', 'Pastor'],
   },
   // {
   //   goTo: '../crear-lider',
@@ -49,4 +61,4 @@ export const CARDS_HOME: CardModel[] = [
   //   description: 'Crear líderes',
   //   icon: 'person_add'
   // }
-]
+];

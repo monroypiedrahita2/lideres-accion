@@ -15,9 +15,12 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { TITULOS_EXCEL } from '../../../../shared/const/titulos-excel.const';
+import { TITULOS_DESCARGA } from '../../../../shared/const/titulos-excel.const';
 import { PrivateRoutingModule } from "../../private-routing.module";
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { PersonInfoComponent } from '../../../../shared/components/modules/person-info/person-info.component';
+import { PerfilModel } from '../../../../../models/perfil/perfil.model';
+import { ConfirmActionComponent } from '../../../../shared/components/modules/modal/confirm-action.component';
 
 @Component({
   selector: 'app-lista-referidos',
@@ -34,22 +37,29 @@ import { RouterModule } from '@angular/router';
     MatSlideToggleModule,
     ButtonComponent,
     PrivateRoutingModule,
-    RouterModule
+    RouterModule,
+    PersonInfoComponent,
+    ConfirmActionComponent
 ],
   providers: [LugaresService],
   templateUrl: './lista-referidos.component.html',
 })
 export class ListaReridosComponent implements OnInit {
-  iglesia: any = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
+  iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
+  usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
   referidos: BaseModel<ReferidoModel>[] = [];
   data: BaseModel<ReferidoModel>[] = [];
   spinner: boolean = true;
+  showModal: boolean = false;
   searchText: string = '';
+  dataModal: { name: string; id: string } = { name: '', id: '' };
 
   length = 50;
   pageSize = 10;
   pageIndex = 0;
   pageSizeOptions = [5, 10, 25];
+
+  btnRecargar: boolean = false;
 
   hidePageSize = false;
   showPageSizeOptions = true;
@@ -59,24 +69,21 @@ export class ListaReridosComponent implements OnInit {
 
   constructor(
     private readonly referidoService: ReferidoService,
-    private readonly toast: ToastrService
+    private readonly toast: ToastrService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
-    this.getReferidos();
+    if (this.usuario.rol === 'Líder') {
+      this.misReferidos(this.usuario.documento);
+    } else {
+      this.getReferidos();
+    }
   }
 
-  handlePageEvent(e: PageEvent) {
-    this.pageEvent = e;
-    this.length = e.length;
-    this.pageSize = e.pageSize;
-    this.pageIndex = e.pageIndex;
-  }
-
-  getReferidos() {
-    this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
+  misReferidos(documento: string) {
+    this.referidoService.getMyReferidos(documento).subscribe({
       next: (data) => {
-        this.data = data;
         this.referidos = data;
         this.spinner = false;
       },
@@ -86,6 +93,42 @@ export class ListaReridosComponent implements OnInit {
       },
     });
   }
+
+    getReferidos() {
+    this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
+      next: (data) => {
+        this.data = data
+        this.referidos = this.data.map((referido: BaseModel<ReferidoModel>) => {
+          return {
+            ...referido,
+            data: {
+              ...referido.data,
+              cantidadReferidos: this.contarReferidos(referido.id!),
+            },
+          }
+        });
+        this.data = this.referidos
+        this.spinner = false;
+      },
+      error: (error) => {
+        console.error(error);
+        this.spinner = false;
+      },
+    });
+  }
+
+  edit(referido: BaseModel<ReferidoModel>) {
+    this.router.navigate(['private/editar-referido', referido.id]);
+  }
+
+  handlePageEvent(e: PageEvent) {
+    this.pageEvent = e;
+    this.length = e.length;
+    this.pageSize = e.pageSize;
+    this.pageIndex = e.pageIndex;
+  }
+
+
 
   onSearch(data: string) {
     this.referidos = this.data.filter(
@@ -100,6 +143,7 @@ export class ListaReridosComponent implements OnInit {
   clear() {
     this.searchText = '';
     this.referidos = this.data;
+    this.btnRecargar = false
   }
 
   descargar(referidos: BaseModel<ReferidoModel>[]) {
@@ -114,7 +158,7 @@ export class ListaReridosComponent implements OnInit {
     const datos: any[][] = [];
 
     // Encabezados
-    datos.push(TITULOS_EXCEL);
+    datos.push(TITULOS_DESCARGA);
 
     referidos.forEach((referido) => {
       const referidoData = referido.data;
@@ -122,7 +166,7 @@ export class ListaReridosComponent implements OnInit {
 
       // ROWS
       datos.push([
-        referidoData.isInterno,
+        referidoData.isInterno ? 'Interno' : 'Externo',
         documento,
         referidoData.nombres,
         referidoData.apellidos,
@@ -138,9 +182,37 @@ export class ListaReridosComponent implements OnInit {
         referidoData.senado ? 'SI' : 'NO',
         referidoData.camara ? 'SI' : 'NO',
         referidoData.referidoPor,
+        referidos.find((referido) => referido.id === referidoData.referidoPor)?.data.nombres + ' ' + referidos.find((referido) => referido.id === referidoData.referidoPor)?.data.apellidos
       ]);
     });
 
     return datos;
+  }
+
+  contarReferidos(id: string): string {
+    const cuenta = this.data.filter((referido) => referido.data.referidoPor === id).length;
+    const cantidad = cuenta.toString();
+    console.log(cantidad);
+    return cantidad + ' referidos';
+  }
+
+  filterReferidos(id: string) {
+    this.referidos = this.data.filter((referido) =>referido.data.referidoPor === id);
+    this.btnRecargar = true;
+  }
+
+  async eliminar(id: string) {
+    try {
+      await this.referidoService.deleteReferido(id)
+      this.toast.success('Referido eliminado correctamente');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  openModal(data: { name: string; id: string }) {
+    this.showModal = true;
+    this.dataModal = data;
+    return true
   }
 }

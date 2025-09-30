@@ -1,8 +1,8 @@
 <app-spinner [showSpinner]="spinner"></app-spinner>
 
 <mg-title [title]="'LISTA DE REFERIDOS'"></mg-title>
-<div class="grid grid-cols-12 w-full gap-4">
-  <div class="col-span-8">
+<div class="grid md:grid-cols-1 lg:grid-cols-12 w-full gap-4">
+  <div class="lg:col-span-8">
     <mg-input-text
       class="w-full"
       type="text"
@@ -12,45 +12,42 @@
       (keyup)="onSearch(searchText)"
     ></mg-input-text>
   </div>
-  <div class="col-span-4 flex items-center justify-end">
-    <mg-button
-      (onClick)="clear()"
-      icon="cloud_download"
-      text="Limpiar"
-      type="reset"
-    ></mg-button>
+  <div class="lg:col-span-4 flex items-center sm:justify-around">
+    <mg-button (onClick)="clear()" [text]=" btnRecargar ? 'Mostrar todos' : 'Limpiar'" type="reset"></mg-button>
+    <div class="p-4" *ngIf="usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'">
+      <mg-button
+        (onClick)="descargar(referidos)"
+        icon="cloud_download"
+        text="Descargar"
+      ></mg-button>
+    </div>
   </div>
 </div>
 
-
-
-<div class="flex justify-between items-end">
+<div class="flex justify-between items-end mt-4">
   <div class="font-primary text-lg">
-    Total registros: {{ referidos.length }} líderes
-  </div>
-  <div class="p-4">
-    <mg-button
-      (onClick)="descargar(referidos)"
-      icon="cloud_download"
-      text="Descargar"
-    ></mg-button>
+    Total registros: {{ referidos.length }} referidos
   </div>
 </div>
 
-<!-- <mat-paginator
-  #paginator
-  class="demo-paginator"
-  (page)="handlePageEvent($event)"
-  [length]="length"
-  [pageSize]="pageSize"
-  [disabled]="disabled"
-  [showFirstLastButtons]="showFirstLastButtons"
-  [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
-  [hidePageSize]="hidePageSize"
-  [pageIndex]="pageIndex"
-  aria-label="Select page"
->
-</mat-paginator> -->
+@for (referido of referidos; track $index) {
+<lida-person-info
+  class="sm:block lg:hidden"
+  [esInterno]="referido.data.isInterno"
+  [title]="referido.data.nombres + ' ' + referido.data.apellidos"
+  [textInfo]="referido.id!"
+  (eventEdit)="edit(referido)"
+  [textInfo2]="referido.data.cantidadReferidos"
+  (evenFilterReferidos)="filterReferidos(referido.id!)"
+  [textInfo3]="'Última actualización'"
+  [textInfo4]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : referido.fechaCreacion.split('T')[0]"
+  [canDelete]="usuario.rol === 'Pastor'"
+  (eventDelete)="openModal({name: referido.data.nombres + ' ' + referido.data.apellidos, id: referido.id!})"
+  [badge]="referido.data.senado ? true : false"
+  [badge2]="referido.data.camara ? true : false"
+  [votacion]="referido.data.lugarVotacion && referido.data.mesaVotacion ? true : false"
+></lida-person-info>
+}
 
 <div class="sm:hidden lg:block">
   <div class="relative overflow-x-auto">
@@ -98,9 +95,11 @@
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
               <div class="flex items-center justify-center gap-4">
-                <span class="material-icons text-primary cursor-pointer" [routerLink]="['../editar-referido', referido.id]">edit</span>
-                <!-- <span class="material-icons text-primary cursor-pointer">delete</span> -->
-
+                <span
+                  class="material-icons text-primary cursor-pointer"
+                  [routerLink]="['../editar-referido', referido.id]"
+                  >edit</span
+                >
               </div>
             </td>
           </tr>
@@ -110,4 +109,4 @@
   </div>
 </div>
 
-<!-- <input type="file" (change)="onFileChange($event)" /> -->
+  <lida-confirm-action [showModal]="showModal" [data]="dataModal" (eventConfirm)="eliminar(dataModal.id)"></lida-confirm-action>

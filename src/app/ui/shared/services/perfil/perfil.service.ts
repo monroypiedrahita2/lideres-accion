@@ -14,7 +14,7 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
-import { PerfilModel } from '../../../../models/perfil/perfil.model';
+import { AsigmentRolePerfilModel, PerfilModel } from '../../../../models/perfil/perfil.model';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
@@ -29,6 +29,12 @@ export class PerfilService {
   crearPerfilConUId(data: PerfilModel, id: string): Promise<void> {
     const dataRef = doc(this.firestore, this._collection, id);
     return setDoc(dataRef, data);
+  }
+
+   getPerfilByDocumento(value: string){
+    const q = query(collection(this.firestore, this._collection), where('documento', '==', value));
+    const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
+    return response;
   }
 
 
@@ -85,7 +91,7 @@ getMiPerfil(id: string): Promise<any> {
     }
   }
 
-  updatePerfil(id: string, newData: any) {
+  updatePerfil(id: string, newData: AsigmentRolePerfilModel) {
     const document = doc(this.firestore, this._collection, id);
     return updateDoc(document, { ...newData });
   }

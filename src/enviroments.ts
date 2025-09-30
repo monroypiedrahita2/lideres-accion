@@ -1,13 +1,22 @@
 export const environment = {
-  production: true,
-  firebase: {
-    apiKey: 'AIzaSyD99fV1NqUuQ_wRJ5UlGLNipMMHIJnvip4',
-    authDomain: 'lideres-accion.firebaseapp.com',
-    projectId: 'lideres-accion',
-    storageBucket: 'lideres-accion.firebasestorage.app',
-    messagingSenderId: '986787431137',
-    appId: '1:986787431137:web:175d57ce13025e8c362da0',
-    measurementId: 'G-6BP19Y34VD',
+  production: false,
+  firebaseDev: {
+    apiKey: 'AIzaSyClvFEPxZZf_q28kiipbROeHzsPbAAdlhk',
+    authDomain: 'lida-dev-f9291.firebaseapp.com',
+    projectId: 'lida-dev-f9291',
+    storageBucket: 'lida-dev-f9291.firebasestorage.app',
+    messagingSenderId: '78286679625',
+    appId: '1:78286679625:web:5621c2157c26df010f1998',
+    measurementId: 'G-JXG93QVL1M',
+  },
+  firebasePDN: {
+    apiKey: 'AIzaSyAIdIAaoUZgpHsBqbl2FIcLVRYGnDYSe0w',
+    authDomain: 'lida-f59df.firebaseapp.com',
+    projectId: 'lida-f59df',
+    storageBucket: 'lida-f59df.firebasestorage.app',
+    messagingSenderId: '410795238641',
+    appId: '1:410795238641:web:d7c476ab836ea7becfb550',
+    measurementId: 'G-QMPFXEBJFG',
   },
   collections: {
     comunas: 'Comunas',
@@ -16,6 +25,7 @@ export const environment = {
     roles: 'Roles',
     lideres: 'Lideres',
     barrios: 'Barrios',
-    perfil: 'Perfil',
+    perfil: 'Perfiles',
   },
+  alerts: { timeOut: 3000, preventDuplicates: true },
 };

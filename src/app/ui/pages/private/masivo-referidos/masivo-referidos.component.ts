@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
-import { AuthService } from '../../../shared/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
-import { TITULOS_EXCEL } from '../../../shared/const/titulos-excel.const';
+import {
+  DESCRIPCION_EXCEL,
+  TITULOS_EXCEL,
+} from '../../../shared/const/titulos-excel.const';
 import { ReferidoService } from '../../../shared/services/referido/referido.service';
 import { ReferidoModel } from '../../../../models/referido/referido.model';
 import { BaseModel } from '../../../../models/base/base.model';
@@ -23,14 +25,13 @@ export class MasivoReferidosComponent {
   accion: 'Crear' | 'Editar' = 'Crear';
   enableSkeleton: boolean = true;
   emailEnabled: boolean = true;
-  referidos: any[] = [];
+  referidos: ReferidoModel[] = [];
+  contador: number = 0;
 
   constructor(
     private readonly referidoService: ReferidoService,
-    private readonly auth: AuthService,
     private readonly toast: ToastrService
   ) {}
-
 
   onFileChange(event: any): void {
     const target: DataTransfer = <DataTransfer>event.target;
@@ -58,82 +59,98 @@ export class MasivoReferidosComponent {
   processExcelData(data: any[][]): void {
     const usuarios = data.slice(1).map((row) => ({
       isInterno: row[0] === 'Interno',
-      documento: String(row[1] ?? 'sin dato'),
-      nombres: String(row[2] ?? 'sin dato'),
-      apellidos: String(row[3] ?? 'sin dato'),
-      celular: String(row[4] ?? 'sin dato'),
-      email: String(row[5] ?? 'sin dato'),
+      documento: String(row[1] ?? ''),
+      nombres: String(row[2] ?? ''),
+      apellidos: String(row[3] ?? ''),
+      celular: String(row[4] ?? ''),
+      email: String(row[5] ?? ''),
       esEmprendedor: row[6] === 'SI',
-      comuna: String(row[7] ?? 'sin dato'),
-      barrio: String(row[8] ?? 'sin dato'),
-      direccion: String(row[9] ?? 'sin dato'),
+      comuna: String(row[7] ?? ''),
+      barrio: String(row[8] ?? ''),
+      direccion: String(row[9] ?? ''),
       iglesia: String(this.iglesia),
-      fechaNacimiento: String(row[10] ?? 'sin dato'),
-      lugarVotacion: String(row[11] ?? 'sin dato'),
-      mesaVotacion: String(row[12] ?? 'sin dato'),
+      fechaNacimiento: String(row[10] ?? ''),
+      lugarVotacion: String(row[11] ?? ''),
+      mesaVotacion: String(row[12] ?? ''),
       senado: row[13] === 'SI',
       camara: row[14] === 'SI',
-      referidoPorCedula: String(row[15] ?? 'sin dato'),
+      referidoPor: String(row[15] ?? ''),
     }));
     this.referidos = usuarios;
   }
 
+  descargar() {
+    const datos = this.transformarDatos();
+    const libro = XLSX.utils.book_new();
+    const hoja = XLSX.utils.aoa_to_sheet(datos);
+    XLSX.utils.book_append_sheet(libro, hoja, 'Referidos');
+    XLSX.writeFile(libro, 'referidos.xlsx');
+  }
 
-   descargar() {
-      const datos = this.transformarDatos();
-      const libro = XLSX.utils.book_new();
-      const hoja = XLSX.utils.aoa_to_sheet(datos);
-      XLSX.utils.book_append_sheet(libro, hoja, 'Referidos');
-      XLSX.writeFile(libro, 'referidos.xlsx');
+  transformarDatos(): any[][] {
+    const datos: any[][] = [];
+
+    // Encabezados
+    datos.push(TITULOS_EXCEL);
+
+    // ROWS
+    datos.push(DESCRIPCION_EXCEL);
+
+    return datos;
+  }
+
+  save() {
+    this.loading = true;
+    const promises = this.referidos.map((referido) => {
+      this.guardarReferido(referido);
+      return Promise.resolve();
+    });
+    Promise.all(promises)
+      .then(() => {
+        this.toast.info('Iniciando a guardar');
+      })
+      .catch((error) => {
+        this.toast.error('Vuelva a intentarlo más tarde');
+
+      })
+      .finally(() => {
+      });
+  }
+
+  async guardarReferido(referido: ReferidoModel) {
+    const ref: BaseModel<ReferidoModel> = {
+      id: referido.documento,
+      data: referido,
+      fechaCreacion: new Date().toISOString(),
+      creadoPor: this.usuario.id,
+    };
+    try {
+      await this.referidoService.crearReferidoConIdDocumento(ref, ref.id!)
+      this.contador++;
+      referido.guardado = true;
+      this.toast.success(
+        `Referido ${ref.data.nombres} ${ref.data.apellidos} guardado exitosamente`
+      );
+            if (this.contador === this.referidos.length) {
+        this.toast.info('Se termino el guardado');
+        this.loading = false;
+      }
+    } catch (error) {
+      this.toast.error(
+        `Error al guardar el referido ${ref.data.nombres} ${ref.data.apellidos}`
+      );
+      referido.guardado = 'error';
+      console.error(error);
     }
+  }
 
-    transformarDatos(): any[][] {
-        const datos: any[][] = [];
 
-        // Encabezados
-        datos.push(TITULOS_EXCEL);
 
-        return datos;
-      }
 
-      save() {
-        this.loading = true;
-        const promises = this.referidos.map((referido) => {
-          this.guardarReferido(referido);
-        return Promise.resolve();
-        });
-        Promise.all(promises).then(() => {
-          this.toast.success('Referidos guardados exitosamente');
-        }).catch((error) => {}).finally(() => {
-          this.loading = false;
-        });
-      }
 
-      async guardarReferido(referido: ReferidoModel) {
-        const ref: BaseModel<ReferidoModel> = {
-            id: referido.documento,
-            data: referido,
-            fechaCreacion: new Date().toISOString(),
-            creadoPor: this.usuario.id,
-          }
-        try {
-          await this.referidoService.crearReferidoConIdDocumento(
-            ref,
-            ref.id!
-          );
-          referido.guardado = true;
-          this.toast.success(
-            `Referido ${ref.data.nombres} ${ref.data.apellidos} guardado exitosamente`
-          );
-        } catch (error) {
-          this.toast.error(`Error al guardar el referido ${ref.data.nombres} ${ref.data.apellidos}`);
-          referido.guardado = 'error';
-          console.error(error);
-        }
+  clear() {
+    this.referidos = [];
+  }
 
-      }
 
-      clear() {
-        this.referidos = [];
-      }
 }

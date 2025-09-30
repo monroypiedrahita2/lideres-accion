@@ -3,17 +3,17 @@
 'bg-primary': true,
 'shadow-xl': true
 }" >
-  <div class="flex justify-between items-center h-full">
-    <div class=" flex items-center justify-center gap-2 hover:cursor-pointer hover:shadow-xl pl-4">
-      <mat-icon class="text-white hover:cursor-pointer text-center w-full text-shadow" [routerLink]="['./settings']">menu</mat-icon>
+  <div class="flex justify-between items-center h-full px-4">
+    @if (usuario.rol != 'Coordinador de iglesia' && usuario.rol != 'Líder') {
+      <div  class=" flex items-center justify-center gap-2 hover:cursor-pointer hover:shadow-xl">
+        <mat-icon class="text-white hover:cursor-pointer text-center w-full text-shadow" [routerLink]="['./settings']">settings</mat-icon>
+      </div>
+    }
+    <div>
+      <span class="font-primary text-white text-2xl block uppercase text-shadow">{{nameApp}}</span>
     </div>
-    <div class="w-full text-center">
-      <span class="font-primary text-white text-2xl text-shadow block uppercase">{{nameApp}}</span>
+        <div class=" flex items-center justify-center">
+      <mat-icon class="text-white text-center w-full hover:text-yellow-400 hover:cursor-pointer" (click)="Logout()" (keyup)="Logout()">exit_to_app</mat-icon>
     </div>
-    <div class="w-[100px] flex justify-end pr-4">
-      <mat-icon class="text-white hover:cursor-pointer text-center w-full text-shadow" [routerLink]="['private/home']">home</mat-icon>
-    </div>
-  </div>
-  <div>
   </div>
 </nav>

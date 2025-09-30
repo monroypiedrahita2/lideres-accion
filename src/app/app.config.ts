@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -8,26 +8,22 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideToastr } from 'ngx-toastr';
+import { environment } from '../enviroments';
+import { provideServiceWorker } from '@angular/service-worker';
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideToastr({ timeOut: 2000, preventDuplicates: true }),
+    provideToastr(environment.alerts),
     provideClientHydration(),
-    provideFirebaseApp(() =>
-      initializeApp({
-        projectId: 'lida-f59df',
-        appId: '1:410795238641:web:d7c476ab836ea7becfb550',
-        storageBucket: 'lida-f59df.firebasestorage.app',
-        apiKey: 'AIzaSyAIdIAaoUZgpHsBqbl2FIcLVRYGnDYSe0w',
-        authDomain: 'lida-f59df.firebaseapp.com',
-        messagingSenderId: '410795238641',
-        measurementId: 'G-QMPFXEBJFG',
-      })
-    ),
+    provideFirebaseApp(() => initializeApp(environment.production ? environment.firebasePDN : environment.firebaseDev)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideAnimationsAsync(),
-  ],
+    provideServiceWorker('ngsw-worker.js', {
+        enabled: !isDevMode(),
+        registrationStrategy: 'registerWhenStable:30000'
+    })
+],
 };

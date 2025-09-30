@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { LogoComponent } from '../../../shared/components/atoms/logo/logo.component';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { DURATION_ALERTS } from '../../../shared/const/duration-alerts.const';
-import { NAME_APP, NAME_LONG_APP } from '../../../shared/const/name-app.const';
+import { NAME_LONG_APP } from '../../../shared/const/name-app.const';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -18,16 +18,16 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  loginForm!: FormGroup; 
+  loginForm!: FormGroup;
   nameApp = NAME_LONG_APP;
   loading = false
 
   constructor(
-    private formBuilder: FormBuilder,
-    private auth: AuthService,
-    private router: Router,
-    private _snackBar: MatSnackBar,
-    private toast: ToastrService
+    private readonly formBuilder: FormBuilder,
+    private readonly auth: AuthService,
+    private readonly router: Router,
+    private readonly _snackBar: MatSnackBar,
+    private readonly toast: ToastrService
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -55,6 +55,7 @@ export class LoginComponent {
       this.toast.success('Bienvenido a LIDA')
       this.loading = false;
     } catch (error) {
+      console.error(error)
       this.toast.error('Inicio de sesión incorrecto')
       this.loading = false;
     }

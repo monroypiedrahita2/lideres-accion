@@ -10,13 +10,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { SelectOptionModel } from '../../../../models/base/select-options.model';
-import { ContainerGridComponent } from '../../../shared/components/atoms/container-grid/container-grid.component';
 import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { ToastrService } from 'ngx-toastr';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
 import { LIST_ROLES } from '../../../shared/const/Permisos/list-roles.const';
 import { RolesModel } from '../../../../models/roles/roles.model';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
+import { MatIconModule } from '@angular/material/icon';
+import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 
 @Component({
   selector: 'app-control-accesos',
@@ -24,10 +25,12 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
   imports: [
     CommonModule,
     InputSelectComponent,
+    InputTextComponent,
     TitleComponent,
     ReactiveFormsModule,
     CommonModule,
     ButtonComponent,
+    MatIconModule
   ],
   templateUrl: './control-accesos.component.html',
 })
@@ -39,7 +42,8 @@ export class ControlAccesosComponent implements OnInit {
   usersSelectOptions: SelectOptionModel<string>[] = [];
   usuarios: PerfilModel[] = [];
   loading: boolean = false;
-  rol: BaseModel<any> | undefined;
+  rol: any = '';
+  perfilSeleted: PerfilModel | undefined = undefined;
   disabled: boolean = false;
   permisos!: any;
   desabledSwitchs = false;
@@ -49,7 +53,7 @@ export class ControlAccesosComponent implements OnInit {
     private readonly location: Location,
     private readonly fb: FormBuilder,
     private readonly perfilService: PerfilService,
-    private readonly troastService: ToastrService
+    private readonly toast: ToastrService
   ) {
     this.form = this.fb.group({
       usuario: ['', [Validators.required]],
@@ -59,6 +63,29 @@ export class ControlAccesosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPerfiles();
+    this.form.get('rol')?.disable();
+  }
+
+    getPerfil() {
+    this.perfilService.getPerfilByDocumento(this.form.value.usuario).subscribe({
+      next: (response: any) => {
+
+        this.perfilSeleted = response[0];
+        this.form.get('rol')?.enable();
+        this.toast.info(`Perfil de ${this.perfilSeleted?.nombres} seleccionado`);
+        if (response.length > 1) {
+          this.toast.warning('El usuario tiene más de un perfil, debe eliminar uno de ellos');
+          setTimeout(() => {
+            this.toast.success('Correo seleccionado:  ' + this.perfilSeleted?.email);
+            this.toast.success('Eliminar el perfil:  ' + response[1]?.email);
+          }, 1500);
+        }
+      },
+      error: () => {
+        this.toast.error('El usuario no existe', 'Error');
+        this.form.get('rol')?.disable();
+      },
+    });
   }
 
   getPerfiles() {
@@ -68,6 +95,8 @@ export class ControlAccesosComponent implements OnInit {
       this.getPerfilesByIglesia();
     }
   }
+
+
 
   getAllPerfiles() {
     this.perfilService.getPerfiles().subscribe({
@@ -94,22 +123,24 @@ export class ControlAccesosComponent implements OnInit {
   async asignarRol() {
     const rol = {
       rol: this.form.value.rol,
+      iglesia: this.iglesia,
     };
     try {
-      await this.perfilService.updatePerfil(this.form.value.usuario, rol);
-      this.troastService.success('Rol asignado correctamente', 'Éxito');
+      const uidPerfil = this.perfilSeleted?.id;
+        await this.perfilService.updatePerfil(uidPerfil!, rol);
+      this.toast.success('Rol asignado correctamente', 'Éxito');
     } catch (error) {
-      this.troastService.error('Error al asignar el rol', 'Error');
+      this.toast.error('Error al asignar el rol', 'Error');
       console.error(error);
     }
   }
 
   async deleteRol(uid: string) {
     try {
-      await this.perfilService.updatePerfil(uid, { rol: null });
-      this.troastService.success('Eliminado el rol correctamente', 'Éxito');
+      await this.perfilService.updatePerfil(uid, { rol: '', iglesia: '' });
+      this.toast.success('Eliminado el rol correctamente', 'Éxito');
     } catch {
-      this.troastService.error('Error al asignar el rol', 'Error');
+      this.toast.error('Error al asignar el rol', 'Error');
     }
   }
 
@@ -118,5 +149,6 @@ export class ControlAccesosComponent implements OnInit {
     this.usuario = undefined;
     this.rol = undefined;
     this.disabled = false;
+    this.perfilSeleted = undefined;
   }
 }
