@@ -50,6 +50,7 @@ export class CreateReferidoComponent implements OnInit {
   emailEnabled: boolean = true;
   title: string = this.accion + ' ' + 'referido';
   form!: FormGroup;
+  dataReferido!: BaseModel<ReferidoModel>;
   spinner: boolean = true;
   departamentos: SelectOptionModel<string>[] = [];
   municipios: SelectOptionModel<string>[] = [];
@@ -154,6 +155,7 @@ export class CreateReferidoComponent implements OnInit {
     this.referidoService
       .getReferido(documento)
       .then((res: BaseModel<ReferidoModel>) => {
+        this.dataReferido = res;
         this.form.patchValue({
           documento: this.id,
           referidoPor: res.data.referidoPor,
@@ -252,16 +254,19 @@ export class CreateReferidoComponent implements OnInit {
 
   async editReferido() {
     try {
-      const referido = {
+      const referido: BaseModel<ReferidoModel> = {
+        ...this.dataReferido,
         fechaModificacion: new Date().toISOString(),
         modificadoPor: this.auth.uidUser(),
         data: {
+          ...this.dataReferido.data,
           ...this.form.value,
           comuna: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[0] : '',
           barrio: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[1] : '',
           referidoPor: this.form.get('referidoPor')?.value ? this.form.get('referidoPor')?.value : '',
         },
       }
+      console.log(referido);
       await this.referidoService.updateReferido(this.id!, referido);
       this.location.back();
       this.toast.success('Referido actualizado correctamente');
