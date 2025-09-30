@@ -20,7 +20,6 @@ import { PrivateRoutingModule } from '../private-routing.module';
 import { PersonInfoComponent } from '../../../shared/components/modules/person-info/person-info.component';
 import { Router } from '@angular/router';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
-import { ConfirmActionComponent } from '../../../shared/components/modules/modal/confirm-action.component';
 
 @Component({
   selector: 'app-testigos',
@@ -35,7 +34,6 @@ import { ConfirmActionComponent } from '../../../shared/components/modules/modal
     MatIconModule,
     PrivateRoutingModule,
     PersonInfoComponent,
-    ConfirmActionComponent
   ],
   templateUrl: './testigos.component.html',
 })
@@ -95,6 +93,7 @@ export class TestigosComponent implements OnInit {
   }
 
   async crearTestigo() {
+    this.loading = true;
     const data: BaseModel<ReferidoModel> = {
       ...this.referido!,
       data: {
@@ -112,9 +111,11 @@ export class TestigosComponent implements OnInit {
         data
       );
       this.toast.success('Testigo agregado correctamente');
+      this.loading = false;
     } catch (error) {
       console.error(error);
       this.toast.error('Error al actualizar el testigo. Intente nuevamente.');
+      this.loading = false;
     }
   }
 

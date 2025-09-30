@@ -1,9 +1,51 @@
 <app-spinner [showSpinner]="spinner"></app-spinner>
-  <lida-confirm-action [showModal]="showModal" [data]="dataModal" (eventConfirm)="eliminar(dataModal.id)"></lida-confirm-action>
-
+<lida-confirm-action
+  [showModal]="showModal"
+  [data]="dataModal"
+  (eventConfirm)="eliminar(dataModal.id)"
+></lida-confirm-action>
 
 <mg-title [title]="'LISTA DE REFERIDOS'"></mg-title>
-<div class="grid md:grid-cols-1 lg:grid-cols-12 w-full gap-4">
+<div class="flex justify-center gap-1">
+  <span
+    class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer"
+    (click)="buscarIndividual()"
+    (keydown)="buscarIndividual()"
+    >Por documento</span
+  >
+  <span
+    class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer"
+    (click)="getBySearch('data.isInterno', true)"
+    (keydown)="getBySearch('data.isInterno', true)"
+    >Internos</span
+  >
+  <span
+    class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer"
+      (click)="getBySearch('data.isInterno', false)"
+    (keydown)="getBySearch('data.isInterno', false)"
+    >Externos</span
+  >
+  <span
+    class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer"
+    (click)="getAllReferidos()"
+    (keydown)="getAllReferidos()"
+    >Todos</span
+  >
+</div>
+<form [formGroup]="formRef" class="flex justify-center mt-4">
+  <mg-input-text
+    *ngIf="optionSelected != 'Todos'"
+    class="w-full"
+    type="text"
+    formControlName="documento"
+    id="lastNames"
+    label="Buscar por cédula"
+  ></mg-input-text>
+</form>
+<div
+  class="grid md:grid-cols-1 lg:grid-cols-12 w-full gap-4"
+  *ngIf="optionSelected == 'Todos'"
+>
   <div class="lg:col-span-8">
     <mg-input-text
       class="w-full"
@@ -15,8 +57,15 @@
     ></mg-input-text>
   </div>
   <div class="lg:col-span-4 flex items-center sm:justify-around">
-    <mg-button (onClick)="clear()" [text]=" btnRecargar ? 'Mostrar todos' : 'Limpiar'" type="reset"></mg-button>
-    <div class="p-4" *ngIf="usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'">
+    <mg-button
+      (onClick)="clear()"
+      [text]="btnRecargar ? 'Mostrar todos' : 'Limpiar'"
+      type="reset"
+    ></mg-button>
+    <div
+      class="p-4"
+      *ngIf="usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'"
+    >
       <mg-button
         (onClick)="descargar(referidos)"
         icon="cloud_download"
@@ -42,12 +91,23 @@
   [textInfo2]="referido.data.cantidadReferidos"
   (evenFilterReferidos)="filterReferidos(referido.id!)"
   [textInfo3]="'Última actualización'"
-  [textInfo4]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : referido.fechaCreacion.split('T')[0]"
+  [textInfo4]="
+    referido.fechaModificacion
+      ? referido.fechaModificacion.split('T')[0]
+      : referido.fechaCreacion.split('T')[0]
+  "
   [canDelete]="usuario.rol === 'Pastor'"
-  (eventDelete)="openModal({name: referido.data.nombres + ' ' + referido.data.apellidos, id: referido.id!})"
+  (eventDelete)="
+    openModal({
+      name: referido.data.nombres + ' ' + referido.data.apellidos,
+      id: referido.id!
+    })
+  "
   [badge]="referido.data.senado ? true : false"
   [badge2]="referido.data.camara ? true : false"
-  [votacion]="referido.data.lugarVotacion && referido.data.mesaVotacion ? true : false"
+  [votacion]="
+    referido.data.lugarVotacion && referido.data.mesaVotacion ? true : false
+  "
 ></lida-person-info>
 }
 
@@ -110,4 +170,3 @@
     </div>
   </div>
 </div>
-

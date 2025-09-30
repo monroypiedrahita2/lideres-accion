@@ -64,7 +64,7 @@
     <mg-button
       [text]="'Asignar como testigo'"
       [loading]="loading"
-      [disabled]="form.invalid"
+      [disabled]="form.invalid && referido == null"
       (onClick)="crearTestigo()"
     ></mg-button>
     <mg-button

@@ -55,6 +55,14 @@ export class ReferidoService {
     const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
     return response;
   }
+  getReferidoBySearch(criterio: string, value: string  | boolean) {
+    const q = query(
+      collection(this.firestore, this._collection),
+      where(criterio, '==', value)
+    );
+    const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
+    return response;
+  }
 
   getReferidoByDocument(value: string) {
     const docRef = doc(this.firestore, this._collection, value);
@@ -66,6 +74,7 @@ export class ReferidoService {
       }
     });
   }
+
 
   getReferidoByIglesia(
     iglesia: string
@@ -84,6 +93,18 @@ export class ReferidoService {
         'data.testigo.quiereApoyar',
         '==',
         true
+      )
+    );
+    return collectionData(q, { idField: 'id' }) as Observable<any[]>;
+  }
+  getReferidoByDocumentoAndIlgesia(documento: string, iglesia: string): Observable<BaseModel<ReferidoModel>[]> {
+    const q = query(
+      collection(this.firestore, this._collection),
+      where('data.iglesia', '==', iglesia),
+      where(
+        'id',
+        '==',
+        documento
       )
     );
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
