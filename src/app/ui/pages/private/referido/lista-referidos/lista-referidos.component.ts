@@ -98,15 +98,18 @@ export class ListaReridosComponent implements OnInit {
     this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
       next: (data) => {
         this.data = data
-        this.referidos = this.data.map((referido: BaseModel<ReferidoModel>) => {
-          return {
-            ...referido,
-            data: {
-              ...referido.data,
-              cantidadReferidos: this.contarReferidos(referido.id!),
-            },
-          }
-        });
+        this.referidos = this.data
+          .map((referido: BaseModel<ReferidoModel>) => {
+            return {
+              ...referido,
+              data: {
+                ...referido.data,
+                cantidadReferidos: this.contarReferidos(referido.id!),
+              },
+            }
+          })
+          .sort((a, b) => a.data.nombres.localeCompare(b.data.nombres))
+
         this.data = this.referidos
         this.spinner = false;
       },
@@ -205,6 +208,7 @@ export class ListaReridosComponent implements OnInit {
     try {
       await this.referidoService.deleteReferido(id)
       this.toast.success('Referido eliminado correctamente');
+      this.showModal = false;
     } catch (error) {
       console.error(error);
     }

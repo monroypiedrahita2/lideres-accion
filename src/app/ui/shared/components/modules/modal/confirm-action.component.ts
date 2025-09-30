@@ -22,8 +22,8 @@ export class ConfirmActionComponent {
 
 
   confirm(id: string) {
-    this.eventConfirm.emit();
     this.showModal = false
+    this.eventConfirm.emit();
   }
 
   back() {

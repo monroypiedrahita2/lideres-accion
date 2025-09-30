@@ -1,4 +1,6 @@
 <app-spinner [showSpinner]="spinner"></app-spinner>
+  <lida-confirm-action [showModal]="showModal" [data]="dataModal" (eventConfirm)="eliminar(dataModal.id)"></lida-confirm-action>
+
 
 <mg-title [title]="'LISTA DE REFERIDOS'"></mg-title>
 <div class="grid md:grid-cols-1 lg:grid-cols-12 w-full gap-4">
@@ -109,4 +111,3 @@
   </div>
 </div>
 
-  <lida-confirm-action [showModal]="showModal" [data]="dataModal" (eventConfirm)="eliminar(dataModal.id)"></lida-confirm-action>
