@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-button-footer',
@@ -18,9 +18,6 @@ export class ButtonFooterComponent {
   @Input() option: string = 'option';
   @Input() icon: string = 'directions_car';
   @Input() goTo: string = '/home';
-
-  constructor(private router: Router) {
-  }
 
 
 

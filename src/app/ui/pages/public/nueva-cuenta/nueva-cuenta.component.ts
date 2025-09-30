@@ -50,7 +50,6 @@ export class NuevaCuentaComponent {
   }
 
   async crear() {
-    console.log(this.form.value);
     this.disableBtn = true;
     if (
       this.form.invalid &&

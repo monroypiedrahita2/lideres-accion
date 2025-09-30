@@ -1,7 +1,7 @@
 import { IglesiaService } from './../../../shared/services/iglesia/iglesia.service';
 import { IglesiaModel } from './../../../../models/iglesia/iglesia.model';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CardModel } from '../../../../models/utils/card.model';
 import { CARDS_HOME } from '../../../shared/const/cards.const';
@@ -11,11 +11,12 @@ import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
 import { LogoComponent } from '../../../shared/components/atoms/logo/logo.component';
+import { CardInfoComponent } from '../../../shared/components/modules/card-info/card-info.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule, CommonModule, SkeletonComponent,LogoComponent],
+  imports: [RouterModule, CommonModule, SkeletonComponent,LogoComponent, CardInfoComponent],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
@@ -30,7 +31,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private readonly IglesiaService: IglesiaService,
     private readonly perfilService: PerfilService,
-    private readonly auth: AuthService
+    private readonly auth: AuthService,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -46,8 +48,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
+
   async getMyIglesia(i: string) {
-        console.log('entra a iglesia 2')
 
     const iglesia = await this.IglesiaService.getMyIglesia(i);
     this.iglesiaData = iglesia.data;

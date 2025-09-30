@@ -1,0 +1,120 @@
+<mg-title title="Testigos"></mg-title>
+
+<form [formGroup]="form">
+  <div class="w-full flex items-center justify-between gap-2">
+    <mg-input-text
+      class="w-full"
+      type="text"
+      formControlName="documento"
+      id="user"
+      label="Documento de identidad"
+    ></mg-input-text>
+  </div>
+
+  <div class="w-full h-[118px] p-2">
+    @if (referido) {
+      <div  class="flex p-4 mb-4 text-sm text-green-800 rounded-lg bg-blue-50 dark:bg-green-800 dark:text-green-400 relative w-full" role="alert">
+        <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+        </svg>
+        <span class="sr-only">Success</span>
+        <div>
+          <span class="font-medium">{{referido.data.nombres + ' ' + referido.data.nombres}}</span>
+            <ul class="mt-1.5 list-disc list-inside">
+              <li>{{referido.data.celular}}</li>
+              <li>{{referido.data.direccion}}</li>
+              <li>{{referido.data.comuna + ' - ' + referido.data.barrio}}</li>
+          </ul>
+        </div>
+      </div>
+    }
+    @else if (referido == null && form.value.documento != '') {
+      <div  class="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 relative w-full" role="alert">
+        <svg class="shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+        </svg>
+        <span class="sr-only">Danger</span>
+        <div>
+          <span class="font-medium">No existen datos de la persona</span>
+            <ul class="mt-1.5 list-disc list-inside">
+              <li>Verifica el número de documento</li>
+              <li>Registra el referido</li>
+          </ul>
+        </div>
+      </div>
+    }
+
+
+
+  </div>
+
+  <div class="flex flex-row-reverse justify-center gap-4 sm:pt-5 lg:pt-8">
+    <mg-button
+      [text]="'Asignar como testigo'"
+      [loading]="loading"
+      [disabled]="form.invalid"
+      (onClick)="crearTestigo()"
+    ></mg-button>
+    <mg-button
+      [text]="'Limpiar'"
+      [type]="'reset'"
+      (onClick)="clear()"
+    ></mg-button>
+  </div>
+</form>
+
+
+<!--
+<div class="relative overflow-x-auto mt-10">
+  <div>
+    <table
+      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+    >
+      <thead
+        class="text-sm text-white uppercase bg-primary dark:bg-primary dark:text-gray-400 font-primary"
+      >
+        <tr>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Nombres
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            email
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Rol
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Acciones
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let user of usuarios"
+          class="bg-white border-b dark:bg-base dark:border-gray-700 border-gray-200 hover:bg-gray-300"
+        >
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{ user.nombres + " " + user.apellidos }}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{ user.email }}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{ user.rol }}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            <div class="flex justify-center gap-4">
+              <span
+                *ngIf="user.rol != 'Sin rol asignado'"
+                class="material-icons text-primary hover:cursor-pointer"
+                (click)="deleteRol(user.id!)"
+                (keydown)="deleteRol(user.id!)"
+                >delete</span
+              >
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> -->

@@ -98,6 +98,7 @@ export class ListaReridosComponent implements OnInit {
     this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
       next: (data) => {
         this.data = data
+        console.log(this.data);
         this.referidos = this.data
           .map((referido: BaseModel<ReferidoModel>) => {
             return {
@@ -195,7 +196,6 @@ export class ListaReridosComponent implements OnInit {
   contarReferidos(id: string): string {
     const cuenta = this.data.filter((referido) => referido.data.referidoPor === id).length;
     const cantidad = cuenta.toString();
-    console.log(cantidad);
     return cantidad + ' referidos';
   }
 

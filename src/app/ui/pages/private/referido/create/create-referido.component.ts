@@ -286,7 +286,6 @@ export class CreateReferidoComponent implements OnInit {
     };
     try {
       const { documento, ...referidoSinDocumento } = referido as any;
-      console.log(referidoSinDocumento);
       await this.referidoService.crearReferidoConIdDocumento(
         referidoSinDocumento,
         this.form.get('documento')?.value

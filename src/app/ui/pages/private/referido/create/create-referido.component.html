@@ -2,7 +2,7 @@
 
 @if (!enableSkeleton) {
 
-<form [formGroup]="form" (onSubmit)="onSubmit()">
+<form [formGroup]="form">
   <mg-input-select
     *ngIf="userRol != 'Líder'"
     formControlName="referidoPor"
