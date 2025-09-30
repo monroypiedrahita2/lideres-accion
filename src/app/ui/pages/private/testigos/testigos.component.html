@@ -75,6 +75,10 @@
   </div>
 </form>
 
+<div class="w-full p-2">
+  <span class="text-sm text-gray-500 dark:text-gray-400">Total testigos: {{testigos.length}}</span>
+</div>
+
 @for (referido of testigos; track $index) {
   <lida-person-info
     class="sm:block lg:hidden"
