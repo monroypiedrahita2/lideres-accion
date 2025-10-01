@@ -166,8 +166,7 @@ export class CreateReferidoComponent implements OnInit {
           email: res.data.email,
           fechaNacimiento: res.data.fechaNacimiento,
           esEmprendedor: res.data.esEmprendedor,
-          comuna: res.data.comuna,
-          barrio: res.data.comuna + ' - ' + res.data.barrio,
+          barrio: res.data.barrio,
           direccion: res.data.direccion,
           camara: res.data.camara,
           senado: res.data.senado,
@@ -212,7 +211,7 @@ export class CreateReferidoComponent implements OnInit {
       next: (res) => {
         this.barrios = res.map((comuna: BaseModel<ComunaModel>) => ({
           label: comuna.data.barrio,
-          value: comuna.data.barrio,
+          value: comuna.id,
         }));
       },
       error: (err) => {
@@ -261,12 +260,9 @@ export class CreateReferidoComponent implements OnInit {
         data: {
           ...this.dataReferido.data,
           ...this.form.value,
-          comuna: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[0] : '',
-          barrio: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[1] : '',
           referidoPor: this.form.get('referidoPor')?.value ? this.form.get('referidoPor')?.value : '',
         },
       }
-      console.log(referido);
       await this.referidoService.updateReferido(this.id!, referido);
       this.location.back();
       this.toast.success('Referido actualizado correctamente');
@@ -274,7 +270,6 @@ export class CreateReferidoComponent implements OnInit {
       console.error(error);
       this.toast.error('Error al actualizar el referido. Intente nuevamente.');
     this.loading = false;
-
     }
   }
 
@@ -285,8 +280,6 @@ export class CreateReferidoComponent implements OnInit {
       data: {
         ...this.form.value,
         iglesia: this.iglesia,
-        comuna: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[0] : '',
-        barrio: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[1] : '',
       },
     };
     try {

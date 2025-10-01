@@ -6,33 +6,33 @@
 ></lida-confirm-action>
 
 <mg-title [title]="'LISTA DE REFERIDOS'"></mg-title>
-<div class="flex justify-center flex-wrap gap-1">
+<div class="flex justify-between flex-wrap gap-1 gap-y-2">
   <span
-    class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer"
-    (click)="buscarIndividual()"
-    (keydown)="buscarIndividual()"
+    [class]="optionSelected === 'Cedula' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer'"
+    (click)="buscarIndividual('Cedula')"
+    (keydown)="buscarIndividual('Cedula')"
     >Cédula</span
   >
   <span
-    class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer"
+    [class]="optionSelected === 'Internos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer'"
     (click)="getBySearch('data.isInterno', true)"
     (keydown)="getBySearch('data.isInterno', true)"
     >Internos</span
   >
   <span
-    class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer"
+    [class]="optionSelected === 'Externos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer'"
       (click)="getBySearch('data.isInterno', false)"
     (keydown)="getBySearch('data.isInterno', false)"
     >Externos</span
   >
     <span
-    class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer"
+    [class]="optionSelected === 'Testigos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer'"
     (click)="getTestigos()"
     (keydown)="getTestigos()"
     >Testigos</span
   >
   <span
-    class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer"
+    [class]="optionSelected === 'Todos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer'"
     (click)="getAllReferidos()"
     (keydown)="getAllReferidos()"
     >Todos</span
@@ -41,7 +41,7 @@
 </div>
 <form [formGroup]="formRef" class="flex justify-center mt-4">
   <mg-input-text
-    *ngIf="optionSelected != 'Todos'"
+    *ngIf="optionSelected == 'Cedula'"
     class="w-full"
     type="text"
     formControlName="documento"
@@ -51,7 +51,7 @@
 </form>
 <div
   class="grid md:grid-cols-1 lg:grid-cols-12 w-full gap-4"
-  *ngIf="optionSelected == 'Todos'"
+  *ngIf="optionSelected != 'Cedula'"
 >
   <div class="lg:col-span-8">
     <mg-input-text
