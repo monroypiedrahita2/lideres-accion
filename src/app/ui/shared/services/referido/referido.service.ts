@@ -11,8 +11,8 @@ import {
   setDoc,
   updateDoc,
   where,
+  and,
 } from '@angular/fire/firestore';
-import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
 import { ReferidoModel } from '../../../../models/referido/referido.model';
@@ -21,10 +21,7 @@ import { ReferidoModel } from '../../../../models/referido/referido.model';
 export class ReferidoService {
   _collection: string = environment.collections.referidos;
 
-  constructor(
-    private readonly firestore: Firestore,
-    private readonly toast: ToastrService
-  ) {}
+  constructor(private readonly firestore: Firestore) {}
 
   crearReferidoConIdDocumento(
     data: BaseModel<ReferidoModel>,
@@ -58,6 +55,14 @@ export class ReferidoService {
     const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
     return response;
   }
+  getReferidoBySearch(criterio: string, value: string  | boolean) {
+    const q = query(
+      collection(this.firestore, this._collection),
+      where(criterio, '==', value)
+    );
+    const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
+    return response;
+  }
 
   getReferidoByDocument(value: string) {
     const docRef = doc(this.firestore, this._collection, value);
@@ -70,12 +75,37 @@ export class ReferidoService {
     });
   }
 
+
   getReferidoByIglesia(
     iglesia: string
   ): Observable<BaseModel<ReferidoModel>[]> {
     const q = query(
       collection(this.firestore, this._collection),
       where('data.iglesia', '==', iglesia)
+    );
+    return collectionData(q, { idField: 'id' }) as Observable<any[]>;
+  }
+  getTestigos(iglesia: string): Observable<BaseModel<ReferidoModel>[]> {
+    const q = query(
+      collection(this.firestore, this._collection),
+      where('data.iglesia', '==', iglesia),
+      where(
+        'data.testigo.quiereApoyar',
+        '==',
+        true
+      )
+    );
+    return collectionData(q, { idField: 'id' }) as Observable<any[]>;
+  }
+  getReferidoByDocumentoAndIlgesia(documento: string, iglesia: string): Observable<BaseModel<ReferidoModel>[]> {
+    const q = query(
+      collection(this.firestore, this._collection),
+      where('data.iglesia', '==', iglesia),
+      where(
+        'id',
+        '==',
+        documento
+      )
     );
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }
@@ -103,7 +133,7 @@ export class ReferidoService {
     await deleteDoc(docRef);
   }
 
-  updateReferido(id: string, newData: any) {
+  updateReferido(id: string, newData: BaseModel<ReferidoModel>) {
     const document = doc(this.firestore, this._collection, id);
     return updateDoc(document, { ...newData });
   }

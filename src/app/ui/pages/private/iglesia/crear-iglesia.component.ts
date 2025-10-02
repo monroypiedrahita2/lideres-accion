@@ -147,7 +147,6 @@ export class CrearIglesiaComponent implements OnInit {
         creadoPor: this.auth.uidUser(),
       };
       const response =await this.iglesiaService.createIglesia(this.iglesia);
-      console.log(response);
       this.toast.success('Iglesia creada correctamente');
       this.loading = false;
       this.form.patchValue({

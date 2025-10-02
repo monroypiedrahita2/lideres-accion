@@ -1,3 +1,4 @@
+import { ComunaService } from './../../../../shared/services/comuna/comuna.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TitleComponent } from '../../../../shared/components/atoms/title/title.component';
@@ -10,7 +11,7 @@ import { ButtonComponent } from '../../../../shared/components/atoms/button/butt
 import * as XLSX from 'xlsx';
 import { ReferidoService } from '../../../../shared/services/referido/referido.service';
 import { InputTextComponent } from '../../../../shared/components/atoms/input-text/input-text.component';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -21,6 +22,7 @@ import { Router, RouterModule } from '@angular/router';
 import { PersonInfoComponent } from '../../../../shared/components/modules/person-info/person-info.component';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { ConfirmActionComponent } from '../../../../shared/components/modules/modal/confirm-action.component';
+import { ComunaModel } from '../../../../../models/comuna/comuna.model';
 
 @Component({
   selector: 'app-lista-referidos',
@@ -39,20 +41,24 @@ import { ConfirmActionComponent } from '../../../../shared/components/modules/mo
     PrivateRoutingModule,
     RouterModule,
     PersonInfoComponent,
-    ConfirmActionComponent
+    ConfirmActionComponent,
+    ReactiveFormsModule
 ],
   providers: [LugaresService],
   templateUrl: './lista-referidos.component.html',
 })
 export class ListaReridosComponent implements OnInit {
+  formRef!: FormGroup
   iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
   usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
   referidos: BaseModel<ReferidoModel>[] = [];
   data: BaseModel<ReferidoModel>[] = [];
-  spinner: boolean = true;
+  spinner: boolean = false;
   showModal: boolean = false;
   searchText: string = '';
   dataModal: { name: string; id: string } = { name: '', id: '' };
+  optionSelected: 'Todos' | 'Cedula' | 'Internos' | 'Externos' | 'Testigos' | '' = 'Cedula';
+  barrios: BaseModel<ComunaModel>[] = [];
 
   length = 50;
   pageSize = 10;
@@ -67,19 +73,103 @@ export class ListaReridosComponent implements OnInit {
   disabled = false;
   pageEvent: PageEvent | undefined = undefined;
 
+  private avanceTimeout: any;
+
+
   constructor(
     private readonly referidoService: ReferidoService,
     private readonly toast: ToastrService,
-    private readonly router: Router
-  ) {}
+    private readonly router: Router,
+    private readonly comunaService: ComunaService,
+    private readonly fb: FormBuilder
+  ) {
+    this.formRef = this.fb.group({
+      documento: ['', [Validators.pattern('^[0-9]*$')]],
+    });
+  }
 
   ngOnInit(): void {
+    this.getComunas();
     if (this.usuario.rol === 'Líder') {
       this.misReferidos(this.usuario.documento);
-    } else {
-      this.getReferidos();
     }
+
+      this.formRef.get('documento')?.valueChanges.subscribe((value) => {
+      this.selectDocument(value);
+    });
   }
+
+  getComunas() {
+    this.comunaService.getComunas().subscribe({
+      next: (res) => {
+       this.barrios = res;
+      },
+      error: (err) => {
+        console.error('Error getting lideres', err);
+      },
+      complete: () => {},
+    });
+  }
+
+    selectDocument(value: string) {
+    if (this.avanceTimeout) {
+      clearTimeout(this.avanceTimeout);
+    }
+    this.avanceTimeout = setTimeout(() => {
+      this.getReferidoByDocumentoAndIglesia(value);
+    }, 500);
+  }
+  getTestigos() {
+    this.referidoService
+      .getTestigos(this.usuario.iglesia!).subscribe({
+
+        next: (res: BaseModel<ReferidoModel>[]) => {
+          this.referidos = res;
+        },
+      })
+      this.optionSelected = 'Testigos';
+  }
+
+
+  getBySearch(criterio: string, value: string | boolean) {
+    this.spinner = true;
+    this.optionSelected = value ? 'Internos' : 'Externos';
+    this.referidoService.getReferidoBySearch(criterio, value).subscribe({
+      next: (data) => {
+        this.data = data;
+        this.referidos = data;
+        this.spinner = false;
+      },
+      error: (error) => {
+        console.error(error);
+        this.spinner = false;
+      },
+    });
+  }
+
+  getReferidoByDocumentoAndIglesia(documento: string) {
+    this.spinner = true;
+    this.referidoService.getReferidoByDocumentoAndIlgesia(documento, this.iglesia).subscribe({
+      next: (data) => {
+        this.referidos = data;
+        this.spinner = false;
+      },
+      error: (error) => {
+        console.error(error);
+        this.spinner = false;
+      },
+    });
+  }
+
+
+
+  getAllReferidos() {
+    this.spinner = true;
+    this.optionSelected = 'Todos';
+    this.getReferidos();
+  }
+
+
 
   misReferidos(documento: string) {
     this.referidoService.getMyReferidos(documento).subscribe({
@@ -94,19 +184,28 @@ export class ListaReridosComponent implements OnInit {
     });
   }
 
+  buscarIndividual(option: 'Todos' | 'Cedula' | 'Internos' | 'Externos' | 'Testigos' | '') {
+    this.optionSelected = option;
+    this.referidos = [];
+  }
+
     getReferidos() {
+    this.spinner = true;
     this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
       next: (data) => {
         this.data = data
-        this.referidos = this.data.map((referido: BaseModel<ReferidoModel>) => {
-          return {
-            ...referido,
-            data: {
-              ...referido.data,
-              cantidadReferidos: this.contarReferidos(referido.id!),
-            },
-          }
-        });
+        this.referidos = this.data
+          .map((referido: BaseModel<ReferidoModel>) => {
+            return {
+              ...referido,
+              data: {
+                ...referido.data,
+                cantidadReferidos: this.contarReferidos(referido.id!),
+              },
+            }
+          })
+          .sort((a, b) => a.data.nombres.localeCompare(b.data.nombres))
+
         this.data = this.referidos
         this.spinner = false;
       },
@@ -163,6 +262,9 @@ export class ListaReridosComponent implements OnInit {
     referidos.forEach((referido) => {
       const referidoData = referido.data;
       const documento = referido.id;
+      const barrio = this.barrios.find((barrio) => barrio.id === referidoData.barrio)?.data.barrio || '';
+      const nombreReferente = referidos.find((referido) => referido.id === referidoData.referidoPor)?.data.nombres + ' ' + referidos.find((referido) => referido.id === referidoData.referidoPor)?.data.apellidos
+
 
       // ROWS
       datos.push([
@@ -173,8 +275,8 @@ export class ListaReridosComponent implements OnInit {
         referidoData.celular,
         referidoData.email,
         referidoData.esEmprendedor ? 'SI' : 'NO',
-        referidoData.comuna,
-        referidoData.barrio,
+        barrio.split(' - ')[0],
+        barrio.split(' - ')[1],
         referidoData.direccion,
         referidoData.fechaNacimiento,
         referidoData.lugarVotacion,
@@ -182,7 +284,7 @@ export class ListaReridosComponent implements OnInit {
         referidoData.senado ? 'SI' : 'NO',
         referidoData.camara ? 'SI' : 'NO',
         referidoData.referidoPor,
-        referidos.find((referido) => referido.id === referidoData.referidoPor)?.data.nombres + ' ' + referidos.find((referido) => referido.id === referidoData.referidoPor)?.data.apellidos
+        nombreReferente
       ]);
     });
 
@@ -192,7 +294,6 @@ export class ListaReridosComponent implements OnInit {
   contarReferidos(id: string): string {
     const cuenta = this.data.filter((referido) => referido.data.referidoPor === id).length;
     const cantidad = cuenta.toString();
-    console.log(cantidad);
     return cantidad + ' referidos';
   }
 
@@ -205,6 +306,7 @@ export class ListaReridosComponent implements OnInit {
     try {
       await this.referidoService.deleteReferido(id)
       this.toast.success('Referido eliminado correctamente');
+      this.showModal = false;
     } catch (error) {
       console.error(error);
     }

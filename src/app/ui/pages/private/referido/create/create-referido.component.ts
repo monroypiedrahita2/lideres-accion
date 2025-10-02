@@ -50,6 +50,7 @@ export class CreateReferidoComponent implements OnInit {
   emailEnabled: boolean = true;
   title: string = this.accion + ' ' + 'referido';
   form!: FormGroup;
+  dataReferido!: BaseModel<ReferidoModel>;
   spinner: boolean = true;
   departamentos: SelectOptionModel<string>[] = [];
   municipios: SelectOptionModel<string>[] = [];
@@ -154,6 +155,7 @@ export class CreateReferidoComponent implements OnInit {
     this.referidoService
       .getReferido(documento)
       .then((res: BaseModel<ReferidoModel>) => {
+        this.dataReferido = res;
         this.form.patchValue({
           documento: this.id,
           referidoPor: res.data.referidoPor,
@@ -164,8 +166,7 @@ export class CreateReferidoComponent implements OnInit {
           email: res.data.email,
           fechaNacimiento: res.data.fechaNacimiento,
           esEmprendedor: res.data.esEmprendedor,
-          comuna: res.data.comuna,
-          barrio: res.data.comuna + ' - ' + res.data.barrio,
+          barrio: res.data.barrio,
           direccion: res.data.direccion,
           camara: res.data.camara,
           senado: res.data.senado,
@@ -210,7 +211,7 @@ export class CreateReferidoComponent implements OnInit {
       next: (res) => {
         this.barrios = res.map((comuna: BaseModel<ComunaModel>) => ({
           label: comuna.data.barrio,
-          value: comuna.data.barrio,
+          value: comuna.id,
         }));
       },
       error: (err) => {
@@ -252,13 +253,13 @@ export class CreateReferidoComponent implements OnInit {
 
   async editReferido() {
     try {
-      const referido = {
+      const referido: BaseModel<ReferidoModel> = {
+        ...this.dataReferido,
         fechaModificacion: new Date().toISOString(),
         modificadoPor: this.auth.uidUser(),
         data: {
+          ...this.dataReferido.data,
           ...this.form.value,
-          comuna: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[0] : '',
-          barrio: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[1] : '',
           referidoPor: this.form.get('referidoPor')?.value ? this.form.get('referidoPor')?.value : '',
         },
       }
@@ -269,7 +270,6 @@ export class CreateReferidoComponent implements OnInit {
       console.error(error);
       this.toast.error('Error al actualizar el referido. Intente nuevamente.');
     this.loading = false;
-
     }
   }
 
@@ -280,13 +280,10 @@ export class CreateReferidoComponent implements OnInit {
       data: {
         ...this.form.value,
         iglesia: this.iglesia,
-        comuna: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[0] : '',
-        barrio: this.form.get('barrio')?.value ? this.form.get('barrio')?.value.split('-')[1] : '',
       },
     };
     try {
       const { documento, ...referidoSinDocumento } = referido as any;
-      console.log(referidoSinDocumento);
       await this.referidoService.crearReferidoConIdDocumento(
         referidoSinDocumento,
         this.form.get('documento')?.value

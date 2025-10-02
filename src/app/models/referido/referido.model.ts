@@ -20,4 +20,12 @@ export interface ReferidoModel {
   camara: boolean | string;
   cantidadReferidos?: string;
   guardado?: 'error' | boolean;
+  testigo?: TestigoModel;
+}
+
+export interface TestigoModel {
+  quiereApoyar: boolean;
+  aprobadoPorPastor?: boolean;
+  mesa?: string;
+  puesto?: string;
 }
