@@ -19,15 +19,13 @@
         </svg>
         <span class="sr-only">Success</span>
         <div>
-          <span class="font-medium">{{referido.data.nombres + ' ' + referido.data.nombres}}</span>
+          <span class="font-medium">{{referido.data.nombres + ' ' + referido.data.apellidos}}</span>
             <ul class="mt-1.5 list-disc list-inside">
               <li>{{referido.data.isInterno ? 'Interno' : 'Externo'}}</li>
               <li>{{referido.data.celular}}</li>
-              <li>{{referido.data.direccion}}</li>
               <li>{{referido.data.email}}</li>
               <li>{{referido.data.esEmprendedor ? 'Es emprendedor' : 'No es emprendedor'}}</li>
               <li>Fecha de nacmiento: {{referido.data.fechaNacimiento}}</li>
-              <li>{{referido.data.comuna + ' - ' + referido.data.barrio}}</li>
               <li>{{referido.data.lugarVotacion ? 'Lugar de votacion: ' + referido.data.lugarVotacion : ''}}</li>
               <li>{{referido.data.mesaVotacion ? 'Mesa de votacion: ' + referido.data.mesaVotacion : ''}}</li>
           </ul>
@@ -60,7 +58,7 @@
 
   </div>
 
-  <div class="flex flex-row-reverse justify-center gap-4 sm:pt-5 lg:pt-8">
+  <div class="flex flex-row-reverse justify-center gap-4">
     <mg-button
       [text]="'Asignar como testigo'"
       [loading]="loading"

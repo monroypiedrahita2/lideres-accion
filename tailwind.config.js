@@ -62,7 +62,7 @@ module.exports = {
         'primary': '#0c82c7',
         'secundary': '#1ca6e6',
         'tertiary': '#ffce00',
-        'base': "#fafafa",
+        'base': "white",
         'base-two': "gray-500",
       },
       backgroundImage: {

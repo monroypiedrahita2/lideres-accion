@@ -13,16 +13,6 @@
   </div>
 }
 
-@if (!skeleton && usuario.rol == 'Pastor' || usuario.rol == 'Coordinador de iglesia') {
-  <div class="mt-2">
-    <mtt-card-info
-      [title]="'Testigos'"
-      [textInfo]="'Ver testigos'"
-      [icon]="'close'"
-      [routerLink]="'../testigos'"
-    ></mtt-card-info>
-  </div>
-}
 
 @if (!skeleton && !usuario.rol) {
 <div class="mt-3">

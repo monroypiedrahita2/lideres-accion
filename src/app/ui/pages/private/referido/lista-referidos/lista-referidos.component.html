@@ -45,12 +45,12 @@
     class="w-full"
     type="text"
     formControlName="documento"
-    id="lastNames"
+    id="documento"
     label="Buscar por cédula"
   ></mg-input-text>
 </form>
 <div
-  class="grid md:grid-cols-1 lg:grid-cols-12 w-full gap-4"
+  class="grid md:grid-cols-1 lg:grid-cols-12 w-full gap-2"
   *ngIf="optionSelected != 'Cedula'"
 >
   <div class="lg:col-span-8">
@@ -58,7 +58,7 @@
       class="w-full"
       type="text"
       [(ngModel)]="searchText"
-      id="lastNames"
+      id="documentoOrName"
       label="Buscar por nombre o documento"
       (keyup)="onSearch(searchText)"
     ></mg-input-text>
@@ -83,9 +83,13 @@
 </div>
 
 <div class="flex justify-between items-end mt-4">
-  <div class="font-primary text-lg">
+  <div *ngIf="nombreLider == ''" class="font-primary text-lg">
     Total registros: {{ referidos.length }} referidos
   </div>
+  <div class="flex gap-4" *ngIf="nombreLider != ''">
+    <span>{{nombreLider + ':'}} {{ referidos.length }} referidos</span>
+  </div>
+
 </div>
 
 @for (referido of referidos; track $index) {
@@ -95,8 +99,8 @@
   [title]="referido.data.nombres + ' ' + referido.data.apellidos"
   [textInfo]="referido.id!"
   (eventEdit)="edit(referido)"
-  [textInfo2]="referido.data.cantidadReferidos"
-  (evenFilterReferidos)="filterReferidos(referido.id!)"
+  [textInfo2]="referido.data.cantidadReferidos ? referido.data.cantidadReferidos : 'Ver referidos'"
+  (evenFilterReferidos)="referido.data.cantidadReferidos ? filterReferidos(referido.id!, referido.data.nombres + ' ' + referido.data.apellidos) : misReferidos(referido.id!)"
   [textInfo3]="'Última actualización'"
   [textInfo4]="
     referido.fechaModificacion
