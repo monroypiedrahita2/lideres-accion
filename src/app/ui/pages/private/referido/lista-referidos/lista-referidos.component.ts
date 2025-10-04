@@ -108,7 +108,6 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
     }
     if (this.value_draft != '') {
       this.selectDocument(this.value_draft);
-      console.log('entro', this.value_draft);
     }
     this.loadFormFromLocalStorage();
 
@@ -213,6 +212,8 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   }
 
   misReferidos(documento: string) {
+    this.referidos = [];
+    this.data = [];
     this.referidoService.getMyReferidos(documento).subscribe({
       next: (data) => {
         this.referidos = data;
