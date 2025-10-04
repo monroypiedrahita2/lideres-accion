@@ -1,5 +1,5 @@
 import { ComunaService } from './../../../../shared/services/comuna/comuna.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TitleComponent } from '../../../../shared/components/atoms/title/title.component';
 import { ToastrService } from 'ngx-toastr';
@@ -29,6 +29,7 @@ import { PersonInfoComponent } from '../../../../shared/components/modules/perso
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { ConfirmActionComponent } from '../../../../shared/components/modules/modal/confirm-action.component';
 import { ComunaModel } from '../../../../../models/comuna/comuna.model';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-lista-referidos',
@@ -53,7 +54,8 @@ import { ComunaModel } from '../../../../../models/comuna/comuna.model';
   providers: [LugaresService],
   templateUrl: './lista-referidos.component.html',
 })
-export class ListaReridosComponent implements OnInit {
+export class ListaReridosComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject<void>();
   formRef!: FormGroup;
   iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
   usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -71,6 +73,7 @@ export class ListaReridosComponent implements OnInit {
     | 'Testigos'
     | '' = 'Cedula';
   barrios: BaseModel<ComunaModel>[] = [];
+  value_draft: string = localStorage.getItem('document_search_draft') || '';
 
   nombreLider: string = '';
 
@@ -103,12 +106,38 @@ export class ListaReridosComponent implements OnInit {
     if (this.usuario.rol === 'Líder') {
       this.misReferidos(this.usuario.documento);
     }
+    if (this.value_draft != '') {
+      this.selectDocument(this.value_draft);
+      console.log('entro', this.value_draft);
+    }
+    this.loadFormFromLocalStorage();
 
-    this.formRef.get('documento')?.valueChanges.subscribe((value) => {
-      if (value !== '') {
-        this.selectDocument(value);
+    this.formRef
+      .get('documento')
+      ?.valueChanges.pipe(
+        takeUntil(this.unsubscribe$) // 👈 Agrega el operador aquí
+      )
+      .subscribe((value) => {
+        if (value.length > 0) {
+          this.selectDocument(value);
+        }
+      });
+  }
+
+  loadFormFromLocalStorage(): void {
+    const savedData = localStorage.getItem('document_search_draft');
+    if (savedData) {
+      const data = JSON.parse(savedData);
+      const currentValue = this.formRef.get('documento')?.value;
+      if (currentValue !== data) {
+        this.formRef.patchValue({ documento: data });
       }
-    });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next(); // 👈 Emite un valor para que takeUntil detenga las suscripciones
+    this.unsubscribe$.complete(); // 👈 Completa el Subject para liberar recursos
   }
 
   getComunas() {
@@ -129,6 +158,7 @@ export class ListaReridosComponent implements OnInit {
     }
     this.avanceTimeout = setTimeout(() => {
       this.getReferidoByDocumentoAndIglesia(value);
+      localStorage.setItem('document_search_draft', value);
     }, 800);
   }
   getTestigos() {

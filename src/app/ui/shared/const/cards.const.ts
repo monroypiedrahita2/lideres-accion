@@ -43,7 +43,7 @@ export const CARDS_HOME: CardModel[] = [
   // },
   {
     goTo: '../listar-referidos',
-    title: 'Listar refereidos',
+    title: 'Listar referidos',
     description: 'Administrar de referidos',
     icon: 'groups',
     showIf: ['Todos'],

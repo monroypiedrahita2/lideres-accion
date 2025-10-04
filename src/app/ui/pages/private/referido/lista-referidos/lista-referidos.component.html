@@ -20,8 +20,9 @@
     >Internos</span
   >
   <span
+    *ngIf="usuario.rol === 'Pastor' || usuario.rol === 'Super usuario'"
     [class]="optionSelected === 'Externos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer'"
-      (click)="getBySearch('data.isInterno', false)"
+    (click)="getBySearch('data.isInterno', false)"
     (keydown)="getBySearch('data.isInterno', false)"
     >Externos</span
   >
@@ -32,6 +33,7 @@
     >Testigos</span
   >
   <span
+    *ngIf="usuario.rol === 'Pastor' || usuario.rol === 'Super usuario'"
     [class]="optionSelected === 'Todos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer'"
     (click)="getAllReferidos()"
     (keydown)="getAllReferidos()"
@@ -101,7 +103,7 @@
   (eventEdit)="edit(referido)"
   [textInfo2]="referido.data.cantidadReferidos ? referido.data.cantidadReferidos : 'Ver referidos'"
   (evenFilterReferidos)="referido.data.cantidadReferidos ? filterReferidos(referido.id!, referido.data.nombres + ' ' + referido.data.apellidos) : misReferidos(referido.id!)"
-  [textInfo3]="'Última actualización'"
+  [textInfo3]="referido.data.testigo?.quiereApoyar ? 'Testigo' : ''"
   [textInfo4]="
     referido.fechaModificacion
       ? referido.fechaModificacion.split('T')[0]
