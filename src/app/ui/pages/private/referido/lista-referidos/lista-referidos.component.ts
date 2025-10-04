@@ -233,6 +233,9 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
     this.referidos = [];
     this.nombreLider = '';
     this.data = [];
+    if (this.value_draft != '') {
+      this.selectDocument(this.value_draft);
+    }
   }
 
   getReferidos() {
