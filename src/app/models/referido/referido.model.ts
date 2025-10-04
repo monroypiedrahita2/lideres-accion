@@ -7,6 +7,7 @@ export interface ReferidoModel {
   apellidos: string;
   celular: string;
   email?: string;
+  sexo?: 'M' | 'F';
   esEmprendedor?: boolean | string;
   comuna?: string;
   barrio?: string;

@@ -24,6 +24,8 @@ production: false
 
 HOST PDN
 
+ng build --configuration production
+
 https://lida-f59df.web.app/public/login
 
 

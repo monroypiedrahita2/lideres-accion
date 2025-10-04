@@ -12,6 +12,11 @@ import {
   updateDoc,
   where,
   and,
+  orderBy,
+  limit,
+  getDocs,
+  startAfter,
+  getCountFromServer,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
@@ -20,6 +25,7 @@ import { ReferidoModel } from '../../../../models/referido/referido.model';
 @Injectable({ providedIn: 'root' })
 export class ReferidoService {
   _collection: string = environment.collections.referidos;
+  lastDoc: any = null; // Para paginación
 
   constructor(private readonly firestore: Firestore) {}
 
@@ -55,7 +61,7 @@ export class ReferidoService {
     const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
     return response;
   }
-  getReferidoBySearch(criterio: string, value: string  | boolean) {
+  getReferidoBySearch(criterio: string, value: string | boolean) {
     const q = query(
       collection(this.firestore, this._collection),
       where(criterio, '==', value)
@@ -75,7 +81,6 @@ export class ReferidoService {
     });
   }
 
-
   getReferidoByIglesia(
     iglesia: string
   ): Observable<BaseModel<ReferidoModel>[]> {
@@ -89,23 +94,18 @@ export class ReferidoService {
     const q = query(
       collection(this.firestore, this._collection),
       where('data.iglesia', '==', iglesia),
-      where(
-        'data.testigo.quiereApoyar',
-        '==',
-        true
-      )
+      where('data.testigo.quiereApoyar', '==', true)
     );
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }
-  getReferidoByDocumentoAndIlgesia(documento: string, iglesia: string): Observable<BaseModel<ReferidoModel>[]> {
+  getReferidoByDocumentoAndIlgesia(
+    documento: string,
+    iglesia: string
+  ): Observable<BaseModel<ReferidoModel>[]> {
     const q = query(
       collection(this.firestore, this._collection),
       where('data.iglesia', '==', iglesia),
-      where(
-        'id',
-        '==',
-        documento
-      )
+      where('id', '==', documento)
     );
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }
@@ -137,4 +137,46 @@ export class ReferidoService {
     const document = doc(this.firestore, this._collection, id);
     return updateDoc(document, { ...newData });
   }
+
+  async getFirstPage() {
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(colRef, orderBy('data.nombres'), limit(5));
+    const snapshot = await getDocs(q);
+
+    // Guardamos el último doc para la siguiente página
+    this.lastDoc = snapshot.docs[snapshot.docs.length - 1];
+
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async getNextPage() {
+    if (!this.lastDoc) return [];
+
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      orderBy('data.nombres'),
+      startAfter(this.lastDoc), // empieza después del último
+      limit(5)
+    );
+    const snapshot = await getDocs(q);
+
+    this.lastDoc = snapshot.docs[snapshot.docs.length - 1];
+
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async countActiveIf(condicion: string, valor: any): Promise<number> {
+  const colRef = collection(this.firestore, this._collection);
+
+  // Filtro: solo los que tengan estado == "activo"
+  const q = query(colRef, where(condicion, '==', valor));
+
+  const snapshot = await getCountFromServer(q);
+
+  return snapshot.data().count; // 👈 Aquí tienes el número total
+}
+
+
+
 }
