@@ -1,5 +1,5 @@
 import { ComunaService } from './../../../../shared/services/comuna/comuna.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TitleComponent } from '../../../../shared/components/atoms/title/title.component';
 import { ToastrService } from 'ngx-toastr';
@@ -11,18 +11,25 @@ import { ButtonComponent } from '../../../../shared/components/atoms/button/butt
 import * as XLSX from 'xlsx';
 import { ReferidoService } from '../../../../shared/services/referido/referido.service';
 import { InputTextComponent } from '../../../../shared/components/atoms/input-text/input-text.component';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TITULOS_DESCARGA } from '../../../../shared/const/titulos-excel.const';
-import { PrivateRoutingModule } from "../../private-routing.module";
+import { PrivateRoutingModule } from '../../private-routing.module';
 import { Router, RouterModule } from '@angular/router';
 import { PersonInfoComponent } from '../../../../shared/components/modules/person-info/person-info.component';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { ConfirmActionComponent } from '../../../../shared/components/modules/modal/confirm-action.component';
 import { ComunaModel } from '../../../../../models/comuna/comuna.model';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-lista-referidos',
@@ -42,13 +49,14 @@ import { ComunaModel } from '../../../../../models/comuna/comuna.model';
     RouterModule,
     PersonInfoComponent,
     ConfirmActionComponent,
-    ReactiveFormsModule
-],
+    ReactiveFormsModule,
+  ],
   providers: [LugaresService],
   templateUrl: './lista-referidos.component.html',
 })
-export class ListaReridosComponent implements OnInit {
-  formRef!: FormGroup
+export class ListaReridosComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject<void>();
+  formRef!: FormGroup;
   iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
   usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
   referidos: BaseModel<ReferidoModel>[] = [];
@@ -57,13 +65,17 @@ export class ListaReridosComponent implements OnInit {
   showModal: boolean = false;
   searchText: string = '';
   dataModal: { name: string; id: string } = { name: '', id: '' };
-  optionSelected: 'Todos' | 'Cedula' | 'Internos' | 'Externos' | 'Testigos' | '' = 'Cedula';
+  optionSelected:
+    | 'Todos'
+    | 'Cedula'
+    | 'Internos'
+    | 'Externos'
+    | 'Testigos'
+    | '' = 'Cedula';
   barrios: BaseModel<ComunaModel>[] = [];
+  value_draft: string = localStorage.getItem('document_search_draft') || '';
 
-  length = 50;
-  pageSize = 10;
-  pageIndex = 0;
-  pageSizeOptions = [5, 10, 25];
+  nombreLider: string = '';
 
   btnRecargar: boolean = false;
 
@@ -74,7 +86,6 @@ export class ListaReridosComponent implements OnInit {
   pageEvent: PageEvent | undefined = undefined;
 
   private avanceTimeout: any;
-
 
   constructor(
     private readonly referidoService: ReferidoService,
@@ -89,20 +100,49 @@ export class ListaReridosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getComunas();
+    if (this.usuario.rol === 'Pastor') {
+      this.getComunas();
+    }
     if (this.usuario.rol === 'Líder') {
       this.misReferidos(this.usuario.documento);
     }
+    if (this.value_draft != '') {
+      this.selectDocument(this.value_draft);
+    }
+    this.loadFormFromLocalStorage();
 
-      this.formRef.get('documento')?.valueChanges.subscribe((value) => {
-      this.selectDocument(value);
-    });
+    this.formRef
+      .get('documento')
+      ?.valueChanges.pipe(
+        takeUntil(this.unsubscribe$) // 👈 Agrega el operador aquí
+      )
+      .subscribe((value) => {
+        if (value.length > 0) {
+          this.selectDocument(value);
+        }
+      });
+  }
+
+  loadFormFromLocalStorage(): void {
+    const savedData = localStorage.getItem('document_search_draft');
+    if (savedData) {
+      const data = JSON.parse(savedData);
+      const currentValue = this.formRef.get('documento')?.value;
+      if (currentValue !== data) {
+        this.formRef.patchValue({ documento: data });
+      }
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next(); // 👈 Emite un valor para que takeUntil detenga las suscripciones
+    this.unsubscribe$.complete(); // 👈 Completa el Subject para liberar recursos
   }
 
   getComunas() {
     this.comunaService.getComunas().subscribe({
       next: (res) => {
-       this.barrios = res;
+        this.barrios = res;
       },
       error: (err) => {
         console.error('Error getting lideres', err);
@@ -111,28 +151,30 @@ export class ListaReridosComponent implements OnInit {
     });
   }
 
-    selectDocument(value: string) {
+  selectDocument(value: string) {
     if (this.avanceTimeout) {
       clearTimeout(this.avanceTimeout);
     }
     this.avanceTimeout = setTimeout(() => {
       this.getReferidoByDocumentoAndIglesia(value);
-    }, 500);
+      localStorage.setItem('document_search_draft', value);
+    }, 800);
   }
   getTestigos() {
-    this.referidoService
-      .getTestigos(this.usuario.iglesia!).subscribe({
-
-        next: (res: BaseModel<ReferidoModel>[]) => {
-          this.referidos = res;
-        },
-      })
-      this.optionSelected = 'Testigos';
+    this.nombreLider = '';
+    this.data = [];
+    this.optionSelected = 'Testigos';
+    this.referidoService.getTestigos(this.usuario.iglesia!).subscribe({
+      next: (res: BaseModel<ReferidoModel>[]) => {
+        this.referidos = res;
+      },
+    });
   }
-
 
   getBySearch(criterio: string, value: string | boolean) {
     this.spinner = true;
+    this.nombreLider = '';
+    this.data = [];
     this.optionSelected = value ? 'Internos' : 'Externos';
     this.referidoService.getReferidoBySearch(criterio, value).subscribe({
       next: (data) => {
@@ -149,19 +191,19 @@ export class ListaReridosComponent implements OnInit {
 
   getReferidoByDocumentoAndIglesia(documento: string) {
     this.spinner = true;
-    this.referidoService.getReferidoByDocumentoAndIlgesia(documento, this.iglesia).subscribe({
-      next: (data) => {
-        this.referidos = data;
-        this.spinner = false;
-      },
-      error: (error) => {
-        console.error(error);
-        this.spinner = false;
-      },
-    });
+    this.referidoService
+      .getReferidoByDocumentoAndIlgesia(documento, this.iglesia)
+      .subscribe({
+        next: (data) => {
+          this.referidos = data;
+          this.spinner = false;
+        },
+        error: (error) => {
+          console.error(error);
+          this.spinner = false;
+        },
+      });
   }
-
-
 
   getAllReferidos() {
     this.spinner = true;
@@ -169,9 +211,9 @@ export class ListaReridosComponent implements OnInit {
     this.getReferidos();
   }
 
-
-
   misReferidos(documento: string) {
+    this.referidos = [];
+    this.data = [];
     this.referidoService.getMyReferidos(documento).subscribe({
       next: (data) => {
         this.referidos = data;
@@ -184,16 +226,23 @@ export class ListaReridosComponent implements OnInit {
     });
   }
 
-  buscarIndividual(option: 'Todos' | 'Cedula' | 'Internos' | 'Externos' | 'Testigos' | '') {
+  buscarIndividual(
+    option: 'Todos' | 'Cedula' | 'Internos' | 'Externos' | 'Testigos' | ''
+  ) {
     this.optionSelected = option;
     this.referidos = [];
+    this.nombreLider = '';
+    this.data = [];
+    if (this.value_draft != '') {
+      this.selectDocument(this.value_draft);
+    }
   }
 
-    getReferidos() {
+  getReferidos() {
     this.spinner = true;
     this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
       next: (data) => {
-        this.data = data
+        this.data = data;
         this.referidos = this.data
           .map((referido: BaseModel<ReferidoModel>) => {
             return {
@@ -202,11 +251,11 @@ export class ListaReridosComponent implements OnInit {
                 ...referido.data,
                 cantidadReferidos: this.contarReferidos(referido.id!),
               },
-            }
+            };
           })
-          .sort((a, b) => a.data.nombres.localeCompare(b.data.nombres))
+          .sort((a, b) => a.data.nombres.localeCompare(b.data.nombres));
 
-        this.data = this.referidos
+        this.data = this.referidos;
         this.spinner = false;
       },
       error: (error) => {
@@ -219,15 +268,6 @@ export class ListaReridosComponent implements OnInit {
   edit(referido: BaseModel<ReferidoModel>) {
     this.router.navigate(['private/editar-referido', referido.id]);
   }
-
-  handlePageEvent(e: PageEvent) {
-    this.pageEvent = e;
-    this.length = e.length;
-    this.pageSize = e.pageSize;
-    this.pageIndex = e.pageIndex;
-  }
-
-
 
   onSearch(data: string) {
     this.referidos = this.data.filter(
@@ -242,7 +282,7 @@ export class ListaReridosComponent implements OnInit {
   clear() {
     this.searchText = '';
     this.referidos = this.data;
-    this.btnRecargar = false
+    this.btnRecargar = false;
   }
 
   descargar(referidos: BaseModel<ReferidoModel>[]) {
@@ -262,9 +302,15 @@ export class ListaReridosComponent implements OnInit {
     referidos.forEach((referido) => {
       const referidoData = referido.data;
       const documento = referido.id;
-      const barrio = this.barrios.find((barrio) => barrio.id === referidoData.barrio)?.data.barrio || '';
-      const nombreReferente = referidos.find((referido) => referido.id === referidoData.referidoPor)?.data.nombres + ' ' + referidos.find((referido) => referido.id === referidoData.referidoPor)?.data.apellidos
-
+      const barrio =
+        this.barrios.find((barrio) => barrio.id === referidoData.barrio)?.data
+          .barrio || '';
+      const nombreReferente =
+        referidos.find((referido) => referido.id === referidoData.referidoPor)
+          ?.data.nombres +
+        ' ' +
+        referidos.find((referido) => referido.id === referidoData.referidoPor)
+          ?.data.apellidos;
 
       // ROWS
       datos.push([
@@ -284,7 +330,7 @@ export class ListaReridosComponent implements OnInit {
         referidoData.senado ? 'SI' : 'NO',
         referidoData.camara ? 'SI' : 'NO',
         referidoData.referidoPor,
-        nombreReferente
+        nombreReferente,
       ]);
     });
 
@@ -292,19 +338,24 @@ export class ListaReridosComponent implements OnInit {
   }
 
   contarReferidos(id: string): string {
-    const cuenta = this.data.filter((referido) => referido.data.referidoPor === id).length;
+    const cuenta = this.data.filter(
+      (referido) => referido.data.referidoPor === id
+    ).length;
     const cantidad = cuenta.toString();
     return cantidad + ' referidos';
   }
 
-  filterReferidos(id: string) {
-    this.referidos = this.data.filter((referido) =>referido.data.referidoPor === id);
+  filterReferidos(id: string, nombre: string) {
+    this.referidos = this.data.filter(
+      (referido) => referido.data.referidoPor === id
+    );
     this.btnRecargar = true;
+    this.nombreLider = nombre;
   }
 
   async eliminar(id: string) {
     try {
-      await this.referidoService.deleteReferido(id)
+      await this.referidoService.deleteReferido(id);
       this.toast.success('Referido eliminado correctamente');
       this.showModal = false;
     } catch (error) {
@@ -315,6 +366,6 @@ export class ListaReridosComponent implements OnInit {
   openModal(data: { name: string; id: string }) {
     this.showModal = true;
     this.dataModal = data;
-    return true
+    return true;
   }
 }

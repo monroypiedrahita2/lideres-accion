@@ -16,12 +16,12 @@ export class ButtonComponent {
   @Input() disabled: boolean = this.loading == false ? false : true;
   @Input() icon!: string;
   @Output() onClick = new EventEmitter<void>();
-  
+
   submit(){
     if (this.disabled) {
       return;
     }
     this.onClick.emit()
   }
-  
+
 }

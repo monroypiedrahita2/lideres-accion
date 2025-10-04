@@ -69,6 +69,7 @@ export class ControlAccesosComponent implements OnInit {
     getPerfil() {
     this.perfilService.getPerfilByDocumento(this.form.value.usuario).subscribe({
       next: (response: any) => {
+        console.log(response);
 
         this.perfilSeleted = response[0];
         this.form.get('rol')?.enable();

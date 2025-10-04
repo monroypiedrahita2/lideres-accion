@@ -85,7 +85,6 @@ export class CreateReferidoComponent implements OnInit {
       celular: [
         '',
         [
-          Validators.required,
           Validators.maxLength(10),
           Validators.minLength(10),
           Validators.pattern('^[0-9]*$'),
@@ -140,6 +139,10 @@ export class CreateReferidoComponent implements OnInit {
 }
 
   confirmDocument(value: string) {
+    if (!value || value.length == 0) {
+      this.existDocument = false;
+      return;
+    }
     if (this.avanceTimeout) {
       clearTimeout(this.avanceTimeout);
     }
