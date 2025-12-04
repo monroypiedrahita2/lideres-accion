@@ -71,6 +71,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
     | 'Internos'
     | 'Externos'
     | 'Testigos'
+    | 'Nombre'
     | '' = 'Cedula';
   barrios: BaseModel<ComunaModel>[] = [];
   value_draft: string = localStorage.getItem('document_search_draft') || '';
@@ -86,6 +87,9 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   pageEvent: PageEvent | undefined = undefined;
 
   private avanceTimeout: any;
+  isFirstPage: boolean = true;
+  nombreBuscado: string = '';
+  isLastPage: boolean = false;
 
   constructor(
     private readonly referidoService: ReferidoService,
@@ -95,7 +99,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder
   ) {
     this.formRef = this.fb.group({
-      documento: ['', [Validators.pattern('^[0-9]*$')]],
+      documento: [''],
     });
   }
 
@@ -117,7 +121,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$) // 👈 Agrega el operador aquí
       )
       .subscribe((value) => {
-        if (value.length > 0) {
+        if (value && value.length > 0) {
           this.selectDocument(value);
         }
       });
@@ -155,10 +159,20 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
     if (this.avanceTimeout) {
       clearTimeout(this.avanceTimeout);
     }
-    this.avanceTimeout = setTimeout(() => {
-      this.getReferidoByDocumentoAndIglesia(value);
-      localStorage.setItem('document_search_draft', value);
-    }, 800);
+
+    if (this.optionSelected == 'Cedula') {
+      this.avanceTimeout = setTimeout(() => {
+        this.getReferidoByDocumentoAndIglesia(value);
+        localStorage.setItem('document_search_draft', value);
+      }, 800);
+    } else if (this.optionSelected == 'Nombre') {
+      this.nombreBuscado = value;
+      this.referidoService.getFirstPageByName(value, this.iglesia).then((res: any) => {
+        this.referidos = res.items;
+        this.isFirstPage = true;
+        this.isLastPage = !res.hasMore;
+      });
+    }
   }
   getTestigos() {
     this.nombreLider = '';
@@ -227,9 +241,11 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   }
 
   buscarIndividual(
-    option: 'Todos' | 'Cedula' | 'Internos' | 'Externos' | 'Testigos' | ''
+    option: 'Todos' | 'Cedula' | 'Internos' | 'Externos' | 'Testigos' | 'Nombre' | ''
   ) {
     this.optionSelected = option;
+    this.formRef.reset();
+
     this.referidos = [];
     this.nombreLider = '';
     this.data = [];
@@ -241,9 +257,11 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   async getReferidos() {
     this.spinner = true;
     try {
-     const data =  await this.referidoService.getFirstPage(this.iglesia)
+     const res: any =  await this.referidoService.getFirstPage(this.iglesia)
      this.spinner = false;
-      this.referidos = data;
+      this.referidos = res.items;
+      this.isFirstPage = true;
+      this.isLastPage = !res.hasMore;
       } catch (error) {
       console.error(error);
     }
@@ -251,8 +269,18 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
 
     async nextPage() {
     try {
-      const data = await this.referidoService.getNextPage( this.iglesia)
-      this.referidos = data;
+        if (this.optionSelected == 'Todos') {
+          const res: any = await this.referidoService.getNextPage(this.iglesia);
+          this.referidos = res.items;
+          this.isFirstPage = false;
+          this.isLastPage = !res.hasMore;
+        } else if (this.optionSelected == 'Nombre') {
+          if (!this.nombreBuscado) return;
+          const res: any = await this.referidoService.getNextPageByName(this.nombreBuscado, this.iglesia);
+          this.referidos = res.items;
+          this.isFirstPage = false;
+          this.isLastPage = !res.hasMore;
+        }
     } catch (error) {
       console.error(error);
     }
@@ -260,8 +288,18 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
 
   async prevPage() {
     try {
-      const data =  await this.referidoService.getPreviousPage(this.iglesia)
-      this.referidos = data;
+      if (this.optionSelected == 'Todos') {
+        const res: any = await this.referidoService.getPreviousPage(this.iglesia);
+        this.referidos = res.items;
+        this.isLastPage = false;
+        this.isFirstPage = res.items.length < 5;
+      } else if (this.optionSelected == 'Nombre') {
+        if (!this.nombreBuscado) return;
+        const res: any = await this.referidoService.getPreviousPageByName(this.nombreBuscado, this.iglesia);
+        this.referidos = res.items;
+        this.isLastPage = false;
+        this.isFirstPage = res.items.length < 5;
+      }
     } catch (error) {
       console.error(error);
     }

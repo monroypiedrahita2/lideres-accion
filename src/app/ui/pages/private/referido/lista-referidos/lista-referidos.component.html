@@ -5,36 +5,44 @@
   (eventConfirm)="eliminar(dataModal.id)"
 ></lida-confirm-action>
 
-<mg-title [title]="'LISTA DE REFERIDOS'"></mg-title>
-<div class="flex justify-between flex-wrap gap-1 gap-y-2">
+<!-- <mg-title [title]="'LISTA DE REFERIDOS'"></mg-title> -->
+<div class="flex justify-around gap-1 gap-y-2 overflow-x-auto p-2" style="flex-wrap: nowrap;">
+
+
   <span
-    [class]="optionSelected === 'Cedula' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer'"
+    [class]="optionSelected === 'Cedula' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer'"
     (click)="buscarIndividual('Cedula')"
     (keydown)="buscarIndividual('Cedula')"
     >Cédula</span
   >
   <span
-    [class]="optionSelected === 'Internos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer'"
+    [class]="optionSelected === 'Cedula' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer'"
+    (click)="buscarIndividual('Nombre')"
+    (keydown)="buscarIndividual('Nombre')"
+    >Nombre</span
+  >
+  <!-- <span
+    [class]="optionSelected === 'Internos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer'"
     (click)="getBySearch('data.isInterno', true)"
     (keydown)="getBySearch('data.isInterno', true)"
     >Internos</span
   >
   <span
     *ngIf="usuario.rol === 'Pastor' || usuario.rol === 'Super usuario'"
-    [class]="optionSelected === 'Externos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer'"
+    [class]="optionSelected === 'Externos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer'"
     (click)="getBySearch('data.isInterno', false)"
     (keydown)="getBySearch('data.isInterno', false)"
     >Externos</span
   >
     <span
-    [class]="optionSelected === 'Testigos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer'"
+    [class]="optionSelected === 'Testigos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer'"
     (click)="getTestigos()"
     (keydown)="getTestigos()"
     >Testigos</span
-  >
+  > -->
   <span
     *ngIf="usuario.rol === 'Pastor' || usuario.rol === 'Super usuario'"
-    [class]="optionSelected === 'Todos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm cursor-pointer'"
+    [class]="optionSelected === 'Todos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer'"
     (click)="getAllReferidos()"
     (keydown)="getAllReferidos()"
     >Todos</span
@@ -53,38 +61,37 @@
 </form>
 <div
   class="grid md:grid-cols-1 lg:grid-cols-12 w-full gap-2"
-  *ngIf="optionSelected != 'Cedula' && optionSelected != 'Todos'"
+  *ngIf="optionSelected == 'Nombre'"
 >
-  <div class="lg:col-span-8">
+  <form [formGroup]="formRef" class="lg:col-span-8">
     <mg-input-text
       class="w-full"
       type="text"
-      [(ngModel)]="searchText"
+      formControlName="documento"
       id="documentoOrName"
-      label="Buscar por nombre o documento"
-      (keyup)="onSearch(searchText)"
+      label="Buscar por nombre"
     ></mg-input-text>
-  </div>
-  <div class="lg:col-span-4 flex items-center sm:justify-around">
+  </form>
+</div>
+<div *ngIf="optionSelected == 'Todos' && (usuario.rol === 'Pastor' || usuario.rol === 'Super usuario')" class="lg:col-span-4 flex items-center sm:justify-around">
+  <mg-button
+    (onClick)="clear()"
+    [text]="btnRecargar ? 'Mostrar todos' : 'Limpiar'"
+    type="reset"
+  ></mg-button>
+  <div
+    class="p-4"
+    *ngIf="usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'"
+  >
     <mg-button
-      (onClick)="clear()"
-      [text]="btnRecargar ? 'Mostrar todos' : 'Limpiar'"
-      type="reset"
+      (onClick)="descargar(referidos)"
+      icon="cloud_download"
+      text="Descargar"
     ></mg-button>
-    <div
-      class="p-4"
-      *ngIf="usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'"
-    >
-      <mg-button
-        (onClick)="descargar(referidos)"
-        icon="cloud_download"
-        text="Descargar"
-      ></mg-button>
-    </div>
   </div>
 </div>
 
-<div class="flex justify-between items-end mt-4">
+<!-- <div  class="flex justify-between items-end mt-4">
   <div *ngIf="nombreLider == ''" class="font-primary text-lg">
     Total registros: {{ referidos.length }} referidos
   </div>
@@ -92,22 +99,21 @@
     <span>{{nombreLider + ':'}} {{ referidos.length }} referidos</span>
   </div>
 
-</div>
+</div> -->
 
-<div class="flex justify-center p-1" *ngIf="optionSelected == 'Todos' || optionSelected == 'Internos' || optionSelected == 'Externos' || optionSelected == 'Testigos'">
-    <a (click)="prevPage()"  class="flex items-center justify-center px-3 h-8 me-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+<div *ngIf="(formRef.value.documento || optionSelected == 'Todos') && optionSelected != 'Cedula'" class="flex justify-center p-1">
+  <a *ngIf="!isFirstPage" (click)="prevPage()" class="flex items-center justify-center px-3 h-8 me-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
     <svg class="w-3.5 h-3.5 me-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
     </svg>
-    Previous
+    Anterior
   </a>
-  <a  (click)="nextPage()" class="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-    Next
+  <a *ngIf="!isLastPage" (click)="nextPage()" class="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
+    Siguiente
     <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
       <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
     </svg>
   </a>
-
 </div>
 
 
@@ -145,10 +151,10 @@
   <div class="relative overflow-x-auto">
     <div>
       <table
-        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        class="w-full text-sm text-left rtl:text-right text-gray-500 "
       >
         <thead
-          class="text-sm text-white uppercase bg-primary dark:bg-primary dark:text-gray-400 font-primary"
+          class="text-sm text-white uppercase bg-primary  font-primary"
         >
           <tr>
             <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">

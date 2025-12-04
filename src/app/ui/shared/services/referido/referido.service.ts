@@ -140,55 +140,140 @@ export class ReferidoService {
   }
 
   async getFirstPage(iglesia: string) {
+    const pageSize = 5;
     const colRef = collection(this.firestore, this._collection);
     const q = query(
       colRef,
       orderBy('data.nombres'),
-      limit(5),
-      where('data.iglesia', '==', iglesia)
+      where('data.iglesia', '==', iglesia),
+      limit(pageSize + 1)
     );
     const snapshot = await getDocs(q);
 
-    // Guardamos el último doc para la siguiente página
-    this.lastDoc = snapshot.docs.at(-1);
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
 
-    return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as any) }));
+    // Guardamos el último doc (el que se mostró) para la siguiente página
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
   }
 
   async getNextPage(iglesia: string) {
-    if (!this.lastDoc) return [];
+    const pageSize = 5;
+    if (!this.lastDoc) return { items: [], hasMore: false };
 
     const colRef = collection(this.firestore, this._collection);
     const q = query(
       colRef,
       orderBy('data.nombres'),
+      where('data.iglesia', '==', iglesia),
       startAfter(this.lastDoc), // empieza después del último
-      limit(5),
-      where('data.iglesia', '==', iglesia)
+      limit(pageSize + 1)
     );
     const snapshot = await getDocs(q);
 
-   this.lastDoc = snapshot.docs.at(-1);
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
 
-    return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as any) }));
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
   }
 
   async getPreviousPage(iglesia: string) {
-    if (!this.lastDoc) return [];
+    const pageSize = 5;
+    if (!this.lastDoc) return { items: [], hasMore: false };
 
     const colRef = collection(this.firestore, this._collection);
     const q = query(
       colRef,
       orderBy('data.nombres'),
+      where('data.iglesia', '==', iglesia),
       endBefore(this.lastDoc), // empieza antes del último
-      limit(5),
-       where('data.iglesia', '==', iglesia)
+      limit(pageSize + 1)
     );
     const snapshot = await getDocs(q);
 
-     this.lastDoc = snapshot.docs.at(-1);
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(Math.max(0, docs.length - pageSize));
 
-    return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as any) }));
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
+  }
+
+  async getFirstPageByName(nombre: string, iglesia: string) {
+    const pageSize = 5;
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      where('data.nombres', '>=', nombre),
+      where('data.nombres', '<=', nombre + '\uf8ff'),
+      where('data.iglesia', '==', iglesia),
+      orderBy('data.nombres'),
+      limit(pageSize + 1)
+    );
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
+
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
+  }
+
+  async getNextPageByName(nombre: string, iglesia: string) {
+    const pageSize = 5;
+    if (!this.lastDoc) return { items: [], hasMore: false };
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      where('data.nombres', '>=', nombre),
+      where('data.nombres', '<=', nombre + '\uf8ff'),
+      where('data.iglesia', '==', iglesia),
+      orderBy('data.nombres'),
+      startAfter(this.lastDoc),
+      limit(pageSize + 1)
+    );
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
+
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
+  }
+
+  async getPreviousPageByName(nombre: string, iglesia: string) {
+    const pageSize = 5;
+    if (!this.lastDoc) return { items: [], hasMore: false };
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      where('data.nombres', '>=', nombre),
+      where('data.nombres', '<=', nombre + '\uf8ff'),
+      where('data.iglesia', '==', iglesia),
+      orderBy('data.nombres'),
+      endBefore(this.lastDoc),
+      limit(pageSize + 1)
+    );
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(Math.max(0, docs.length - pageSize));
+
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
   }
 
   async countByIglesia(iglesia: string) {
