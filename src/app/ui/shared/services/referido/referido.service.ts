@@ -276,6 +276,55 @@ export class ReferidoService {
     return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
   }
 
+  // Método genérico para obtener una página, pasando opcionalmente un cursor `startAfterDoc`.
+  async getPage(iglesia: string, startAfterDoc?: any) {
+    const pageSize = 5;
+    const colRef = collection(this.firestore, this._collection);
+    const constraints: any[] = [orderBy('data.nombres'), where('data.iglesia', '==', iglesia)];
+    if (startAfterDoc) constraints.push(startAfter(startAfterDoc));
+    constraints.push(limit(pageSize + 1));
+    const q = query(colRef, ...constraints);
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
+
+    return {
+      items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })),
+      hasMore,
+      firstDoc: returned[0] || null,
+      lastDoc: returned.at(-1) || null,
+    };
+  }
+
+  // Método genérico para obtener una página por nombre, pasando opcionalmente un cursor `startAfterDoc`.
+  async getPageByName(nombre: string, iglesia: string, startAfterDoc?: any) {
+    const pageSize = 5;
+    const colRef = collection(this.firestore, this._collection);
+    const constraints: any[] = [
+      where('data.nombres', '>=', nombre),
+      where('data.nombres', '<=', nombre + '\uf8ff'),
+      where('data.iglesia', '==', iglesia),
+      orderBy('data.nombres'),
+    ];
+    if (startAfterDoc) constraints.push(startAfter(startAfterDoc));
+    constraints.push(limit(pageSize + 1));
+    const q = query(colRef, ...constraints);
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
+
+    return {
+      items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })),
+      hasMore,
+      firstDoc: returned[0] || null,
+      lastDoc: returned.at(-1) || null,
+    };
+  }
+
   async countByIglesia(iglesia: string) {
     const colRef = collection(this.firestore, this._collection);
     const q = query(colRef, where('data.iglesia', '==', iglesia));
