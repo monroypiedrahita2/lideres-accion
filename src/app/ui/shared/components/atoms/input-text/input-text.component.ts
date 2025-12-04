@@ -19,7 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 export class InputTextComponent implements ControlValueAccessor, ErrorStateMatcher {
 
   @Input() id: string = 'id';
-  @Input() errorsMessage: string = '';
+  @Input() textError: string = '';
   @Input() label: string = 'label';
   @Input() autocomplete: string = 'off';
   @Input() type: string = 'text';

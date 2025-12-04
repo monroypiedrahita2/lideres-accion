@@ -46,6 +46,7 @@
       formControlName="documento"
       id="document"
       label="Número de cédula"
+      [textError]="form.get('documento')?.hasError('pattern') ? 'Solo puedes digitar números' : ''"
     ></mg-input-text>
     <mg-input-text
       type="text"
