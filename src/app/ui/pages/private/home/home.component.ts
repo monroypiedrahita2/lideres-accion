@@ -14,6 +14,7 @@ import { SkeletonComponent } from '../../../shared/components/organism/skeleton/
 import { LogoComponent } from '../../../shared/components/atoms/logo/logo.component';
 import { CardEstadisticasComponent } from '../../../shared/components/organism/card-estadisticas/card-estadisticas.component';
 import { MatIconModule } from '@angular/material/icon';
+import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +26,7 @@ import { MatIconModule } from '@angular/material/icon';
     LogoComponent,
     CardEstadisticasComponent,
     MatIconModule,
+    ButtonComponent
   ],
   templateUrl: './home.component.html',
 })
@@ -44,6 +46,7 @@ export class HomeComponent implements OnInit {
   senado: number = 0;
   camara: number = 0;
   sinPuesto: number = 0;
+  showCounters: boolean = false;
 
 
   constructor(
@@ -65,9 +68,6 @@ export class HomeComponent implements OnInit {
     } else {
       this.getusuario(this.auth.uidUser());
     }
-
-    this.contarReferidos();
-
   }
 
   async getMyIglesia(i: string) {
@@ -96,6 +96,7 @@ export class HomeComponent implements OnInit {
   }
 
   async contarReferidos() {
+  this.showCounters = true;
   this.totalRegistros = await this.referidoService.countActiveIf('data.iglesia', this.usuario.iglesia)
   this.totalInternos = await this.referidoService.countActiveIf('data.isInterno', true)
   this.totalExternos = await this.referidoService.countActiveIf('data.isInterno', false)
@@ -103,6 +104,5 @@ export class HomeComponent implements OnInit {
   this.senado = await this.referidoService.countActiveIf('data.senado', true)
   this.camara = await this.referidoService.countActiveIf('data.camara', true)
   this.sinPuesto = await this.referidoService.countActiveIf('data.lugarVotacion', '')
-
   }
 }

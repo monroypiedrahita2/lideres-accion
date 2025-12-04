@@ -1,5 +1,5 @@
 <mat-form-field class="w-full z-10">
-  <mat-label class="font-primary">{{ label }}</mat-label>
+  <mat-label >{{ label }}</mat-label>
   <input
     [id]="id"
     [name]="id"
@@ -21,6 +21,6 @@
     [errorStateMatcher]="matcher"
     matInput>
     @if (showError) {
-      <mat-error class="font-primary">{{errors[0]}}</mat-error>
+      <mat-error>{{ errors[0].length > 2 ? errors[0] : errorsMessage }}</mat-error>
     }
 </mat-form-field>

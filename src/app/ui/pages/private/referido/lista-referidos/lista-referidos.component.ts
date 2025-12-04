@@ -55,7 +55,7 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './lista-referidos.component.html',
 })
 export class ListaReridosComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject<void>();
+  private readonly unsubscribe$ = new Subject<void>();
   formRef!: FormGroup;
   iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
   usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -238,31 +238,33 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
     }
   }
 
-  getReferidos() {
+  async getReferidos() {
     this.spinner = true;
-    this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
-      next: (data) => {
-        this.data = data;
-        this.referidos = this.data
-          .map((referido: BaseModel<ReferidoModel>) => {
-            return {
-              ...referido,
-              data: {
-                ...referido.data,
-                cantidadReferidos: this.contarReferidos(referido.id!),
-              },
-            };
-          })
-          .sort((a, b) => a.data.nombres.localeCompare(b.data.nombres));
+    try {
+     const data =  await this.referidoService.getFirstPage(this.iglesia)
+     this.spinner = false;
+      this.referidos = data;
+      } catch (error) {
+      console.error(error);
+    }
+  }
 
-        this.data = this.referidos;
-        this.spinner = false;
-      },
-      error: (error) => {
-        console.error(error);
-        this.spinner = false;
-      },
-    });
+    async nextPage() {
+    try {
+      const data = await this.referidoService.getNextPage( this.iglesia)
+      this.referidos = data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async prevPage() {
+    try {
+      const data =  await this.referidoService.getPreviousPage(this.iglesia)
+      this.referidos = data;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   edit(referido: BaseModel<ReferidoModel>) {
@@ -284,6 +286,8 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
     this.referidos = this.data;
     this.btnRecargar = false;
   }
+
+
 
   descargar(referidos: BaseModel<ReferidoModel>[]) {
     const datos = this.transformarDatos(referidos);

@@ -11,12 +11,13 @@ import {
   setDoc,
   updateDoc,
   where,
-  and,
   orderBy,
   limit,
   getDocs,
   startAfter,
   getCountFromServer,
+  endBefore,
+  limitToLast,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
@@ -138,18 +139,23 @@ export class ReferidoService {
     return updateDoc(document, { ...newData });
   }
 
-  async getFirstPage() {
+  async getFirstPage(iglesia: string) {
     const colRef = collection(this.firestore, this._collection);
-    const q = query(colRef, orderBy('data.nombres'), limit(5));
+    const q = query(
+      colRef,
+      orderBy('data.nombres'),
+      limit(5),
+      where('data.iglesia', '==', iglesia)
+    );
     const snapshot = await getDocs(q);
 
     // Guardamos el último doc para la siguiente página
-    this.lastDoc = snapshot.docs[snapshot.docs.length - 1];
+    this.lastDoc = snapshot.docs.at(-1);
 
-    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as any) }));
   }
 
-  async getNextPage() {
+  async getNextPage(iglesia: string) {
     if (!this.lastDoc) return [];
 
     const colRef = collection(this.firestore, this._collection);
@@ -157,26 +163,50 @@ export class ReferidoService {
       colRef,
       orderBy('data.nombres'),
       startAfter(this.lastDoc), // empieza después del último
-      limit(5)
+      limit(5),
+      where('data.iglesia', '==', iglesia)
     );
     const snapshot = await getDocs(q);
 
-    this.lastDoc = snapshot.docs[snapshot.docs.length - 1];
+   this.lastDoc = snapshot.docs.at(-1);
 
-    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as any) }));
+  }
+
+  async getPreviousPage(iglesia: string) {
+    if (!this.lastDoc) return [];
+
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      orderBy('data.nombres'),
+      endBefore(this.lastDoc), // empieza antes del último
+      limit(5),
+       where('data.iglesia', '==', iglesia)
+    );
+    const snapshot = await getDocs(q);
+
+     this.lastDoc = snapshot.docs.at(-1);
+
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as any) }));
+  }
+
+  async countByIglesia(iglesia: string) {
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(colRef, where('data.iglesia', '==', iglesia));
+    const snapshot = await getCountFromServer(q);
+    return snapshot.data().count; // 👈 Aquí tienes el número total
   }
 
   async countActiveIf(condicion: string, valor: any): Promise<number> {
-  const colRef = collection(this.firestore, this._collection);
+    const colRef = collection(this.firestore, this._collection);
 
-  // Filtro: solo los que tengan estado == "activo"
-  const q = query(colRef, where(condicion, '==', valor));
+    // Filtro: solo los que tengan estado == "activo"
+    const q = query(colRef, where(condicion, '==', valor));
+    console.log(q);
 
-  const snapshot = await getCountFromServer(q);
+    const snapshot = await getCountFromServer(q);
 
-  return snapshot.data().count; // 👈 Aquí tienes el número total
-}
-
-
-
+    return snapshot.data().count; // 👈 Aquí tienes el número total
+  }
 }

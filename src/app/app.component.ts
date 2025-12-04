@@ -14,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 export class AppComponent implements OnInit {
   constructor(private readonly swUpdate: SwUpdate, private readonly toastr: ToastrService) {}
 
-  ngOnInit(): void {
+ ngOnInit(): void {
     // 1. Verificar que el Service Worker esté habilitado
     if (this.swUpdate.isEnabled) {
 
@@ -50,3 +50,4 @@ export class AppComponent implements OnInit {
   }
 }
 
+ 

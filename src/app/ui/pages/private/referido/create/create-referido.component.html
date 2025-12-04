@@ -14,10 +14,19 @@
     ></mg-input-select>
   </div>
 
-<div [class]=" form.value.isInterno ? 'my-5 bg-blue-100 border border-blue-300 rounded-lg shadow-md p-2' : 'my-5 bg-gray-200 border border-blue-300 rounded-lg shadow-md p-2'">
+  <div
+    [class]="
+      form.value.isInterno
+        ? 'my-5 bg-blue-100 border border-blue-300 rounded-lg shadow-md p-2'
+        : 'my-5 bg-gray-200 border border-blue-300 rounded-lg shadow-md p-2'
+    "
+    class="flex flex-col gap-3"
+  >
     <mg-sub-title title="Datos del referido (Obligatorios)"></mg-sub-title>
     <div class="w-full flex justify-center">
-      <label class="flex flex-col-reverse gap-1 items-center p-2 cursor-pointer min-w-3">
+      <label
+        class="flex flex-col-reverse gap-1 items-center p-2 cursor-pointer min-w-3"
+      >
         <input
           type="checkbox"
           [value]="true"
@@ -25,7 +34,7 @@
           formControlName="isInterno"
         />
         <div
-          class="relative w-11 h-6 bg-gray-300 peer-focus:outline-none  rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 "
+          class="relative w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
         ></div>
         <span class="text-sm font-medium text-black">{{
           form.value.isInterno ? "Es interno" : "Es externo"
@@ -50,7 +59,6 @@
       id="lastNames"
       label="Apellidos"
     ></mg-input-text>
-
   </div>
 
   @if (existDocument && accion == 'Crear') {
@@ -59,7 +67,14 @@
   ></lida-tarjeta-informativa>
   } @if (!existDocument || accion == 'Editar') {
 
-  <div [class]=" form.value.isInterno ? 'my-5 bg-blue-100 border border-blue-300 rounded-lg shadow-md p-2' : 'my-5 bg-gray-200 border border-blue-300 rounded-lg shadow-md p-2'">
+  <div
+    [class]="
+      form.value.isInterno
+        ? 'my-5 bg-blue-100 border border-blue-300 rounded-lg shadow-md p-2'
+        : 'my-5 bg-gray-200 border border-blue-300 rounded-lg shadow-md p-2'
+    "
+    class="flex flex-col gap-3"
+  >
     <mg-sub-title title="No obligatorios"></mg-sub-title>
     <mg-input-text
       type="phone"
@@ -99,9 +114,7 @@
     <label
       class="flex flex-col mb-3 gap-2 items-center justify-between p-2 cursor-pointer min-w-3"
     >
-      <span class="ms-3 text-sm font-medium text-black"
-        >¿Es emprendedor?</span
-      >
+      <span class="ms-3 text-sm font-medium text-black">¿Es emprendedor?</span>
       <input
         type="checkbox"
         [value]="true"
@@ -109,20 +122,25 @@
         formControlName="esEmprendedor"
       />
       <div
-        class="relative w-11 h-6 bg-gray-300 peer-focus:outline-none   rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
+        class="relative w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
       ></div>
     </label>
   </div>
 
-<div [class]=" form.value.isInterno ? 'my-5 bg-blue-100 border border-blue-300 rounded-lg shadow-md p-2' : 'my-5 bg-gray-200 border border-blue-300 rounded-lg shadow-md p-2'">
+  <div
+    [class]="
+      form.value.isInterno
+        ? 'my-5 bg-blue-100 border border-blue-300 rounded-lg shadow-md p-2'
+        : 'my-5 bg-gray-200 border border-blue-300 rounded-lg shadow-md p-2'
+    "
+    class="flex flex-col gap-3"
+  >
     <mg-sub-title title="Nos va apoyar en"></mg-sub-title>
     <div class="mb-10 flex justify-around gap-4">
       <label
         class="inline-flex gap-2 items-center justify-between p-2 cursor-pointer min-w-3"
       >
-        <span class="ms-3 text-sm font-medium text-black"
-          >Senado</span
-        >
+        <span class="ms-3 text-sm font-medium text-black">Senado</span>
         <input
           type="checkbox"
           [value]="true"
@@ -136,9 +154,7 @@
       <label
         class="inline-flex gap-2 items-center justify-between p-2 cursor-pointer min-w-3"
       >
-        <span class="ms-3 text-sm font-medium text-black"
-          >Camara</span
-        >
+        <span class="ms-3 text-sm font-medium text-black">Camara</span>
         <input
           type="checkbox"
           [value]="true"
@@ -178,7 +194,7 @@
     <mg-input-text
       type="text"
       formControlName="lugarVotacion"
-      id="direccion"
+      id="lugarVotacion"
       label="Lugar de votación"
     ></mg-input-text>
     <mg-input-text

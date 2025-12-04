@@ -29,7 +29,11 @@
 </div>
 }
 
-<div class="flex flex-wrap justify-center items-center gap-10 mt-4 p-4">
+<div class="flex justify-center mt-4" *ngIf="!skeleton && usuario.rol">
+  <mg-button [text]="'Mostrar estadisticas'" (onClick)="contarReferidos()" *ngIf="!showCounters"></mg-button>
+</div>
+
+<div class="flex flex-wrap justify-center items-center gap-10 mt-4 p-4" *ngIf="showCounters">
   <app-card-estadisticas class="mb-5" [number]="totalRegistros" [info]="'Referidos'"></app-card-estadisticas>
   <app-card-estadisticas class="mb-5" [number]="totalInternos" [info]="'Internos'"></app-card-estadisticas>
   <app-card-estadisticas class="mb-5" [number]="totalExternos" [info]="'Externos'"></app-card-estadisticas>
