@@ -13,8 +13,9 @@ export class ButtonComponent {
   @Input() type: 'submit' | 'reset' = 'submit';
   @Input() text: string = 'text';
   @Input() loading: boolean = false;
-  @Input() disabled: boolean = this.loading == false ? false : true;
+  @Input() disabled: boolean = this.loading;
   @Input() icon!: string;
+  @Input() size: 'small' | 'big' = 'small';
   @Output() onClick = new EventEmitter<void>();
 
   submit(){

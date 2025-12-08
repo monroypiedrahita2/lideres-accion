@@ -1,4 +1,5 @@
 <button (click)="submit()" [disabled]="disabled" [ngClass]="{
+  'w-full h-10': size == 'big',
 'bg-yellow-600': type == 'submit' && !disabled && !loading,
 'hover:bg-yellow-800': type == 'submit' && !disabled && !loading,
 'text-white': type == 'submit' && !disabled && !loading,
@@ -11,7 +12,7 @@
 
 'tracking-widest font-medium py-1 px-4 rounded-[18px] min-w-20 font-primary shadow-md': true
 }">
-<div class="flex justify-center items-center gap-2">
+<div class="flex justify-start items-center gap-2 w-full">
     <span *ngIf="icon && !loading" class="material-symbols-outlined text-sm">{{icon}}</span>
     <span
     *ngIf="loading"
@@ -19,6 +20,6 @@
   >
     progress_activity
   </span>
-   <span *ngIf="!loading" class="font-primary text-sm">{{text}}</span>
+   <span *ngIf="!loading" [ngClass]="{'text-lg': size == 'big', 'text-sm': size == 'small'}" class="font-primary text-center w-full">{{text}}</span>
 </div>
 </button>

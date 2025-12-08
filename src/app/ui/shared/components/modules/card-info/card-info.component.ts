@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 export class CardInfoComponent {
   @Input() icon: string = 'home';
   @Input() title: string = 'title';
-  @Input() textInfo: string = 'title';
+  @Input() textInfo: string = 'textInfo';
   @Input() activePoint: boolean = false;
 
 }

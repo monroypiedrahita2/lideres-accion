@@ -2,12 +2,12 @@
   <mg-skeleton [enableSkeleton]="skeleton" [num]="5"></mg-skeleton>
 
   @if (usuario && !skeleton && showInfoPerfil) {
-    <div class="absolute right-7">
-      <mat-icon class="relative cursor-pointer" (click)="closeInfoPerfil()" (keydown)="closeInfoPerfil()">close</mat-icon>
+    <div class="absolute right-7 text-gray-500">
+      <mat-icon class="relative cursor-pointer top-2" (click)="closeInfoPerfil()" (keydown)="closeInfoPerfil()">close</mat-icon>
     </div>
-  <div class="p-4 bg-white rounded shadow text-center flex">
+  <div class="p-4 bg-white rounded shadow text-center">
     <mg-logo></mg-logo>
-    <div class="mt-2 flex flex-col w-full justify-center items-center">
+    <div class="mt-2 flex flex-col w-full justify-center items-center border-red-400">
       <span class="font-primary font-semibold">{{ usuario.rol }}</span>
       <span class="text-lg font-bold col-span-2 font-primary">{{ usuario.nombres + ' ' + usuario.apellidos }}</span>
       <span class="font-primary">{{ usuario.documento}}</span>
@@ -29,18 +29,9 @@
 </div>
 }
 
-<div class="flex justify-center mt-4" *ngIf="!skeleton && usuario.rol">
-  <mg-button [text]="'Mostrar estadisticas'" (onClick)="contarReferidos()" *ngIf="!showCounters"></mg-button>
+
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+  <mtt-card-info *ngIf="usuario.rol === 'Pastor' || usuario.rol === 'Super Usuario'" title="Estadisticas" icon="data_usage" textInfo="Estisticas por iglesia" [routerLink]="'../estadisticas'"></mtt-card-info>
+  <mtt-card-info *ngIf="usuario.rol === 'Super Usuario'" title="DashBoard" icon="developer_board" textInfo="Estisticas generales" [routerLink]="'../dashboards'"></mtt-card-info>
+  <mtt-card-info title="Apoyo vehicular" icon="directions_car" textInfo="Adminitrar datos de apoyo vehicular" (click)="opcionesVehiculo()" (keydown)="opcionesVehiculo()"></mtt-card-info>
 </div>
-
-<div class="flex flex-wrap justify-center items-center gap-10 mt-4 p-4" *ngIf="showCounters">
-  <app-card-estadisticas class="mb-5" [number]="totalRegistros" [info]="'Referidos'"></app-card-estadisticas>
-  <app-card-estadisticas class="mb-5" [number]="totalInternos" [info]="'Internos'"></app-card-estadisticas>
-  <app-card-estadisticas class="mb-5" [number]="totalExternos" [info]="'Externos'"></app-card-estadisticas>
-  <app-card-estadisticas class="mb-5" [number]="emprendedores" [info]="'Emprendedores'"></app-card-estadisticas>
-  <app-card-estadisticas class="mb-5" [number]="senado" [info]="'Senado'"></app-card-estadisticas>
-  <app-card-estadisticas class="mb-5" [number]="camara" [info]="'Camara'"></app-card-estadisticas>
-  <app-card-estadisticas class="mb-5" [number]="sinPuesto" [info]="'Sin puesto'"></app-card-estadisticas>
-</div>
-
-
