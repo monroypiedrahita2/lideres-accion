@@ -96,15 +96,9 @@ export class HomeComponent implements OnInit {
 
 
   opcionesVehiculo() {
-    console.log('abrir dialogo');
-      const dialogRef = this.dialog.open(DialogOpcionesVehicularComponent, {
+      this.dialog.open(DialogOpcionesVehicularComponent, {
       data: {name: 'mi-carro'},
       width: '300px',
-    });
-
-      dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-     console.log(result);
     });
   }
 
