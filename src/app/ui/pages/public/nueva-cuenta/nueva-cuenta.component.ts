@@ -46,6 +46,9 @@ export class NuevaCuentaComponent {
       apellidos: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(5)]],
       confirm: ['', [Validators.required, Validators.minLength(5)]],
+      casaApoyo: [false],
+      transporte: [false],
+      testigo: [false],
     });
   }
 
@@ -64,6 +67,11 @@ export class NuevaCuentaComponent {
         apellidos: this.form.value.apellidos,
         email: this.form.value.email,
         rol: null,
+        postulado: {
+          casaApoyo: this.form.value.casaApoyo,
+          transporte: this.form.value.transporte,
+          testigo: this.form.value.testigo,
+        },
       }
       await this.authService
         .createUserWithEmailAndPassword(

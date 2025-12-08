@@ -11,7 +11,7 @@ import {
   MatDialogActions,
   MatDialogClose,
 } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../components/atoms/button/button.component';
 
 @Component({
@@ -22,12 +22,12 @@ import { ButtonComponent } from '../../components/atoms/button/button.component'
     MatInputModule,
     FormsModule,
     MatButtonModule,
-    MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
-    ButtonComponent
-  ],
+    ButtonComponent,
+    RouterLink
+],
   templateUrl: './dialog-opciones-vehicular.component.html',
   styleUrls: ['./dialog-opciones-vehicular.component.scss']
 })

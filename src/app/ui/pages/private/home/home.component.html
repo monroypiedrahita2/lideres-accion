@@ -34,4 +34,5 @@
   <mtt-card-info *ngIf="usuario.rol === 'Pastor' || usuario.rol === 'Super Usuario'" title="Estadisticas" icon="data_usage" textInfo="Estisticas por iglesia" [routerLink]="'../estadisticas'"></mtt-card-info>
   <mtt-card-info *ngIf="usuario.rol === 'Super Usuario'" title="DashBoard" icon="developer_board" textInfo="Estisticas generales" [routerLink]="'../dashboards'"></mtt-card-info>
   <mtt-card-info title="Apoyo vehicular" icon="directions_car" textInfo="Adminitrar datos de apoyo vehicular" (click)="opcionesVehiculo()" (keydown)="opcionesVehiculo()"></mtt-card-info>
+  <mtt-card-info title="Puntos M" icon="my_location" textInfo="Puntos centrales de apoyo" (click)="opcionesVehiculo()" (keydown)="opcionesVehiculo()"></mtt-card-info>
 </div>
