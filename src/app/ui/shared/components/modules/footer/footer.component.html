@@ -14,6 +14,7 @@
     [goTo]="'./listar-referidos'"
   ></app-button-footer>
   <app-button-footer
+    *ngIf="usuario.rol == 'Líder' || usuario.rol == 'Coordinador de iglesia' || usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'"
     class="w-full flex justify-center"
     [option]="'Referido'"
     [icon]="'person_add'"

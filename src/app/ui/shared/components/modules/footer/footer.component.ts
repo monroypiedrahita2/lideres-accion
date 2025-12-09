@@ -4,6 +4,7 @@ import { NAME_APP } from '../../../const/name-app.const';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { ButtonFooterComponent } from '../../atoms/button-footer/button-footer.component';
+import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 
 @Component({
   selector: 'mtt-footer',
@@ -18,7 +19,7 @@ import { ButtonFooterComponent } from '../../atoms/button-footer/button-footer.c
   styleUrl: './footer.component.css',
 })
 export class FooterComponent {
-  usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
+  usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
   title: string = NAME_APP;
 
 }

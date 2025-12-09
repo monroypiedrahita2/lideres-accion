@@ -26,6 +26,7 @@ export const environment = {
     lideres: 'Lideres',
     barrios: 'Barrios',
     perfil: 'Perfiles',
+    vehiculos: 'Vehiculos',
   },
   alerts: { timeOut: 3000, preventDuplicates: true },
 };

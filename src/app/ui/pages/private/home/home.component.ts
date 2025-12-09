@@ -1,4 +1,4 @@
-import { IglesiaService } from './../../../shared/services/iglesia/iglesia.service';
+import { IglesiaService } from '../../../shared/services/iglesia/iglesia.service';
 import { IglesiaModel } from './../../../../models/iglesia/iglesia.model';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';

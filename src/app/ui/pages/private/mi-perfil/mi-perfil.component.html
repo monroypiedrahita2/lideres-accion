@@ -1,5 +1,5 @@
   <mg-skeleton [enableSkeleton]="enableSkeleton" [num]="5"></mg-skeleton>
-  <div class="bg-white border border-gray-200 rounded-lg p-6">
+  <div *ngIf="!enableSkeleton" class="bg-white border border-gray-200 rounded-lg p-6">
     <mg-title title="Mis datos"></mg-title>
     <form [formGroup]="form">
     <mg-input-text type="number" formControlName="documento" label="Documento de identidad" id="documento"></mg-input-text>

@@ -104,6 +104,11 @@ export class CreateReferidoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.userRol == null || this.iglesia == null) {
+      this.toast.error('No se ha podido identificar su iglesia');
+      this.location.back();
+      return;
+    }
     this.enableSkeleton = true;
     if (this.userRol != 'Líder') {
       this.getReferidos();

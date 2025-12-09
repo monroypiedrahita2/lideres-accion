@@ -1,6 +1,6 @@
 <mg-sub-title title="Mi vehiculo"></mg-sub-title>
 
-<form [formGroup]="form" class="w-full" (ngSubmit)="onSubmit()">
+<form [formGroup]="form" class="w-full">
   <div class="w-full flex justify-center items-center">
     <span class="font-primary font-semibold text-center text-lg bg-yellow-500 border-2 rounded-lg px-1 mb-1 border-black">{{ (form.get('placaLetras')?.value || '').toUpperCase() }} - {{ form.get('placaNumeros')?.value }}</span>
   </div>
@@ -45,6 +45,14 @@
       [items]="modelos"
     ></mg-input-select>
 
+    <mg-input-text
+      class="w-full"
+      type="text"
+      formControlName="nombreModelo"
+      id="nombreModelo"
+      label="Nombre del modelo"
+    ></mg-input-text>
+
     <mg-input-select
       formControlName="color"
       id="color"
@@ -52,11 +60,34 @@
       [items]="colores"
     ></mg-input-select>
 
+    <mg-input-text
+      class="w-full"
+      type="text"
+      formControlName="nombres"
+      id="nombres"
+      label="Nombres del conductor"
+    ></mg-input-text>
+    <mg-input-text
+      class="w-full"
+      type="text"
+      formControlName="apellidos"
+      id="apellidos"
+      label="Apellidos del conductor"
+    ></mg-input-text>
+    <mg-input-text
+      class="w-full"
+      type="text"
+      formControlName="celular"
+      id="celular"
+      label="Celular del conductor"
+      [textError]="form.get('celular')?.hasError('pattern') ? 'Solo puedes digitar números' : ''"
+    ></mg-input-text>
+
   </div>
 
   <div class="flex gap-3 justify-center mt-6">
       <mg-button  size="small" text="Cancelar" type="reset" (onClick)="back()"></mg-button>
-      <mg-button  [disabled]="form.invalid" size="small" text="Guardar"></mg-button>
+      <mg-button  [disabled]="form.invalid" size="small" text="Guardar" type="submit" [loading]="loading" (onClick)="onSubmit()"></mg-button>
   </div>
 
 </form>
