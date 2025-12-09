@@ -49,9 +49,7 @@ export class DialogNotificationComponent {
     this.dialogRef.close(false);
   }
 
-  gotoLink(url: string): void {
-    // this.router.navigate([url]);
-  }
+
 
   confirm(): void {
     this.dialogRef.close(true);

@@ -10,6 +10,8 @@ import { TitleComponent } from '../../../shared/components/atoms/title/title.com
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
+import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -32,14 +34,15 @@ export class MiPerfilComponent implements OnInit {
     private readonly perfilService: PerfilService,
     private readonly location: Location,
     private readonly auth: AuthService,
-    private readonly toast: ToastrService
+    private readonly toast: ToastrService,
+    public dialog: MatDialog
   ) {
     this.form = this.fb.group({
       documento: ['', Validators.required],
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      celular: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      celular: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
       testigo: [false],
       casaApoyo: [false],
       transporte: [false],
@@ -50,11 +53,16 @@ export class MiPerfilComponent implements OnInit {
     (async () => {
       try {
         this.user = await this.perfilService.getMiPerfil(this.auth.uidUser());
-        console.log(this.user);
-        this.form.patchValue(this.user);
-        this.accion = this.user ? 'Editar' : 'Crear';
-        this.form.get('email')?.disable();
-        this.emailEnabled = false;
+        console.log('usuario de back', this.user);
+        if (this.user) {
+          this.actualizarForm(this.user);
+          this.form.get('email')?.disable();
+          this.accion = 'Editar';
+        } else {
+          this.form.get('email')?.enable();
+          this.accion = 'Crear';
+          this.form.get('email')?.setValue(this.auth.getEmail());
+        }
         this.enableSkeleton = false;
       } catch (error) {
         console.error(error);
@@ -63,30 +71,47 @@ export class MiPerfilComponent implements OnInit {
     })();
   }
 
-  submit() {
-
-  }
-
-  crear() {
-
-  }
-
-  editar () {
-
+  actualizarForm(user: PerfilModel) {
+    this.form.patchValue({
+      documento: user.documento,
+      nombres: user.nombres,
+      apellidos: user.apellidos,
+      email: user.email,
+      celular: user.celular,
+      testigo: user.postulado?.testigo || false,
+      casaApoyo: user.postulado?.casaApoyo || false,
+      transporte: user.postulado?.transporte || false,
+    });
   }
 
   back() {
     this.location.back();
   }
 
-  async onSubmit(data: any) {
+  async onSubmit() {
+      this.form.get('email')?.enable();
+      const user: PerfilModel = {
+        documento: this.form.value.documento,
+        nombres: this.form.value.nombres,
+        apellidos: this.form.value.apellidos,
+        celular: this.form.value.celular,
+        email: this.form.value.email,
+        rol: this.usuario.rol || null,
+        postulado: {
+          casaApoyo: this.form.value.casaApoyo,
+          transporte: this.form.value.transporte,
+          testigo: this.form.value.testigo,
+        },
+      }
+    console.log(user);
+
     this.loading = true;
     if (this.accion == 'Editar') {
-      await this.updateUser(data);
+      await this.updateUser(user);
       return;
     }
     try {
-      await this.perfilService.crearPerfilConUId(data, this.auth.uidUser());
+      await this.perfilService.crearPerfilConUId(user, this.auth.uidUser());
       this.toast.success('Perfil de la app creado ');
       this.location.back();
     } catch (error) {
@@ -102,9 +127,20 @@ export class MiPerfilComponent implements OnInit {
       await this.perfilService.updatePerfil(this.auth.uidUser(), data);
       this.toast.success('Usuario actualizado');
       this.location.back();
-    } catch {
+    } catch (error) {
+      console.error(error);
       this.toast.error('Error al actualizar el usuario. Intente nuevamente.');
       this.loading = false;
     }
+  }
+
+  openDialogNotificaciones(title: string, message: string, buttonText: string) {
+    this.dialog.open(DialogNotificationComponent, {
+      data: {
+        title: 'Uusari',
+        message: 'Aquí puedes gestionar tus preferencias de notificaciones. Próximamente podrás activar o desactivar las notificaciones push desde esta sección.',
+        buttonText: 'one',
+      },
+    });
   }
 }
