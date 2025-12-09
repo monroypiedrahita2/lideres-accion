@@ -14,6 +14,20 @@
       <span class="font-primary">{{ iglesiaData.nombre! }}</span>
     </div>
   </div>
+
+
+
+}
+
+@if (!skeleton) {
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+    <mtt-card-info title="Mi datos" icon="account_circle" textInfo="Actualiza y edita el tu perfil" [routerLink]="'../mi-perfil'"></mtt-card-info>
+    <mtt-card-info *ngIf="usuario.rol === 'Pastor' || usuario.rol === 'Super Usuario'" title="Estadisticas" icon="data_usage" textInfo="Estisticas por iglesia" [routerLink]="'../estadisticas'"></mtt-card-info>
+    <mtt-card-info *ngIf="usuario.rol === 'Super Usuario'" title="DashBoard" icon="developer_board" textInfo="Estisticas generales" [routerLink]="'../dashboards'"></mtt-card-info>
+    <mtt-card-info title="Apoyo vehicular" icon="directions_car" textInfo="Adminitrar datos de apoyo vehicular" (click)="opcionesVehiculo()" (keydown)="opcionesVehiculo()"></mtt-card-info>
+    <mtt-card-info title="Casas de apoyo" icon="my_location" textInfo="Puntos centrales de apoyo" (click)="opcionesVehiculo()" (keydown)="opcionesVehiculo()"></mtt-card-info>
+</div>
+
 }
 
 
@@ -30,9 +44,4 @@
 }
 
 
-<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-  <mtt-card-info *ngIf="usuario.rol === 'Pastor' || usuario.rol === 'Super Usuario'" title="Estadisticas" icon="data_usage" textInfo="Estisticas por iglesia" [routerLink]="'../estadisticas'"></mtt-card-info>
-  <mtt-card-info *ngIf="usuario.rol === 'Super Usuario'" title="DashBoard" icon="developer_board" textInfo="Estisticas generales" [routerLink]="'../dashboards'"></mtt-card-info>
-  <mtt-card-info title="Apoyo vehicular" icon="directions_car" textInfo="Adminitrar datos de apoyo vehicular" (click)="opcionesVehiculo()" (keydown)="opcionesVehiculo()"></mtt-card-info>
-  <mtt-card-info title="Puntos M" icon="my_location" textInfo="Puntos centrales de apoyo" (click)="opcionesVehiculo()" (keydown)="opcionesVehiculo()"></mtt-card-info>
-</div>
+

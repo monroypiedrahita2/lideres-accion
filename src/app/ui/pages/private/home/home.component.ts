@@ -1,4 +1,3 @@
-import { ReferidoService } from './../../../shared/services/referido/referido.service';
 import { IglesiaService } from './../../../shared/services/iglesia/iglesia.service';
 import { IglesiaModel } from './../../../../models/iglesia/iglesia.model';
 import { Component, OnInit } from '@angular/core';
@@ -14,7 +13,6 @@ import { SkeletonComponent } from '../../../shared/components/organism/skeleton/
 import { LogoComponent } from '../../../shared/components/atoms/logo/logo.component';
 import { MatIconModule } from '@angular/material/icon';
 import { CardInfoComponent } from '../../../shared/components/modules/card-info/card-info.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogOpcionesVehicularComponent } from '../../../shared/dialogs/dialog-opciones-vehicular/dialog-opciones-vehicular.component';
 
