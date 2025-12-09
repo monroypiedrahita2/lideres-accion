@@ -34,6 +34,6 @@
 
     <div class="flex justify-center mt-9 gap-4">
       <mg-button text="Regresar" [type]="'reset'" (onClick)="back()"></mg-button>
-      <mg-button text="Crear" type="submit" [loading]="loading" [disabled]="form.invalid" (onClick)="onSubmit()"></mg-button>
+      <mg-button [text]="accion" type="submit" [loading]="loading" [disabled]="form.invalid" (onClick)="onSubmit()"></mg-button>
     </div>
   </div>

@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CardInfoComponent } from '../../../shared/components/modules/card-info/card-info.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogOpcionesVehicularComponent } from '../../../shared/dialogs/dialog-opciones-vehicular/dialog-opciones-vehicular.component';
+import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +28,6 @@ import { DialogOpcionesVehicularComponent } from '../../../shared/dialogs/dialog
     MatIconModule,
     CardInfoComponent,
     MatDialogModule,
-    DialogOpcionesVehicularComponent
   ],
   templateUrl: './home.component.html',
 })
@@ -85,7 +85,16 @@ export class HomeComponent implements OnInit {
       this.skeleton = false;
     } catch (error) {
       console.error(error);
+      this.skeleton = false;
+      this.openDialogNotification()
     }
+  }
+
+  openDialogNotification() {
+    this.dialog.open(DialogNotificationComponent, {
+      data: {title: 'Bienvenido', message: 'Lo primero que debes de hacer es ingresar a MIS DATOS y actualizar tus datos.', bottons: 'one', type:'info'},
+      width: '300px',
+    });
   }
 
   closeInfoPerfil() {

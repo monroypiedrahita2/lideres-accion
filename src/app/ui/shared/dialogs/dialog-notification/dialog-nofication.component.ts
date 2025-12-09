@@ -7,12 +7,12 @@ import {
   MAT_DIALOG_DATA,
   MatDialogRef,
   MatDialogContent,
-  MatDialogActions,
   MatDialogClose,
 } from '@angular/material/dialog';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ButtonComponent } from '../../components/atoms/button/button.component';
 import { CommonModule } from '@angular/common';
+import { DialogNotificationModel } from '../../../../models/base/dialog-notification.model';
 
 @Component({
   selector: 'app-dialog-opciones-vehicular',
@@ -24,7 +24,6 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     MatButtonModule,
     MatDialogContent,
-    MatDialogActions,
     MatDialogClose,
     ButtonComponent,
 ],
@@ -40,7 +39,7 @@ export class DialogNotificationComponent {
 
     constructor(
     public dialogRef: MatDialogRef<DialogNotificationComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: DialogNotificationModel,
     private readonly router: Router
 
   ) {}
