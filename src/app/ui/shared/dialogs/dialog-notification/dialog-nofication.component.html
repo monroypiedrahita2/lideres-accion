@@ -1,11 +1,11 @@
 <div class="flex flex-col items-center justify-center pt-8 px-6">
-    <div [ngClass]="bgIconClass" class="rounded-full p-5 mb-4 flex items-center justify-center animate-bounce-slow">
+    <div [ngClass]="bgIconClass" class="rounded-full p-5 mb-4 flex items-center justify-center">
         <mat-icon [ngClass]="colorClass" class="!w-12 !h-12 !text-[48px] flex items-center justify-center">{{icon}}</mat-icon>
     </div>
     <span [ngClass]="colorClass" class="font-primary font-bold text-center text-2xl uppercase tracking-wide">{{data.title}}</span>
 </div>
 <mat-dialog-content>
-  <p class="text-center font-primary">{{data.message}}</p>
+  <p class="text-center font-primary text-gray-600 text-lg leading-relaxed mt-2">{{data.message}}</p>
 </mat-dialog-content>
 <div class="w-full flex gap-4 p-4">
   <mg-button [mat-dialog-close]="false" size="big" type="reset" text="Cerrar" class="w-full"></mg-button>
