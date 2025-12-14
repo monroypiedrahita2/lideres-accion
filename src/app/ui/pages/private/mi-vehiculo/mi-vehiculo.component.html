@@ -1,93 +1,97 @@
 <mg-sub-title title="Mi vehiculo"></mg-sub-title>
 
-<form [formGroup]="form" class="w-full">
-  <div class="w-full flex justify-center items-center">
-    <span class="font-primary font-semibold text-center text-lg bg-yellow-500 border-2 rounded-lg px-1 mb-1 border-black">{{ (form.get('placaLetras')?.value || '').toUpperCase() }} - {{ form.get('placaNumeros')?.value }}</span>
-  </div>
+<mg-skeleton [enableSkeleton]="skeleton" [num]="5"></mg-skeleton>
 
-  <mg-input-text
-    class="w-full"
-    type="text"
-    formControlName="placaLetras"
-    id="placaLetras"
-    label="Letras de la placa"
-    [textError]="form.get('placaLetras')?.hasError('pattern') ? 'Solo puedes digitar letras (A-Z), máximo 3' : form.get('placaLetras')?.hasError('maxlength') ? 'Máximo 3 letras' : ''"
-  ></mg-input-text>
+@if (!skeleton) {
+  <form [formGroup]="form" class="w-full">
+    <div class="w-full flex justify-center items-center">
+      <span class="font-primary font-semibold text-center text-lg bg-yellow-500 border-2 rounded-lg px-1 mb-1 border-black">{{ (form.get('placaLetras')?.value || '').toUpperCase() }} - {{ form.get('placaNumeros')?.value }}</span>
+    </div>
 
-  <mg-input-text
-    class="w-full"
-    type="text"
-    formControlName="placaNumeros"
-    id="placaNumeros"
-    label="Números de la placa"
-    [textError]="form.get('placaNumeros')?.hasError('pattern') ? 'Solo puedes digitar números' : form.get('placaNumeros')?.hasError('maxlength') ? 'Máximo 3 números' : ''"
-  ></mg-input-text>
+    <mg-input-text
+      class="w-full"
+      type="text"
+      formControlName="placaLetras"
+      id="placaLetras"
+      label="Letras de la placa"
+      [textError]="form.get('placaLetras')?.hasError('pattern') ? 'Solo puedes digitar letras (A-Z), máximo 3' : form.get('placaLetras')?.hasError('maxlength') ? 'Máximo 3 letras' : ''"
+    ></mg-input-text>
 
-    <mg-input-select
-    formControlName="tipoVehiculo"
-    [label]="'Tipo de vehículo'"
-    id="tipoVehiculo"
-    [items]="tipoVehiculos"
-  ></mg-input-select>
+    <mg-input-text
+      class="w-full"
+      type="text"
+      formControlName="placaNumeros"
+      id="placaNumeros"
+      label="Números de la placa"
+      [textError]="form.get('placaNumeros')?.hasError('pattern') ? 'Solo puedes digitar números' : form.get('placaNumeros')?.hasError('maxlength') ? 'Máximo 3 números' : ''"
+    ></mg-input-text>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-    <mg-input-select
-      formControlName="marca"
-      id="marca"
-      [label]="'Marca'"
-      [items]="marcas"
+      <mg-input-select
+      formControlName="tipoVehiculo"
+      [label]="'Tipo de vehículo'"
+      id="tipoVehiculo"
+      [items]="tipoVehiculos"
     ></mg-input-select>
 
-    <mg-input-select
-      formControlName="modelo"
-      id="modelo"
-      [label]="'Modelo (Año)'"
-      [items]="modelos"
-    ></mg-input-select>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+      <mg-input-select
+        formControlName="marca"
+        id="marca"
+        [label]="'Marca'"
+        [items]="marcas"
+      ></mg-input-select>
 
-    <mg-input-text
-      class="w-full"
-      type="text"
-      formControlName="nombreModelo"
-      id="nombreModelo"
-      label="Nombre del modelo"
-    ></mg-input-text>
+      <mg-input-select
+        formControlName="modelo"
+        id="modelo"
+        [label]="'Modelo (Año)'"
+        [items]="modelos"
+      ></mg-input-select>
 
-    <mg-input-select
-      formControlName="color"
-      id="color"
-      [label]="'Color'"
-      [items]="colores"
-    ></mg-input-select>
+      <mg-input-text
+        class="w-full"
+        type="text"
+        formControlName="nombreModelo"
+        id="nombreModelo"
+        label="Nombre del modelo"
+      ></mg-input-text>
 
-    <mg-input-text
-      class="w-full"
-      type="text"
-      formControlName="nombres"
-      id="nombres"
-      label="Nombres del conductor"
-    ></mg-input-text>
-    <mg-input-text
-      class="w-full"
-      type="text"
-      formControlName="apellidos"
-      id="apellidos"
-      label="Apellidos del conductor"
-    ></mg-input-text>
-    <mg-input-text
-      class="w-full"
-      type="text"
-      formControlName="celular"
-      id="celular"
-      label="Celular del conductor"
-      [textError]="form.get('celular')?.hasError('pattern') ? 'Solo puedes digitar números' : ''"
-    ></mg-input-text>
+      <mg-input-select
+        formControlName="color"
+        id="color"
+        [label]="'Color'"
+        [items]="colores"
+      ></mg-input-select>
 
-  </div>
+      <mg-input-text
+        class="w-full"
+        type="text"
+        formControlName="nombres"
+        id="nombres"
+        label="Nombres del conductor"
+      ></mg-input-text>
+      <mg-input-text
+        class="w-full"
+        type="text"
+        formControlName="apellidos"
+        id="apellidos"
+        label="Apellidos del conductor"
+      ></mg-input-text>
+      <mg-input-text
+        class="w-full"
+        type="text"
+        formControlName="celular"
+        id="celular"
+        label="Celular del conductor"
+        [textError]="form.get('celular')?.hasError('pattern') ? 'Solo puedes digitar números' : ''"
+      ></mg-input-text>
 
-  <div class="flex gap-3 justify-center mt-6">
-      <mg-button  size="small" text="Cancelar" type="reset" (onClick)="back()"></mg-button>
-      <mg-button  [disabled]="form.invalid" size="small" text="Guardar" type="submit" [loading]="loading" (onClick)="onSubmit()"></mg-button>
-  </div>
+    </div>
 
-</form>
+    <div class="flex gap-3 justify-center mt-6">
+        <mg-button  size="small" text="Cancelar" type="reset" (onClick)="back()"></mg-button>
+        <mg-button  [disabled]="form.invalid" size="small" text="Guardar" type="submit" [loading]="loading" (onClick)="onSubmit()"></mg-button>
+    </div>
+
+  </form>
+}

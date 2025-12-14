@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, getDoc, query, where } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, getDoc, query, updateDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
 import { environment } from '../../../../../enviroments';
@@ -30,6 +30,12 @@ export class VehiculoService {
     return response;
   }
 
+  getVehiculoByConductor(value: string) {
+    const q = query(collection(this.firestore, this._collection), where('conductorId', '==', value));
+    const response = collectionData(q, { idField: 'id' }) as Observable<VehiculoModel[]>;
+    return response;
+  }
+
   getMyVehiculo(id: string): Promise<any> {
     const docRef = doc(this.firestore, this._collection, id);
     return getDoc(docRef).then((docSnap) => {
@@ -40,6 +46,13 @@ export class VehiculoService {
       }
     });
   }
+
+
+
+    updateVehiculo(id: string, newData: VehiculoModel) {
+      const document = doc(this.firestore, this._collection, id);
+      return updateDoc(document, { ...newData });
+    }
 
 }
 
