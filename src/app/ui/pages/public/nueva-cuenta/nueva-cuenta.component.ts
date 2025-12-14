@@ -75,12 +75,16 @@ export class NuevaCuentaComponent {
   }
 
   openNotification() {
-    this.dialog.open(DialogNotificationComponent, {
+    const dialogRef = this.dialog.open(DialogNotificationComponent, {
       data: {
         title: 'Cuenta creada exitosamente',
         message: 'Por favor, inicie sesión con su nuevo usuario.',
         bottons: 'Aceptar'
       }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.location.back();
     });
   }
 
