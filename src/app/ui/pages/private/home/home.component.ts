@@ -92,7 +92,7 @@ export class HomeComponent implements OnInit {
 
   openDialogNotification() {
     this.dialog.open(DialogNotificationComponent, {
-      data: {title: 'Bienvenido', message: 'Lo primero que debes de hacer es ingresar a MIS DATOS y actualizar tus datos.', bottons: 'one', type:'info'},
+      data: {title: 'Bienvenido', message: 'Debes acceder a MIS DATOS y registrar tu información.', bottons: 'one', type:'info'},
       width: '300px',
     });
   }

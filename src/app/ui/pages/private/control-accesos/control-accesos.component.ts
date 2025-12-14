@@ -18,6 +18,7 @@ import { RolesModel } from '../../../../models/roles/roles.model';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { MatIconModule } from '@angular/material/icon';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
+import { PersonCardComponent } from '../../../shared/components/modules/person-card/person-card.component';
 
 @Component({
   selector: 'app-control-accesos',
@@ -28,9 +29,9 @@ import { InputTextComponent } from '../../../shared/components/atoms/input-text/
     InputTextComponent,
     TitleComponent,
     ReactiveFormsModule,
-    CommonModule,
     ButtonComponent,
-    MatIconModule
+    MatIconModule,
+    PersonCardComponent
   ],
   templateUrl: './control-accesos.component.html',
 })
@@ -114,6 +115,7 @@ export class ControlAccesosComponent implements OnInit {
     this.perfilService.getPerfilesByIglesia(this.iglesia).subscribe({
       next: (response: PerfilModel[]) => {
         this.usuarios = response;
+        console.log(this.usuarios);
         this.usersSelectOptions = response.map((item: any) => {
           return { label: item.nombres + ' ' + item.apellidos, value: item.id };
         });

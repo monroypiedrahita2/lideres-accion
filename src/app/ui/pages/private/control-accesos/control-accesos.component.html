@@ -38,56 +38,13 @@
   </div>
 </form>
 
-<div class="relative overflow-x-auto mt-10">
-  <div>
-    <table
-      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-    >
-      <thead
-        class="text-sm text-white uppercase bg-primary dark:bg-primary dark:text-gray-400 font-primary"
-      >
-        <tr>
-          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
-            Nombres
-          </th>
-          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
-            email
-          </th>
-          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
-            Rol
-          </th>
-          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
-            Acciones
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let user of usuarios"
-          class="bg-white border-b dark:bg-base dark:border-gray-700 border-gray-200 hover:bg-gray-300"
-        >
-          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-            {{ user.nombres + " " + user.apellidos }}
-          </td>
-          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-            {{ user.email }}
-          </td>
-          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-            {{ user.rol }}
-          </td>
-          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-            <div class="flex justify-center gap-4">
-              <span
-                *ngIf="user.rol != 'Sin rol asignado'"
-                class="material-icons text-primary hover:cursor-pointer"
-                (click)="deleteRol(user.id!)"
-                (keydown)="deleteRol(user.id!)"
-                >delete</span
-              >
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<div class="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  <lida-person-card
+    *ngFor="let user of usuarios"
+    [person]="user"
+    [showDeleteAction]="user.rol !== 'Sin rol asignado'"
+    (deleteClicked)="deleteRol(user.id!)"
+  ></lida-person-card>
 </div>
+
+

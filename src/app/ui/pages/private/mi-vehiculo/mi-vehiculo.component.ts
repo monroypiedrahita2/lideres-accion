@@ -14,19 +14,21 @@ import { COLORES_VEHICULOS, MARCAS_VEHICULOS, TIPOS_VEHICULOS } from '../../../s
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
+import { PerfilModel } from '../../../../models/perfil/perfil.model';
 
 @Component({
   selector: 'app-mi-vehiculo',
   standalone: true,
   imports: [SubTitleComponent, InputTextComponent, InputSelectComponent, FormsModule, ReactiveFormsModule, ButtonComponent, SkeletonComponent],
   templateUrl: './mi-vehiculo.component.html',
-  styleUrls: ['./mi-vehiculo.component.scss']
 })
 export class MiVehiculoComponent implements OnInit {
   form!: FormGroup;
   loading: boolean = false;
   tipoVehiculos: SelectOptionsModel[] = TIPOS_VEHICULOS
   vehiculoId: string = '';
+  usuario: PerfilModel = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario') || '') : {} as PerfilModel;
+
 
   skeleton: boolean = true;
 
@@ -51,7 +53,7 @@ export class MiVehiculoComponent implements OnInit {
       color: ['', Validators.required],
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
-      celular: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      celular: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10), Validators.maxLength(10)]],
     });
   }
 
@@ -60,6 +62,7 @@ export class MiVehiculoComponent implements OnInit {
       if (vehiculos.length === 0) {
         this.accion = 'Crear';
         this.skeleton = false;
+        this.patchUsuarioForm();
         return;
       }
 
@@ -83,6 +86,14 @@ export class MiVehiculoComponent implements OnInit {
         this.skeleton = false;
     });
 
+  }
+
+  patchUsuarioForm(): void {
+    this.form.patchValue({
+      nombres: this.usuario.nombres,
+      apellidos: this.usuario.apellidos,
+      celular: this.usuario.celular,
+    });
   }
 
   onSubmit(): void {

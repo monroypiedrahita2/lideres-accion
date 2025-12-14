@@ -14,7 +14,7 @@
       formControlName="placaLetras"
       id="placaLetras"
       label="Letras de la placa"
-      [textError]="form.get('placaLetras')?.hasError('pattern') ? 'Solo puedes digitar letras (A-Z), máximo 3' : form.get('placaLetras')?.hasError('maxlength') ? 'Máximo 3 letras' : ''"
+      [textError]="form.get('placaLetras')?.hasError('pattern') ? 'Solo puedes digitar letras mayúsculas (A-Z), máximo 3' : form.get('placaLetras')?.hasError('maxlength') ? 'Máximo 3 letras' : ''"
     ></mg-input-text>
 
     <mg-input-text
@@ -54,6 +54,7 @@
         formControlName="nombreModelo"
         id="nombreModelo"
         label="Nombre del modelo"
+        placeholder="March, Prado, Rio, Boxer, etc"
       ></mg-input-text>
 
       <mg-input-select
@@ -83,7 +84,7 @@
         formControlName="celular"
         id="celular"
         label="Celular del conductor"
-        [textError]="form.get('celular')?.hasError('pattern') ? 'Solo puedes digitar números' : ''"
+        [textError]="form.get('celular')?.hasError('pattern') ? 'Solo puedes digitar números' : form.get('celular')?.hasError('minlength') ? 'Mínimo 10 números' : form.get('celular')?.hasError('maxlength') ? 'Máximo 10 números' : form.get('celular')?.hasError('required') ? 'Este campo es obligatorio' : ''"
       ></mg-input-text>
 
     </div>

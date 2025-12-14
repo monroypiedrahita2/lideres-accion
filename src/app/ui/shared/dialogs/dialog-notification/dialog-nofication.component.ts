@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 import {
   MAT_DIALOG_DATA,
   MatDialogRef,
@@ -26,6 +27,7 @@ import { DialogNotificationModel } from '../../../../models/base/dialog-notifica
     MatDialogContent,
     MatDialogClose,
     ButtonComponent,
+    MatIconModule
 ],
   templateUrl: './dialog-nofication.component.html',
   styleUrls: ['./dialog-nofication.component.scss']
@@ -52,6 +54,51 @@ export class DialogNotificationComponent {
 
   confirm(): void {
     this.dialogRef.close(true);
+  }
+
+  get icon(): string {
+    switch (this.data.type) {
+      case 'success':
+        return 'check_circle';
+      case 'error':
+        return 'error';
+      case 'warning':
+        return 'warning';
+      case 'info':
+        return 'info';
+      default:
+        return 'info';
+    }
+  }
+
+  get colorClass(): string {
+    switch (this.data.type) {
+      case 'success':
+        return 'text-green-500';
+      case 'error':
+        return 'text-red-500';
+      case 'warning':
+        return 'text-orange-500';
+      case 'info':
+        return 'text-blue-500';
+      default:
+        return 'text-primary';
+    }
+  }
+
+  get bgIconClass(): string {
+    switch (this.data.type) {
+      case 'success':
+        return 'bg-green-100';
+      case 'error':
+        return 'bg-red-100';
+      case 'warning':
+        return 'bg-orange-100';
+      case 'info':
+        return 'bg-blue-100';
+      default:
+        return 'bg-gray-100';
+    }
   }
 
 

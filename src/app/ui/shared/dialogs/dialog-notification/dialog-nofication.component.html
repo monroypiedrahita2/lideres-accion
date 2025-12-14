@@ -1,4 +1,9 @@
-<span class="mt-4 font-primary font-bold text-center text-[24px] ">{{data.title.toUpperCase()}}</span>
+<div class="flex flex-col items-center justify-center pt-8 px-6">
+    <div [ngClass]="bgIconClass" class="rounded-full p-5 mb-4 flex items-center justify-center animate-bounce-slow">
+        <mat-icon [ngClass]="colorClass" class="!w-12 !h-12 !text-[48px] flex items-center justify-center">{{icon}}</mat-icon>
+    </div>
+    <span [ngClass]="colorClass" class="font-primary font-bold text-center text-2xl uppercase tracking-wide">{{data.title}}</span>
+</div>
 <mat-dialog-content>
   <p class="text-center font-primary">{{data.message}}</p>
 </mat-dialog-content>
