@@ -1,8 +1,32 @@
 <div class="flex flex-col items-center justify-center pt-8 px-6">
-    <div [ngClass]="bgIconClass" class="rounded-full p-5 mb-4 flex items-center justify-center">
-        <mat-icon [ngClass]="colorClass" class="!w-12 !h-12 !text-[48px] flex items-center justify-center">{{icon}}</mat-icon>
-    </div>
-    <span [ngClass]="colorClass" class="font-primary font-bold text-center text-2xl uppercase tracking-wide">{{data.title}}</span>
+    <ng-container [ngSwitch]="data.type">
+        <!-- Success -->
+        <div *ngSwitchCase="'success'" class="bg-green-100 rounded-full p-5 mb-4 flex items-center justify-center">
+            <mat-icon class="text-green-600 !w-12 !h-12 !text-[48px] flex items-center justify-center">check_circle</mat-icon>
+        </div>
+        
+        <!-- Error -->
+        <div *ngSwitchCase="'error'" class="bg-red-100 rounded-full p-5 mb-4 flex items-center justify-center">
+             <mat-icon class="text-red-600 !w-12 !h-12 !text-[48px] flex items-center justify-center">error</mat-icon>
+        </div>
+
+        <!-- Warning -->
+        <div *ngSwitchCase="'warning'" class="bg-amber-100 rounded-full p-5 mb-4 flex items-center justify-center">
+            <mat-icon class="text-amber-600 !w-12 !h-12 !text-[48px] flex items-center justify-center">warning</mat-icon>
+        </div>
+
+        <!-- Info & Default -->
+        <div *ngSwitchDefault class="bg-blue-100 rounded-full p-5 mb-4 flex items-center justify-center">
+             <mat-icon class="text-blue-600 !w-12 !h-12 !text-[48px] flex items-center justify-center">info</mat-icon>
+        </div>
+    </ng-container>
+
+    <ng-container [ngSwitch]="data.type">
+        <span *ngSwitchCase="'success'" class="text-green-600 font-bold text-center text-2xl uppercase tracking-wide">{{data.title}}</span>
+        <span *ngSwitchCase="'error'" class="text-red-600 font-bold text-center text-2xl uppercase tracking-wide">{{data.title}}</span>
+        <span *ngSwitchCase="'warning'" class="text-amber-600 font-bold text-center text-2xl uppercase tracking-wide">{{data.title}}</span>
+        <span *ngSwitchDefault class="text-blue-600 font-bold text-center text-2xl uppercase tracking-wide">{{data.title}}</span>
+    </ng-container>
 </div>
 <mat-dialog-content>
   <p class="text-center font-primary text-gray-600 text-lg leading-relaxed mt-2">{{data.message}}</p>

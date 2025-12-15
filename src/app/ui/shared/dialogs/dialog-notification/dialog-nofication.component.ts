@@ -56,50 +56,7 @@ export class DialogNotificationComponent {
     this.dialogRef.close(true);
   }
 
-  get icon(): string {
-    switch (this.data.type) {
-      case 'success':
-        return 'check_circle';
-      case 'error':
-        return 'error';
-      case 'warning':
-        return 'warning';
-      case 'info':
-        return 'info';
-      default:
-        return 'info';
-    }
-  }
-
-  get colorClass(): string {
-    switch (this.data.type) {
-      case 'success':
-        return 'text-green-500';
-      case 'error':
-        return 'text-red-500';
-      case 'warning':
-        return 'text-amber-500';
-      case 'info':
-        return 'text-blue-500';
-      default:
-        return 'text-primary';
-    }
-  }
-
-  get bgIconClass(): string {
-    switch (this.data.type) {
-      case 'success':
-        return 'bg-green-100';
-      case 'error':
-        return 'bg-red-100';
-      case 'warning':
-        return 'bg-amber-100';
-      case 'info':
-        return 'bg-blue-100';
-      default:
-        return 'bg-gray-100';
-    }
-  }
+  // Getters removed in favor of template logic
 
 
 
