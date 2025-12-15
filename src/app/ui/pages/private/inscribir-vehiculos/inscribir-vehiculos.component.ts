@@ -71,7 +71,7 @@ export class InscribirVehiculosComponent {
           data: {
             title: 'Error',
             message: vehiculo.iglesiaId === this.usuario.iglesia ? 'El vehículo ya se encuentra asignado a tu iglesia.' : 'El vehículo ya se encuentra asignado a otra iglesia.',
-            type: 'info'
+            type: vehiculo.iglesiaId === this.usuario.iglesia ? 'warning' : 'error'
           }
         });
         return;
@@ -98,20 +98,19 @@ export class InscribirVehiculosComponent {
       });
   }
 
-  eliminar(vehiculo: VehiculoModel) {
+  desasignar(vehiculo: VehiculoModel) {
     const dialogRef = this.dialog.open(DialogNotificationComponent, {
       data: {
         title: 'Confirmación',
         message: `¿Estás seguro de desasignar el vehículo ${vehiculo.placa}?`,
         type: 'warning',
-        showCancel: true,
-        actionText: 'Eliminar'
+        bottons: 'two', 
+        actionText: 'Desasignar'
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-         // @ts-ignore
          this.vehiculoService.updateVehiculo(vehiculo.id!, { ...vehiculo, iglesiaId: null }).then(async () => {
             // Verification step
             try {
@@ -119,7 +118,7 @@ export class InscribirVehiculosComponent {
                if (!updatedVehiculo.iglesiaId) { // Check if it is null or undefined
                    this.dialog.open(DialogNotificationComponent, {
                        data: {
-                       title: 'Eliminado',
+                       title: 'Desasignado',
                        message: 'Vehículo desasignado correctamente.',
                        type: 'success'
                        }
