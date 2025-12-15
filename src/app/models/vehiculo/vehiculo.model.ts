@@ -10,4 +10,5 @@ export interface VehiculoModel {
   nombre: string;
   apellidos: string;
   celular: string;
+  iglesiaId?: string;
 }

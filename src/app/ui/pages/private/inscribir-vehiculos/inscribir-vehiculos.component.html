@@ -5,24 +5,26 @@
   </div>
 
   <!-- Search Section -->
-  <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex gap-4 items-center mb-8">
-    <div class="flex-1 relative">
-      <mat-icon class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">search</mat-icon>
-      <input 
+  <div class="flex gap-2 items-center justify-end">
+    <div class="flex-1">
+      <mg-input-text
         [formControl]="searchControl"
-        type="text" 
-        placeholder="Ingrese la placa del vehículo (Ej: ABC-123)" 
+        label="Ingrese la placa del vehículo"
+        placeholder="Ej: ABC-123"
+        [required]="true"
         (keydown.enter)="search()"
-        class="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-xl border-none focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none text-gray-700 placeholder:text-gray-400 font-medium uppercase"
-      >
+      ></mg-input-text>
     </div>
     <button 
+      mat-mini-fab 
+      color="primary"
       (click)="search()"
       [disabled]="loading || searchControl.invalid"
-      class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-lg shadow-primary/30 flex items-center gap-2 disabled:opacity-50 disabled:shadow-none h-[52px]"
+      class="shadow-lg shadow-primary/30 mb-[22px]"
+      aria-label="Buscar"
     >
-      <span *ngIf="!loading">Buscar</span>
-      <span *ngIf="loading" class="animate-spin material-icons text-xl">sync</span>
+      <mat-icon *ngIf="!loading">search</mat-icon>
+      <mat-icon *ngIf="loading" class="animate-spin">sync</mat-icon>
     </button>
   </div>
 

@@ -25,7 +25,7 @@ export class VehiculoService {
   }
 
   getVehiculoByPlaca(value: string) {
-    const q = query(collection(this.firestore, this._collection), where('data.placa', '==', value));
+    const q = query(collection(this.firestore, this._collection), where('placa', '==', value));
     const response = collectionData(q, { idField: 'id' }) as Observable<BaseModel<VehiculoModel>[]>;
     return response;
   }

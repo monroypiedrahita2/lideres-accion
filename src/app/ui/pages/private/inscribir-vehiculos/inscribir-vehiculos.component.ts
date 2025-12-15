@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
 import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
+import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 
 @Component({
   selector: 'app-inscribir-vehiculos',
@@ -15,7 +16,8 @@ import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-noti
     CommonModule,
     ReactiveFormsModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    InputTextComponent
   ],
   templateUrl: './inscribir-vehiculos.component.html',
 })
@@ -35,7 +37,7 @@ export class InscribirVehiculosComponent {
     this.hasSearched = true;
     const placa = this.searchControl.value!;
 
-    this.vehiculoService.getVehiculoByPlaca(placa).subscribe({
+    this.vehiculoService.getVehiculoByPlaca(placa.toUpperCase()).subscribe({
       next: (data: any[]) => {
         // The service returns Observable<BaseModel<VehiculoModel>[]> based on previous reading
         this.vehiculos = data as unknown as VehiculoModel[];
