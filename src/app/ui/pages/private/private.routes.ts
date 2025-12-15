@@ -64,6 +64,10 @@ export const routes: Routes = [
         path: 'mi-perfil',
         loadComponent: () => import('./mi-perfil/mi-perfil.component').then(m => m.MiPerfilComponent),
       },
+      {
+        path: 'inscribir-vehiculos',
+        loadComponent: () => import('./inscribir-vehiculos/inscribir-vehiculos.component').then(m => m.InscribirVehiculosComponent),
+      },
     ]
   },
   {

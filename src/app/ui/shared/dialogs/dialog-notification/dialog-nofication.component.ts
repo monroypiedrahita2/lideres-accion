@@ -78,7 +78,7 @@ export class DialogNotificationComponent {
       case 'error':
         return 'text-red-500';
       case 'warning':
-        return 'text-orange-500';
+        return 'text-amber-500';
       case 'info':
         return 'text-blue-500';
       default:
@@ -93,7 +93,7 @@ export class DialogNotificationComponent {
       case 'error':
         return 'bg-red-100';
       case 'warning':
-        return 'bg-orange-100';
+        return 'bg-amber-100';
       case 'info':
         return 'bg-blue-100';
       default:

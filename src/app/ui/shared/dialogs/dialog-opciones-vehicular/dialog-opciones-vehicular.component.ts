@@ -13,6 +13,8 @@ import {
 } from '@angular/material/dialog';
 import { Router, RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../components/atoms/button/button.component';
+import { CommonModule } from '@angular/common';
+import { PerfilModel } from '../../../../models/perfil/perfil.model';
 
 @Component({
   selector: 'app-dialog-opciones-vehicular',
@@ -21,6 +23,7 @@ import { ButtonComponent } from '../../components/atoms/button/button.component'
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
+    CommonModule,
     MatButtonModule,
     MatDialogContent,
     MatDialogActions,
@@ -32,6 +35,7 @@ import { ButtonComponent } from '../../components/atoms/button/button.component'
   styleUrls: ['./dialog-opciones-vehicular.component.scss']
 })
 export class DialogOpcionesVehicularComponent {
+  usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
 
 
     constructor(
