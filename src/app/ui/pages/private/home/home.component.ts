@@ -10,12 +10,12 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
-import { LogoComponent } from '../../../shared/components/atoms/logo/logo.component';
 import { MatIconModule } from '@angular/material/icon';
 import { CardInfoComponent } from '../../../shared/components/modules/card-info/card-info.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogOpcionesVehicularComponent } from '../../../shared/dialogs/dialog-opciones-vehicular/dialog-opciones-vehicular.component';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
+import { DialogCasasApoyoComponent } from '../../../shared/dialogs/dialog-casas-apoyo/dialog-casas-apoyo.component';
 
 @Component({
   selector: 'app-home',
@@ -24,7 +24,6 @@ import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-noti
     RouterModule,
     CommonModule,
     SkeletonComponent,
-    LogoComponent,
     MatIconModule,
     CardInfoComponent,
     MatDialogModule,
@@ -105,6 +104,13 @@ export class HomeComponent implements OnInit {
   opcionesVehiculo() {
       this.dialog.open(DialogOpcionesVehicularComponent, {
       data: {name: 'mi-carro'},
+      width: '300px',
+    });
+  }
+
+  opcionesCasasApoyo() {
+    this.dialog.open(DialogCasasApoyoComponent, {
+      data: {name: 'mi-casa-apoyo'},
       width: '300px',
     });
   }
