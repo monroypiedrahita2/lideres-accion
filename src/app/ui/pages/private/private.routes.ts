@@ -76,6 +76,10 @@ export const routes: Routes = [
         path: 'mi-casa-de-apoyo',
         loadComponent: () => import('./mi-casa-de-apoyo/mi-casa-de-apoyo.component').then(m => m.MiCasaDeApoyoComponent),
       },
+      {
+        path: 'listar-casas-apoyo',
+        loadComponent: () => import('./listar-casas-apoyo/listar-casas-apoyo.component').then(m => m.ListarCasasApoyoComponent),
+      },
     ]
   },
   {
