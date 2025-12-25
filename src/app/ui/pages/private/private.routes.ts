@@ -49,8 +49,12 @@ export const routes: Routes = [
         loadComponent: () => import('./masivo-referidos/masivo-referidos.component').then(m => m.MasivoReferidosComponent),
       },
       {
-        path: 'testigos',
+        path: 'activar-testigo',
         loadComponent: () => import('./testigos/testigos.component').then(m => m.TestigosComponent),
+      },
+      {
+        path: 'listar-testigos',
+        loadComponent: () => import('./testigos/listar-testigos/listar-testigos.component').then(m => m.ListarTestigosComponent),
       },
       {
         path: 'estadisticas',
