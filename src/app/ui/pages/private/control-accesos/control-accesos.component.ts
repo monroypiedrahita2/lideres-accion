@@ -18,6 +18,8 @@ import { InputTextComponent } from '../../../shared/components/atoms/input-text/
 import { PersonCardComponent } from '../../../shared/components/modules/person-card/person-card.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogControlAccesosComponent } from './dialog-control-accesos/dialog-control-accesos.component';
+import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
+import { DialogNotificationModel } from '../../../../models/base/dialog-notification.model';
 
 @Component({
   selector: 'app-control-accesos',
@@ -134,15 +136,30 @@ export class ControlAccesosComponent implements OnInit {
     }
   }
 
-  async deleteRol(uid: string) {
-    // Confirmation could be added here
-    try {
-      await this.perfilService.updatePerfil(uid, { rol: '', iglesia: '' });
-      this.toast.success('Rol removido correctamente', 'Exito');
-      this.getPerfiles(); // Refresh list
-    } catch {
-      this.toast.error('Error al remover el rol', 'Error');
-    }
+  deleteRol(uid: string) {
+    const dialogRef = this.dialog.open(DialogNotificationComponent, {
+      minWidth: '350px',
+      maxWidth: '500px',
+      data: {
+        title: 'Eliminar Rol',
+        message:
+          '¿Estás seguro de que deseas eliminar el rol asignado a este usuario? Esta acción no se puede deshacer.',
+        type: 'warning',
+        bottons: 'two',
+      } as DialogNotificationModel,
+    });
+
+    dialogRef.afterClosed().subscribe(async (result: boolean) => {
+      if (result) {
+        try {
+          await this.perfilService.updatePerfil(uid, { rol: '', iglesia: '' });
+          this.toast.success('Rol removido correctamente', 'Exito');
+          this.getPerfiles();
+        } catch {
+          this.toast.error('Error al remover el rol', 'Error');
+        }
+      }
+    });
   }
 
   clear() {
