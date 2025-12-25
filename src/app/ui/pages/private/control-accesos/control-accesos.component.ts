@@ -9,29 +9,28 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { SelectOptionModel } from '../../../../models/base/select-options.model';
 import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { ToastrService } from 'ngx-toastr';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
-import { LIST_ROLES } from '../../../shared/const/Permisos/list-roles.const';
-import { RolesModel } from '../../../../models/roles/roles.model';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { MatIconModule } from '@angular/material/icon';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { PersonCardComponent } from '../../../shared/components/modules/person-card/person-card.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DialogControlAccesosComponent } from './dialog-control-accesos/dialog-control-accesos.component';
 
 @Component({
   selector: 'app-control-accesos',
   standalone: true,
   imports: [
     CommonModule,
-    InputSelectComponent,
     InputTextComponent,
     TitleComponent,
     ReactiveFormsModule,
     ButtonComponent,
     MatIconModule,
-    PersonCardComponent
+    PersonCardComponent,
+    MatDialogModule
   ],
   templateUrl: './control-accesos.component.html',
 })
@@ -39,53 +38,42 @@ export class ControlAccesosComponent implements OnInit {
   form!: FormGroup;
   usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
   iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
-  rolesSelectOptions: SelectOptionModel<string>[] = LIST_ROLES;
-  usersSelectOptions: SelectOptionModel<string>[] = [];
   usuarios: PerfilModel[] = [];
   loading: boolean = false;
-  rol: any = '';
   perfilSeleted: PerfilModel | undefined = undefined;
-  disabled: boolean = false;
-  permisos!: any;
-  desabledSwitchs = false;
-  roles: RolesModel[] = [];
 
   constructor(
-    private readonly location: Location,
     private readonly fb: FormBuilder,
     private readonly perfilService: PerfilService,
-    private readonly toast: ToastrService
+    private readonly toast: ToastrService,
+    private readonly dialog: MatDialog
   ) {
     this.form = this.fb.group({
       usuario: ['', [Validators.required]],
-      rol: ['', [Validators.required]],
     });
   }
 
   ngOnInit(): void {
     this.getPerfiles();
-    this.form.get('rol')?.disable();
   }
 
-    getPerfil() {
+  getPerfil() {
+    if (this.form.invalid) return;
+
+    this.loading = true;
     this.perfilService.getPerfilByDocumento(this.form.value.usuario).subscribe({
       next: (response: any) => {
-        console.log(response);
-
-        this.perfilSeleted = response[0];
-        this.form.get('rol')?.enable();
-        this.toast.info(`Perfil de ${this.perfilSeleted?.nombres} seleccionado`);
-        if (response.length > 1) {
-          this.toast.warning('El usuario tiene más de un perfil, debe eliminar uno de ellos');
-          setTimeout(() => {
-            this.toast.success('Correo seleccionado:  ' + this.perfilSeleted?.email);
-            this.toast.success('Eliminar el perfil:  ' + response[1]?.email);
-          }, 1500);
+        this.loading = false;
+        if (response && response.length > 0) {
+          this.perfilSeleted = response[0];
+          this.toast.info(`Perfil de ${this.perfilSeleted?.nombres} seleccionado`);
+        } else {
+          this.toast.error('El usuario no existe', 'Error');
         }
       },
       error: () => {
-        this.toast.error('El usuario no existe', 'Error');
-        this.form.get('rol')?.disable();
+        this.loading = false;
+        this.toast.error('Error buscar usuario', 'Error');
       },
     });
   }
@@ -98,15 +86,10 @@ export class ControlAccesosComponent implements OnInit {
     }
   }
 
-
-
   getAllPerfiles() {
     this.perfilService.getPerfiles().subscribe({
       next: (response: PerfilModel[]) => {
         this.usuarios = response;
-        this.usersSelectOptions = response.map((item: any) => {
-          return { label: item.nombres + ' ' + item.apellidos, value: item.id };
-        });
       },
     });
   }
@@ -115,23 +98,36 @@ export class ControlAccesosComponent implements OnInit {
     this.perfilService.getPerfilesByIglesia(this.iglesia).subscribe({
       next: (response: PerfilModel[]) => {
         this.usuarios = response;
-        console.log(this.usuarios);
-        this.usersSelectOptions = response.map((item: any) => {
-          return { label: item.nombres + ' ' + item.apellidos, value: item.id };
-        });
       },
     });
   }
 
-  async asignarRol() {
+  gestionarRol() {
+    if (!this.perfilSeleted) return;
+
+    const dialogRef = this.dialog.open(DialogControlAccesosComponent, {
+      width: 'auto',
+      data: this.perfilSeleted,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== undefined) {
+        this.asignarRol(result);
+      }
+    });
+  }
+
+  async asignarRol(rolName: string) {
     const rol = {
-      rol: this.form.value.rol,
+      rol: rolName,
       iglesia: this.iglesia,
     };
     try {
       const uidPerfil = this.perfilSeleted?.id;
-        await this.perfilService.updatePerfil(uidPerfil!, rol);
-      this.toast.success('Rol asignado correctamente', 'Éxito');
+      await this.perfilService.updatePerfil(uidPerfil!, rol);
+      this.toast.success('Rol actualizado correctamente', 'Exito');
+      this.getPerfiles(); // Refresh list
+      this.clear();
     } catch (error) {
       this.toast.error('Error al asignar el rol', 'Error');
       console.error(error);
@@ -139,19 +135,18 @@ export class ControlAccesosComponent implements OnInit {
   }
 
   async deleteRol(uid: string) {
+    // Confirmation could be added here
     try {
       await this.perfilService.updatePerfil(uid, { rol: '', iglesia: '' });
-      this.toast.success('Eliminado el rol correctamente', 'Éxito');
+      this.toast.success('Rol removido correctamente', 'Exito');
+      this.getPerfiles(); // Refresh list
     } catch {
-      this.toast.error('Error al asignar el rol', 'Error');
+      this.toast.error('Error al remover el rol', 'Error');
     }
   }
 
   clear() {
     this.form.reset();
-    this.usuario = undefined;
-    this.rol = undefined;
-    this.disabled = false;
     this.perfilSeleted = undefined;
   }
 }
