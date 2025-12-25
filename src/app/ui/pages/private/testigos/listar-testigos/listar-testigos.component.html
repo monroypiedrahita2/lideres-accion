@@ -14,7 +14,7 @@
     [textInfo2]="''"
     [textInfo3]="'Última actualización'"
     [textInfo4]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : referido.fechaCreacion.split('T')[0]"
-    [canDelete]="usuario.rol === 'Ninguno'"
+    [canDelete]="true"
     (eventDelete)="openModal({name: referido.data.nombres + ' ' + referido.data.apellidos, id: referido.id!})"
     [votacion]="referido.data.lugarVotacion && referido.data.mesaVotacion ? true : false"
   ></lida-person-info>
@@ -24,4 +24,5 @@
   [showModal]="showModal"
   [data]="dataModal"
   (eventConfirm)="quitarTestigo(referidoToDelete!)"
+  (eventBack)="showModal = false"
 ></lida-confirm-action>
