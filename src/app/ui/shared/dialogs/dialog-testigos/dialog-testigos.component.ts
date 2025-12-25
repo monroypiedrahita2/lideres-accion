@@ -30,18 +30,7 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
         ButtonComponent,
         RouterLink
     ],
-    template: `
-    <span class="mt-4 font-primary font-bold text-center text-[24px] ">Vincular Testigos</span>
-    <mat-dialog-content>
-      <p class="text-center font-primary">Seleccione la opcion que desea</p>
-    </mat-dialog-content>
-    <mat-dialog-actions class="w-full flex flex-col gap-4">
-      <mg-button mat-dialog-close  size="big" text="Activar testigo" class="w-full" icon="person_add" routerLink="/private/testigos"></mg-button>
-      <mg-button  mat-dialog-close  size="big" text="Listar testigos" class="w-full" icon="list" routerLink="/private/testigos"></mg-button>
-
-      <button mat-button (click)="onNoClick()">Cerrar</button>
-    </mat-dialog-actions>
-    `,
+    templateUrl: './dialog-testigos.component.html',
     styleUrls: ['./dialog-testigos.component.scss']
 })
 export class DialogTestigosComponent {
