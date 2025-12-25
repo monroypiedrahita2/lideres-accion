@@ -1,0 +1,46 @@
+
+<div class="form-container">
+  <mg-title title="Mi Casa de Apoyo"></mg-title>
+  
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+    
+    <mg-input-select 
+      label="Barrio" 
+      [items]="barrioOptions" 
+      formControlName="barrioId"
+      placeholder="Seleccione un barrio"
+      [required]="true">
+    </mg-input-select>
+
+    <mg-input-text 
+      label="Dirección" 
+      formControlName="direccion"
+      placeholder="Ej: Cra 45 # 23 - 10"
+      [required]="true">
+    </mg-input-text>
+
+    <mg-input-text 
+      label="Nombre del Habitante" 
+      formControlName="nombreHabitante"
+      placeholder="Nombre completo"
+      [required]="true">
+    </mg-input-text>
+
+    <mg-input-text 
+      label="Teléfono" 
+      formControlName="telefonoHabitante"
+      placeholder="Número de contacto"
+      type="number"
+      [required]="true">
+    </mg-input-text>
+
+    <div class="actions">
+        <mg-button 
+            text="Guardar" 
+            type="submit" 
+            [disabled]="form.invalid">
+        </mg-button>
+    </div>
+
+  </form>
+</div>

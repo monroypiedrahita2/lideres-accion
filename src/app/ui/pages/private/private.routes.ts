@@ -6,7 +6,7 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./private.component').then(m => m.PrivateComponent),
-     ...canActivate(() => redirectUnauthorizedTo(['./public/login'])),
+    ...canActivate(() => redirectUnauthorizedTo(['./public/login'])),
     children: [
       {
         path: 'home',
@@ -67,6 +67,10 @@ export const routes: Routes = [
       {
         path: 'inscribir-vehiculos',
         loadComponent: () => import('./inscribir-vehiculos/inscribir-vehiculos.component').then(m => m.InscribirVehiculosComponent),
+      },
+      {
+        path: 'mi-casa-de-apoyo',
+        loadComponent: () => import('./mi-casa-de-apoyo/mi-casa-de-apoyo.component').then(m => m.MiCasaDeApoyoComponent),
       },
     ]
   },

@@ -1,4 +1,4 @@
-export interface PerfilModel  {
+export interface PerfilModel {
   id?: string;
   documento: string;
   nombres: string;
@@ -8,7 +8,7 @@ export interface PerfilModel  {
   nameIglesia?: string;
   email: string;
   rol: string | null;
-  postulado: PostuladoModel;
+  postulado?: PostuladoModel;
 }
 
 export interface AsigmentRolePerfilModel {

@@ -16,6 +16,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogOpcionesVehicularComponent } from '../../../shared/dialogs/dialog-opciones-vehicular/dialog-opciones-vehicular.component';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { DialogCasasApoyoComponent } from '../../../shared/dialogs/dialog-casas-apoyo/dialog-casas-apoyo.component';
+import { DialogTestigosComponent } from '../../../shared/dialogs/dialog-testigos/dialog-testigos.component';
 
 @Component({
   selector: 'app-home',
@@ -48,7 +49,7 @@ export class HomeComponent implements OnInit {
     private readonly auth: AuthService,
     public dialog: MatDialog
 
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -91,7 +92,7 @@ export class HomeComponent implements OnInit {
 
   openDialogNotification() {
     this.dialog.open(DialogNotificationComponent, {
-      data: {title: 'Bienvenido', message: 'Debes acceder a MIS DATOS y registrar tu información.', bottons: 'one', type:'info'},
+      data: { title: 'Bienvenido', message: 'Debes acceder a MIS DATOS y registrar tu información.', bottons: 'one', type: 'info' },
       width: '300px',
     });
   }
@@ -102,15 +103,22 @@ export class HomeComponent implements OnInit {
 
 
   opcionesVehiculo() {
-      this.dialog.open(DialogOpcionesVehicularComponent, {
-      data: {name: 'mi-carro'},
+    this.dialog.open(DialogOpcionesVehicularComponent, {
+      data: { name: 'mi-carro' },
       width: '300px',
     });
   }
 
   opcionesCasasApoyo() {
     this.dialog.open(DialogCasasApoyoComponent, {
-      data: {name: 'mi-casa-apoyo'},
+      data: { name: 'mi-casa-apoyo' },
+      width: '300px',
+    });
+  }
+
+  opcionesTestigos() {
+    this.dialog.open(DialogTestigosComponent, {
+      data: { name: 'mi-testigos' },
       width: '300px',
     });
   }
