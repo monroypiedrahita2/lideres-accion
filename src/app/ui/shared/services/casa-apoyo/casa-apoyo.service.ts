@@ -9,7 +9,7 @@ import { environment } from '../../../../../enviroments';
     providedIn: 'root'
 })
 export class CasaApoyoService {
-    private _collection: string = 'casas-apoyo';
+    private _collection: string = environment.collections.casasApoyo;
 
     constructor(private readonly firestore: Firestore) { }
 

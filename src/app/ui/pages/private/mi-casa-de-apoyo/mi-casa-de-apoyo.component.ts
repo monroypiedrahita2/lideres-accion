@@ -50,7 +50,7 @@ export class MiCasaDeApoyoComponent implements OnInit {
         this.comunaService.getComunas().pipe(
             map((comunas: BaseModel<ComunaModel>[]) => {
                 return comunas.map(c => ({
-                    label: `${c.data.barrio} - ${c.data.municipio}`,
+                    label: `${c.data.barrio.split('-')[1]} - ${c.data.municipio.split('-')[1]}`,
                     value: c.id
                 } as SelectOption));
             })
