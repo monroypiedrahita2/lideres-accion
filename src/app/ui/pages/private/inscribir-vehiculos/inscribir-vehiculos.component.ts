@@ -8,6 +8,8 @@ import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.serv
 import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
+import { CardVehiculoComponent } from '../../../shared/components/cards/card-vehiculo/card-vehiculo.component';
+import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
 
 @Component({
   selector: 'app-inscribir-vehiculos',
@@ -17,7 +19,9 @@ import { InputTextComponent } from '../../../shared/components/atoms/input-text/
     ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
-    InputTextComponent
+    InputTextComponent,
+    CardVehiculoComponent,
+    TitleComponent
   ],
   templateUrl: './inscribir-vehiculos.component.html',
 })
@@ -55,47 +59,47 @@ export class InscribirVehiculosComponent {
 
 
   asignar(vehiculo: VehiculoModel) {
-      if (!this.usuario.iglesia) {
-        this.dialog.open(DialogNotificationComponent, {
-          data: {
-            title: 'Error',
-            message: 'No tienes una iglesia asignada para realizar esta acción.',
-            type: 'error'
-          }
-        });
-        return;
-      }
-
-      if (vehiculo.iglesiaId) {
-        this.dialog.open(DialogNotificationComponent, {
-          data: {
-            title: 'Error',
-            message: vehiculo.iglesiaId === this.usuario.iglesia ? 'El vehículo ya se encuentra asignado a tu iglesia.' : 'El vehículo ya se encuentra asignado a otra iglesia.',
-            type: vehiculo.iglesiaId === this.usuario.iglesia ? 'warning' : 'error'
-          }
-        });
-        return;
-      }
-
-      this.vehiculoService.updateVehiculo(vehiculo.id!, { ...vehiculo, iglesiaId: this.usuario.iglesia }).then(async () => {
-        this.dialog.open(DialogNotificationComponent, {
-          data: {
-            title: 'Éxito',
-            message: 'Vehículo asignado correctamente.',
-            type: 'success'
-          }
-        });
-        this.search(); // Refresh list
-      }).catch(err => {
-        console.error(err);
-        this.dialog.open(DialogNotificationComponent, {
-          data: {
-            title: 'Error',
-            message: 'Ocurrió un error al asignar el vehículo.',
-            type: 'error'
-          }
-        });
+    if (!this.usuario.iglesia) {
+      this.dialog.open(DialogNotificationComponent, {
+        data: {
+          title: 'Error',
+          message: 'No tienes una iglesia asignada para realizar esta acción.',
+          type: 'error'
+        }
       });
+      return;
+    }
+
+    if (vehiculo.iglesiaId) {
+      this.dialog.open(DialogNotificationComponent, {
+        data: {
+          title: 'Error',
+          message: vehiculo.iglesiaId === this.usuario.iglesia ? 'El vehículo ya se encuentra asignado a tu iglesia.' : 'El vehículo ya se encuentra asignado a otra iglesia.',
+          type: vehiculo.iglesiaId === this.usuario.iglesia ? 'warning' : 'error'
+        }
+      });
+      return;
+    }
+
+    this.vehiculoService.updateVehiculo(vehiculo.id!, { ...vehiculo, iglesiaId: this.usuario.iglesia }).then(async () => {
+      this.dialog.open(DialogNotificationComponent, {
+        data: {
+          title: 'Éxito',
+          message: 'Vehículo asignado correctamente.',
+          type: 'success'
+        }
+      });
+      this.search(); // Refresh list
+    }).catch(err => {
+      console.error(err);
+      this.dialog.open(DialogNotificationComponent, {
+        data: {
+          title: 'Error',
+          message: 'Ocurrió un error al asignar el vehículo.',
+          type: 'error'
+        }
+      });
+    });
   }
 
   desasignar(vehiculo: VehiculoModel) {
@@ -104,49 +108,49 @@ export class InscribirVehiculosComponent {
         title: 'Confirmación',
         message: `¿Estás seguro de desasignar el vehículo ${vehiculo.placa}?`,
         type: 'warning',
-        bottons: 'two', 
+        bottons: 'two',
         actionText: 'Desasignar'
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-         this.vehiculoService.updateVehiculo(vehiculo.id!, { ...vehiculo, iglesiaId: null }).then(async () => {
-            // Verification step
-            try {
-               const updatedVehiculo = await this.vehiculoService.getMyVehiculo(vehiculo.id!);
-               if (!updatedVehiculo.iglesiaId) { // Check if it is null or undefined
-                   this.dialog.open(DialogNotificationComponent, {
-                       data: {
-                       title: 'Desasignado',
-                       message: 'Vehículo desasignado correctamente.',
-                       type: 'success'
-                       }
-                   });
-                   this.search(); // Refresh list
-               } else {
-                   throw new Error('Verification failed');
-               }
-            } catch (error) {
-               console.error('Verification failed', error);
-               this.dialog.open(DialogNotificationComponent, {
-                   data: {
-                   title: 'Error',
-                   message: 'No se pudo verificar la desasignación del vehículo.',
-                   type: 'error'
-                   }
-               });
+        this.vehiculoService.updateVehiculo(vehiculo.id!, { ...vehiculo, iglesiaId: null }).then(async () => {
+          // Verification step
+          try {
+            const updatedVehiculo = await this.vehiculoService.getMyVehiculo(vehiculo.id!);
+            if (!updatedVehiculo.iglesiaId) { // Check if it is null or undefined
+              this.dialog.open(DialogNotificationComponent, {
+                data: {
+                  title: 'Desasignado',
+                  message: 'Vehículo desasignado correctamente.',
+                  type: 'success'
+                }
+              });
+              this.search(); // Refresh list
+            } else {
+              throw new Error('Verification failed');
             }
-         }).catch(err => {
-            console.error(err);
+          } catch (error) {
+            console.error('Verification failed', error);
             this.dialog.open(DialogNotificationComponent, {
-               data: {
-                 title: 'Error',
-                 message: 'Ocurrió un error al desasignar el vehículo.',
-                 type: 'error'
-               }
+              data: {
+                title: 'Error',
+                message: 'No se pudo verificar la desasignación del vehículo.',
+                type: 'error'
+              }
             });
-         });
+          }
+        }).catch(err => {
+          console.error(err);
+          this.dialog.open(DialogNotificationComponent, {
+            data: {
+              title: 'Error',
+              message: 'Ocurrió un error al desasignar el vehículo.',
+              type: 'error'
+            }
+          });
+        });
       }
     });
   }

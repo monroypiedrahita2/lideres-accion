@@ -36,6 +36,11 @@ export class VehiculoService {
     return response;
   }
 
+  getVehiculosByIglesia(iglesiaId: string) {
+    const q = query(collection(this.firestore, this._collection), where('iglesiaId', '==', iglesiaId));
+    return collectionData(q, { idField: 'id' }) as Observable<VehiculoModel[]>;
+  }
+
   getMyVehiculo(id: string): Promise<any> {
     const docRef = doc(this.firestore, this._collection, id);
     return getDoc(docRef).then((docSnap) => {
@@ -49,10 +54,10 @@ export class VehiculoService {
 
 
 
-    updateVehiculo(id: string, newData: VehiculoModel) {
-      const document = doc(this.firestore, this._collection, id);
-      return updateDoc(document, { ...newData });
-    }
+  updateVehiculo(id: string, newData: VehiculoModel) {
+    const document = doc(this.firestore, this._collection, id);
+    return updateDoc(document, { ...newData });
+  }
 
 }
 

@@ -87,6 +87,10 @@ export const routes: Routes = [
         path: 'listar-casas-apoyo',
         loadComponent: () => import('./listar-casas-apoyo/listar-casas-apoyo.component').then(m => m.ListarCasasApoyoComponent),
       },
+      {
+        path: 'listar-vehiculos',
+        loadComponent: () => import('./listar-vehiculos/listar-vehiculos.component').then(m => m.ListarVehiculosComponent),
+      },
     ]
   },
   {
