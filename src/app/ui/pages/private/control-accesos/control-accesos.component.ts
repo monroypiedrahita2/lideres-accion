@@ -38,7 +38,7 @@ import { DialogNotificationModel } from '../../../../models/base/dialog-notifica
 })
 export class ControlAccesosComponent implements OnInit {
   form!: FormGroup;
-  usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
+  usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
   iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
   usuarios: PerfilModel[] = [];
   loading: boolean = false;

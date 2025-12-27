@@ -29,11 +29,18 @@ export const CARDS_HOME: CardModel[] = [
     showIf: ['Super usuario'],
   },
   {
-    goTo: '../crear-comuna',
-    title: 'Comunas',
-    description: 'Ver y gestionar comunas',
+    goTo: '../ver-comunas',
+    title: 'Comunas y Barrios',
+    description: 'Listar, eliminar o editar barrios y comunas',
     icon: 'location_city',
-    showIf: ['Pastor'],
+    showIf: ['Pastor', 'Coordinador de iglesia'],
+  },
+  {
+    goTo: '../crear-comuna',
+    title: 'Añadir Barrios',
+    description: 'Crear una nueva comuna',
+    icon: 'location_city',
+    showIf: ['Pastor', 'Coordinador de iglesia'],
   },
   // {
   //   goTo: '../roles',

@@ -12,3 +12,5 @@ export interface DataUserModel {
     uid: string;
     email: string;
 }
+
+

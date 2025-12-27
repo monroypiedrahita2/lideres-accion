@@ -22,6 +22,7 @@ import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/su
 import { ButtonsFormComponent } from '../../../shared/components/modules/buttons-form/buttons-form.component';
 import { ComunaModel } from '../../../../models/comuna/comuna.model';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
+import { PerfilModel } from '../../../../models/perfil/perfil.model';
 
 @Component({
   selector: 'app-comuna',
@@ -51,6 +52,7 @@ export class ComunaComponent implements OnInit {
   barrios: string[] = [];
   loading: boolean = false;
   enableSkeleton: boolean = true;
+  iglesiaIdbyUser: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -165,6 +167,7 @@ export class ComunaComponent implements OnInit {
           departamento: this.form.value.departamento,
           municipio: this.form.value.municipio,
           barrio: barrio,
+          iglesiaId: this.iglesiaIdbyUser,
         },
         fechaCreacion: new Date().toISOString(),
         creadoPor: this.auth.uidUser(),

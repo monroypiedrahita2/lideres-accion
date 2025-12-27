@@ -25,6 +25,10 @@ export const routes: Routes = [
         loadComponent: () => import('./comuna/comuna.component').then(m => m.ComunaComponent),
       },
       {
+        path: 'listar-comunas',
+        loadComponent: () => import('./comuna/listar-comunas/listar-comunas.component').then(m => m.ListarComunasComponent),
+      },
+      { 
         path: 'crear-referido',
         loadComponent: () => import('./referido/create/create-referido.component').then(m => m.CreateReferidoComponent),
       },
