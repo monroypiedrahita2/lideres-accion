@@ -6,11 +6,12 @@ import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { MatIconModule } from '@angular/material/icon';
+import { TitleComponent } from "../../../shared/components/atoms/title/title.component";
 
 @Component({
     selector: 'app-listar-vehiculos',
     standalone: true,
-    imports: [CommonModule, CardVehiculoComponent, MatIconModule],
+    imports: [CommonModule, CardVehiculoComponent, MatIconModule, TitleComponent],
     templateUrl: './listar-vehiculos.component.html',
     styleUrls: ['./listar-vehiculos.component.scss']
 })

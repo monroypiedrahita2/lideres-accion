@@ -29,6 +29,7 @@
 
   <div class="flex gap-3" *ngIf="showActions">
     <button 
+      *ngIf="showAssign"
       (click)="asignar()"
       class="flex-1 py-2.5 rounded-lg border border-transparent bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 cursor-pointer"
     >
@@ -36,6 +37,7 @@
       Asignar
     </button>
     <button 
+      *ngIf="showUnassign"
       (click)="desasignar()"
       class="flex-1 py-2.5 rounded-lg border border-red-200 text-red-600 bg-red-50 font-medium hover:bg-red-100 transition-colors flex items-center justify-center gap-2 cursor-pointer"
     >

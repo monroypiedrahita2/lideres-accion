@@ -14,6 +14,8 @@ import { VehiculoModel } from '../../../../../models/vehiculo/vehiculo.model';
 export class CardVehiculoComponent {
     @Input() vehiculo!: VehiculoModel | any;
     @Input() showActions: boolean = true;
+    @Input() showAssign: boolean = true;
+    @Input() showUnassign: boolean = true;
     @Output() onAsignar = new EventEmitter<VehiculoModel>();
     @Output() onDesasignar = new EventEmitter<VehiculoModel>();
 
