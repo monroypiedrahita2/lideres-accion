@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, query, where, orderBy, limit, getDocs, startAfter, endBefore, getCountFromServer } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, query, where, orderBy, limit, getDocs, startAfter, endBefore, getCountFromServer, deleteDoc, doc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
 import { environment } from '../../../../../enviroments';
@@ -191,5 +191,10 @@ export class ComunaService {
       firstDoc: returned[0] || null,
       lastDoc: returned.at(-1) || null,
     };
+  }
+
+  async deleteComuna(id: string) {
+    const docRef = doc(this.firestore, `${this._collection}/${id}`);
+    await deleteDoc(docRef);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ComunaModel } from '../../../../../models/comuna/comuna.model';
@@ -14,4 +14,9 @@ import { BaseModel } from '../../../../../models/base/base.model';
 })
 export class ComunaCardComponent {
   @Input() comuna!: BaseModel<ComunaModel>;
+  @Output() eventDelete = new EventEmitter<string>();
+
+  onDelete() {
+    this.eventDelete.emit(this.comuna.id);
+  }
 }

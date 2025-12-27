@@ -1,3 +1,9 @@
+<lida-confirm-action
+  [showModal]="showModal"
+  [data]="dataModal"
+  (eventConfirm)="eliminar(dataModal.id)"
+></lida-confirm-action>
+
 <div class="p-4">
   <mg-title title="Listar Comunas"></mg-title>
 
@@ -16,6 +22,6 @@
     </a>
   </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <app-comuna-card *ngFor="let comuna of comunas" [comuna]="comuna"></app-comuna-card>
+    <app-comuna-card *ngFor="let comuna of comunas" [comuna]="comuna" (eventDelete)="openModal({ name: comuna.data.barrio, id: comuna.id! })"></app-comuna-card>
   </div>
 </div>

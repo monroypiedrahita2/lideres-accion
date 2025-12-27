@@ -6,11 +6,13 @@ import { ComunaModel } from '../../../../../models/comuna/comuna.model';
 import { ComunaCardComponent } from '../../../../shared/components/modules/comuna-card/comuna-card.component';
 import { TitleComponent } from '../../../../shared/components/atoms/title/title.component';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
+import { ConfirmActionComponent } from '../../../../shared/components/modules/modal/confirm-action.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-listar-comunas',
   standalone: true,
-  imports: [CommonModule, ComunaCardComponent, TitleComponent],
+  imports: [CommonModule, ComunaCardComponent, TitleComponent, ConfirmActionComponent],
   templateUrl: './listar-comunas.component.html',
   styleUrls: ['./listar-comunas.component.scss']
 })
@@ -25,7 +27,10 @@ export class ListarComunasComponent implements OnInit {
   isFirstPage: boolean = true;
   isLastPage: boolean = false;
 
-  constructor(private readonly comunaService: ComunaService) {}
+  showModal: boolean = false;
+  dataModal: { name: string; id: string } = { name: '', id: '' };
+
+  constructor(private readonly comunaService: ComunaService, private readonly toast: ToastrService) {}
 
   ngOnInit(): void {
     this.getComunas();
@@ -74,6 +79,24 @@ export class ListarComunasComponent implements OnInit {
       this.isLastPage = !res.hasMore;
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  openModal(data: { name: string; id: string }) {
+    this.dataModal = data;
+    this.showModal = true;
+  }
+
+  async eliminar(id: string) {
+    try {
+      await this.comunaService.deleteComuna(id);
+      this.toast.success('Comuna eliminada exitosamente');
+      this.showModal = false;
+      // Recargar la página actual
+      await this.getComunas();
+    } catch (error) {
+      console.error(error);
+      this.toast.error('Error al eliminar la comuna');
     }
   }
 }
