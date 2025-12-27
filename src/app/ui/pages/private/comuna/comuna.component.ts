@@ -166,8 +166,9 @@ export class ComunaComponent implements OnInit {
         data: {
           departamento: this.form.value.departamento,
           municipio: this.form.value.municipio,
-          barrio: barrio,
+          barrio: barrio.split(' - ')[1],
           iglesiaId: this.iglesiaIdbyUser,
+          comuna: barrio.split(' - ')[0],
         },
         fechaCreacion: new Date().toISOString(),
         creadoPor: this.auth.uidUser(),

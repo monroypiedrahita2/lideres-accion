@@ -17,7 +17,6 @@ import {
   startAfter,
   getCountFromServer,
   endBefore,
-  limitToLast,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
