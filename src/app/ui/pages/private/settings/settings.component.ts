@@ -4,12 +4,12 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { CARDS_HOME } from '../../../shared/const/cards.const';
 import { CardModel } from '../../../../models/utils/card.model';
-import { CardInfoComponent } from '../../../shared/components/modules/card-info/card-info.component';
+import { MenuItemComponent } from '../../../shared/components/modules/menu-item/menu-item.component';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, RouterModule, CardInfoComponent],
+  imports: [CommonModule, RouterModule, MenuItemComponent],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
 })

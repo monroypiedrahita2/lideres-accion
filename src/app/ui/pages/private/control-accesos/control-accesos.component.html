@@ -21,7 +21,7 @@
               label="Documento de identidad"
             ></mg-input-text>
           </div>
-          
+
           <div class="flex justify-center items-center gap-3">
              <mg-button
                 [text]="'Buscar Usuario'"
@@ -46,24 +46,21 @@
               <div class="flex flex-col md:flex-row justify-between items-center gap-6">
                 <!-- User Info -->
                 <div class="flex flex-col sm:flex-row items-center gap-4 w-full">
-                  <!-- <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-blue-600 shadow-sm ring-4 ring-white shrink-0">
-                    <mat-icon class="!w-8 !h-8 !text-[32px]">person</mat-icon>
-                  </div> -->
                   <div class="text-center sm:text-left w-full min-w-0">
                     <h3 class="text-xl font-bold text-gray-900 tracking-tight break-words text-center">{{ perfilSeleted.nombres }} {{ perfilSeleted.apellidos }}</h3>
                     <div class="flex flex-col gap-2 mt-2 w-full">
                       <!-- Mobile View (Vertical Stack) -->
                       <div class="flex flex-col gap-2 sm:hidden text-sm text-gray-500 w-full mt-2">
                         <div class="flex items-start gap-3 w-full">
-                          <mat-icon class="!w-5 !h-5 !text-[20px] shrink-0 text-gray-400 mt-0.5">email</mat-icon> 
+                          <mat-icon class="!w-5 !h-5 !text-[20px] shrink-0 text-gray-400 mt-0.5">email</mat-icon>
                           <span class="break-words text-left">{{ perfilSeleted.email }}</span>
                         </div>
                         <div class="flex items-center gap-3 w-full">
-                           <mat-icon class="!w-5 !h-5 !text-[20px] shrink-0 text-gray-400">badge</mat-icon> 
+                           <mat-icon class="!w-5 !h-5 !text-[20px] shrink-0 text-gray-400">badge</mat-icon>
                            <span>{{ perfilSeleted.documento }}</span>
                         </div>
                         <div class="flex items-center gap-3 w-full">
-                           <mat-icon class="!w-5 !h-5 !text-[20px] shrink-0 text-gray-400">phone</mat-icon> 
+                           <mat-icon class="!w-5 !h-5 !text-[20px] shrink-0 text-gray-400">phone</mat-icon>
                            <span>{{ perfilSeleted.celular || 'No registrado' }}</span>
                         </div>
                       </div>
@@ -71,7 +68,7 @@
                       <!-- Desktop View (Horizontal Row) -->
                       <div class="hidden sm:flex flex-col items-center gap-4 text-sm text-gray-500">
                         <span class="flex items-center gap-2" title="{{ perfilSeleted.email }}">
-                          <mat-icon class="!w-4 !h-4 !text-[16px] shrink-0">email</mat-icon> 
+                          <mat-icon class="!w-4 !h-4 !text-[16px] shrink-0">email</mat-icon>
                           <span class="truncate max-w-[200px]">{{ perfilSeleted.email }}</span>
                         </span>
                         <span class="flex items-center gap-2">
@@ -94,8 +91,8 @@
                         icon="verified_user"
                      ></mg-button>
                    </div>
-                   <button 
-                      (click)="clear()" 
+                   <button
+                      (click)="clear()"
                       class="text-xs text-gray-500 hover:text-gray-700 underline text-center py-1 cursor-pointer"
                    >
                      Limpiar búsqueda
@@ -105,7 +102,7 @@
 
                <div class="mt-6 pt-4 border-t border-blue-100/50 flex flex-col items-center justify-center sm:justify-start gap-2 text-center sm:text-left">
                   <span class="text-sm font-medium text-gray-600">Rol asignado:</span>
-                  <span 
+                  <span
                     class="px-3 py-1 rounded-full text-sm font-semibold border"
                     [ngClass]="perfilSeleted.rol ? 'bg-white text-blue-700 border-blue-200' : 'bg-gray-100 text-gray-500 border-gray-200'"
                   >
@@ -126,7 +123,7 @@
       <mat-icon>group</mat-icon>
       Usuarios con roles activos
     </h3>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <lida-person-card
         *ngFor="let user of usuarios"
@@ -135,7 +132,7 @@
         (deleteClicked)="deleteRol(user.id!)"
       ></lida-person-card>
     </div>
-    
+
     <div *ngIf="usuarios.length === 0" class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300">
        <p class="text-gray-500">No hay usuarios con roles asignados en este momento.</p>
     </div>
