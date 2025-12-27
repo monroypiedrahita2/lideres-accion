@@ -29,7 +29,7 @@ export const CARDS_HOME: CardModel[] = [
     showIf: ['Super usuario'],
   },
   {
-    goTo: '../ver-comunas',
+    goTo: '../listar-comunas',
     title: 'Comunas y Barrios',
     description: 'Listar, eliminar o editar barrios y comunas',
     icon: 'location_city',
@@ -49,16 +49,9 @@ export const CARDS_HOME: CardModel[] = [
   //   icon: 'supervisor_account'
   // },
   {
-    goTo: '../listar-referidos',
-    title: 'Listar referidos',
-    description: 'Administrar de referidos',
-    icon: 'groups',
-    showIf: ['Todos'],
-  },
-  {
     goTo: '../masivo-referidos',
     title: 'Carga masiva',
-    description: 'A través de un archivo Excel',
+    description: 'Carga masiva de referidos a través de un archivo Excel',
     icon: 'upload_file',
     showIf: ['Super usuario', 'Pastor'],
   },

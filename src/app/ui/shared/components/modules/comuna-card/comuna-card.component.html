@@ -1,0 +1,24 @@
+<div class="border border-gray-200 shadow-md hover:shadow-lg rounded-lg bg-white w-full p-4 relative transition-shadow duration-300">
+  <div class="flex justify-between items-start gap-3">
+    <!-- Info Section -->
+    <div class="flex-1 min-w-0">
+      <h3 class="text-lg font-semibold text-gray-800 truncate">
+        Comuna: {{ comuna.data.barrio }}
+      </h3>
+
+      <div class="mt-2 space-y-1">
+        <!-- Municipio -->
+        <p class="text-sm text-gray-600 flex items-center gap-2">
+          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400 flex items-center justify-center leading-none">location_city</mat-icon>
+          <span class="truncate">Municipio: {{ comuna.data.municipio }}</span>
+        </p>
+
+        <!-- Barrio -->
+        <p class="text-sm text-gray-600 flex items-center gap-2">
+          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400 flex items-center justify-center leading-none">home</mat-icon>
+          <span class="truncate">Barrio: {{ comuna.data.departamento }}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

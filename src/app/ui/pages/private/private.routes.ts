@@ -1,4 +1,3 @@
-import { MiPerfilComponent } from './mi-perfil/mi-perfil.component';
 import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { Routes } from '@angular/router';
 
@@ -28,7 +27,7 @@ export const routes: Routes = [
         path: 'listar-comunas',
         loadComponent: () => import('./comuna/listar-comunas/listar-comunas.component').then(m => m.ListarComunasComponent),
       },
-      { 
+      {
         path: 'crear-referido',
         loadComponent: () => import('./referido/create/create-referido.component').then(m => m.CreateReferidoComponent),
       },
