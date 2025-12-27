@@ -9,11 +9,13 @@ import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { ConfirmActionComponent } from '../../../../shared/components/modules/modal/confirm-action.component';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-listar-comunas',
   standalone: true,
-  imports: [CommonModule, ComunaCardComponent, TitleComponent, ConfirmActionComponent],
+  imports: [CommonModule, ComunaCardComponent, TitleComponent, ConfirmActionComponent, ReactiveFormsModule],
   templateUrl: './listar-comunas.component.html',
   styleUrls: ['./listar-comunas.component.scss']
 })
@@ -31,10 +33,28 @@ export class ListarComunasComponent implements OnInit {
   showModal: boolean = false;
   dataModal: { name: string; id: string } = { name: '', id: '' };
 
+  searchControl = new FormControl('');
+  isSearching: boolean = false;
+  searchText: string = '';
+
   constructor(private readonly comunaService: ComunaService, private readonly toast: ToastrService, private readonly router: Router) {}
 
   ngOnInit(): void {
     this.getComunas();
+
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(searchText => {
+      this.searchText = searchText || '';
+      if (this.searchText) {
+        this.isSearching = true;
+        this.performSearch();
+      } else {
+        this.isSearching = false;
+        this.getComunas();
+      }
+    });
   }
 
   async getComunas() {
@@ -52,11 +72,30 @@ export class ListarComunasComponent implements OnInit {
     }
   }
 
+  async performSearch() {
+    try {
+      this.pageStartAfter = [undefined];
+      this.currentPageIndex = 0;
+      const res: any = await this.comunaService.getFirstPageBySearch(this.iglesia, this.searchText);
+      this.comunas = res.items;
+      this.isFirstPage = true;
+      this.isLastPage = !res.hasMore;
+      if (res.lastDoc) this.pageStartAfter[1] = res.lastDoc;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async nextPage() {
     try {
       const targetIndex = this.currentPageIndex + 1;
       const startAfterDoc = this.pageStartAfter[targetIndex];
-      const res: any = await this.comunaService.getPageByIglesia(this.iglesia, startAfterDoc);
+      let res: any;
+      if (this.isSearching) {
+        res = await this.comunaService.getNextPageBySearch(this.iglesia, this.searchText);
+      } else {
+        res = await this.comunaService.getPageByIglesia(this.iglesia, startAfterDoc);
+      }
       // store cursor for next page
       if (res.lastDoc) this.pageStartAfter[targetIndex + 1] = res.lastDoc;
       this.currentPageIndex = targetIndex;
@@ -73,7 +112,12 @@ export class ListarComunasComponent implements OnInit {
       const targetIndex = this.currentPageIndex - 1;
       if (targetIndex < 0) return;
       const startAfterDoc = this.pageStartAfter[targetIndex];
-      const res: any = await this.comunaService.getPageByIglesia(this.iglesia, startAfterDoc);
+      let res: any;
+      if (this.isSearching) {
+        res = await this.comunaService.getPreviousPageBySearch(this.iglesia, this.searchText);
+      } else {
+        res = await this.comunaService.getPageByIglesia(this.iglesia, startAfterDoc);
+      }
       this.currentPageIndex = targetIndex;
       this.comunas = res.items;
       this.isFirstPage = this.currentPageIndex === 0;
@@ -94,7 +138,11 @@ export class ListarComunasComponent implements OnInit {
       this.toast.success('Comuna eliminada exitosamente');
       this.showModal = false;
       // Recargar la página actual
-      await this.getComunas();
+      if (this.isSearching) {
+        await this.performSearch();
+      } else {
+        await this.getComunas();
+      }
     } catch (error) {
       console.error(error);
       this.toast.error('Error al eliminar la comuna');
@@ -103,5 +151,9 @@ export class ListarComunasComponent implements OnInit {
 
   editar(id: string) {
     this.router.navigate(['/private/editar-comuna', id]);
+  }
+
+  clearSearch() {
+    this.searchControl.setValue('');
   }
 }

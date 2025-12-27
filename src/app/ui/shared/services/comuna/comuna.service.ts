@@ -213,4 +213,76 @@ export class ComunaService {
     const document = doc(this.firestore, this._collection, id);
     return updateDoc(document, { ...newData });
   }
+
+  async getFirstPageBySearch(iglesiaId: string, searchText: string) {
+    const pageSize = 3;
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      where('data.iglesiaId', '==', iglesiaId),
+      where('data.comuna', '>=', searchText),
+      where('data.comuna', '<=', searchText + '\uf8ff'),
+      orderBy('data.comuna'),
+      limit(pageSize + 1)
+    );
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
+
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
+  }
+
+  async getNextPageBySearch(iglesiaId: string, searchText: string) {
+    const pageSize = 3;
+    if (!this.lastDoc) return { items: [], hasMore: false };
+
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      where('data.iglesiaId', '==', iglesiaId),
+      where('data.comuna', '>=', searchText),
+      where('data.comuna', '<=', searchText + '\uf8ff'),
+      orderBy('data.comuna'),
+      startAfter(this.lastDoc),
+      limit(pageSize + 1)
+    );
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
+
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
+  }
+
+  async getPreviousPageBySearch(iglesiaId: string, searchText: string) {
+    const pageSize = 3;
+    if (!this.lastDoc) return { items: [], hasMore: false };
+
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      where('data.iglesiaId', '==', iglesiaId),
+      where('data.comuna', '>=', searchText),
+      where('data.comuna', '<=', searchText + '\uf8ff'),
+      orderBy('data.comuna'),
+      endBefore(this.lastDoc),
+      limit(pageSize + 1)
+    );
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(Math.max(0, docs.length - pageSize));
+
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
+  }
 }

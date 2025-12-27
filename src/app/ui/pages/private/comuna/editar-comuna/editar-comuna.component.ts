@@ -19,7 +19,6 @@ import { ContainerGridComponent } from '../../../../shared/components/atoms/cont
 import { InputSelectComponent } from '../../../../shared/components/atoms/input-select/input-select.component';
 import { HttpClientModule } from '@angular/common/http';
 import { TitleComponent } from '../../../../shared/components/atoms/title/title.component';
-import { SubTitleComponent } from '../../../../shared/components/atoms/sub-title/sub-title.component';
 import { ButtonsFormComponent } from '../../../../shared/components/modules/buttons-form/buttons-form.component';
 import { ComunaModel } from '../../../../../models/comuna/comuna.model';
 import { SkeletonComponent } from '../../../../shared/components/organism/skeleton/skeleton.component';
@@ -35,7 +34,6 @@ import { SkeletonComponent } from '../../../../shared/components/organism/skelet
     InputSelectComponent,
     HttpClientModule,
     TitleComponent,
-    SubTitleComponent,
     ButtonsFormComponent,
     ContainerGridComponent,
     SkeletonComponent,
@@ -96,7 +94,7 @@ export class EditarComunaComponent implements OnInit {
     try {
       this.comunaData = await this.comunaService.getComuna(this.comunaId);
       await this.initComponent();
-      this.populateForm();
+      await this.populateForm();
     } catch (error) {
       console.error(error);
       this.toast.error('Error al cargar la comuna');
@@ -130,6 +128,7 @@ export class EditarComunaComponent implements OnInit {
       const response = await lastValueFrom(
         this.lugarService.getMunicipios(departamento_id)
       );
+
       this.municipios = response.map((item: any) => ({
         label: item.name,
         value: item.id + '-' + item.name,
@@ -140,18 +139,20 @@ export class EditarComunaComponent implements OnInit {
     }
   }
 
-  populateForm() {
+  async populateForm() {
     if (this.comunaData) {
       this.form.patchValue({
         departamento: this.comunaData.data.departamento,
-        municipio: this.comunaData.data.municipio,
         comuna: this.comunaData.data.comuna,
         barrio: this.comunaData.data.barrio,
       });
       // Enable municipio if departamento is set
       if (this.comunaData.data.departamento) {
         this.form.get('municipio')?.enable();
-        this.getMunicipios(this.comunaData.data.departamento.split('-')[0]);
+        await this.getMunicipios(this.comunaData.data.departamento.split('-')[0]);
+        this.form.patchValue({
+          municipio: this.comunaData.data.municipio,
+        });
       }
     }
   }
