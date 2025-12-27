@@ -28,6 +28,10 @@ export const routes: Routes = [
         loadComponent: () => import('./comuna/listar-comunas/listar-comunas.component').then(m => m.ListarComunasComponent),
       },
       {
+        path: 'editar-comuna/:id',
+        loadComponent: () => import('./comuna/editar-comuna/editar-comuna.component').then(m => m.EditarComunaComponent),
+      },
+      {
         path: 'crear-referido',
         loadComponent: () => import('./referido/create/create-referido.component').then(m => m.CreateReferidoComponent),
       },

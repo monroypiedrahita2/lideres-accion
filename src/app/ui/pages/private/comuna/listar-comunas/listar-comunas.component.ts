@@ -8,6 +8,7 @@ import { TitleComponent } from '../../../../shared/components/atoms/title/title.
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { ConfirmActionComponent } from '../../../../shared/components/modules/modal/confirm-action.component';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-listar-comunas',
@@ -30,7 +31,7 @@ export class ListarComunasComponent implements OnInit {
   showModal: boolean = false;
   dataModal: { name: string; id: string } = { name: '', id: '' };
 
-  constructor(private readonly comunaService: ComunaService, private readonly toast: ToastrService) {}
+  constructor(private readonly comunaService: ComunaService, private readonly toast: ToastrService, private readonly router: Router) {}
 
   ngOnInit(): void {
     this.getComunas();
@@ -98,5 +99,9 @@ export class ListarComunasComponent implements OnInit {
       console.error(error);
       this.toast.error('Error al eliminar la comuna');
     }
+  }
+
+  editar(id: string) {
+    this.router.navigate(['/private/editar-comuna', id]);
   }
 }

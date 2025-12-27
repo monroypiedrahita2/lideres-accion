@@ -1,0 +1,44 @@
+<mg-title [title]="'Editar comuna'"></mg-title>
+
+@if (enableSkeleton) {
+<mg-skeleton [enableSkeleton]="enableSkeleton" [num]="5"></mg-skeleton>
+} @else {
+<form [formGroup]="form">
+  <mg-container-grid [hiddenButtons]="true">
+    <mg-input-select
+      label="Departamento"
+      [items]="departamentos"
+      formControlName="departamento"
+      id="departamento"
+    >
+    </mg-input-select>
+    <mg-input-select
+      label="Municipio"
+      [items]="municipios"
+      formControlName="municipio"
+      id="municipio"
+    >
+    </mg-input-select>
+    <mg-input-text
+      type="text"
+      formControlName="comuna"
+      label="Nombre de la comuna"
+      id="comuna"
+    ></mg-input-text>
+    <mg-input-text
+      type="text"
+      formControlName="barrio"
+      label="Nombre del barrio"
+      id="barrio"
+    ></mg-input-text>
+  </mg-container-grid>
+</form>
+
+<mg-buttons-form
+  [loading]="loading"
+  [disabled]="form.invalid"
+  [principalText]="'Actualizar'"
+  (onSubmit)="onSubmit()"
+></mg-buttons-form>
+
+}

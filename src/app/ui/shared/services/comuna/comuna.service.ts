@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, query, where, orderBy, limit, getDocs, startAfter, endBefore, getCountFromServer, deleteDoc, doc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, query, where, orderBy, limit, getDocs, startAfter, endBefore, getCountFromServer, deleteDoc, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
 import { environment } from '../../../../../enviroments';
@@ -196,5 +196,21 @@ export class ComunaService {
   async deleteComuna(id: string) {
     const docRef = doc(this.firestore, `${this._collection}/${id}`);
     await deleteDoc(docRef);
+  }
+
+  getComuna(id: string): Promise<any> {
+    const docRef = doc(this.firestore, this._collection, id);
+    return getDoc(docRef).then((docSnap) => {
+      if (docSnap.exists()) {
+        return docSnap.data() as any;
+      } else {
+        throw new Error('No existe o permisos insuficientes');
+      }
+    });
+  }
+
+  updateComuna(id: string, newData: BaseModel<ComunaModel>) {
+    const document = doc(this.firestore, this._collection, id);
+    return updateDoc(document, { ...newData });
   }
 }

@@ -15,8 +15,13 @@ import { BaseModel } from '../../../../../models/base/base.model';
 export class ComunaCardComponent {
   @Input() comuna!: BaseModel<ComunaModel>;
   @Output() eventDelete = new EventEmitter<string>();
+  @Output() eventEdit = new EventEmitter<string>();
 
   onDelete() {
     this.eventDelete.emit(this.comuna.id);
+  }
+
+  onEdit() {
+    this.eventEdit.emit(this.comuna.id);
   }
 }
