@@ -1,127 +1,75 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
-import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
-import { InfoCasaComponent } from '../../../shared/components/molecules/info-casa/info-casa.component';
 import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
-import { BaseModel } from '../../../../models/base/base.model';
+import { CardCasaApoyoComponent } from '../../../shared/components/cards/card-casa-apoyo/card-casa-apoyo.component';
 import { CasaApoyoModel } from '../../../../models/casa-apoyo/casa-apoyo.model';
-import { DialogAsignarResponsableComponent } from '../../../shared/dialogs/dialog-asignar-responsable/dialog-asignar-responsable.component';
+import { BaseModel } from '../../../../models/base/base.model';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
+import { MatIconModule } from '@angular/material/icon';
+import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
 
 @Component({
     selector: 'app-listar-casas-apoyo',
     standalone: true,
-    imports: [
-        CommonModule,
-        InfoCasaComponent
-    ],
+    imports: [CommonModule, CardCasaApoyoComponent, MatIconModule, TitleComponent],
     templateUrl: './listar-casas-apoyo.component.html',
     styleUrls: ['./listar-casas-apoyo.component.scss']
 })
 export class ListarCasasApoyoComponent implements OnInit {
+    private readonly casaApoyoService = inject(CasaApoyoService);
+    private readonly dialog = inject(MatDialog);
     casas: BaseModel<CasaApoyoModel>[] = [];
-    loading: boolean = true;
+    usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
 
-    constructor(
-        private casaApoyoService: CasaApoyoService,
-        private dialog: MatDialog
-    ) { }
-
-    ngOnInit(): void {
+    ngOnInit() {
         this.loadCasas();
     }
 
     loadCasas() {
-        this.loading = true;
-        this.casaApoyoService.getCasasApoyo().subscribe({
-            next: (casas) => {
-                this.casas = casas;
-                this.loading = false;
-            },
-            error: (error) => {
-                console.error('Error loading casas:', error);
-                this.loading = false;
-            }
-        });
+        // Only fetch if user has a UID, using the new 'ByResponsable' logic
+        if (this.usuario.uid) {
+            this.casaApoyoService.getCasasApoyoByResponsable(this.usuario.uid).subscribe({
+                next: (data) => {
+                    this.casas = data;
+                },
+                error: (err) => console.error(err)
+            });
+        }
     }
 
-    onDeleteCasa(casa: BaseModel<CasaApoyoModel>) {
-        const dialogData = {
-            title: 'Confirmar eliminación',
-            message: `¿Está seguro que desea eliminar la casa de apoyo ubicada en ${casa.data.direccion}?`,
-            bottons: 'Eliminar',
-            type: 'warning' as const
-        };
-
+    desasignar(casa: BaseModel<CasaApoyoModel>) {
         const dialogRef = this.dialog.open(DialogNotificationComponent, {
-            width: '400px',
-            data: dialogData
+            data: {
+                title: 'Confirmación',
+                message: `¿Estás seguro de desasignar la casa en ${casa.data.direccion}?`,
+                type: 'warning',
+                bottons: 'two',
+                actionText: 'Desasignar'
+            }
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result === true && casa.id) {
-                this.casaApoyoService.deleteCasaApoyo(casa.id!).then(() => {
-                    this.showSuccessNotification('Casa de apoyo eliminada exitosamente');
-                    this.loadCasas();
-                }).catch(error => {
-                    console.error('Error deleting casa:', error);
-                    this.showErrorNotification('Error al eliminar la casa de apoyo');
+            if (result) {
+                this.casaApoyoService.assignResponsable(casa.id!, '', '', '').then(() => {
+                    this.dialog.open(DialogNotificationComponent, {
+                        data: {
+                            title: 'Desasignado',
+                            message: 'Casa desasignada correctamente.',
+                            type: 'success'
+                        }
+                    });
+                }).catch(err => {
+                    console.error(err);
+                    this.dialog.open(DialogNotificationComponent, {
+                        data: {
+                            title: 'Error',
+                            message: 'Ocurrió un error al desasignar la casa.',
+                            type: 'error'
+                        }
+                    });
                 });
             }
-        });
-    }
-
-    onAssignResponsable(casa: BaseModel<CasaApoyoModel>) {
-        const dialogRef = this.dialog.open(DialogAsignarResponsableComponent, {
-            width: '500px',
-            maxWidth: '90vw',
-            data: { casaId: casa.id }
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result && casa.id) {
-                this.casaApoyoService.assignResponsable(
-                    casa.id!,
-                    result.id,
-                    `${result.nombres} ${result.apellidos}`,
-                    result.documento
-                ).then(() => {
-                    this.showSuccessNotification('Responsable asignado exitosamente');
-                    this.loadCasas();
-                }).catch(error => {
-                    console.error('Error assigning responsable:', error);
-                    this.showErrorNotification('Error al asignar responsable');
-                });
-            }
-        });
-    }
-
-    private showSuccessNotification(message: string) {
-        const dialogData = {
-            title: 'Éxito',
-            message: message,
-            bottons: 'Aceptar',
-            type: 'success' as const
-        };
-
-        this.dialog.open(DialogNotificationComponent, {
-            width: '400px',
-            data: dialogData
-        });
-    }
-
-    private showErrorNotification(message: string) {
-        const dialogData = {
-            title: 'Error',
-            message: message,
-            bottons: 'Aceptar',
-            type: 'error' as const
-        };
-
-        this.dialog.open(DialogNotificationComponent, {
-            width: '400px',
-            data: dialogData
         });
     }
 }
