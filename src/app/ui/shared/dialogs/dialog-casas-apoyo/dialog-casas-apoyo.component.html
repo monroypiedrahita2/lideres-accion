@@ -64,6 +64,8 @@
           [badge]="false"
           [textbadge]="''"
           [textbadge2]="''"
+          [canDelete]="multipleFound"
+          (eventDelete)="deleteDocument()"
         ></lida-person-info>
         
         <div class="mt-4 w-full flex gap-4">

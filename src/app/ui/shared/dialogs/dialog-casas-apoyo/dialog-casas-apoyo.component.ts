@@ -48,6 +48,7 @@ export class DialogCasasApoyoComponent {
   showSearch: boolean = false;
   cedula: string = '';
   foundUser: PerfilModel | null = null;
+  multipleFound: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<DialogCasasApoyoComponent>,
@@ -85,11 +86,15 @@ export class DialogCasasApoyoComponent {
       if (users && users.length > 0) {
         if (users.length > 1) {
           this.toast.warning('Se encontraron múltiples usuarios con este documento. Se seleccionó el primero.');
+          this.multipleFound = true;
+        } else {
+          this.multipleFound = false;
         }
         this.processUser(users[0] as PerfilModel);
       } else {
         this.toast.error('Usuario no encontrado');
         this.foundUser = null;
+        this.multipleFound = false;
       }
     });
   }
@@ -125,6 +130,20 @@ export class DialogCasasApoyoComponent {
       }).catch((err) => {
         console.error(err);
         this.toast.error('Error al aprobar solicitud');
+      });
+    }
+  }
+
+  deleteDocument() {
+    if (this.foundUser && this.foundUser.id) {
+      const updateData: any = { documento: '' };
+      this.perfilService.updatePerfil(this.foundUser.id, updateData).then(() => {
+        this.toast.success('Documento eliminado correctamente');
+        this.foundUser = null;
+        this.searchUser(); // Refresh search or just clear
+      }).catch((err) => {
+        console.error(err);
+        this.toast.error('Error al eliminar documento');
       });
     }
   }
