@@ -16,7 +16,7 @@ export class PersonInfoComponent {
   @Input() textInfo: string = 'textInfo';
   @Input() textInfo2: any = 'textInfo2';
   @Input() textInfo3: any = 'textInfo3';
-  @Input() textInfo4: any = 'textInfo4';
+  @Input() textInfo4: any = '';
   @Input() textbadge: any = 'Senado';
   @Input() textbadge2: any = 'Camara';
   @Input() badge: boolean = false;
