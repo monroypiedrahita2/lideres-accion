@@ -28,11 +28,16 @@
   <button mat-button (click)="onNoClick()">Cerrar</button>
 </mat-dialog-actions>
 } @else {
-  <div class="flex flex-col items-center w-full px-4">
+  <div class="flex flex-col w-full px-4 pb-4">
     
-    <span class="font-primary font-bold text-center text-[24px] mb-4 mt-4">Buscar voluntario</span>
+    <div class="w-full flex items-center justify-between mb-4 relative">
+      <button mat-icon-button (click)="backFromSearch()" class="absolute left-0">
+        <mat-icon>close</mat-icon>
+      </button>
+      <span class="font-primary font-bold text-center text-[24px] w-full">Buscar voluntario</span>
+    </div>
     
-    <div class="w-full flex items-center gap-2">
+    <div class="w-full flex flex-col gap-4">
       <div class="w-full">
         <mg-input-text
           label="Documento de identidad"
@@ -41,13 +46,15 @@
           (keyup.enter)="searchUser()"
         ></mg-input-text>
       </div>
-      <button mat-icon-button (click)="searchUser()" class="mb-4">
-        <mat-icon>search</mat-icon>
-      </button>
+      
+      <div class="w-full flex gap-4 justify-center">
+        <mg-button (click)="searchUser()" size="big" text="Buscar" class="w-full" icon="search"></mg-button>
+        <mg-button (click)="clearSearch()" size="big" type="reset" text="Limpiar" class="w-full" icon="backspace"></mg-button>
+      </div>
     </div>
 
     @if(foundUser) {
-      <div class="w-full mb-4">
+      <div class="w-full mt-6 mb-4">
         <lida-person-info 
           [title]="foundUser.nombres + ' ' + foundUser.apellidos"
           [textInfo]="foundUser.documento"
@@ -61,13 +68,8 @@
         
         <div class="mt-4 w-full flex gap-4">
           <mg-button (click)="approveUser()" size="big" text="Aprobar" class="w-full" icon="verified"></mg-button>
-          <mg-button (click)="backFromSearch()" size="big" text="Cerrar" class="w-full" icon="close"></mg-button>
         </div>
       </div>
-    } @else {
-       <div class="mt-4 w-full p-2">
-         <mg-button (click)="backFromSearch()" size="big" text="Cerrar" class="w-full" icon="close"></mg-button>
-        </div>
     }
   </div>
 }

@@ -70,6 +70,11 @@ export class DialogCasasApoyoComponent {
     this.cedula = '';
   }
 
+  clearSearch() {
+    this.cedula = '';
+    this.foundUser = null;
+  }
+
   searchUser() {
     if (!this.cedula) {
       this.toast.error('Ingrese una cédula');
@@ -78,6 +83,9 @@ export class DialogCasasApoyoComponent {
 
     this.perfilService.getPerfilByDocumento(this.cedula).subscribe((users) => {
       if (users && users.length > 0) {
+        if (users.length > 1) {
+          this.toast.warning('Se encontraron múltiples usuarios con este documento. Se seleccionó el primero.');
+        }
         this.processUser(users[0] as PerfilModel);
       } else {
         this.toast.error('Usuario no encontrado');
