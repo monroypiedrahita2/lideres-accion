@@ -9,6 +9,7 @@ export interface PerfilModel {
   email: string;
   rol: string | null;
   postulado?: PostuladoModel;
+  casaApoyo?: CasaApoyoModel;
 }
 
 export interface AsigmentRolePerfilModel {
@@ -20,4 +21,9 @@ export interface PostuladoModel {
   casaApoyo: boolean;
   transporte: boolean;
   testigo: boolean;
+}
+
+export interface CasaApoyoModel {
+  status: boolean;
+  casaApoyoId: string;
 }
