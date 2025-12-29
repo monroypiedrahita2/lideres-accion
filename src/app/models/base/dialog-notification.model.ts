@@ -3,4 +3,5 @@ export interface DialogNotificationModel {
   message: string;
   bottons: string;
   type?: 'success' | 'error' | 'warning' | 'info';
+  actionText?: string;
 }

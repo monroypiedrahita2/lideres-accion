@@ -10,4 +10,5 @@ export interface CasaApoyoModel {
     responsableCedula?: string;
     createdAt?: Date;
     updatedAt?: Date;
+    vehiculos?: any[];
 }

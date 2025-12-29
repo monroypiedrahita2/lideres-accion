@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, deleteDoc, doc, updateDoc, query, where } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, deleteDoc, doc, updateDoc, query, where, arrayUnion, arrayRemove } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
 import { CasaApoyoModel } from '../../../../models/casa-apoyo/casa-apoyo.model';
@@ -73,5 +73,21 @@ export class CasaApoyoService {
     getCasasApoyoByResponsable(uid: string) {
         const q = query(collection(this.firestore, this._collection), where('data.responsableId', '==', uid));
         return collectionData(q, { idField: 'id' }) as Observable<BaseModel<CasaApoyoModel>[]>;
+    }
+
+    addVehiculoToCasa(casaId: string, vehiculo: any): Promise<void> {
+        const docRef = doc(this.firestore, this._collection, casaId);
+        return updateDoc(docRef, {
+            'data.vehiculos': arrayUnion(vehiculo),
+            'data.updatedAt': new Date()
+        });
+    }
+
+    removeVehiculoFromCasa(casaId: string, vehiculo: any): Promise<void> {
+        const docRef = doc(this.firestore, this._collection, casaId);
+        return updateDoc(docRef, {
+            'data.vehiculos': arrayRemove(vehiculo),
+            'data.updatedAt': new Date()
+        });
     }
 }

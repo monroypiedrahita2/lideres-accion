@@ -1,0 +1,61 @@
+
+<div class="w-full sm:w-[600px] p-4 sm:p-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+      <mat-icon class="text-blue-600">directions_car</mat-icon>
+      Vehículos Asignados
+    </h2>
+    <div class="flex items-center gap-2">
+        <mg-button
+            (click)="openAddVehiculo()"
+            text="Agregar"
+            icon="add"
+            size="big">
+        </mg-button>
+        <button (click)="close()" class="text-gray-400 hover:text-gray-600 transition-colors ml-2">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+    
+    <div *ngIf="vehiculos.length === 0" class="text-center py-8 bg-gray-50 rounded-lg border border-gray-100 border-dashed">
+        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 text-gray-400">
+            <mat-icon>no_crash</mat-icon>
+        </div>
+        <p class="text-gray-500 text-sm">No hay vehículos asignados a esta casa.</p>
+    </div>
+
+    <div *ngFor="let vehiculo of vehiculos" class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm flex justify-between items-center group hover:shadow-md transition-shadow">
+        <div class="flex gap-4 items-center">
+            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                <mat-icon>directions_car</mat-icon>
+            </div>
+            <div>
+                <p class="font-bold text-gray-800">{{ vehiculo.placa }}</p>
+                <p class="text-xs text-gray-500">{{ vehiculo.marca }} - {{ vehiculo.modelo }}</p>
+                <p class="text-xs text-gray-400 mt-0.5" *ngIf="vehiculo.nombre">Conductor: {{ vehiculo.nombre }}</p>
+            </div>
+        </div>
+        
+        <button 
+            (click)="removeVehiculo(vehiculo)"
+            class="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+            title="Eliminar vehículo">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
+
+  </div>
+
+  <div class="mt-6 flex justify-end">
+    <mg-button
+        (click)="close()"
+        text="Cerrar"
+        size="big">
+    </mg-button>
+  </div>
+</div>
