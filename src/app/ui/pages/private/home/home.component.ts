@@ -58,7 +58,8 @@ export class HomeComponent implements OnInit {
     const usuarioData = localStorage.getItem('usuario');
     if (usuarioData) {
       this.usuario = JSON.parse(usuarioData);
-      if (!this.iglesiaData) {
+      this.perfilService.setCurrentUser(this.usuario); // Notify subscribers
+      if (!this.iglesiaData && this.usuario.iglesia) {
         this.getMyIglesia(this.usuario.iglesia!);
       }
       this.skeleton = false;
@@ -81,7 +82,12 @@ export class HomeComponent implements OnInit {
         'usuario',
         JSON.stringify({ ...this.usuario, id: id })
       );
-      this.getMyIglesia(this.usuario.iglesia!);
+      this.perfilService.setCurrentUser(this.usuario); // Notify subscribers
+      if (this.usuario.iglesia) {
+        this.getMyIglesia(this.usuario.iglesia!);
+      } else {
+        this.openDialogMissingChurch();
+      }
       this.skeleton = false;
     } catch (error) {
       console.error(error);
@@ -93,6 +99,18 @@ export class HomeComponent implements OnInit {
   openDialogNotification() {
     this.dialog.open(DialogNotificationComponent, {
       data: { title: 'Bienvenido', message: 'Debes acceder a MIS DATOS y registrar tu información.', bottons: 'one', type: 'info' },
+      width: '300px',
+    });
+  }
+
+  openDialogMissingChurch() {
+    this.dialog.open(DialogNotificationComponent, {
+      data: {
+        title: 'Atención',
+        message: 'Debe comunicarse con algun coordinador de iglesia para que lo asocie a la iglesia que pertenece y que va apoyar',
+        bottons: 'one',
+        type: 'info'
+      },
       width: '300px',
     });
   }

@@ -70,20 +70,20 @@ export class MiVehiculoComponent implements OnInit {
 
       const vehiculo: VehiculoModel = vehiculos[0];
       this.vehiculoId = vehiculos[0].id || '';
-        this.form.patchValue({
-          tipoVehiculo: vehiculo.tipoVehiculo,
-          placaLetras: vehiculo.placa.split('-')[0],
-          placaNumeros: vehiculo.placa.split('-')[1],
-          marca: vehiculo.marca,
-          modelo: vehiculo.modelo,
-          nombreModelo: vehiculo.nombreModelo,
-          color: vehiculo.color,
-          nombres: vehiculo.nombre,
-          apellidos: vehiculo.apellidos,
-          celular: vehiculo.celular,
-        });
+      this.form.patchValue({
+        tipoVehiculo: vehiculo.tipoVehiculo,
+        placaLetras: vehiculo.placa.split('-')[0],
+        placaNumeros: vehiculo.placa.split('-')[1],
+        marca: vehiculo.marca,
+        modelo: vehiculo.modelo,
+        nombreModelo: vehiculo.nombreModelo,
+        color: vehiculo.color,
+        nombres: vehiculo.nombre,
+        apellidos: vehiculo.apellidos,
+        celular: vehiculo.celular,
+      });
 
-        this.skeleton = false;
+      this.skeleton = false;
     });
 
   }
@@ -111,7 +111,8 @@ export class MiVehiculoComponent implements OnInit {
       nombre: this.form.value.nombres,
       apellidos: this.form.value.apellidos,
       celular: this.form.value.celular,
-      placa:  `${this.form.value.placaLetras.toUpperCase()}-${this.form.value.placaNumeros}`
+      placa: `${this.form.value.placaLetras.toUpperCase()}-${this.form.value.placaNumeros}`,
+      iglesiaId: this.usuario.iglesia || null
     }
     if (this.accion === 'Crear') {
       this.createVehiculo(vehiculo);
@@ -124,10 +125,10 @@ export class MiVehiculoComponent implements OnInit {
   async updateVehiculo(data: VehiculoModel): Promise<void> {
     this.loading = true;
     try {
-    await this.vehiculoService.updateVehiculo(this.vehiculoId, data);
-    this.openNotification( 'Vehículo actualizado', 'Los datos de su vehículo han sido actualizados con éxito', 'success');
-    this.loading = false;
-    this.router.navigate(['/private/home']);
+      await this.vehiculoService.updateVehiculo(this.vehiculoId, data);
+      this.openNotification('Vehículo actualizado', 'Los datos de su vehículo han sido actualizados con éxito', 'success');
+      this.loading = false;
+      this.router.navigate(['/private/home']);
     } catch (error) {
       console.error('Error al registrar el vehículo:', error);
       this.loading = false;
@@ -137,10 +138,10 @@ export class MiVehiculoComponent implements OnInit {
   async createVehiculo(data: VehiculoModel): Promise<void> {
     this.loading = true;
     try {
-    await this.vehiculoService.createVehiculo(data);
-    this.openNotification('Vehículo registrado', 'Su vehículo ha sido registrado con éxito', 'success');
-    this.loading = false;
-    this.router.navigate(['/private/home']);
+      await this.vehiculoService.createVehiculo(data);
+      this.openNotification('Vehículo registrado', 'Su vehículo ha sido registrado con éxito', 'success');
+      this.loading = false;
+      this.router.navigate(['/private/home']);
     } catch (error) {
       console.error('Error al registrar el vehículo:', error);
       this.loading = false;
@@ -151,15 +152,15 @@ export class MiVehiculoComponent implements OnInit {
     this.location.back();
   }
 
-    openNotification(title: string, message: string, type: string): void {
-      this.dialog.open(DialogNotificationComponent, {
-        data: {
-          title: title,
-          message: message,
-          bottons: 'one',
-          type: type
-        }
-      });
-    }
+  openNotification(title: string, message: string, type: string): void {
+    this.dialog.open(DialogNotificationComponent, {
+      data: {
+        title: title,
+        message: message,
+        bottons: 'one',
+        type: type
+      }
+    });
+  }
 
 }

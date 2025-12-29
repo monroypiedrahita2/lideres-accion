@@ -95,6 +95,10 @@ export const routes: Routes = [
         path: 'listar-vehiculos',
         loadComponent: () => import('./listar-vehiculos/listar-vehiculos.component').then(m => m.ListarVehiculosComponent),
       },
+      {
+        path: 'listar-voluntarios',
+        loadComponent: () => import('./listar-voluntarios/listar-voluntarios.component').then(m => m.ListarVoluntariosComponent),
+      },
     ]
   },
   {

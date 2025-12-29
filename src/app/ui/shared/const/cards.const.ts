@@ -55,6 +55,13 @@ export const CARDS_HOME: CardModel[] = [
     icon: 'upload_file',
     showIf: ['Super usuario', 'Pastor'],
   },
+  {
+    goTo: '../listar-voluntarios',
+    title: 'Voluntarios Iglesia',
+    description: 'Listar y adminstrar voluntarios de la iglesia',
+    icon: 'groups',
+    showIf: ['Pastor', 'Coordinador de iglesia'],
+  },
   // {
   //   goTo: '../crear-lider',
   //   title: 'Crear líder',

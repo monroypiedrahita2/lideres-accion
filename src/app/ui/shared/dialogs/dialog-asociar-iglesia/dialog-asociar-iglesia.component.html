@@ -1,0 +1,45 @@
+<div class="flex flex-col items-center justify-center pt-8 px-6">
+    <div class="bg-blue-100 rounded-full p-5 mb-4 flex items-center justify-center">
+            <mat-icon class="text-blue-600 !w-12 !h-12 !text-[48px] flex items-center justify-center">church</mat-icon>
+    </div>
+    <span class="text-blue-600 font-bold text-center text-2xl uppercase tracking-wide">Asociar a Iglesia</span>
+</div>
+
+<mat-dialog-content class="w-full">
+  <div class="flex flex-col gap-4 mt-4 w-full">
+    <p class="text-center font-primary text-gray-600 text-lg leading-relaxed">
+      Ingresa el documento del perfil que deseas asociar a tu iglesia.
+    </p>
+
+    <div class="flex gap-2 items-center w-full">
+        <mg-input-text
+            class="w-full"
+            label="Documento"
+            [formControl]="documentoControl"
+            placeholder="Digite el documento"
+            type="number">
+        </mg-input-text>
+        <button mat-mini-fab color="primary" (click)="buscarPerfil()" [disabled]="documentoControl.invalid">
+            <mat-icon>search</mat-icon>
+        </button>
+    </div>
+
+    <div *ngIf="perfilEncontrado" class="w-full mt-4">
+        <mtt-card-info
+            [title]="perfilEncontrado.nombres + ' ' + perfilEncontrado.apellidos"
+            [textInfo]="perfilEncontrado.documento"
+            icon="person"
+            [activePoint]="true">
+        </mtt-card-info>
+        
+        <div class="mt-2 text-sm text-gray-500" *ngIf="perfilEncontrado.nameIglesia">
+            Iglesia actual: {{perfilEncontrado.nameIglesia}}
+        </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<div class="w-full flex gap-4 p-4">
+  <mg-button (onClick)="onNoClick()" size="big" type="reset" text="Cancelar" class="w-full"></mg-button>
+  <mg-button *ngIf="perfilEncontrado" size="big" text="Asociar" class="w-full" (onClick)="asociarIglesia()"></mg-button>
+</div>
