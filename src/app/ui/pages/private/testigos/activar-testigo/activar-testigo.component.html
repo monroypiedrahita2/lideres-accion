@@ -1,0 +1,11 @@
+<mg-title title="Activar Testigo"></mg-title>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+    @for (t of paginatedTestigos; track t.id) {
+    <app-card-aprobacion [title]="t.nombres + ' ' + t.apellidos" [subtitle]="t.celular || 'Sin celular'"
+        [checked]="isChecked(t)" (checkedChange)="aprobarTestigo(t, $event)"></app-card-aprobacion>
+    }
+</div>
+
+<mg-paginator [length]="testigos.length" [pageSize]="pageSize" [pageIndex]="pageIndex"
+    (page)="onPageChange($event)"></mg-paginator>

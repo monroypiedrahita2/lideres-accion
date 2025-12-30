@@ -60,6 +60,14 @@ export class PerfilService {
     return collectionData(_collection, { idField: 'id' }) as Observable<any>;
   }
 
+  getPostuladosTestigos(): Observable<PerfilModel[]> {
+    const q = query(
+      collection(this.firestore, this._collection),
+      where('postulado.testigo', '==', true)
+    );
+    return collectionData(q, { idField: 'id' }) as Observable<PerfilModel[]>;
+  }
+
 
 
 

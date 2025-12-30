@@ -45,8 +45,8 @@ export class MiVehiculoComponent implements OnInit {
   constructor(private readonly fb: FormBuilder, private readonly router: Router, private readonly location: Location, private readonly vehiculoService: VehiculoService, private readonly auth: AuthService, public dialog: MatDialog) {
     this.form = this.fb.group({
       tipoVehiculo: ['', Validators.required],
-      placaLetras: ['', [Validators.required, Validators.pattern('^[A-Z]*$'), Validators.maxLength(3)]],
-      placaNumeros: ['', [Validators.required, Validators.pattern('^[0-9A-Z]*$'), Validators.maxLength(3)]],
+      placaLetras: ['', [Validators.required, Validators.pattern('^[a-zA-Z]*$'), Validators.maxLength(3)]],
+      placaNumeros: ['', [Validators.required, Validators.pattern('^[0-9a-zA-Z]*$'), Validators.maxLength(3)]],
       marca: ['', Validators.required],
       modelo: ['', Validators.required],
       nombreModelo: ['', Validators.required],
@@ -111,7 +111,7 @@ export class MiVehiculoComponent implements OnInit {
       nombre: this.form.value.nombres,
       apellidos: this.form.value.apellidos,
       celular: this.form.value.celular,
-      placa: `${this.form.value.placaLetras.toUpperCase()}-${this.form.value.placaNumeros}`,
+      placa: `${this.form.value.placaLetras.toUpperCase()}-${this.form.value.placaNumeros.toString().toUpperCase()}`,
       iglesiaId: this.usuario.iglesia || null,
       aprobado: this.accion === 'Crear' ? false : this.form.value.aprobado
     }
@@ -139,7 +139,7 @@ export class MiVehiculoComponent implements OnInit {
   async createVehiculo(data: VehiculoModel): Promise<void> {
     this.loading = true;
     try {
-      await this.vehiculoService.createVehiculo(data);
+      await this.vehiculoService.createVehiculo(data, this.auth.uidUser());
       this.openNotification('Vehículo registrado', 'Su vehículo ha sido registrado con éxito', 'success');
       this.loading = false;
       this.router.navigate(['/private/home']);

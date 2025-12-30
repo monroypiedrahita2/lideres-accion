@@ -57,7 +57,7 @@ export const routes: Routes = [
       },
       {
         path: 'activar-testigo',
-        loadComponent: () => import('./testigos/activar-testigo.component').then(m => m.ActivarTestigoComponent),
+        loadComponent: () => import('./testigos/activar-testigo/activar-testigo.component').then(m => m.ActivarTestigoComponent),
       },
       {
         path: 'listar-testigos',

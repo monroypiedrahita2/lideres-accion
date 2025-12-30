@@ -6,7 +6,7 @@ import { MatDialogRef, MatDialogContent, MatDialogModule } from '@angular/materi
 import { MatIconModule } from '@angular/material/icon';
 import { ToastrService } from 'ngx-toastr';
 import { InputTextComponent } from '../../components/atoms/input-text/input-text.component';
-import { CardInfoComponent } from '../../components/cards/card-info/card-info.component';
+import { PersonInfoComponent } from '../../components/cards/person-info/person-info.component';
 import { ButtonComponent } from '../../components/atoms/button/button.component';
 import { PerfilService } from '../../services/perfil/perfil.service';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
@@ -22,7 +22,7 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
         MatButtonModule,
         MatIconModule,
         InputTextComponent,
-        CardInfoComponent,
+        PersonInfoComponent,
         ButtonComponent
     ],
     templateUrl: './dialog-asociar-iglesia.component.html',
@@ -45,11 +45,18 @@ export class DialogAsociarIglesiaComponent {
         this.perfilService.getPerfilByDocumento(doc).subscribe((perfiles) => {
             if (perfiles && perfiles.length > 0) {
                 this.perfilEncontrado = perfiles[0];
+                this.documentoControl.disable();
             } else {
                 this.perfilEncontrado = null;
                 this.toastr.warning('Perfil no encontrado');
             }
         });
+    }
+
+    limpiar() {
+        this.perfilEncontrado = null;
+        this.documentoControl.reset();
+        this.documentoControl.enable();
     }
 
     asociarIglesia() {

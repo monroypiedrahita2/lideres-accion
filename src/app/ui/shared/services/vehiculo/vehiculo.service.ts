@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, getDoc, query, updateDoc, where } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, getDoc, query, updateDoc, where, setDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
 import { environment } from '../../../../../enviroments';
@@ -13,7 +13,11 @@ export class VehiculoService {
 
   constructor(private readonly firestore: Firestore) { }
 
-  createVehiculo(vehiculo: VehiculoModel) {
+  createVehiculo(vehiculo: VehiculoModel, id?: string) {
+    if (id) {
+      const document = doc(this.firestore, this._collection, id);
+      return setDoc(document, vehiculo);
+    }
     const collectionRef = collection(this.firestore, this._collection);
     return addDoc(collectionRef, vehiculo);
   }

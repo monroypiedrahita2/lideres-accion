@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TitleComponent } from '../../../../shared/components/atoms/title/title.component';
 import { PersonInfoComponent } from '../../../../shared/components/cards/person-info/person-info.component';
-import { ReferidoService } from '../../../../shared/services/referido/referido.service';
+import { TestigoService } from '../../../../shared/services/testigo/testigo.service';
 import { BaseModel } from '../../../../../models/base/base.model';
-import { ReferidoModel } from '../../../../../models/referido/referido.model';
+import { TestigoModel } from '../../../../../models/testigo/testigo.model';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -22,14 +22,14 @@ import { ConfirmActionComponent } from '../../../../shared/components/modules/mo
     templateUrl: './listar-testigos.component.html',
 })
 export class ListarTestigosComponent implements OnInit {
-    testigos: BaseModel<ReferidoModel>[] = [];
+    testigos: BaseModel<TestigoModel>[] = [];
     usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
     showModal: boolean = false;
     dataModal: { name: string; id: string } = { name: '', id: '' };
-    referidoToDelete: BaseModel<ReferidoModel> | null = null;
+    referidoToDelete: BaseModel<TestigoModel> | null = null;
 
     constructor(
-        private readonly referidoService: ReferidoService,
+        private readonly testigoService: TestigoService,
         private readonly router: Router,
         private readonly toast: ToastrService
     ) { }
@@ -39,14 +39,14 @@ export class ListarTestigosComponent implements OnInit {
     }
 
     getTestigos() {
-        this.referidoService.getTestigos(this.usuario.iglesia!).subscribe({
-            next: (res: BaseModel<ReferidoModel>[]) => {
+        this.testigoService.getAllTestigos().subscribe({
+            next: (res: BaseModel<TestigoModel>[]) => {
                 this.testigos = res;
             },
         });
     }
 
-    edit(referido: BaseModel<ReferidoModel>) {
+    edit(referido: BaseModel<TestigoModel>) {
         this.router.navigate(['private/editar-referido', referido.id]);
     }
 
@@ -57,28 +57,5 @@ export class ListarTestigosComponent implements OnInit {
         this.referidoToDelete = this.testigos.find(t => t.id === data.id) || null;
     }
 
-    async quitarTestigo(referido: BaseModel<ReferidoModel>) {
-        if (!referido) return;
 
-        const data: BaseModel<ReferidoModel> = {
-            ...referido,
-            data: {
-                ...referido.data,
-                testigo: {
-                    ...referido.data.testigo,
-                    quiereApoyar: false,
-                },
-            },
-        };
-
-        try {
-            await this.referidoService.updateReferido(referido.id!, data);
-            this.toast.success('Testigo removido correctamente');
-            this.getTestigos(); // Refresh list
-            this.showModal = false;
-        } catch (error) {
-            console.error(error);
-            this.toast.error('Error al remover el testigo. Intente nuevamente.');
-        }
-    }
 }

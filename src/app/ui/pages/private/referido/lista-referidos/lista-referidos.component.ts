@@ -183,16 +183,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
       });
     }
   }
-  getTestigos() {
-    this.nombreLider = '';
-    this.data = [];
-    this.optionSelected = 'Testigos';
-    this.referidoService.getTestigos(this.usuario.iglesia!).subscribe({
-      next: (res: BaseModel<ReferidoModel>[]) => {
-        this.referidos = res;
-      },
-    });
-  }
+
 
   getBySearch(criterio: string, value: string | boolean) {
     this.spinner = true;

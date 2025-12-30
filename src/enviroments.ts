@@ -28,6 +28,7 @@ export const environment = {
     perfil: 'Perfiles',
     vehiculos: 'Vehiculos',
     casasApoyo: 'Casas',
+    testigos: 'Testigos',
   },
   alerts: { timeOut: 3000, preventDuplicates: true },
 };

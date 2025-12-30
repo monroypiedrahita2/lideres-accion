@@ -5,24 +5,10 @@
 </div>
 
 @for (referido of testigos; track $index) {
-  <lida-person-info
-    [esInterno]="referido.data.isInterno"
-    [title]="referido.data.nombres + ' ' + referido.data.apellidos"
-    [textInfo]="referido.id!"
-    (eventEdit)="edit(referido)"
-    [icon2]="'clear'"
-    [textInfo2]="''"
-    [textInfo3]="'Última actualización'"
-    [textInfo4]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : referido.fechaCreacion.split('T')[0]"
-    [canDelete]="true"
-    (eventDelete)="openModal({name: referido.data.nombres + ' ' + referido.data.apellidos, id: referido.id!})"
-    [votacion]="referido.data.lugarVotacion && referido.data.mesaVotacion ? true : false"
-  ></lida-person-info>
+<lida-person-info [title]="referido.data.nombre + ' ' + referido.data.apellido" [textInfo]="referido.id!"
+  (eventEdit)="edit(referido)" [icon2]="'clear'" [textInfo2]="''" [textInfo3]="'Última actualización'"
+  [textInfo4]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : referido.fechaCreacion.split('T')[0]"
+  [canDelete]="true"
+  (eventDelete)="openModal({name: referido.data.nombre + ' ' + referido.data.apellido, id: referido.id!})"
+  [votacion]="referido.data.puestodevotacion && referido.data.mesadevotacion ? true : false"></lida-person-info>
 }
-
-<lida-confirm-action
-  [showModal]="showModal"
-  [data]="dataModal"
-  (eventConfirm)="quitarTestigo(referidoToDelete!)"
-  (eventBack)="showModal = false"
-></lida-confirm-action>
