@@ -11,7 +11,7 @@ import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
 import { MatIconModule } from '@angular/material/icon';
-import { CardInfoComponent } from '../../../shared/components/modules/card-info/card-info.component';
+import { CardInfoComponent } from '../../../shared/components/cards/card-info/card-info.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogOpcionesVehicularComponent } from '../../../shared/dialogs/dialog-opciones-vehicular/dialog-opciones-vehicular.component';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';

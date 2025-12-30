@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TitleComponent } from '../../../../shared/components/atoms/title/title.component';
-import { PersonInfoComponent } from '../../../../shared/components/modules/person-info/person-info.component';
+import { PersonInfoComponent } from '../../../../shared/components/cards/person-info/person-info.component';
 import { ReferidoService } from '../../../../shared/services/referido/referido.service';
 import { BaseModel } from '../../../../../models/base/base.model';
 import { ReferidoModel } from '../../../../../models/referido/referido.model';

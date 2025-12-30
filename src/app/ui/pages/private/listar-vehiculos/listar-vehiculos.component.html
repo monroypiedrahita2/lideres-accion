@@ -1,33 +1,28 @@
-<div class="px-6 py-6 w-full max-w-7xl mx-auto">
+<div class="w-full max-w-7xl mx-auto">
 
   <mg-title title="Vehículos Inscritos"></mg-title>
 
-  <div *ngIf="paginatedVehiculos.length > 0; else noVehicles" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div *ngIf="paginatedVehiculos.length > 0; else noVehicles"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <div *ngFor="let vehiculo of paginatedVehiculos">
-      <app-card-vehiculo 
-        [vehiculo]="vehiculo" 
-        [showActions]="true"
-        [showAssign]="false"
-        (onDesasignar)="desasignar($event)">
-      </app-card-vehiculo>
+      <app-card-aprobacion [title]="vehiculo.placa" [subtitle]="vehiculo.marca + ' ' + vehiculo.nombreModelo"
+        [date]="vehiculo.nombre + ' ' + vehiculo.apellidos" [status]="vehiculo.color" [checked]="vehiculo.aprobado"
+        (checkedChange)="aprobarVehiculo(vehiculo, $event)">
+      </app-card-aprobacion>
     </div>
   </div>
 
-  <mat-paginator
-    [length]="dataSource.data.length"
-    [pageSize]="5"
-    [pageSizeOptions]="[5, 10, 20]"
-    showFirstLastButtons
-    aria-label="Select page of vehicles">
-  </mat-paginator>
+  <mg-paginator [length]="dataSource.data.length" [pageSize]="pageSize" [pageIndex]="pageIndex"
+    [pageSizeOptions]="[5, 10, 20]" [showPageSizeOptions]="true" (page)="onPageChange($event)">
+  </mg-paginator>
 
   <ng-template #noVehicles>
     <div class="text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-100">
-        <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
-            <mat-icon class="text-3xl">directions_car_filled</mat-icon>
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">No hay vehículos inscritos</h3>
-        <p class="text-gray-500 max-w-md mx-auto">Aún no hay vehículos asociados a esta iglesia.</p>
+      <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
+        <mat-icon class="text-3xl">directions_car_filled</mat-icon>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-800 mb-1">No hay vehículos inscritos</h3>
+      <p class="text-gray-500 max-w-md mx-auto">Aún no hay vehículos asociados a esta iglesia.</p>
     </div>
   </ng-template>
 </div>

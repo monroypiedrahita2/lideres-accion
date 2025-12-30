@@ -1,9 +1,6 @@
 <app-spinner [showSpinner]="spinner"></app-spinner>
-<lida-confirm-action
-  [showModal]="showModal"
-  [data]="dataModal"
-  (eventConfirm)="eliminar(dataModal.id)"
-></lida-confirm-action>
+<lida-confirm-action [showModal]="showModal" [data]="dataModal"
+  (eventConfirm)="eliminar(dataModal.id)"></lida-confirm-action>
 
 <!-- <mg-title [title]="'LISTA DE REFERIDOS'"></mg-title> -->
 <div class="flex justify-around gap-1 gap-y-2 overflow-x-auto p-2" style="flex-wrap: nowrap;">
@@ -11,16 +8,10 @@
 
   <span
     [class]="optionSelected === 'Cedula' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer'"
-    (click)="buscarIndividual('Cedula')"
-    (keydown)="buscarIndividual('Cedula')"
-    >Cédula</span
-  >
+    (click)="buscarIndividual('Cedula')" (keydown)="buscarIndividual('Cedula')">Cédula</span>
   <span
     [class]="optionSelected === 'Nombre' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer'"
-    (click)="buscarIndividual('Nombre')"
-    (keydown)="buscarIndividual('Nombre')"
-    >Nombre</span
-  >
+    (click)="buscarIndividual('Nombre')" (keydown)="buscarIndividual('Nombre')">Nombre</span>
   <!-- <span
     [class]="optionSelected === 'Internos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer'"
     (click)="getBySearch('data.isInterno', true)"
@@ -40,54 +31,26 @@
     (keydown)="getTestigos()"
     >Testigos</span
   > -->
-  <span
-    *ngIf="usuario.rol === 'Pastor' || usuario.rol === 'Super usuario'"
+  <span *ngIf="usuario.rol === 'Pastor' || usuario.rol === 'Super usuario'"
     [class]="optionSelected === 'Todos' ? 'bg-blue-200 border border-blue-800 text-blue-700 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer' : 'bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-md cursor-pointer'"
-    (click)="getAllReferidos()"
-    (keydown)="getAllReferidos()"
-    >Todos</span
-  >
+    (click)="getAllReferidos()" (keydown)="getAllReferidos()">Todos</span>
 
 </div>
 <form [formGroup]="formRef" class="flex justify-center mt-4">
-  <mg-input-text
-    *ngIf="optionSelected == 'Cedula'"
-    class="w-full"
-    type="text"
-    formControlName="documento"
-    id="documento"
-    label="Buscar por cédula"
-  ></mg-input-text>
+  <mg-input-text *ngIf="optionSelected == 'Cedula'" class="w-full" type="text" formControlName="documento"
+    id="documento" label="Buscar por cédula"></mg-input-text>
 </form>
-<div
-  class="grid md:grid-cols-1 lg:grid-cols-12 w-full gap-2"
-  *ngIf="optionSelected == 'Nombre'"
->
+<div class="grid md:grid-cols-1 lg:grid-cols-12 w-full gap-2" *ngIf="optionSelected == 'Nombre'">
   <form [formGroup]="formRef" class="lg:col-span-8">
-    <mg-input-text
-      class="w-full"
-      type="text"
-      formControlName="documento"
-      id="documentoOrName"
-      label="Buscar por nombre"
-    ></mg-input-text>
+    <mg-input-text class="w-full" type="text" formControlName="documento" id="documentoOrName"
+      label="Buscar por nombre"></mg-input-text>
   </form>
 </div>
-<div *ngIf="optionSelected == 'Todos' && (usuario.rol === 'Pastor' || usuario.rol === 'Super usuario')" class="lg:col-span-4 flex items-center sm:justify-around">
-  <mg-button
-    (onClick)="clear()"
-    [text]="btnRecargar ? 'Mostrar todos' : 'Limpiar'"
-    type="reset"
-  ></mg-button>
-  <div
-    class="p-4"
-    *ngIf="usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'"
-  >
-    <mg-button
-      (onClick)="descargar(referidos)"
-      icon="cloud_download"
-      text="Descargar"
-    ></mg-button>
+<div *ngIf="optionSelected == 'Todos' && (usuario.rol === 'Pastor' || usuario.rol === 'Super usuario')"
+  class="lg:col-span-4 flex items-center sm:justify-around">
+  <mg-button (onClick)="clear()" [text]="btnRecargar ? 'Mostrar todos' : 'Limpiar'" type="reset"></mg-button>
+  <div class="p-4" *ngIf="usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'">
+    <mg-button (onClick)="descargar(referidos)" icon="cloud_download" text="Descargar"></mg-button>
   </div>
 </div>
 
@@ -101,61 +64,37 @@
 
 </div> -->
 
-<div *ngIf="(formRef.value.documento || optionSelected == 'Todos') && optionSelected != 'Cedula'" class="flex justify-center p-1">
-  <a *ngIf="!isFirstPage" (click)="prevPage()" class="flex items-center justify-center px-3 h-8 me-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
-    <svg class="w-3.5 h-3.5 me-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
-    </svg>
-    Anterior
-  </a>
-  <a *ngIf="!isLastPage" (click)="nextPage()" class="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
-    Siguiente
-    <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-    </svg>
-  </a>
+<div *ngIf="(formRef.value.documento || optionSelected == 'Todos') && optionSelected != 'Cedula'"
+  class="flex justify-center p-1">
+  <mg-paginator [isFirstPage]="isFirstPage" [isLastPage]="isLastPage" (previous)="prevPage()" (next)="nextPage()">
+  </mg-paginator>
 </div>
 
 
 @for (referido of referidos; track $index) {
-<lida-person-info
-  class="sm:block lg:hidden"
-  [esInterno]="referido.data.isInterno"
-  [title]="referido.data.nombres + ' ' + referido.data.apellidos"
-  [textInfo]="referido.id!"
-  (eventEdit)="edit(referido)"
+<lida-person-info class="sm:block lg:hidden" [esInterno]="referido.data.isInterno"
+  [title]="referido.data.nombres + ' ' + referido.data.apellidos" [textInfo]="referido.id!" (eventEdit)="edit(referido)"
   [textInfo2]="referido.data.cantidadReferidos ? referido.data.cantidadReferidos : 'Ver referidos'"
   (evenFilterReferidos)="referido.data.cantidadReferidos ? filterReferidos(referido.id!, referido.data.nombres + ' ' + referido.data.apellidos) : misReferidos(referido.id!)"
-  [textInfo3]="referido.data.testigo?.quiereApoyar ? 'Testigo' : ''"
-  [textInfo4]="
+  [textInfo3]="referido.data.testigo?.quiereApoyar ? 'Testigo' : ''" [textInfo4]="
     referido.fechaModificacion
       ? referido.fechaModificacion.split('T')[0]
       : referido.fechaCreacion.split('T')[0]
-  "
-  [canDelete]="usuario.rol === 'Pastor'"
-  (eventDelete)="
+  " [canDelete]="usuario.rol === 'Pastor'" (eventDelete)="
     openModal({
       name: referido.data.nombres + ' ' + referido.data.apellidos,
       id: referido.id!
     })
-  "
-  [badge]="referido.data.senado ? true : false"
-  [badge2]="referido.data.camara ? true : false"
-  [votacion]="
+  " [badge]="referido.data.senado ? true : false" [badge2]="referido.data.camara ? true : false" [votacion]="
     referido.data.lugarVotacion && referido.data.mesaVotacion ? true : false
-  "
-></lida-person-info>
+  "></lida-person-info>
 }
 
 <div class="sm:hidden lg:block">
   <div class="relative overflow-x-auto">
     <div>
-      <table
-        class="w-full text-sm text-left rtl:text-right text-gray-500 "
-      >
-        <thead
-          class="text-sm text-white uppercase bg-primary  font-primary"
-        >
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+        <thead class="text-sm text-white uppercase bg-primary  font-primary">
           <tr>
             <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
               Documento
@@ -175,10 +114,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let referido of referidos"
-            class="bg-white border-b border-gray-200 hover:bg-gray-200"
-          >
+          <tr *ngFor="let referido of referidos" class="bg-white border-b border-gray-200 hover:bg-gray-200">
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
               {{ referido.id }}
             </td>
@@ -193,11 +129,8 @@
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
               <div class="flex items-center justify-center gap-4">
-                <span
-                  class="material-icons text-primary cursor-pointer"
-                  [routerLink]="['../editar-referido', referido.id]"
-                  >edit</span
-                >
+                <span class="material-icons text-primary cursor-pointer"
+                  [routerLink]="['../editar-referido', referido.id]">edit</span>
               </div>
             </td>
           </tr>

@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 import { InputTextComponent } from '../../components/atoms/input-text/input-text.component';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { MatIconModule } from '@angular/material/icon';
-import { PersonInfoComponent } from '../../components/modules/person-info/person-info.component';
+import { PersonInfoComponent } from '../../components/cards/person-info/person-info.component';
 import { PerfilService } from '../../services/perfil/perfil.service';
 import { ToastrService } from 'ngx-toastr';
 import { DialogNotificationComponent } from '../dialog-notification/dialog-nofication.component';

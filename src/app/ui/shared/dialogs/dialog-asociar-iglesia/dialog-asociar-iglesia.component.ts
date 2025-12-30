@@ -6,7 +6,7 @@ import { MatDialogRef, MatDialogContent, MatDialogModule } from '@angular/materi
 import { MatIconModule } from '@angular/material/icon';
 import { ToastrService } from 'ngx-toastr';
 import { InputTextComponent } from '../../components/atoms/input-text/input-text.component';
-import { CardInfoComponent } from '../../components/modules/card-info/card-info.component';
+import { CardInfoComponent } from '../../components/cards/card-info/card-info.component';
 import { ButtonComponent } from '../../components/atoms/button/button.component';
 import { PerfilService } from '../../services/perfil/perfil.service';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';

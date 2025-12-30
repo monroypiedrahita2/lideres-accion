@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ComunaService } from '../../../../shared/services/comuna/comuna.service';
 import { BaseModel } from '../../../../../models/base/base.model';
 import { ComunaModel } from '../../../../../models/comuna/comuna.model';
-import { ComunaCardComponent } from '../../../../shared/components/modules/comuna-card/comuna-card.component';
+import { ComunaCardComponent } from '../../../../shared/components/cards/comuna-card/comuna-card.component';
 import { TitleComponent } from '../../../../shared/components/atoms/title/title.component';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { ConfirmActionComponent } from '../../../../shared/components/modules/modal/confirm-action.component';

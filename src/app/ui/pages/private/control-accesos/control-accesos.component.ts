@@ -15,7 +15,7 @@ import { ButtonComponent } from '../../../shared/components/atoms/button/button.
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { MatIconModule } from '@angular/material/icon';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
-import { PersonCardComponent } from '../../../shared/components/modules/person-card/person-card.component';
+import { PersonCardComponent } from '../../../shared/components/cards/person-card/person-card.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogControlAccesosComponent } from './dialog-control-accesos/dialog-control-accesos.component';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';

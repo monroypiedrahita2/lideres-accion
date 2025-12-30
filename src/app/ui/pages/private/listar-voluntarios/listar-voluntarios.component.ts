@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { CardInfoComponent } from '../../../shared/components/modules/card-info/card-info.component';
+import { CardInfoComponent } from '../../../shared/components/cards/card-info/card-info.component';
 import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
 
 @Component({

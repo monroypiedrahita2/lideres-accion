@@ -25,11 +25,12 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TITULOS_DESCARGA } from '../../../../shared/const/titulos-excel.const';
 import { PrivateRoutingModule } from '../../private-routing.module';
 import { Router, RouterModule } from '@angular/router';
-import { PersonInfoComponent } from '../../../../shared/components/modules/person-info/person-info.component';
+import { PersonInfoComponent } from '../../../../shared/components/cards/person-info/person-info.component';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { ConfirmActionComponent } from '../../../../shared/components/modules/modal/confirm-action.component';
 import { ComunaModel } from '../../../../../models/comuna/comuna.model';
 import { Subject, takeUntil } from 'rxjs';
+import { MgPaginatorComponent } from '../../../../shared/components/modules/paginator/paginator.component';
 
 @Component({
   selector: 'app-lista-referidos',
@@ -50,6 +51,7 @@ import { Subject, takeUntil } from 'rxjs';
     PersonInfoComponent,
     ConfirmActionComponent,
     ReactiveFormsModule,
+    MgPaginatorComponent
   ],
   providers: [LugaresService],
   templateUrl: './lista-referidos.component.html',
@@ -154,7 +156,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Error getting lideres', err);
       },
-      complete: () => {},
+      complete: () => { },
     });
   }
 
@@ -264,43 +266,43 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   async getReferidos() {
     this.spinner = true;
     try {
-     // reset pagination for "Todos"
-     this.pageStartAfter = [undefined];
-     this.currentPageIndex = 0;
-     const res: any =  await this.referidoService.getPage(this.iglesia)
-     this.spinner = false;
+      // reset pagination for "Todos"
+      this.pageStartAfter = [undefined];
+      this.currentPageIndex = 0;
+      const res: any = await this.referidoService.getPage(this.iglesia)
+      this.spinner = false;
       this.referidos = res.items;
       this.isFirstPage = true;
       this.isLastPage = !res.hasMore;
       if (res.lastDoc) this.pageStartAfter[1] = res.lastDoc;
-      } catch (error) {
+    } catch (error) {
       console.error(error);
     }
   }
 
-    async nextPage() {
+  async nextPage() {
     try {
-        if (this.optionSelected == 'Todos') {
-          const targetIndex = this.currentPageIndex + 1;
-          const startAfterDoc = this.pageStartAfter[targetIndex];
-          const res: any = await this.referidoService.getPage(this.iglesia, startAfterDoc);
-          // store cursor for next page
-          if (res.lastDoc) this.pageStartAfter[targetIndex + 1] = res.lastDoc;
-          this.currentPageIndex = targetIndex;
-          this.referidos = res.items;
-          this.isFirstPage = this.currentPageIndex === 0;
-          this.isLastPage = !res.hasMore;
-        } else if (this.optionSelected == 'Nombre') {
-          if (!this.nombreBuscado) return;
-          const targetIndex = this.currentPageIndex + 1;
-          const startAfterDoc = this.pageStartAfter[targetIndex];
-          const res: any = await this.referidoService.getPageByName(this.nombreBuscado, this.iglesia, startAfterDoc);
-          if (res.lastDoc) this.pageStartAfter[targetIndex + 1] = res.lastDoc;
-          this.currentPageIndex = targetIndex;
-          this.referidos = res.items;
-          this.isFirstPage = this.currentPageIndex === 0;
-          this.isLastPage = !res.hasMore;
-        }
+      if (this.optionSelected == 'Todos') {
+        const targetIndex = this.currentPageIndex + 1;
+        const startAfterDoc = this.pageStartAfter[targetIndex];
+        const res: any = await this.referidoService.getPage(this.iglesia, startAfterDoc);
+        // store cursor for next page
+        if (res.lastDoc) this.pageStartAfter[targetIndex + 1] = res.lastDoc;
+        this.currentPageIndex = targetIndex;
+        this.referidos = res.items;
+        this.isFirstPage = this.currentPageIndex === 0;
+        this.isLastPage = !res.hasMore;
+      } else if (this.optionSelected == 'Nombre') {
+        if (!this.nombreBuscado) return;
+        const targetIndex = this.currentPageIndex + 1;
+        const startAfterDoc = this.pageStartAfter[targetIndex];
+        const res: any = await this.referidoService.getPageByName(this.nombreBuscado, this.iglesia, startAfterDoc);
+        if (res.lastDoc) this.pageStartAfter[targetIndex + 1] = res.lastDoc;
+        this.currentPageIndex = targetIndex;
+        this.referidos = res.items;
+        this.isFirstPage = this.currentPageIndex === 0;
+        this.isLastPage = !res.hasMore;
+      }
     } catch (error) {
       console.error(error);
     }
