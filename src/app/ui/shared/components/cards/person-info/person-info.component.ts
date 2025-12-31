@@ -25,9 +25,17 @@ export class PersonInfoComponent {
   @Input() votacion: boolean = false;
   @Input() puestodevotacion: string = '';
   @Input() mesadevotacion: string = '';
-  @Output() eventEdit: EventEmitter<any> = new EventEmitter
-  @Output() evenFilterReferidos: EventEmitter<any> = new EventEmitter
-  @Output() eventDelete: EventEmitter<any> = new EventEmitter
+  @Input() showWhatsApp: boolean = false;
+  @Input() showCall: boolean = false;
+  @Input() showClean: boolean = false;
+  @Input() showEdit: boolean = true;
+  @Input() phoneNumber: string = '';
+  @Output() eventEdit: EventEmitter<any> = new EventEmitter();
+  @Output() evenFilterReferidos: EventEmitter<any> = new EventEmitter();
+  @Output() eventDelete: EventEmitter<any> = new EventEmitter();
+  @Output() eventWhatsApp: EventEmitter<any> = new EventEmitter();
+  @Output() eventCall: EventEmitter<any> = new EventEmitter();
+  @Output() eventClean: EventEmitter<any> = new EventEmitter();
 
 
   edit() {
@@ -40,6 +48,18 @@ export class PersonInfoComponent {
 
   filterReferidos() {
     this.evenFilterReferidos.emit();
+  }
+
+  whatsApp() {
+    this.eventWhatsApp.emit();
+  }
+
+  call() {
+    this.eventCall.emit();
+  }
+
+  clean() {
+    this.eventClean.emit();
   }
 
 

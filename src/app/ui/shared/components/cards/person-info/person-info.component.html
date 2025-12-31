@@ -43,14 +43,35 @@
       </dl>
     </div>
 
-    <div class="flex flex-col items-center justify-center">
-      <div class="h-10 w-10 flex items-center justify-center rounded-lg border-2 bg-primary">
-        <span class="material-symbols-outlined text-white font-light" (click)="edit()" (keydown)="edit()">
+    <div class="flex flex-col items-center justify-center gap-1">
+      <div *ngIf="showClean"
+        class="h-10 w-10 flex items-center justify-center rounded-lg border-2 bg-yellow-500 cursor-pointer hover:bg-yellow-600 transition-colors">
+        <mat-icon class="text-white flex items-center justify-center" (click)="clean()"
+          (keydown)="clean()">cleaning_services</mat-icon>
+      </div>
+
+      <div *ngIf="showWhatsApp"
+        class="h-10 w-10 flex items-center justify-center rounded-lg border-2 bg-green-500 cursor-pointer hover:bg-green-600 transition-colors">
+        <img src="assets/whatsApp.svg" alt="WhatsApp" class="h-6 w-6" (click)="whatsApp()" (keydown)="whatsApp()">
+      </div>
+
+      <div *ngIf="showCall"
+        class="h-10 w-10 flex items-center justify-center rounded-lg border-2 bg-blue-500 cursor-pointer hover:bg-blue-600 transition-colors">
+        <mat-icon class="text-white flex items-center justify-center" (click)="call()"
+          (keydown)="call()">call</mat-icon>
+      </div>
+
+      <div *ngIf="showEdit"
+        class="h-10 w-10 flex items-center justify-center rounded-lg border-2 bg-primary cursor-pointer hover:bg-blue-700 transition-colors">
+        <span class="material-symbols-outlined text-white font-light flex items-center justify-center" (click)="edit()"
+          (keydown)="edit()">
           {{ icon }}
         </span>
       </div>
-      <div *ngIf="canDelete" [class]="'h-10 w-10 flex items-center justify-center rounded-lg border-2 bg-red-400'">
-        <span class="material-symbols-outlined text-white font-light" (click)="eliminar()" (keydown)="eliminar()">
+      <div *ngIf="canDelete"
+        [class]="'h-10 w-10 flex items-center justify-center rounded-lg border-2 bg-red-400 cursor-pointer hover:bg-red-500 transition-colors'">
+        <span class="material-symbols-outlined text-white font-light flex items-center justify-center"
+          (click)="eliminar()" (keydown)="eliminar()">
           {{ icon2 }}
         </span>
       </div>

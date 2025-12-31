@@ -72,5 +72,29 @@ export class ListarTestigosComponent implements OnInit {
         this.updatePagination();
     }
 
+    onWhatsApp(celular: string) {
+        if (celular) {
+            window.open(`https://wa.me/57${celular}`, '_blank');
+        }
+    }
+
+    onCall(celular: string) {
+        if (celular) {
+            window.open(`tel:${celular}`, '_self');
+        }
+    }
+
+    onClean(referido: BaseModel<TestigoModel>) {
+        if (!referido.id) return;
+        const testigo = { ...referido };
+        testigo.data.puestodevotacion = '';
+        testigo.data.mesadevotacion = '';
+        this.testigoService.updateTestigo(referido.id, testigo).then(() => {
+            this.toast.success('Asignación eliminada correctamente');
+            this.getTestigos();
+        }).catch(() => {
+            this.toast.error('Error al eliminar la asignación');
+        });
+    }
 
 }
