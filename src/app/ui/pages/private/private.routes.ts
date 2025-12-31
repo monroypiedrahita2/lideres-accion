@@ -96,6 +96,10 @@ export const routes: Routes = [
         loadComponent: () => import('./aprobar-vehiculos/aprobar-vehiculos.component').then(m => m.AprobarVehiculosComponent),
       },
       {
+        path: 'aprobar-casas-apoyo',
+        loadComponent: () => import('./aprobar-casas-apoyo/aprobar-casas-apoyo.component').then(m => m.AprobarCasasApoyoComponent),
+      },
+      {
         path: 'listar-voluntarios',
         loadComponent: () => import('./listar-voluntarios/listar-voluntarios.component').then(m => m.ListarVoluntariosComponent),
       },

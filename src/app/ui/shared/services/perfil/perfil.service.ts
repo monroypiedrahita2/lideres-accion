@@ -89,6 +89,16 @@ export class PerfilService {
 
   }
 
+  getPostuladosCasasApoyoByIglesia(iglesiaId: string) {
+    const q = query(
+      collection(this.firestore, this._collection),
+      where('iglesia', '==', iglesiaId),
+      where('postulado.casaApoyo', '==', true)
+    );
+    const response = collectionData(q, { idField: 'id' }) as Observable<PerfilModel[]>;
+    return response;
+  }
+
 
 
 

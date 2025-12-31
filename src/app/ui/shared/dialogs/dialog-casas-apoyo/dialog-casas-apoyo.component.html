@@ -1,5 +1,3 @@
-
-@if(!showSearch) {
 <span class="mt-4 font-primary font-bold text-center text-[24px] ">Casas de apoyo</span>
 <mat-dialog-content>
   <p class="text-center font-primary">Seleccione la opcion que desea</p>
@@ -10,7 +8,8 @@
     routerLink="/private/mi-casa-de-apoyo"></mg-button>
 
   @if(this.usuario.rol === 'Pastor' || this.usuario.rol === 'Coordinador de iglesia') {
-    <mg-button (click)="toggleSearch()" size="big" text="Aprobación de solicitudes" class="w-full" icon="check_circle"></mg-button>
+  <mg-button mat-dialog-close size="big" text="Aprobar solicitudes" class="w-full" icon="check_circle"
+    routerLink="/private/aprobar-casas-apoyo"></mg-button>
   }
 
   @if(this.usuario.rol === 'Pastor' || this.usuario.rol === 'Coordinador de iglesia') {
@@ -18,55 +17,5 @@
     routerLink="/private/listar-casas-apoyo"></mg-button>
   }
 
-
   <button mat-button (click)="onNoClick()">Cerrar</button>
 </mat-dialog-actions>
-} @else {
-  <div class="flex flex-col w-full px-4 pb-4">
-    
-    <div class="w-full flex items-center justify-between mb-4 relative">
-      <button mat-icon-button (click)="backFromSearch()" class="absolute left-0">
-        <mat-icon>close</mat-icon>
-      </button>
-      <span class="font-primary font-bold text-center text-[24px] w-full">Buscar voluntario</span>
-    </div>
-    
-    <div class="w-full flex flex-col gap-4">
-      <div class="w-full">
-        <mg-input-text
-          label="Documento de identidad"
-          placeholder="Ingrese cédula"
-          [(ngModel)]="cedula"
-          (keyup.enter)="searchUser()"
-        ></mg-input-text>
-      </div>
-      
-      <div class="w-full flex gap-4 justify-center">
-        <mg-button (click)="searchUser()" size="big" text="Buscar" class="w-full" icon="search"></mg-button>
-        <mg-button (click)="clearSearch()" size="big" type="reset" text="Limpiar" class="w-full" icon="backspace"></mg-button>
-      </div>
-    </div>
-
-    @if(foundUser) {
-      <div class="w-full mt-6 mb-4">
-        <lida-person-info 
-          [title]="foundUser.nombres + ' ' + foundUser.apellidos"
-          [textInfo]="foundUser.documento"
-          [textInfo2]="foundUser.celular"
-          [textInfo3]="foundUser.email"
-          [icon]="'person'"
-          [badge]="false"
-          [textbadge]="''"
-          [textbadge2]="''"
-          [canDelete]="multipleFound"
-          (eventDelete)="deleteDocument()"
-        ></lida-person-info>
-        
-        <div class="mt-4 w-full flex gap-4">
-          <mg-button (click)="approveUser()" size="big" text="Aprobar" class="w-full" icon="verified"></mg-button>
-        </div>
-      </div>
-    }
-  </div>
-}
-
