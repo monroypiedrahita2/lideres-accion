@@ -1,22 +1,35 @@
-
-  <mg-skeleton [enableSkeleton]="skeleton" [num]="5"></mg-skeleton>
+<mg-skeleton [enableSkeleton]="skeleton" [num]="5"></mg-skeleton>
 
 @if (!skeleton) {
-  <div class="flex sm:flex-col md:flex-row gap-4 mt-4">
-    <mtt-card-info title="Mis datos" icon="account_circle" textInfo="Actualiza y edita el tu perfil" [routerLink]="'../mi-perfil'"></mtt-card-info>
-    <ng-container *ngIf="usuario.iglesia">
-      <mtt-card-info *ngIf="usuario.rol === 'Pastor' || usuario.rol === 'Super Usuario'" title="Estadisticas" icon="data_usage" textInfo="Estisticas por iglesia" [routerLink]="'../estadisticas'"></mtt-card-info>
-      <mtt-card-info *ngIf="usuario.rol === 'Super Usuario'" title="DashBoard" icon="developer_board" textInfo="Estisticas generales" [routerLink]="'../dashboards'"></mtt-card-info>
-      <mtt-card-info *ngIf="usuario.postulado?.transporte" title="Apoyo vehicular" icon="directions_car" textInfo="Adminitrar datos de apoyo vehicular" (click)="opcionesVehiculo()" (keydown)="opcionesVehiculo()"></mtt-card-info>
-      <mtt-card-info *ngIf="usuario.postulado?.casaApoyo" title="Casas de apoyo" icon="my_location" textInfo="Puntos centrales de apoyo" (click)="opcionesCasasApoyo()" (keydown)="opcionesCasasApoyo()"></mtt-card-info>
-      <mtt-card-info *ngIf="usuario.postulado?.testigo" title="Gestión de testigos" icon="how_to_vote" textInfo="Realiza tus gestiones como testigo aquí" (click)="opcionesTestigos()" (keydown)="opcionesTestigos()"></mtt-card-info>
-    </ng-container>
-    
+<div class="flex flex-col gap-2 mt-4">
+  <app-container-alert-information type="info" title="Información" *ngIf="isProfileIncomplete">
+    Debes completar tus datos de perfil para poder continuar.
+  </app-container-alert-information>
+  <app-container-alert-information type="warning" title="Advertencia" *ngIf="isChurchMissing">
+    Debes comunicarte con algún coordinador de iglesia para que te asocie a la iglesia a la que perteneces y que vas a
+    apoyar.
+  </app-container-alert-information>
+</div>
+
+<div class="flex sm:flex-col md:flex-row gap-4 mt-4">
+  <mtt-card-info title="Mis datos" icon="account_circle" textInfo="Actualiza y edita el tu perfil"
+    [routerLink]="'../mi-perfil'" [activePoint]="isProfileIncomplete"></mtt-card-info>
+  <ng-container *ngIf="usuario.iglesia">
+    <mtt-card-info *ngIf="usuario.rol === 'Pastor' || usuario.rol === 'Super Usuario'" title="Estadisticas"
+      icon="data_usage" textInfo="Estisticas por iglesia" [routerLink]="'../estadisticas'"></mtt-card-info>
+    <mtt-card-info *ngIf="usuario.rol === 'Super Usuario'" title="DashBoard" icon="developer_board"
+      textInfo="Estisticas generales" [routerLink]="'../dashboards'"></mtt-card-info>
+    <mtt-card-info *ngIf="usuario.postulado?.transporte" title="Apoyo vehicular" icon="directions_car"
+      textInfo="Adminitrar datos de apoyo vehicular" (click)="opcionesVehiculo()"
+      (keydown)="opcionesVehiculo()"></mtt-card-info>
+    <mtt-card-info *ngIf="usuario.postulado?.casaApoyo" title="Casas de apoyo" icon="my_location"
+      textInfo="Puntos centrales de apoyo" (click)="opcionesCasasApoyo()"
+      (keydown)="opcionesCasasApoyo()"></mtt-card-info>
+    <mtt-card-info *ngIf="usuario.postulado?.testigo" title="Gestión de testigos" icon="how_to_vote"
+      textInfo="Realiza tus gestiones como testigo aquí" (click)="opcionesTestigos()"
+      (keydown)="opcionesTestigos()"></mtt-card-info>
+  </ng-container>
+
 </div>
 
 }
-
-
-
-
-

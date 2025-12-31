@@ -2,8 +2,9 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
     @for (t of paginatedTestigos; track t.id) {
-    <app-card-aprobacion [title]="t.nombres + ' ' + t.apellidos" [subtitle]="t.celular || 'Sin celular'"
-        [checked]="isChecked(t)" (checkedChange)="aprobarTestigo(t, $event)"></app-card-aprobacion>
+    <app-card-aprobacion [title]="t.nombres" [subtitle]="t.apellidos" [date]="t.barrioDondeVive"
+        [checked]="isChecked(t)" (checkedChange)="aprobarTestigo(t, $event)"
+        [phoneNumber]="t.celular || ''"></app-card-aprobacion>
     }
 </div>
 

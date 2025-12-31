@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
+import { ContainerAlertInformationComponent } from '../../../shared/components/modules/container-alert-information/container-alert-information.component';
 import {
   DESCRIPCION_EXCEL,
   TITULOS_EXCEL,
@@ -16,7 +17,7 @@ import { BaseModel } from '../../../../models/base/base.model';
   selector: 'app-masivo-referidos',
   templateUrl: './masivo-referidos.component.html',
   standalone: true,
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule, ButtonComponent, ContainerAlertInformationComponent],
 })
 export class MasivoReferidosComponent {
   iglesia: any = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
@@ -31,7 +32,7 @@ export class MasivoReferidosComponent {
   constructor(
     private readonly referidoService: ReferidoService,
     private readonly toast: ToastrService
-  ) {}
+  ) { }
 
   onFileChange(event: any): void {
     const target: DataTransfer = <DataTransfer>event.target;
@@ -131,7 +132,7 @@ export class MasivoReferidosComponent {
       this.toast.success(
         `Referido ${ref.data.nombres} ${ref.data.apellidos} guardado exitosamente`
       );
-            if (this.contador === this.referidos.length) {
+      if (this.contador === this.referidos.length) {
         this.toast.info('Se termino el guardado');
         this.loading = false;
       }

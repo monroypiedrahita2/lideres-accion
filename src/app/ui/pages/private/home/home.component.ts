@@ -17,6 +17,7 @@ import { DialogOpcionesVehicularComponent } from '../../../shared/dialogs/dialog
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { DialogCasasApoyoComponent } from '../../../shared/dialogs/dialog-casas-apoyo/dialog-casas-apoyo.component';
 import { DialogTestigosComponent } from '../../../shared/dialogs/dialog-testigos/dialog-testigos.component';
+import { ContainerAlertInformationComponent } from '../../../shared/components/modules/container-alert-information/container-alert-information.component';
 
 @Component({
   selector: 'app-home',
@@ -28,6 +29,7 @@ import { DialogTestigosComponent } from '../../../shared/dialogs/dialog-testigos
     MatIconModule,
     CardInfoComponent,
     MatDialogModule,
+    ContainerAlertInformationComponent,
   ],
   templateUrl: './home.component.html',
 })
@@ -40,6 +42,14 @@ export class HomeComponent implements OnInit {
     localStorage.getItem('iglesiaData') || '{}'
   );
   showInfoPerfil: boolean = true;
+
+  get isProfileIncomplete(): boolean {
+    return !this.usuario.nombres || !this.usuario.apellidos || !this.usuario.documento;
+  }
+
+  get isChurchMissing(): boolean {
+    return !this.isProfileIncomplete && !this.usuario.iglesia;
+  }
 
 
 

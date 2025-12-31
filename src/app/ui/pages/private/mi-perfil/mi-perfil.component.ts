@@ -66,6 +66,7 @@ export class MiPerfilComponent implements OnInit {
       testigo: [false],
       casaApoyo: [false],
       transporte: [false],
+      barrioDondeVive: ['', Validators.required],
     });
   }
 
@@ -103,6 +104,7 @@ export class MiPerfilComponent implements OnInit {
       testigo: user.postulado?.testigo || false,
       casaApoyo: user.postulado?.casaApoyo || false,
       transporte: user.postulado?.transporte || false,
+      barrioDondeVive: user.barrioDondeVive,
     });
   }
 
@@ -118,6 +120,7 @@ export class MiPerfilComponent implements OnInit {
       apellidos: this.form.value.apellidos,
       celular: this.form.value.celular,
       email: this.form.value.email,
+      barrioDondeVive: this.form.value.barrioDondeVive,
       rol: this.usuario.rol || null,
       postulado: {
         casaApoyo: this.form.value.casaApoyo,
@@ -125,7 +128,6 @@ export class MiPerfilComponent implements OnInit {
         testigo: this.form.value.testigo,
       },
     };
-    console.log(user);
 
     this.loading = true;
     if (this.accion == 'Editar') {

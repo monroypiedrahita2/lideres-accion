@@ -3,13 +3,16 @@ export interface PerfilModel {
   documento: string;
   nombres: string;
   apellidos: string;
-  iglesia?: string;
+  iglesia?: string; // solo lo puede administrar el Pastor y Super Usuario y coordinador de iglesia
   celular?: string;
   nameIglesia?: string;
   email: string;
-  rol: string | null;
-  postulado?: PostuladoModel;
-  casaApoyo?: CasaApoyoModel;
+  rol: string | null; // solo lo puede administrar el Pastor y Super Usuario
+  barrioDondeVive: string;
+  postulado?: PostuladoModel; // solo lo puede Crear administrar y eliminar el mismo usuario
+  coordinadorCasaApoyo?: CasaApoyoModel;  // solo lo puede Crear administrar y eliminar el Pastor
+  coordinadorTransporte?: boolean; // solo lo puede Crear administrar y eliminar el Pastor
+  coordinadorTestigos?: boolean; // solo lo puede Crear administrar y eliminar el Pastor
 }
 
 export interface AsigmentRolePerfilModel {

@@ -4,7 +4,7 @@
 </mat-dialog-content>
 <mat-dialog-actions class="w-full flex flex-col gap-4">
   <mg-button mat-dialog-close  size="big" text="Mi vehículo" class="w-full" icon="directions_car" routerLink="/private/mi-vehiculo"></mg-button>
-  @if(this.usuario.rol === 'Coordinador de iglesia' || this.usuario.rol === 'Pastor') {
+  @if(this.usuario.coordinadorTransporte  || this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super Usuario') {
     <mg-button  mat-dialog-close  size="big" text="Vehículos inscritos" class="w-full" icon="list" routerLink="/private/listar-vehiculos"></mg-button>
   }
   <button mat-button (click)="onNoClick()">Cerrar</button>
