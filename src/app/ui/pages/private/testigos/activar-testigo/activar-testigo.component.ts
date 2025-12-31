@@ -26,7 +26,7 @@ export class ActivarTestigoComponent implements OnInit {
     testigos: PerfilModel[] = [];
     paginatedTestigos: PerfilModel[] = [];
     existingTestigosIds: Set<string> = new Set();
-    pageSize: number = 10;
+    pageSize: number = 5;
     pageIndex: number = 0;
 
     constructor(

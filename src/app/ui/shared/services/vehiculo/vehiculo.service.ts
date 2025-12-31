@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, getDoc, query, updateDoc, where, setDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, getDoc, query, updateDoc, where, setDoc, deleteDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
 import { environment } from '../../../../../enviroments';
@@ -61,6 +61,11 @@ export class VehiculoService {
   updateVehiculo(id: string, newData: VehiculoModel) {
     const document = doc(this.firestore, this._collection, id);
     return updateDoc(document, { ...newData });
+  }
+
+  async deleteVehiculo(id: string) {
+    const docRef = doc(this.firestore, `${this._collection}/${id}`);
+    await deleteDoc(docRef);
   }
 
 }

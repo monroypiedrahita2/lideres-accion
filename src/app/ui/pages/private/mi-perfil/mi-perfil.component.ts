@@ -17,6 +17,9 @@ import { ButtonComponent } from '../../../shared/components/atoms/button/button.
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { MatDialog } from '@angular/material/dialog';
+import { TestigoService } from '../../../shared/services/testigo/testigo.service';
+import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -47,7 +50,9 @@ export class MiPerfilComponent implements OnInit {
     private readonly location: Location,
     private readonly auth: AuthService,
     private readonly toast: ToastrService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private readonly testigoService: TestigoService,
+    private readonly vehiculoService: VehiculoService
   ) {
     this.form = this.fb.group({
       documento: ['', Validators.required],
@@ -75,6 +80,7 @@ export class MiPerfilComponent implements OnInit {
       try {
         this.user = await this.perfilService.getMiPerfil(this.auth.uidUser());
         if (this.user) {
+          this.usuario = this.user;
           this.actualizarForm(this.user);
           this.form.get('email')?.disable();
           this.accion = 'Editar';
@@ -87,7 +93,7 @@ export class MiPerfilComponent implements OnInit {
         this.form.patchValue({
           email: this.auth.getEmail(),
         });
-         this.form.get('email')?.disable();
+        this.form.get('email')?.disable();
         console.error(error);
         this.enableSkeleton = false;
       }
@@ -112,6 +118,51 @@ export class MiPerfilComponent implements OnInit {
     this.location.back();
   }
 
+  async checkAndRemoveRoles() {
+    let notificationNeeded = false;
+    const uid = this.auth.uidUser();
+
+    // Check Testigo
+    if (this.usuario.postulado?.testigo && !this.form.value.testigo) {
+      try {
+        await this.testigoService.deleteTestigo(uid);
+        notificationNeeded = true;
+      } catch (e) {
+        console.error('Error deleting testigo', e);
+      }
+    }
+
+    // Check Transporte (Vehiculo)
+    if (this.usuario.postulado?.transporte && !this.form.value.transporte) {
+      try {
+        const vehicles$ = this.vehiculoService.getVehiculoByConductor(uid);
+        const vehicles = await firstValueFrom(vehicles$);
+        if (vehicles && vehicles.length > 0) {
+          for (const vehicle of vehicles) {
+            if (vehicle.id) await this.vehiculoService.deleteVehiculo(vehicle.id);
+          }
+        }
+        notificationNeeded = true;
+      } catch (e) {
+        console.error('Error deleting vehiculo', e);
+      }
+    }
+
+    // Check Casa Apoyo
+    if (this.usuario.postulado?.casaApoyo && !this.form.value.casaApoyo) {
+      // Logic handled in updateUser data construction (clearing coordinadorCasaApoyo)
+      notificationNeeded = true;
+    }
+
+    if (notificationNeeded) {
+      this.openDialogNotificaciones(
+        'Atención',
+        'Al cancelar el apoyo debe avisar al pastor de ya no poder ayudar, gracias.',
+        'Entendido'
+      );
+    }
+  }
+
   async onSubmit() {
     this.form.get('email')?.enable();
     const user: PerfilModel = {
@@ -122,6 +173,9 @@ export class MiPerfilComponent implements OnInit {
       email: this.form.value.email,
       barrioDondeVive: this.form.value.barrioDondeVive,
       rol: this.usuario.rol || null,
+      coordinadorCasaApoyo: this.form.value.casaApoyo
+        ? this.usuario.coordinadorCasaApoyo || null
+        : null, // Clear if unchecked
       postulado: {
         casaApoyo: this.form.value.casaApoyo,
         transporte: this.form.value.transporte,
@@ -130,7 +184,9 @@ export class MiPerfilComponent implements OnInit {
     };
 
     this.loading = true;
+
     if (this.accion == 'Editar') {
+      await this.checkAndRemoveRoles(); // Check removal before or during update
       await this.updateUser(user);
       return;
     }
@@ -151,7 +207,7 @@ export class MiPerfilComponent implements OnInit {
       await this.perfilService.updatePerfil(this.auth.uidUser(), data);
       this.toast.success('Usuario actualizado');
       this.location.back();
-      localStorage.setItem('usuario', JSON.stringify({...this.usuario, ...data}));
+      localStorage.setItem('usuario', JSON.stringify({ ...this.usuario, ...data }));
 
     } catch (error) {
       console.error(error);
@@ -163,10 +219,9 @@ export class MiPerfilComponent implements OnInit {
   openDialogNotificaciones(title: string, message: string, buttonText: string) {
     this.dialog.open(DialogNotificationComponent, {
       data: {
-        title: 'Uusari',
-        message:
-          'Aquí puedes gestionar tus preferencias de notificaciones. Próximamente podrás activar o desactivar las notificaciones push desde esta sección.',
-        buttonText: 'one',
+        title: title,
+        message: message,
+        buttonText: buttonText,
       },
     });
   }

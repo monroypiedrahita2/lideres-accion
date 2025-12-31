@@ -16,8 +16,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogOpcionesVehicularComponent } from '../../../shared/dialogs/dialog-opciones-vehicular/dialog-opciones-vehicular.component';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { DialogCasasApoyoComponent } from '../../../shared/dialogs/dialog-casas-apoyo/dialog-casas-apoyo.component';
-import { DialogTestigosComponent } from '../../../shared/dialogs/dialog-testigos/dialog-testigos.component';
 import { ContainerAlertInformationComponent } from '../../../shared/components/modules/container-alert-information/container-alert-information.component';
+import { DialogTestigosComponent } from '../../../shared/dialogs/dialog-opciones-testigos/dialog-testigos.component';
 
 @Component({
   selector: 'app-home',

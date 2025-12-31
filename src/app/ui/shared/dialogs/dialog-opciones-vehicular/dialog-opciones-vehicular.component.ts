@@ -6,7 +6,6 @@ import { MatInputModule } from '@angular/material/input';
 import {
   MAT_DIALOG_DATA,
   MatDialogRef,
-  MatDialogTitle,
   MatDialogContent,
   MatDialogActions,
   MatDialogClose,
@@ -30,7 +29,7 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
     MatDialogClose,
     ButtonComponent,
     RouterLink
-],
+  ],
   templateUrl: './dialog-opciones-vehicular.component.html',
   styleUrls: ['./dialog-opciones-vehicular.component.scss']
 })
@@ -38,21 +37,15 @@ export class DialogOpcionesVehicularComponent {
   usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
 
 
-    constructor(
+  constructor(
     public dialogRef: MatDialogRef<DialogOpcionesVehicularComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private readonly router: Router
 
-  ) {}
+  ) { }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
-
-  gotoLink(url: string): void {
-    // this.router.navigate([url]);
-  }
-
-
 
 }

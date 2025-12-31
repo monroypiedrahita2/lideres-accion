@@ -8,7 +8,6 @@ import { TestigoModel } from '../../../../../models/testigo/testigo.model';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ConfirmActionComponent } from '../../../../shared/components/modules/modal/confirm-action.component';
 
 @Component({
     selector: 'app-listar-testigos',
@@ -17,7 +16,6 @@ import { ConfirmActionComponent } from '../../../../shared/components/modules/mo
         CommonModule,
         TitleComponent,
         PersonInfoComponent,
-        ConfirmActionComponent
     ],
     templateUrl: './listar-testigos.component.html',
 })

@@ -10,9 +10,9 @@ export interface PerfilModel {
   rol: string | null; // solo lo puede administrar el Pastor y Super Usuario
   barrioDondeVive: string;
   postulado?: PostuladoModel; // solo lo puede Crear administrar y eliminar el mismo usuario
-  coordinadorCasaApoyo?: CasaApoyoModel;  // solo lo puede Crear administrar y eliminar el Pastor
-  coordinadorTransporte?: boolean; // solo lo puede Crear administrar y eliminar el Pastor
-  coordinadorTestigos?: boolean; // solo lo puede Crear administrar y eliminar el Pastor
+  coordinadorCasaApoyo?: string | null;  // solo lo puede Crear administrar y eliminar el Pastor
+  coordinadorTransporte?: boolean | null; // solo lo puede Crear administrar y eliminar el Pastor
+  coordinadorTestigos?: boolean | null; // solo lo puede Crear administrar y eliminar el Pastor
 }
 
 export interface AsigmentRolePerfilModel {
@@ -26,7 +26,3 @@ export interface PostuladoModel {
   testigo: boolean;
 }
 
-export interface CasaApoyoModel {
-  status: boolean;
-  casaApoyoId: string;
-}
