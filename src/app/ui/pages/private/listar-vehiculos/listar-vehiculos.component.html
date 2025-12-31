@@ -7,7 +7,7 @@
     <div *ngFor="let vehiculo of paginatedVehiculos">
       <app-card-aprobacion [title]="vehiculo.placa" [subtitle]="vehiculo.marca + ' ' + vehiculo.nombreModelo"
         [date]="vehiculo.nombre + ' ' + vehiculo.apellidos" [status]="vehiculo.color" [checked]="vehiculo.aprobado"
-        (checkedChange)="aprobarVehiculo(vehiculo, $event)">
+        [phoneNumber]="vehiculo.celular" (checkedChange)="aprobarVehiculo(vehiculo, $event)">
       </app-card-aprobacion>
     </div>
   </div>
