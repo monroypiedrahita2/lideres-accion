@@ -12,9 +12,9 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(private readonly swUpdate: SwUpdate, private readonly toastr: ToastrService) {}
+  constructor(private readonly swUpdate: SwUpdate, private readonly toastr: ToastrService) { }
 
- ngOnInit(): void {
+  ngOnInit(): void {
     // 1. Verificar que el Service Worker esté habilitado
     if (this.swUpdate.isEnabled) {
 
@@ -34,20 +34,21 @@ export class AppComponent implements OnInit {
     }
   }
 
-    private promptUpdate(): void {
-    const message = '¡Nueva Versión Disponible! ¿Desea Actualizar Ahora?';
+  private promptUpdate(): void {
+    const message = 'Actualizando aplicación a la nueva versión...';
 
-    // Usar ngx-toastr para una notificación atractiva
-    this.toastr.info(message, 'Actualización PWA', {
-      timeOut: 0, // No se cierra automáticamente
-      extendedTimeOut: 0,
-      closeButton: true,
-      disableTimeOut: true,
-    }).onTap.subscribe(() => {
-      // Forzar la activación de la nueva versión del Service Worker y recargar la página
-      this.swUpdate.activateUpdate().then(() => document.location.reload());
+    this.toastr.info(message, 'Actualización Obligatoria', {
+      timeOut: 3000,
+      progressBar: true,
+      closeButton: false, // Prevent closing
+      disableTimeOut: false,
+      tapToDismiss: false // Prevent dismissing
     });
+
+    // Wait 3 seconds for the user to read the message, then force update
+    setTimeout(() => {
+      this.swUpdate.activateUpdate().then(() => document.location.reload());
+    }, 3000);
   }
 }
 
- 

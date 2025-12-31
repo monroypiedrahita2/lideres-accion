@@ -5,12 +5,12 @@
 </div>
 
 @for (referido of paginatedTestigos; track $index) {
-<lida-person-info [title]="referido.data.nombre + ' ' + referido.data.apellido" [textInfo]="referido.id!"
-  (eventEdit)="edit(referido)" [icon2]="'clear'" [textInfo2]="''" [textInfo3]="'Última actualización'"
-  [textInfo4]="referido.fechaModificacion ? referido.fechaModificacion.split('T')[0] : referido.fechaCreacion.split('T')[0]"
-  [canDelete]="true"
+<lida-person-info [title]="referido.data.nombre + ' ' + referido.data.apellido"
+  (eventEdit)="edit(referido)" [textInfo2]="''"
+  [canDelete]="false"
   (eventDelete)="openModal({name: referido.data.nombre + ' ' + referido.data.apellido, id: referido.id!})"
-  [votacion]="referido.data.puestodevotacion && referido.data.mesadevotacion ? true : false"></lida-person-info>
+  [puestodevotacion]="referido.data.puestodevotacion"
+  [mesadevotacion]="referido.data.mesadevotacion"></lida-person-info>
 }
 
 <mg-paginator [length]="testigos.length" [pageSize]="pageSize" [pageIndex]="pageIndex" [showPageSizeOptions]="true"

@@ -1,0 +1,22 @@
+<div class="p-6">
+    <mg-title title="Asignar Puesto y Mesa"></mg-title>
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="flex flex-col gap-4 mt-4">
+
+        <mg-input-text label="Puesto de votación" placeholder="Ingrese el puesto de votación"
+            [formControlName]="'puestodevotacion'" [required]="true"
+            [textError]="form.get('puestodevotacion')?.invalid && form.get('puestodevotacion')?.touched ? 'El puesto es obligatorio' : ''">
+        </mg-input-text>
+
+        <mg-input-text label="Mesa de votación" placeholder="Ingrese mesa (1-100)" type="number" [min]="1" [max]="100"
+            [formControlName]="'mesadevotacion'" [required]="true"
+            [textError]="form.get('mesadevotacion')?.hasError('required') ? 'La mesa es obligatoria' : 
+                         form.get('mesadevotacion')?.hasError('min') || form.get('mesadevotacion')?.hasError('max') ? 'Debe ser entre 1 y 100' : ''">
+        </mg-input-text>
+
+        <div class="flex gap-4 justify-end mt-4">
+            <mg-button type="reset" text="Cancelar" (onClick)="close()"></mg-button>
+            <mg-button type="submit" text="Guardar" [disabled]="form.invalid"></mg-button>
+        </div>
+    </form>
+</div>

@@ -1,12 +1,6 @@
 import { CardModel } from '../../../models/utils/card.model';
 
 export const CARDS_HOME: CardModel[] = [
-  // {
-  //   goTo: '../mi-perfil',
-  //   title: 'Mi perfil',
-  //   description: 'Ver y editar tu perfil',
-  //   icon: 'person'
-  // },
   {
     goTo: '../control-accesos',
     title: 'Control y accesos',
@@ -42,12 +36,6 @@ export const CARDS_HOME: CardModel[] = [
     icon: 'location_city',
     showIf: ['Pastor', 'Coordinador de iglesia'],
   },
-  // {
-  //   goTo: '../roles',
-  //   title: 'Roles',
-  //   description: 'Administrar roles',
-  //   icon: 'supervisor_account'
-  // },
   {
     goTo: '../masivo-referidos',
     title: 'Carga masiva',

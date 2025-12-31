@@ -13,9 +13,9 @@ export class PersonInfoComponent {
   @Input() icon: string = 'edit';
   @Input() icon2: string = 'delete';
   @Input() title: string = 'title';
-  @Input() textInfo: string = 'textInfo';
+  @Input() textInfo: string = '';
   @Input() textInfo2: any = 'textInfo2';
-  @Input() textInfo3: any = 'textInfo3';
+  @Input() textInfo3: any = '';
   @Input() textInfo4: any = '';
   @Input() textbadge: any = 'Senado';
   @Input() textbadge2: any = 'Camara';
@@ -23,6 +23,8 @@ export class PersonInfoComponent {
   @Input() badge2: boolean = false;
   @Input() esInterno: boolean = false;
   @Input() votacion: boolean = false;
+  @Input() puestodevotacion: string = '';
+  @Input() mesadevotacion: string = '';
   @Output() eventEdit: EventEmitter<any> = new EventEmitter
   @Output() evenFilterReferidos: EventEmitter<any> = new EventEmitter
   @Output() eventDelete: EventEmitter<any> = new EventEmitter

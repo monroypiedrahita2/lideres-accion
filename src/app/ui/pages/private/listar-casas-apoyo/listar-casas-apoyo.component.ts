@@ -27,9 +27,9 @@ export class ListarCasasApoyoComponent implements OnInit {
     }
 
     loadCasas() {
-        // Only fetch if user has a UID, using the new 'ByResponsable' logic
-        if (this.usuario.uid) {
-            this.casaApoyoService.getCasasApoyoByResponsable(this.usuario.uid).subscribe({
+        // Fetch approved houses for the user's church
+        if (this.usuario.iglesia) {
+            this.casaApoyoService.getCasasApoyoAprobadasByIglesia(this.usuario.iglesia).subscribe({
                 next: (data) => {
                     this.casas = data;
                 },

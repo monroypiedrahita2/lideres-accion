@@ -10,6 +10,7 @@ import { DialogNotificationComponent } from '../../../../shared/dialogs/dialog-n
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { TestigoModel } from '../../../../../models/testigo/testigo.model';
 import { BaseModel } from '../../../../../models/base/base.model';
+import { DialogAsignarPuestoMesaComponent } from './dialog-asignar-puesto-mesa/dialog-asignar-puesto-mesa.component';
 
 @Component({
     selector: 'app-activar-testigo',
@@ -64,44 +65,90 @@ export class ActivarTestigoComponent implements OnInit {
 
     async aprobarTestigo(perfil: PerfilModel, isChecked: boolean) {
         if (isChecked) {
-            const testigoData: TestigoModel = {
-                nombre: perfil.nombres,
-                apellido: perfil.apellidos,
-                iglesiaId: perfil.iglesia || '',
-                celular: perfil.celular || '',
-                puestodevotacion: '',
-                mesadevotacion: '',
-            };
+            const dialogRef = this.dialog.open(DialogAsignarPuestoMesaComponent, {
+                width: '400px',
+                disableClose: true,
+            });
 
-            const baseData: BaseModel<TestigoModel> = {
-                data: testigoData,
-                fechaCreacion: new Date().toISOString(),
-                creadoPor: 'system',
-            };
+            dialogRef.afterClosed().subscribe(async (result) => {
+                if (result) {
+                    const testigoData: TestigoModel = {
+                        nombre: perfil.nombres,
+                        apellido: perfil.apellidos,
+                        iglesiaId: perfil.iglesia || '',
+                        celular: perfil.celular || '',
+                        puestodevotacion: result.puestodevotacion,
+                        mesadevotacion: result.mesadevotacion,
+                    };
 
-            try {
-                if (perfil.id) {
-                    await this.testigoService.crearTestigo(baseData, perfil.id);
-                    this.existingTestigosIds.add(perfil.id);
-                    this.dialog.open(DialogNotificationComponent, {
-                        data: {
-                            title: 'Éxito',
-                            message: 'Testigo activado correctamente',
-                            bottons: 'Aceptar',
-                            type: 'success',
-                        },
-                    });
+                    const baseData: BaseModel<TestigoModel> = {
+                        data: testigoData,
+                        fechaCreacion: new Date().toISOString(),
+                        creadoPor: 'system',
+                    };
+
+                    try {
+                        if (perfil.id) {
+                            await this.testigoService.crearTestigo(baseData, perfil.id);
+                            this.existingTestigosIds.add(perfil.id);
+                            this.dialog.open(DialogNotificationComponent, {
+                                data: {
+                                    title: 'Éxito',
+                                    message: 'Testigo activado correctamente',
+                                    bottons: 'Aceptar',
+                                    type: 'success',
+                                },
+                            });
+                        }
+                    } catch (error) {
+                        this.dialog.open(DialogNotificationComponent, {
+                            data: {
+                                title: 'Error',
+                                message: 'Error al activar testigo',
+                                bottons: 'Aceptar',
+                                type: 'error',
+                            },
+                        });
+                    }
                 }
-            } catch (error) {
-                this.dialog.open(DialogNotificationComponent, {
-                    data: {
-                        title: 'Error',
-                        message: 'Error al activar testigo',
-                        bottons: 'Aceptar',
-                        type: 'error',
-                    },
-                });
-            }
+            });
+        } else {
+            const dialogRef = this.dialog.open(DialogNotificationComponent, {
+                data: {
+                    title: 'Confirmar',
+                    message: '¿Está seguro que desea desasociar a este usuario del listado de testigos?',
+                    bottons: 'two',
+                    type: 'warning',
+                },
+            });
+
+            dialogRef.afterClosed().subscribe(async (result) => {
+                if (result) {
+                    try {
+                        if (perfil.id) {
+                            await this.testigoService.deleteTestigo(perfil.id);
+                            this.existingTestigosIds.delete(perfil.id);
+                            this.dialog.open(DialogNotificationComponent, {
+                                data: {
+                                    title: 'Éxito',
+                                    message: 'Testigo desasociado correctamente',
+                                    bottons: 'Aceptar',
+                                    type: 'success',
+                                },
+                            });
+                        }
+                    } catch (error) {
+                        this.dialog.open(DialogNotificationComponent, {
+                            data: {
+                                title: 'Error',
+                                message: 'Error al desasociar testigo',
+                                bottons: 'Aceptar',
+                                type: 'error',
+                            },
+                        });
+                    }
+                }
+            });
         }
     }
 

@@ -44,28 +44,17 @@ export class CasaApoyoService {
     }
 
     getCasasApoyoByIglesia(iglesiaId: string) {
-        // Assuming there isn't actually an 'iglesiaId' on the casa model directly based on my read, 
-        // but typically it might be inferred from the user or added. 
-        // However, InscribirVehiculos checks if vehicle.iglesiaId === user.iglesia.
-        // I will assume simple query by 'responsableId' if that's how we track ownership, OR ideally add iglesiaId to CasaApoyoModel.
-        // For now, looking at the models, let's assume filtering by responsible or we need to filter on client side if 'iglesiaId' isn't stored.
-        // Wait, 'responsableId' is assigned. 
-        // Let's assume we query where responsableId is NOT null for 'assigned' ones if we want all assigned.
-        // OR better: Inscribir logic suggests we assign a person. 
-        // Actually, the user asked to "select casa de apoyo", "tomar". 
-        // If "tomar" means assigning MYSELF as responsible.
-        // The list should show houses assigned to ME (or my church if the model supports it).
-        // Let's implement getting houses where I am the responsible.
-
-        // RE-READING: "la opcion de seleccionar casa de apoyo, tomar".
-        // Similar to vehicles. Vehicles have 'iglesiaId'.
-        // Does CasaApoyoModel have 'iglesiaId'? I should have checked.
-        // Let's check BaseModel. It does NOT have iglesiaId.
-        // Let's check ComunaModel. It HAS iglesiaId.
-        // VehiculoModel has iglesiaId.
-
-        // I'll add a generic query for now, assuming we might match by 'responsableId' which is the user's UID.
+        // Keeping this for backward compatibility if needed, though getCasasApoyoAprobadasByIglesia is preferred for the list
         const q = query(collection(this.firestore, this._collection), where('data.iglesiaId', '==', iglesiaId));
+        return collectionData(q, { idField: 'id' }) as Observable<BaseModel<CasaApoyoModel>[]>;
+    }
+
+    getCasasApoyoAprobadasByIglesia(iglesiaId: string) {
+        const q = query(
+            collection(this.firestore, this._collection),
+            where('data.iglesiaId', '==', iglesiaId),
+            where('data.aprobado', '==', true)
+        );
         return collectionData(q, { idField: 'id' }) as Observable<BaseModel<CasaApoyoModel>[]>;
     }
 
