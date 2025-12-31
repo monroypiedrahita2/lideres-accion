@@ -13,13 +13,13 @@ import { CardAprobacionComponent } from '../../../shared/components/cards/card-a
 import { MgPaginatorComponent, PageEvent } from '../../../shared/components/modules/paginator/paginator.component';
 
 @Component({
-    selector: 'app-listar-vehiculos',
+    selector: 'app-aprobar-vehiculos',
     standalone: true,
     imports: [CommonModule, MatIconModule, TitleComponent, MgPaginatorComponent, CardAprobacionComponent],
-    templateUrl: './listar-vehiculos.component.html',
-    styleUrls: ['./listar-vehiculos.component.scss']
+    templateUrl: './aprobar-vehiculos.component.html',
+    styleUrls: ['./aprobar-vehiculos.component.scss']
 })
-export class ListarVehiculosComponent implements OnInit, AfterViewInit {
+export class AprobarVehiculosComponent implements OnInit, AfterViewInit {
     private readonly vehiculoService = inject(VehiculoService);
     private readonly dialog = inject(MatDialog);
 
