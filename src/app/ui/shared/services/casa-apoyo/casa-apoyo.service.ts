@@ -90,4 +90,11 @@ export class CasaApoyoService {
             'data.updatedAt': new Date()
         });
     }
+
+    updateCasaApoyo(id: string, data: CasaApoyoModel): Promise<void> {
+        const docRef = doc(this.firestore, this._collection, id);
+        return updateDoc(docRef, {
+            data: data
+        });
+    }
 }

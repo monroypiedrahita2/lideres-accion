@@ -18,12 +18,6 @@
     routerLink="/private/listar-casas-apoyo"></mg-button>
   }
 
-  @if(this.usuario.rol === 'Pastor' || this.usuario.rol === 'Coordinador de iglesia') {
-  <mg-button mat-dialog-close size="big" text="Inscribir casa" class="w-full" icon="add_home"
-    routerLink="/private/inscribir-casas-apoyo"></mg-button>
-  }
-  
-
 
   <button mat-button (click)="onNoClick()">Cerrar</button>
 </mat-dialog-actions>
