@@ -76,8 +76,8 @@ export const routes: Routes = [
         loadComponent: () => import('./mi-perfil/mi-perfil.component').then(m => m.MiPerfilComponent),
       },
       {
-        path: 'inscribir-vehiculos',
-        loadComponent: () => import('./inscribir-vehiculos/inscribir-vehiculos.component').then(m => m.InscribirVehiculosComponent),
+        path: 'listar-vehiculos-aprobados',
+        loadComponent: () => import('./lista-vehiculos-aprobados/lista-vehiculos-aprobados.component').then(m => m.ListaVehiculosAprobadosComponent),
       },
       {
         path: 'mi-casa-de-apoyo',

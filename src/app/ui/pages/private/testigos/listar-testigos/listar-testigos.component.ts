@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MgPaginatorComponent, PageEvent } from '../../../../shared/components/modules/paginator/paginator.component';
 import { TitleComponent } from '../../../../shared/components/atoms/title/title.component';
 import { PersonInfoComponent } from '../../../../shared/components/cards/person-info/person-info.component';
 import { TestigoService } from '../../../../shared/services/testigo/testigo.service';
@@ -16,11 +17,15 @@ import { ToastrService } from 'ngx-toastr';
         CommonModule,
         TitleComponent,
         PersonInfoComponent,
+        MgPaginatorComponent
     ],
     templateUrl: './listar-testigos.component.html',
 })
 export class ListarTestigosComponent implements OnInit {
     testigos: BaseModel<TestigoModel>[] = [];
+    paginatedTestigos: BaseModel<TestigoModel>[] = [];
+    pageSize: number = 5;
+    pageIndex: number = 0;
     usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
     showModal: boolean = false;
     dataModal: { name: string; id: string } = { name: '', id: '' };
@@ -40,6 +45,7 @@ export class ListarTestigosComponent implements OnInit {
         this.testigoService.getAllTestigos().subscribe({
             next: (res: BaseModel<TestigoModel>[]) => {
                 this.testigos = res;
+                this.updatePagination();
             },
         });
     }
@@ -51,8 +57,19 @@ export class ListarTestigosComponent implements OnInit {
     openModal(data: { name: string; id: string }) {
         this.showModal = true;
         this.dataModal = data;
-        // Find the referido to delete based on ID since the modal only passes ID and name
         this.referidoToDelete = this.testigos.find(t => t.id === data.id) || null;
+    }
+
+    updatePagination() {
+        const start = this.pageIndex * this.pageSize;
+        const end = start + this.pageSize;
+        this.paginatedTestigos = this.testigos.slice(start, end);
+    }
+
+    onPageChange(event: PageEvent) {
+        this.pageIndex = event.pageIndex;
+        this.pageSize = event.pageSize;
+        this.updatePagination();
     }
 
 

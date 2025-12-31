@@ -1,13 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
 import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
-import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { CardVehiculoComponent } from '../../../shared/components/cards/card-vehiculo/card-vehiculo.component';
 import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
 
@@ -16,43 +12,35 @@ import { TitleComponent } from '../../../shared/components/atoms/title/title.com
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatIconModule,
-    InputTextComponent,
     CardVehiculoComponent,
     TitleComponent
   ],
-  templateUrl: './inscribir-vehiculos.component.html',
+  templateUrl: './lista-vehiculos-aprobados.component.html',
 })
-export class InscribirVehiculosComponent {
+export class ListaVehiculosAprobadosComponent implements OnInit {
   private readonly vehiculoService = inject(VehiculoService);
   private readonly dialog = inject(MatDialog);
   usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
 
-
-  searchControl = new FormControl('', [Validators.required]);
-  vehiculos: VehiculoModel[] = [];
+  // Change type to match service return (BaseModel<VehiculoModel> or just VehiculoModel depending on how it's used, 
+  // but let's stick to what we saw in the service: observable returns BaseModel<VehiculoModel>[])
+  vehiculos: any[] = [];
   loading = false;
-  hasSearched = false;
 
-  search() {
-    if (this.searchControl.invalid) return;
+  ngOnInit(): void {
+    this.getVehiculos();
+  }
 
+  getVehiculos() {
     this.loading = true;
-    this.hasSearched = true;
-    const placa = this.searchControl.value!;
-
-    this.vehiculoService.getVehiculoByPlaca(placa.toUpperCase()).subscribe({
-      next: (data: any[]) => {
-        // The service returns Observable<BaseModel<VehiculoModel>[]> based on previous reading
-        this.vehiculos = data as unknown as VehiculoModel[];
+    this.vehiculoService.getVehiculos().subscribe({
+      next: (data) => {
+        this.vehiculos = data;
         this.loading = false;
       },
-      error: (err: any) => {
+      error: (err) => {
         console.error(err);
         this.loading = false;
-        this.vehiculos = [];
       }
     });
   }
@@ -89,7 +77,7 @@ export class InscribirVehiculosComponent {
           type: 'success'
         }
       });
-      this.search(); // Refresh list
+      this.getVehiculos(); // Refresh list
     }).catch(err => {
       console.error(err);
       this.dialog.open(DialogNotificationComponent, {
@@ -127,7 +115,7 @@ export class InscribirVehiculosComponent {
                   type: 'success'
                 }
               });
-              this.search(); // Refresh list
+              this.getVehiculos(); // Refresh list
             } else {
               throw new Error('Verification failed');
             }
