@@ -31,7 +31,7 @@
 
     <div *ngIf="perfilEncontrado" class="w-full mt-4">
       <lida-person-info [title]="perfilEncontrado.nombres" [textInfo]="perfilEncontrado.apellidos" icon="person"
-        [textInfo2]="''" [textInfo3]="perfilEncontrado.email">
+        [textInfo2]="''" [textInfo3]="perfilEncontrado.email.length > 25 ? (perfilEncontrado.email | slice:0:25) + '...' : perfilEncontrado.email">
       </lida-person-info>
 
       <div class="mt-2 text-sm text-gray-500" *ngIf="perfilEncontrado.nameIglesia">

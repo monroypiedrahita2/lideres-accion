@@ -48,7 +48,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 
   openAsociarIglesia() {
     this.dialog.open(DialogAsociarIglesiaComponent, {
-      width: '400px',
+      width: '500px',
       data: {}
     });
   }
