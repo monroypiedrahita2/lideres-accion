@@ -12,4 +12,5 @@ export interface VehiculoModel {
   celular: string;
   iglesiaId?: string | null;
   aprobado: boolean;
+  casaApoyoId?: string | null;
 }

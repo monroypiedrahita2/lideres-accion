@@ -65,7 +65,7 @@ export class CasaApoyoService {
         // VehiculoModel has iglesiaId.
 
         // I'll add a generic query for now, assuming we might match by 'responsableId' which is the user's UID.
-        const q = query(collection(this.firestore, this._collection), where('data.responsableId', '==', iglesiaId)); // iglesiaId here likely means the user ID if acting as "responsable"
+        const q = query(collection(this.firestore, this._collection), where('data.iglesiaId', '==', iglesiaId));
         return collectionData(q, { idField: 'id' }) as Observable<BaseModel<CasaApoyoModel>[]>;
     }
 

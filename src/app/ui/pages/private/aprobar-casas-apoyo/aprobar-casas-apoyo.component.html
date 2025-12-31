@@ -2,13 +2,13 @@
 
     <mg-title title="Aprobar Casas de Apoyo"></mg-title>
 
-    <div *ngIf="paginatedPerfiles.length > 0; else noItems"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div *ngFor="let perfil of paginatedPerfiles">
-            <app-card-aprobacion [title]="perfil.nombres + ' ' + perfil.apellidos" [subtitle]="perfil.documento"
-                [date]="perfil.celular || 'Sin celular'" [status]="perfil.email"
-                [checked]="!!perfil.coordinadorCasaApoyo || ($any(perfil).casaApoyo?.status === true)"
-                [phoneNumber]="perfil.celular || ''" (checkedChange)="aprobar(perfil, $event)">
+    <div *ngIf="paginatedCasas.length > 0; else noItems" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let casa of paginatedCasas">
+            <app-card-aprobacion [title]="casa.data.responsableNombre + ' ' + casa.data.responsableApellido"
+                [subtitle]="casa.data.direccion + ' - ' + casa.data.barrio"
+                [date]="casa.data.responsableTelefono || 'Sin teléfono'" [status]="casa.data.municipio"
+                [checked]="!!casa.data.aprobado" [phoneNumber]="casa.data.responsableTelefono || ''"
+                (checkedChange)="aprobar(casa, $event)">
             </app-card-aprobacion>
         </div>
     </div>

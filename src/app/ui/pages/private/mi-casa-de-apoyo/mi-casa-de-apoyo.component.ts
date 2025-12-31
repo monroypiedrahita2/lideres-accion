@@ -143,7 +143,11 @@ export class MiCasaDeApoyoComponent implements OnInit {
             nombreHabitante: this.form.value.nombreHabitante,
             telefonoHabitante: this.form.value.telefonoHabitante,
             responsableId: this.authService.uidUser(),
-            responsableNombre: `${this.usuario.nombres} ${this.usuario.apellidos}`,
+            responsableNombre: this.usuario.nombres,
+            responsableApellido: this.usuario.apellidos,
+            responsableTelefono: this.usuario.celular || '',
+            iglesiaId: this.usuario.iglesia || null,
+            aprobado: null
         };
 
         try {

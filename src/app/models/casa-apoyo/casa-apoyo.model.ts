@@ -5,25 +5,11 @@ export interface CasaApoyoModel {
     direccion: string;
     nombreHabitante: string;
     telefonoHabitante: string;
-    responsableId?: string;
-    responsableNombre?: string;
-    iglesiaId?: string | null;
-    vehiculos?: VehiculoModelByCasaApoyo[];
+    responsableId: string;
+    responsableNombre: string;
+    responsableApellido: string;
+    responsableTelefono: string;
+    iglesiaId: string | null;
+    aprobado: boolean | null;
 }
 
-
-export interface VehiculoModelByCasaApoyo {
-  id?: string;
-  tipoVehiculo: string;
-  placa: string;
-  marca: string;
-  modelo: string;
-  nombreModelo: string;
-  color: string;
-  conductorId: string;
-  nombre: string;
-  apellidos: string;
-  celular: string;
-  aprobado: boolean;
-
-}
