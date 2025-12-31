@@ -14,16 +14,17 @@ import { VehiculoModel } from '../../../../../models/vehiculo/vehiculo.model';
 export class CardVehiculoComponent {
     @Input() vehiculo!: VehiculoModel | any;
     @Input() showActions: boolean = true;
-    @Input() showAssign: boolean = true;
-    @Input() showUnassign: boolean = true;
-    @Output() onAsignar = new EventEmitter<VehiculoModel>();
-    @Output() onDesasignar = new EventEmitter<VehiculoModel>();
 
-    asignar() {
-        this.onAsignar.emit(this.vehiculo);
+
+    openWhatsapp() {
+        if (this.vehiculo?.celular) {
+            window.open(`https://wa.me/57${this.vehiculo.celular}`, '_blank');
+        }
     }
 
-    desasignar() {
-        this.onDesasignar.emit(this.vehiculo);
+    call() {
+        if (this.vehiculo?.celular) {
+            window.open(`tel:${this.vehiculo.celular}`, '_self');
+        }
     }
 }

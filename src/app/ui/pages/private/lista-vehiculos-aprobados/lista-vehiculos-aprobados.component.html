@@ -5,7 +5,7 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
   @for (vehiculo of vehiculos; track $index) {
-  <app-card-vehiculo [vehiculo]="vehiculo" (onAsignar)="asignar($event)" (onDesasignar)="desasignar($event)">
+  <app-card-vehiculo [vehiculo]="vehiculo">
   </app-card-vehiculo>
   }
 </div>
