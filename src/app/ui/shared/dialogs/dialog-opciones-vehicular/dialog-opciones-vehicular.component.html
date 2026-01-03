@@ -8,7 +8,7 @@
   @if(this.usuario.coordinadorTransporte || this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super Usuario') {
   <mg-button mat-dialog-close size="big" text="Aprobar vehículos" class="w-full" icon="check_circle"
     routerLink="/private/aprobar-vehiculos"></mg-button>
-  <mg-button mat-dialog-close size="big" text="Listar vehículos" class="w-full" icon="list"
+  <mg-button mat-dialog-close size="big" text="Vehículos aprobados" class="w-full" icon="list"
     routerLink="/private/listar-vehiculos-aprobados"></mg-button>
   }
   <button mat-button (click)="onNoClick()">Cerrar</button>

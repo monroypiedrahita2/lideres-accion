@@ -1,52 +1,70 @@
-<div>
-  
-</div>
+<mat-accordion class="w-full">
+  <mat-expansion-panel (opened)="onPanelOpened()">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="font-primary font-medium">{{casa.data.barrio }} </span>
+      </mat-panel-title>
 
-
-
-
-<!-- <div class="shadow-lg hover:shadow-2xl rounded-lg bg-white w-full p-4 transition-all lg:hover:-translate-y-1 h-full flex flex-col justify-between">
-
-
-    <div class="border-t border-gray-100 pt-4 mt-2 mb-6 space-y-2">
-      <div class="flex items-center gap-3 text-gray-600">
-          <mat-icon class="text-primary text-sm">phone</mat-icon>
-          <span class="text-sm font-mono font-primary">+57 {{ casa.data.telefonoHabitante }}</span>
+      <div class="flex items-center gap-3 pr-4" (click)="$event.stopPropagation()">
+        <a [href]="'https://wa.me/' + casa.data.responsableTelefono" target="_blank"
+          class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-green-50 transition-colors">
+          <img src="assets/whatsApp.svg" alt="WhatsApp" class="w-6 h-6">
+        </a>
+        <a [href]="'tel:' + casa.data.responsableTelefono"
+          class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-blue-50 transition-colors text-blue-600">
+          <mat-icon>call</mat-icon>
+        </a>
       </div>
-      <div class="flex items-center gap-3 text-gray-600" *ngIf="casa.data.responsableNombre">
-          <mat-icon class="text-primary text-sm">badge</mat-icon>
-          <span class="text-sm font-primary">Resp: {{ casa.data.responsableNombre }}</span>
+    </mat-expansion-panel-header>
+
+    <!-- Información de la casa -->
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center flex-row gap-2 justify-between">
+        <span class="font-primary font-medium">{{ casa.data.responsableNombre }}</span>
+        <span class="font-primary font-medium">{{ casa.data.direccion }}</span>
+        <span class="cursor-pointer text-blue-600 hover:text-blue-800 transition-colors hover:underline"
+          (click)="gestionarVehiculos()">Más vehículos</span>
       </div>
-       <div class="flex items-center gap-3 text-gray-600">
-          <mat-icon class="text-primary text-sm">directions_car</mat-icon>
-          <span class="text-sm font-primary">{{ casa.data.vehiculos?.length || 0 }} Vehículos</span>
+
+      <!-- Aqui va los vehiculos que en el momento estan contratados -->
+      <div class="flex flex-col gap-2">
+
+        <!-- Loading state -->
+        <div *ngIf="isLoadingVehiculos"
+          class="bg-white flex items-center justify-center p-4 rounded-md border border-gray-200">
+          <span class="font-primary text-xs text-gray-500">Cargando vehículos...</span>
+        </div>
+
+        <!-- Vehicle rows -->
+         <span class="font-primary text-xs font-bold">Vehículos asociados</span>
+             <!-- Empty state -->
+        <div *ngIf="!isLoadingVehiculos && (!vehiculos || vehiculos.length === 0)"
+          class="bg-white flex items-center justify-center p-4 rounded-md border border-red-200 text-red-500">
+          <span class="font-primary text-xs">No hay vehículos registrados</span>
+        </div>
+        <div *ngFor="let vehiculo of vehiculos"
+          class="bg-white flex flex-row p-2 justify-between items-center rounded-md border border-gray-200 hover:bg-gray-50 transition-colors">
+          <span class="font-primary text-xs font-bold">{{ vehiculo.tipoVehiculo || 'N/A' }}</span>
+          <span class="font-primary text-xs font-bold">{{ vehiculo.nombre || 'N/A' }} {{ vehiculo.apellidos || '' }}</span>
+          <span class="font-primary text-xs font-bold">{{ vehiculo.placa || 'N/A' }}</span>
+          <mat-icon (click)="desasociarVehiculo(vehiculo)" class="text-xs cursor-pointer pt-[5px] text-red-500">block</mat-icon>
+        </div>
+
+         <span class="font-primary text-xs font-bold">Vehículos no asociados</span>
+        <div *ngFor="let vehiculo of vehiculosNoAsociados"
+          class="bg-white flex flex-row p-2 justify-between items-center rounded-md border border-gray-200 hover:bg-gray-50 transition-colors">
+          <span class="font-primary text-xs font-bold">{{ vehiculo.tipoVehiculo || 'N/A' }}</span>
+          <span class="font-primary text-xs font-bold">{{ vehiculo.nombre || 'N/A' }} {{ vehiculo.apellidos || '' }}</span>
+          <span class="font-primary text-xs font-bold">{{ vehiculo.placa || 'N/A' }}</span>
+          <mat-icon (click)="asociarVehiculo(vehiculo)" class="text-xs cursor-pointer pt-[5px] text-green-500">link</mat-icon>
+        </div>
+
+    
       </div>
     </div>
-  </div>
 
-  <div class="flex gap-2 mt-auto flex-wrap" *ngIf="showActions">
-    <button 
-        (click)="gestionarVehiculos()"
-        class="flex-1 py-2 rounded-lg bg-blue-50 text-blue-600 border border-blue-100 font-primary font-medium hover:bg-blue-100 transition-colors flex items-center justify-center gap-1 cursor-pointer"
-        title="Gestionar vehículos">
-        <mat-icon class="text-sm">directions_car</mat-icon>
-        <span class="text-xs sm:text-sm">Vehículos</span>
-    </button>
-    <button 
-      *ngIf="showAssign"
-      (click)="asignar()"
-      class="flex-1 py-2 rounded-lg bg-primary text-white font-primary font-medium hover:bg-opacity-90 transition-colors flex items-center justify-center gap-1 cursor-pointer shadow-md"
-    >
-      <mat-icon class="text-sm">add_link</mat-icon>
-       <span class="text-xs sm:text-sm">Asignar</span>
-    </button>
-    <button 
-      *ngIf="showUnassign"
-      (click)="desasignar()"
-      class="flex-1 py-2 rounded-lg border border-red-200 text-red-600 bg-red-50 font-primary font-medium hover:bg-red-100 transition-colors flex items-center justify-center gap-1 cursor-pointer"
-    >
-      <mat-icon class="text-sm">link_off</mat-icon>
-       <span class="text-xs sm:text-sm">Desasignar</span>
-    </button>
-  </div>
-</div> -->
+
+
+
+  </mat-expansion-panel>
+</mat-accordion>

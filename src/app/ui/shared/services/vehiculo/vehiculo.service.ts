@@ -45,6 +45,30 @@ export class VehiculoService {
     return collectionData(q, { idField: 'id' }) as Observable<VehiculoModel[]>;
   }
 
+  getVehiculosByCasaApoyo(casaApoyoId: string) {
+    const q = query(collection(this.firestore, this._collection), where('casaApoyoId', '==', casaApoyoId));
+    return collectionData(q, { idField: 'id' }) as Observable<VehiculoModel[]>;
+  }
+
+  getVehiculosAprobadosSinCasaByIglesia(iglesiaId: string) {
+    const q = query(
+      collection(this.firestore, this._collection),
+      where('iglesiaId', '==', iglesiaId),
+      where('aprobado', '==', true),
+      where('casaApoyoId', '==', null)
+    );
+    return collectionData(q, { idField: 'id' }) as Observable<VehiculoModel[]>;
+  }
+
+  getVehiculosAprobadosByIglesia(iglesiaId: string) {
+    const q = query(
+      collection(this.firestore, this._collection),
+      where('iglesiaId', '==', iglesiaId),
+      where('aprobado', '==', true)
+    );
+    return collectionData(q, { idField: 'id' }) as Observable<VehiculoModel[]>;
+  }
+
   getMyVehiculo(id: string): Promise<any> {
     const docRef = doc(this.firestore, this._collection, id);
     return getDoc(docRef).then((docSnap) => {

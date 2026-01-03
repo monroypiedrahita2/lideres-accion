@@ -6,6 +6,7 @@ import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { CardVehiculoComponent } from '../../../shared/components/cards/card-vehiculo/card-vehiculo.component';
 import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
+import { PerfilModel } from '../../../../models/perfil/perfil.model';
 
 @Component({
   selector: 'app-inscribir-vehiculos',
@@ -20,7 +21,7 @@ import { TitleComponent } from '../../../shared/components/atoms/title/title.com
 export class ListaVehiculosAprobadosComponent implements OnInit {
   private readonly vehiculoService = inject(VehiculoService);
   private readonly dialog = inject(MatDialog);
-  usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+  usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
 
   // Change type to match service return (BaseModel<VehiculoModel> or just VehiculoModel depending on how it's used, 
   // but let's stick to what we saw in the service: observable returns BaseModel<VehiculoModel>[])
@@ -33,8 +34,18 @@ export class ListaVehiculosAprobadosComponent implements OnInit {
 
   getVehiculos() {
     this.loading = true;
-    this.vehiculoService.getVehiculos().subscribe({
+
+    // Validate that usuario.iglesiaId exists
+    if (!this.usuario?.iglesia) {
+      console.error('Usuario no tiene iglesiaId en localStorage:', this.usuario);
+      this.loading = false;
+      return;
+    }
+
+    // Get approved vehicles from user's church using service method
+    this.vehiculoService.getVehiculosAprobadosByIglesia(this.usuario.iglesia).subscribe({
       next: (data) => {
+        console.log(data);
         this.vehiculos = data;
         this.loading = false;
       },

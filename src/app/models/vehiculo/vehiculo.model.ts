@@ -10,7 +10,7 @@ export interface VehiculoModel {
   nombre: string;
   apellidos: string;
   celular: string;
-  iglesiaId?: string | null;
+  iglesiaId: string | null;
   aprobado: boolean | null;
   casaApoyoId?: string | null;
 }
