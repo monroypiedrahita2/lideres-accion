@@ -1,7 +1,6 @@
 import { ComunaService } from './../../../../shared/services/comuna/comuna.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TitleComponent } from '../../../../shared/components/atoms/title/title.component';
 import { ToastrService } from 'ngx-toastr';
 import { LugaresService } from '../../../../shared/services/lugares/lugares.service';
 import { BaseModel } from '../../../../../models/base/base.model';
@@ -16,7 +15,6 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators,
 } from '@angular/forms';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -38,7 +36,6 @@ import { MgPaginatorComponent } from '../../../../shared/components/modules/pagi
   imports: [
     CommonModule,
     FormsModule,
-    TitleComponent,
     SpinnerComponent,
     InputTextComponent,
     MatPaginatorModule,
