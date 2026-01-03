@@ -7,29 +7,38 @@
         </mat-card-header>
 
         <mat-card-content>
-            <!-- Paso 1: Buscar Testigo -->
-            <div *ngIf="!testigoEncontrado && !envioExitoso">
-                <p class="mb-4 text-gray-600">
-                    Ingrese su número de documento para verificar su asignación como testigo.
-                </p>
-
-                <form [formGroup]="testigoForm" (ngSubmit)="buscarTestigo()" class="flex flex-col gap-4">
-                    <mg-input-text label="Número de Documento" placeholder="Ingrese documento"
-                        [formControlName]="'documento'" [required]="true" [type]="'number'"></mg-input-text>
-
-                    <mg-button [loading]="loading" class="w-full mt-2" text="Verificar" icon="search"
-                        (click)="buscarTestigo()"></mg-button>
-                </form>
+            <!-- Paso 1: Loading State -->
+            <div *ngIf="loading && !testigoEncontrado" class="flex flex-col items-center justify-center py-10">
+                <mat-icon class="spinner animate-spin text-blue-500 text-6xl h-16 w-16 mb-4">autorenew</mat-icon>
+                <p class="text-gray-600 font-medium">Verificando asignación de testigo...</p>
             </div>
 
             <!-- Paso 2: Confirmar y Enviar Resultados -->
             <div *ngIf="testigoEncontrado && !envioExitoso">
                 <div class="bg-blue-50 p-4 rounded-lg mb-6 border border-blue-200">
                     <h3 class="font-bold text-blue-800 mb-2">Información del Testigo</h3>
-                    <p><span class="font-semibold">Nombre:</span> {{ testigoEncontrado.data.nombre }} {{
-                        testigoEncontrado.data.apellido }}</p>
-                    <p><span class="font-semibold">Puesto:</span> {{ testigoEncontrado.data.puestodevotacion }}</p>
-                    <p><span class="font-semibold">Mesa:</span> {{ testigoEncontrado.data.mesadevotacion }}</p>
+                    <!-- Check for null safely with optional chaining in template or relying on *ngIf="testigoEncontrado" which implies existence. 
+                         Ideally testigoEncontrado has the structure { id: string, data: TestigoModel } 
+                    -->
+                    <p><span class="font-semibold">Nombre:</span> {{ testigoEncontrado.data?.nombre }} {{
+                        testigoEncontrado.data?.apellido }}</p>
+                    <p><span class="font-semibold">Puesto:</span> {{ testigoEncontrado.data?.puestodevotacion }}</p>
+
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold">Mesa:</span>
+
+                        <div *ngIf="!editingMesa" class="flex items-center gap-2">
+                            <span>{{ form.get('mesa')?.value || testigoEncontrado.data?.mesadevotacion }}</span>
+                            <mat-icon (click)="toggleEditMesa()" class="text-blue text-xs font-bold">edit_note</mat-icon>
+                        </div>
+
+                        <div *ngIf="editingMesa" class="flex items-center gap-2" [formGroup]="form">
+                            <mat-form-field appearance="outline" class="w-24 -mb-5 density-compact">
+                                <input matInput formControlName="mesa" type="text">
+                            </mat-form-field>
+                            <mat-icon (click)="toggleEditMesa()" class="text-blue text-xs font-bold">check</mat-icon>
+                        </div>
+                    </div>
                 </div>
 
                 <p class="mb-4 font-medium">Ingrese la cantidad de votos obtenidos:</p>
@@ -44,11 +53,6 @@
                     <div class="flex flex-col gap-3 mt-4">
                         <mg-button [loading]="loading" class="w-full" text="Enviar Resultados" icon="send"
                             (click)="enviarResultados()"></mg-button>
-
-                        <button mat-button type="button" (click)="testigoEncontrado = null"
-                            class="w-full text-gray-600">
-                            Volver a buscar
-                        </button>
                     </div>
                 </form>
             </div>

@@ -11,13 +11,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CuentavotosService } from '../../../shared/services/cuentavotos/cuentavotos.service';
 import { TestigoService } from '../../../shared/services/testigo/testigo.service';
+import { AuthService } from '../../../shared/services/auth/auth.service';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
 import { CuentavotosModel } from '../../../../models/cuentavotos/cuentavotos.model';
+import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
+import { DialogNotificationModel } from '../../../../models/base/dialog-notification.model';
 
 @Component({
     selector: 'app-enviar-resultados-votacion',
@@ -30,7 +33,7 @@ import { CuentavotosModel } from '../../../../models/cuentavotos/cuentavotos.mod
         MatButtonModule,
         MatCardModule,
         MatIconModule,
-        MatSnackBarModule,
+        MatDialogModule,
         InputTextComponent,
         ButtonComponent,
     ],
@@ -39,63 +42,68 @@ import { CuentavotosModel } from '../../../../models/cuentavotos/cuentavotos.mod
 })
 export class EnviarResultadosVotacionComponent {
     form: FormGroup;
-    testigoForm: FormGroup;
     testigoEncontrado: any = null;
     loading = false;
     envioExitoso = false;
+    editingMesa = false;
 
     private fb = inject(FormBuilder);
     private cuentavotosService = inject(CuentavotosService);
     private testigoService = inject(TestigoService);
-    private snackBar = inject(MatSnackBar);
+    private authService = inject(AuthService);
+    private dialog = inject(MatDialog);
     private router = inject(Router);
 
     constructor() {
-        this.testigoForm = this.fb.group({
-            documento: ['', [Validators.required]],
-        });
-
         this.form = this.fb.group({
             senado: ['', [Validators.required, Validators.min(0)]],
             camara: ['', [Validators.required, Validators.min(0)]],
+            mesa: [{ value: '', disabled: true }, [Validators.required]]
         });
     }
 
-    async buscarTestigo() {
-        if (this.testigoForm.invalid) {
-            this.testigoForm.markAllAsTouched();
-            return;
-        }
-
+    async ngOnInit() {
         this.loading = true;
-        const documento = this.testigoForm.get('documento')?.value;
-
         try {
-            const testigo = await this.testigoService.getTestigoByDocument(documento);
+            const uid = this.authService.uidUser();
+            if (!uid) {
+                this.showNotification('error', 'Error', 'Usuario no identificado.');
+                this.router.navigate(['/public/login']);
+                return;
+            }
+
+            const testigo = await this.testigoService.getTestigo(uid);
+
             if (testigo) {
-                if (!testigo.data.puestodevotacion || !testigo.data.mesadevotacion) {
-                    this.snackBar.open(
-                        'El testigo no tiene puesto o mesa de votación asignados.',
-                        'Cerrar',
-                        { duration: 5000 }
-                    );
-                    this.testigoEncontrado = null;
+                // Check if witness data exists and has required fields
+                if (!testigo.data?.puestodevotacion || !testigo.data?.mesadevotacion) {
+                    this.showNotification('warning', 'Atención', 'No tienes puesto o mesa de votación asignados.');
+                    // Optional: redirect or stay on page with error
                 } else {
-                    this.testigoEncontrado = testigo;
-                    this.snackBar.open('Testigo encontrado.', 'Cerrar', {
-                        duration: 3000,
+                    this.testigoEncontrado = { id: uid, ...testigo };
+                    this.form.patchValue({
+                        mesa: testigo.data.mesadevotacion
                     });
                 }
+            } else {
+                this.showNotification('warning', 'Atención', 'No estás registrado como testigo.');
             }
+
         } catch (error) {
-            this.snackBar.open(
-                'Testigo no encontrado o error al buscar.',
-                'Cerrar',
-                { duration: 5000 }
-            );
-            this.testigoEncontrado = null;
+            console.error('Error fetching witness:', error);
+            this.showNotification('error', 'Error', 'Error al verificar la información del testigo.');
         } finally {
             this.loading = false;
+        }
+    }
+
+    toggleEditMesa() {
+        this.editingMesa = !this.editingMesa;
+        if (this.editingMesa) {
+            this.form.get('mesa')?.enable();
+        } else {
+            this.form.get('mesa')?.disable();
+            // Optionally reset to original value if cancelled, currently it keeps the edit
         }
     }
 
@@ -107,13 +115,15 @@ export class EnviarResultadosVotacionComponent {
 
         this.loading = true;
         try {
-            const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
             const now = new Date().toISOString();
+            const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+
+            // Get mesa value, using getRawValue because it might be disabled
+            const mesaValue = this.form.get('mesa')?.value;
 
             const votosData: CuentavotosModel = {
-                reportadoPor: this.testigoEncontrado.id,
                 puestoVotacion: this.testigoEncontrado.data.puestodevotacion,
-                mesaVotacion: this.testigoEncontrado.data.mesadevotacion,
+                mesaVotacion: mesaValue,
                 senado: Number(this.form.get('senado')?.value),
                 camara: Number(this.form.get('camara')?.value),
             };
@@ -121,35 +131,53 @@ export class EnviarResultadosVotacionComponent {
             const resultados: any = {
                 data: votosData,
                 fechaCreacion: now,
-                creadoPor: usuario.id || 'unknown',
+                creadoPor: usuario.id || this.authService.uidUser(),
             };
 
             await this.cuentavotosService.crearCuentavotos(resultados);
 
             this.envioExitoso = true;
-            this.snackBar.open('Resultados enviados exitosamente.', 'Cerrar', {
-                duration: 5000,
-            });
+            this.showNotification('success', 'Éxito', 'Resultados enviados exitosamente.');
 
             this.resetForm();
         } catch (error) {
             console.error(error);
-            this.snackBar.open('Error al enviar los resultados.', 'Cerrar', {
-                duration: 5000,
-            });
+            this.showNotification('error', 'Error', 'Error al enviar los resultados.');
         } finally {
             this.loading = false;
         }
     }
 
     resetForm() {
-        this.form.reset();
-        this.testigoForm.reset();
-        this.testigoEncontrado = null;
         this.envioExitoso = false;
+        this.form.reset();
+        // Reset local editing state
+        this.editingMesa = false;
+        this.form.get('mesa')?.disable();
+
+        // Restore original mesa value if needed or keep it empty until reload
+        if (this.testigoEncontrado) {
+            this.form.patchValue({
+                mesa: this.testigoEncontrado.data.mesadevotacion
+            });
+        }
     }
 
     cancelar() {
         this.router.navigate(['/private/home']);
+    }
+
+    private showNotification(type: 'success' | 'error' | 'warning' | 'info', title: string, message: string) {
+        const data: DialogNotificationModel = {
+            type,
+            title,
+            message,
+            bottons: 'one'
+        };
+        this.dialog.open(DialogNotificationComponent, {
+            data,
+            width: '400px',
+            panelClass: 'dialog-notification'
+        });
     }
 }
