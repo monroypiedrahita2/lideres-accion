@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogNotificationComponent } from '../../../dialogs/dialog-notification/dialog-nofication.component';
 import { Subscription } from 'rxjs';
 import { PerfilService } from '../../../services/perfil/perfil.service';
+import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 
 
 @Component({
@@ -22,7 +23,7 @@ import { PerfilService } from '../../../services/perfil/perfil.service';
   ],
 })
 export class NavComponent implements OnInit, OnDestroy {
-  usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
+  usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
   @Input() titleHeader: string = NAME_APP;
   @Input() foto: string | undefined;
   nameApp = NAME_LONG_APP;

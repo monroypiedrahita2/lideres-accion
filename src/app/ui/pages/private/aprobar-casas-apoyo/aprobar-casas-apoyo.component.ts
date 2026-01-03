@@ -11,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CardAprobacionComponent } from '../../../shared/components/cards/card-aprobacion/card-aprobacion.component';
 import { MgPaginatorComponent, PageEvent } from '../../../shared/components/modules/paginator/paginator.component';
 import { DialogAsignarVehiculoComponent } from '../../../shared/dialogs/dialog-asignar-vehiculo/dialog-asignar-vehiculo.component';
+import { PerfilModel } from '../../../../models/perfil/perfil.model';
 
 @Component({
     selector: 'app-aprobar-casas-apoyo',
@@ -25,7 +26,7 @@ export class AprobarCasasApoyoComponent implements OnInit {
 
     dataSource = new MatTableDataSource<BaseModel<CasaApoyoModel>>([]);
     paginatedCasas: BaseModel<CasaApoyoModel>[] = [];
-    usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+    usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
 
     pageIndex: number = 0;
     pageSize: number = 5;

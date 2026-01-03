@@ -12,6 +12,9 @@ import {
 import { ReferidoService } from '../../../shared/services/referido/referido.service';
 import { ReferidoModel } from '../../../../models/referido/referido.model';
 import { BaseModel } from '../../../../models/base/base.model';
+import { PerfilModel } from '../../../../models/perfil/perfil.model';
+import { PerfilService } from '../../../shared/services/perfil/perfil.service';
+import { AuthService } from '../../../shared/services/auth/auth.service';
 
 @Component({
   selector: 'app-masivo-referidos',
@@ -20,8 +23,8 @@ import { BaseModel } from '../../../../models/base/base.model';
   imports: [CommonModule, ButtonComponent, ContainerAlertInformationComponent],
 })
 export class MasivoReferidosComponent {
-  iglesia: any = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
-  usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
+  iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
+  usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
   loading: boolean = false;
   accion: 'Crear' | 'Editar' = 'Crear';
   enableSkeleton: boolean = true;
@@ -31,7 +34,9 @@ export class MasivoReferidosComponent {
 
   constructor(
     private readonly referidoService: ReferidoService,
-    private readonly toast: ToastrService
+    private readonly toast: ToastrService,
+    private readonly perfilService: PerfilService,
+    private readonly auth: AuthService
   ) { }
 
   onFileChange(event: any): void {
@@ -123,7 +128,7 @@ export class MasivoReferidosComponent {
       id: referido.documento,
       data: referido,
       fechaCreacion: new Date().toISOString(),
-      creadoPor: this.usuario.id,
+      creadoPor: this.auth.uidUser() ?? '',
     };
     try {
       await this.referidoService.crearReferidoConIdDocumento(ref, ref.id!)

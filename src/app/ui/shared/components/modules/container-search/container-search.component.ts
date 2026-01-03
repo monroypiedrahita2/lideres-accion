@@ -12,6 +12,7 @@ import { LugaresService } from '../../../services/lugares/lugares.service';
 import { distinctUntilChanged } from 'rxjs';
 import { BaseModel } from '../../../../../models/base/base.model';
 import { ButtonComponent } from '../../atoms/button/button.component';
+import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 
 @Component({
   selector: 'app-container-search',
@@ -30,7 +31,7 @@ export class ContainerSearchComponent implements OnInit {
   filter: SelectOptionModel<string>[] = []
 
   @Input() atribute: SelectOptionModel<string>[] = [];
-  usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
+  usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
   spinner: boolean = false;
   @Input() data: any;
 

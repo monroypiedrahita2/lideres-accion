@@ -11,6 +11,7 @@ import { TitleComponent } from "../../../shared/components/atoms/title/title.com
 import { MatTableDataSource } from '@angular/material/table';
 import { CardAprobacionComponent } from '../../../shared/components/cards/card-aprobacion/card-aprobacion.component';
 import { MgPaginatorComponent, PageEvent } from '../../../shared/components/modules/paginator/paginator.component';
+import { PerfilModel } from '../../../../models/perfil/perfil.model';
 
 @Component({
     selector: 'app-aprobar-vehiculos',
@@ -25,7 +26,7 @@ export class AprobarVehiculosComponent implements OnInit, AfterViewInit {
 
     dataSource = new MatTableDataSource<VehiculoModel>([]);
     paginatedVehiculos: VehiculoModel[] = [];
-    usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+    usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
 
     pageIndex: number = 0;
     pageSize: number = 5;
@@ -98,7 +99,7 @@ export class AprobarVehiculosComponent implements OnInit, AfterViewInit {
     }
 
     aprobarVehiculo(vehiculo: VehiculoModel, estado: boolean) {
-        this.vehiculoService.updateVehiculo(vehiculo.id!, { ...vehiculo, aprobado: estado }).then(() => {
+        this.vehiculoService.updateVehiculo(vehiculo.id!, { ...vehiculo, aprobado: estado, casaApoyoId: null }).then(() => {
             this.dialog.open(DialogNotificationComponent, {
                 data: {
                     title: 'Éxito',

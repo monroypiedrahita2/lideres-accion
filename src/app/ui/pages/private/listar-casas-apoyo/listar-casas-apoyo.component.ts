@@ -8,6 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { MatIconModule } from '@angular/material/icon';
 import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
+import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
+import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
 
 @Component({
     selector: 'app-listar-casas-apoyo',
@@ -18,12 +20,15 @@ import { TitleComponent } from '../../../shared/components/atoms/title/title.com
 })
 export class ListarCasasApoyoComponent implements OnInit {
     private readonly casaApoyoService = inject(CasaApoyoService);
+    private readonly vehiculoService = inject(VehiculoService);
     private readonly dialog = inject(MatDialog);
     casas: BaseModel<CasaApoyoModel>[] = [];
+    vehiculosDisponibles: VehiculoModel[] = [];
     usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
 
     ngOnInit() {
         this.loadCasas();
+        this.loadVehiculosDisponibles();
     }
 
     loadCasas() {
@@ -35,6 +40,34 @@ export class ListarCasasApoyoComponent implements OnInit {
                 },
                 error: (err) => console.error(err)
             });
+        }
+    }
+
+    loadVehiculosDisponibles() {
+        // Load available vehicles (approved and without casa de apoyo) once
+        if (this.usuario.iglesia) {
+            this.vehiculoService.getVehiculosAprobadosSinCasaByIglesia(this.usuario.iglesia).subscribe({
+                next: (data) => {
+                    this.vehiculosDisponibles = data;
+                },
+                error: (err) => console.error('Error loading available vehicles:', err)
+            });
+        }
+    }
+
+    onVehiculoChanged(event?: { vehiculo: VehiculoModel, action: 'asociar' | 'desasociar' }) {
+        // Update available vehicles list locally without making a new API call
+        if (event) {
+            if (event.action === 'asociar') {
+                // Remove vehicle from available list when assigned
+                this.vehiculosDisponibles = this.vehiculosDisponibles.filter(v => v.id !== event.vehiculo.id);
+            } else if (event.action === 'desasociar') {
+                // Add vehicle back to available list when unassigned
+                this.vehiculosDisponibles.push(event.vehiculo);
+            }
+        } else {
+            // Fallback: reload if no event data provided
+            this.loadVehiculosDisponibles();
         }
     }
 
