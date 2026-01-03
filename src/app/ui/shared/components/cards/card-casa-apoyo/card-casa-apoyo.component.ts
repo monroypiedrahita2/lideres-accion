@@ -38,7 +38,8 @@ export class CardCasaApoyoComponent {
         const dialogRef = this.dialog.open(DialogGestionVehiculosCasaComponent, {
             data: {
                 casaId: this.casa.id,
-                vehiculos: this.casa.data.vehiculos || []
+                vehiculos: this.casa.data.vehiculos || [],
+                iglesiaId: this.casa.data.iglesiaId
             }
         });
 

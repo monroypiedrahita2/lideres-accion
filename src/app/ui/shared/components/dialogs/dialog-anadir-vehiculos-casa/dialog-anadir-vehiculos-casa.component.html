@@ -1,0 +1,51 @@
+<div class="p-6 bg-white rounded-lg max-w-md w-full mx-auto">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+            <mat-icon class="text-blue-600">home</mat-icon>
+            Asignar Vehículos
+        </h2>
+        <button mat-icon-button (click)="onClose()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <div class="dialog-content mb-6 max-h-[60vh] overflow-y-auto">
+        @if (loading) {
+        <div class="flex justify-center p-4">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+        } @else if (vehiculos.length === 0) {
+        <div class="text-center p-4 text-gray-500 bg-gray-50 rounded-lg">
+            <p>No hay vehículos disponibles para asignar.</p>
+            <p class="text-xs mt-1">(Deben estar aprobados)</p>
+        </div>
+        } @else {
+        <div class="space-y-3">
+            @for (vehiculo of vehiculos; track vehiculo.id) {
+            <div class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+                (click)="toggleSelection(vehiculo.id!)">
+                <div class="flex flex-col">
+                    <span class="font-semibold text-gray-800 flex items-center gap-2">
+                        {{ vehiculo.placa | uppercase }}
+                        <span class="text-xs font-normal text-gray-500 border border-gray-200 px-1 rounded">{{
+                            vehiculo.marca
+                            }}</span>
+                    </span>
+                    <span class="text-sm text-gray-500">{{ vehiculo.nombre }} {{ vehiculo.apellidos }}</span>
+                </div>
+                <mat-checkbox color="primary" [checked]="selectedVehiculos.has(vehiculo.id!)"
+                    (click)="$event.stopPropagation()" (change)="toggleSelection(vehiculo.id!)">
+                </mat-checkbox>
+            </div>
+            }
+        </div>
+        }
+    </div>
+
+    <div class="flex justify-end gap-3 mt-4">
+        <button mat-stroked-button (click)="onClose()">Cancelar</button>
+        <button mat-flat-button color="primary" [disabled]="loading || selectedVehiculos.size === 0" (click)="onSave()">
+            Guardar ({{ selectedVehiculos.size }})
+        </button>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { InputTextComponent } from '../../components/atoms/input-text/input-text.component';
@@ -9,6 +9,9 @@ import { ButtonComponent } from '../../components/atoms/button/button.component'
 import { VehiculoService } from '../../services/vehiculo/vehiculo.service';
 import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
 import { firstValueFrom } from 'rxjs';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button'; // Ensure button types are correct
+import { CasaApoyoService } from '../../services/casa-apoyo/casa-apoyo.service';
 
 @Component({
     selector: 'app-dialog-asignar-vehiculo',
@@ -18,65 +21,82 @@ import { firstValueFrom } from 'rxjs';
         ReactiveFormsModule,
         MatDialogModule,
         MatIconModule,
-        InputTextComponent,
-        ButtonComponent
+        MatCheckboxModule,
+        FormsModule,
+        MatButtonModule
     ],
     templateUrl: './dialog-asignar-vehiculo.component.html',
     styleUrls: ['./dialog-asignar-vehiculo.component.scss']
 })
 export class DialogAsignarVehiculoComponent implements OnInit {
-    searchForm: FormGroup;
-    searching: boolean = false;
-    searched: boolean = false;
-    vehiculo: VehiculoModel | null = null;
-    notFound: boolean = false;
+    vehiculos: VehiculoModel[] = [];
+    selectedVehiculos: Set<string> = new Set();
+    loading: boolean = true;
+
+    private casaApoyoService = inject(CasaApoyoService);
 
     constructor(
-        private fb: FormBuilder,
         private vehiculoService: VehiculoService,
         public dialogRef: MatDialogRef<DialogAsignarVehiculoComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: { casaId: string }
-    ) {
-        this.searchForm = this.fb.group({
-            placa: ['', [Validators.required]]
-        });
+        @Inject(MAT_DIALOG_DATA) public data: { casaId: string, iglesiaId: string }
+    ) { }
+
+    ngOnInit(): void {
+        this.loadVehiculos();
     }
 
-    ngOnInit(): void { }
-
-    async searchByPlaca() {
-        if (this.searchForm.invalid) {
-            this.searchForm.markAllAsTouched();
+    loadVehiculos() {
+        if (!this.data.iglesiaId) {
+            console.error('No iglesiaId provided');
+            this.loading = false;
             return;
         }
 
-        const placa = this.searchForm.get('placa')?.value.toUpperCase();
-        this.searching = true;
-        this.searched = false;
-        this.notFound = false;
-        this.vehiculo = null;
-
-        try {
-            const result = await firstValueFrom(this.vehiculoService.getVehiculoByPlaca(placa));
-            this.searching = false;
-            this.searched = true;
-            if (result && result.length > 0) {
-                this.vehiculo = { ...result[0].data, id: result[0].id } as VehiculoModel;
-                this.notFound = false;
-            } else {
-                this.notFound = true;
+        this.vehiculoService.getVehiculosByIglesia(this.data.iglesiaId).subscribe({
+            next: (val) => {
+                // Filter: not assigned (no casaApoyoId) AND approved
+                this.vehiculos = val.filter(v => !v.casaApoyoId && v.aprobado === true);
+                this.loading = false;
+            },
+            error: (err) => {
+                console.error('Error loading vehicles', err);
+                this.loading = false;
             }
-        } catch (error) {
-            console.error('Error searching vehiculo:', error);
-            this.searching = false;
-            this.searched = true;
-            this.notFound = true;
+        });
+    }
+
+    toggleSelection(vehiculoId: string) {
+        if (this.selectedVehiculos.has(vehiculoId)) {
+            this.selectedVehiculos.delete(vehiculoId);
+        } else {
+            this.selectedVehiculos.add(vehiculoId);
         }
     }
 
-    assignVehiculo() {
-        if (this.vehiculo) {
-            this.dialogRef.close(this.vehiculo);
+    async onSave() {
+        this.loading = true;
+        const selectedList = this.vehiculos.filter(v => this.selectedVehiculos.has(v.id!));
+
+        const promises = selectedList.map(async vehiculo => {
+            // 1. Update Vehicle: set casaApoyoId
+            await this.vehiculoService.updateVehiculo(vehiculo.id!, { casaApoyoId: this.data.casaId } as unknown as VehiculoModel);
+
+            // 2. Update House: add to vehiculos array
+            // Note: addVehiculoToCasa expects 'any' (the whole vehicle object or partial?)
+            // Usually we store the whole object in array or just ID. 
+            // Existing code pushed the whole object. Let's do that.
+            // But we should probably update checks to ensure no duplication, but we heavily rely on UI state here.
+            await this.casaApoyoService.addVehiculoToCasa(this.data.casaId, vehiculo);
+        });
+
+        try {
+            await Promise.all(promises);
+            this.dialogRef.close(selectedList);
+        } catch (error) {
+            console.error('Error assigning vehicles', error);
+            // Handle error
+        } finally {
+            this.loading = false;
         }
     }
 

@@ -6,7 +6,7 @@
     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <div *ngFor="let vehiculo of paginatedVehiculos">
       <app-card-aprobacion [title]="vehiculo.placa" [subtitle]="vehiculo.marca + ' ' + vehiculo.nombreModelo"
-        [date]="vehiculo.nombre + ' ' + vehiculo.apellidos" [status]="vehiculo.color" [checked]="vehiculo.aprobado"
+        [date]="vehiculo.nombre + ' ' + vehiculo.apellidos" [status]="vehiculo.color" [checked]="vehiculo.aprobado || false"
         [phoneNumber]="vehiculo.celular" (checkedChange)="aprobarVehiculo(vehiculo, $event)">
       </app-card-aprobacion>
     </div>

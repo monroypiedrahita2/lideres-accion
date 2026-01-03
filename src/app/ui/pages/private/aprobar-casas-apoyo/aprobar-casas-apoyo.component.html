@@ -5,10 +5,10 @@
     <div *ngIf="paginatedCasas.length > 0; else noItems" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div *ngFor="let casa of paginatedCasas">
             <app-card-aprobacion [title]="casa.data.responsableNombre + ' ' + casa.data.responsableApellido"
-                [subtitle]="casa.data.direccion + ' - ' + casa.data.barrio"
-                [date]="casa.data.responsableTelefono || 'Sin teléfono'" [status]="casa.data.municipio"
+                [subtitle]="casa.data.direccion + ' - ' + casa.data.barrio" [date]="''" [status]="casa.data.municipio"
                 [checked]="!!casa.data.aprobado" [phoneNumber]="casa.data.responsableTelefono || ''"
-                (checkedChange)="aprobar(casa, $event)">
+                [showAssignAction]="true" (checkedChange)="aprobar(casa, $event)"
+                (onAssignAction)="asignarVehiculos(casa)">
             </app-card-aprobacion>
         </div>
     </div>

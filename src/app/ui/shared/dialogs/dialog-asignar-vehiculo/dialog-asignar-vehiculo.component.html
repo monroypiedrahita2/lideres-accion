@@ -1,106 +1,51 @@
-
-<div class="w-full sm:w-[500px] p-4 sm:p-6">
-  <!-- Header -->
-  <div class="flex items-center justify-between mb-4">
+<div class="p-6 bg-white rounded-lg max-w-md w-full mx-auto">
+  <div class="flex justify-between items-center mb-4">
     <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
       <mat-icon class="text-blue-600">directions_car</mat-icon>
-      Asignar Vehículo
+      Asignar Vehículos
     </h2>
-    <button (click)="cancel()" class="text-gray-400 hover:text-gray-600 transition-colors">
+    <button mat-icon-button (click)="cancel()">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <!-- Description -->
-  <p class="text-sm text-gray-600 mb-6">
-    Busque el vehículo por placa para asignarlo a esta casa de apoyo.
-  </p>
-
-  <!-- Search Form -->
-  <form [formGroup]="searchForm" (ngSubmit)="searchByPlaca()" class="space-y-4">
-    <div class="flex gap-2">
-      <div class="flex-1">
-        <mg-input-text
-          formControlName="placa"
-          placeholder="Placa del vehículo"
-          label="Placa"
-          [required]="true">
-        </mg-input-text>
-      </div>
-      <div class="flex items-end">
-        <mg-button
-          type="submit"
-          text="Buscar"
-          icon="search"
-          size="big"
-          [disabled]="searching">
-        </mg-button>
-      </div>
+  <div class="dialog-content mb-6 max-h-[60vh] overflow-y-auto">
+    @if (loading) {
+    <div class="flex justify-center p-4">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
     </div>
-  </form>
-
-  <!-- Loading State -->
-  <div *ngIf="searching" class="flex justify-center items-center py-8">
-    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+    } @else if (vehiculos.length === 0) {
+    <div class="text-center p-4 text-gray-500 bg-gray-50 rounded-lg">
+      <p>No hay vehículos disponibles para asignar.</p>
+      <p class="text-xs mt-1">(Deben estar aprobados y sin asignar)</p>
+    </div>
+    } @else {
+    <div class="space-y-3">
+      @for (vehiculo of vehiculos; track vehiculo.id) {
+      <div
+        class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+        (click)="toggleSelection(vehiculo.id!)">
+        <div class="flex flex-col">
+          <span class="font-semibold text-gray-800 flex items-center gap-2">
+            {{ vehiculo.placa | uppercase }}
+            <span class="text-xs font-normal text-gray-500 border border-gray-200 px-1 rounded">{{ vehiculo.marca
+              }}</span>
+          </span>
+          <span class="text-sm text-gray-500">{{ vehiculo.nombre }} {{ vehiculo.apellidos }}</span>
+        </div>
+        <mat-checkbox color="primary" [checked]="selectedVehiculos.has(vehiculo.id!)" (click)="$event.stopPropagation()"
+          (change)="toggleSelection(vehiculo.id!)">
+        </mat-checkbox>
+      </div>
+      }
+    </div>
+    }
   </div>
 
-  <!-- Not Found Message -->
-  <div *ngIf="searched && notFound" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-    <div class="flex items-center gap-2 text-red-700">
-      <mat-icon class="!text-[20px]">error_outline</mat-icon>
-      <p class="text-sm font-medium">No se encontró ningún vehículo con esa placa</p>
-    </div>
-  </div>
-
-  <!-- Result Card -->
-  <div *ngIf="searched && vehiculo && !notFound" class="mt-4">
-    <div class="border border-gray-200 rounded-lg bg-white p-4 shadow-sm">
-      <p class="text-xs font-semibold text-gray-500 uppercase mb-3">Vehículo encontrado</p>
-      
-      <div class="space-y-2">
-        <!-- Placa -->
-        <div class="flex items-center gap-2">
-          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400">confirmation_number</mat-icon>
-          <p class="text-sm text-gray-700 font-medium">
-            {{ vehiculo.placa }}
-          </p>
-        </div>
-
-        <!-- Marca y Modelo -->
-        <div class="flex items-center gap-2">
-          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400">directions_car</mat-icon>
-          <p class="text-sm text-gray-600">{{ vehiculo.marca }} - {{ vehiculo.modelo }}</p>
-        </div>
-
-        <!-- Color -->
-        <div class="flex items-center gap-2">
-          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400">palette</mat-icon>
-          <p class="text-sm text-gray-600">{{ vehiculo.color }}</p>
-        </div>
-
-         <!-- Conductor -->
-         <div *ngIf="vehiculo.nombre" class="flex items-center gap-2">
-            <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400">person</mat-icon>
-            <p class="text-sm text-gray-600">Conductor: {{ vehiculo.nombre }} {{ vehiculo.apellidos }}</p>
-          </div>
-      </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="flex gap-3 mt-6">
-      <mg-button
-        (click)="cancel()"
-        text="Cancelar"
-        size="big"
-        class="flex-1">
-      </mg-button>
-      <mg-button
-        (click)="assignVehiculo()"
-        text="Asignar"
-        icon="check"
-        size="big"
-        class="flex-1">
-      </mg-button>
-    </div>
+  <div class="flex justify-end gap-3 mt-4">
+    <button mat-stroked-button (click)="cancel()">Cancelar</button>
+    <button mat-flat-button color="primary" [disabled]="loading || selectedVehiculos.size === 0" (click)="onSave()">
+      Asignar ({{ selectedVehiculos.size }})
+    </button>
   </div>
 </div>

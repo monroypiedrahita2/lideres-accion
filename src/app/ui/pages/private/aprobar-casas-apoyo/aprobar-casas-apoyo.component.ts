@@ -10,6 +10,7 @@ import { TitleComponent } from "../../../shared/components/atoms/title/title.com
 import { MatTableDataSource } from '@angular/material/table';
 import { CardAprobacionComponent } from '../../../shared/components/cards/card-aprobacion/card-aprobacion.component';
 import { MgPaginatorComponent, PageEvent } from '../../../shared/components/modules/paginator/paginator.component';
+import { DialogAsignarVehiculoComponent } from '../../../shared/dialogs/dialog-asignar-vehiculo/dialog-asignar-vehiculo.component';
 
 @Component({
     selector: 'app-aprobar-casas-apoyo',
@@ -84,6 +85,26 @@ export class AprobarCasasApoyoComponent implements OnInit {
                     type: 'error'
                 }
             });
+        });
+    }
+    asignarVehiculos(casa: BaseModel<CasaApoyoModel>) {
+        this.dialog.open(DialogAsignarVehiculoComponent, {
+            data: {
+                casaId: casa.id,
+                iglesiaId: this.usuario.iglesia
+            },
+            width: '100%',
+            maxWidth: '600px'
+        }).afterClosed().subscribe(result => {
+            if (result) {
+                this.dialog.open(DialogNotificationComponent, {
+                    data: {
+                        title: 'Éxito',
+                        message: 'Vehículos asignados correctamente.',
+                        type: 'success'
+                    }
+                });
+            }
         });
     }
 }

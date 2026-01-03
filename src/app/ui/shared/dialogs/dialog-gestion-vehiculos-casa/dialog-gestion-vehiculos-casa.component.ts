@@ -22,7 +22,7 @@ export class DialogGestionVehiculosCasaComponent implements OnInit {
 
     constructor(
         public dialogRef: MatDialogRef<DialogGestionVehiculosCasaComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: { casaId: string, vehiculos: VehiculoModel[] },
+        @Inject(MAT_DIALOG_DATA) public data: { casaId: string, vehiculos: VehiculoModel[], iglesiaId: string },
         private casaApoyoService: CasaApoyoService,
         private dialog: MatDialog
     ) {
@@ -34,12 +34,19 @@ export class DialogGestionVehiculosCasaComponent implements OnInit {
 
     openAddVehiculo() {
         const dialogRef = this.dialog.open(DialogAsignarVehiculoComponent, {
-            data: { casaId: this.casaId }
+            data: {
+                casaId: this.casaId,
+                iglesiaId: this.data.iglesiaId
+            }
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.addVehiculo(result);
+        dialogRef.afterClosed().subscribe(addedVehiculos => {
+            if (addedVehiculos && Array.isArray(addedVehiculos)) {
+                this.vehiculos.push(...addedVehiculos);
+                // No need to call addVehiculoToCasa manually if dialog handles it, 
+                // but if dialog returns just the objects, we might need to.
+                // Plan said dialog HANDLES SAVING. 
+                // So here we likely just update local view.
             }
         });
     }
