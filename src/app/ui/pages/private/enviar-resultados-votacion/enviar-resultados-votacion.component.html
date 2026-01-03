@@ -1,0 +1,74 @@
+<div class="container mx-auto p-4 max-w-lg">
+    <mat-card class="p-6">
+        <mat-card-header>
+            <mat-card-title class="text-2xl font-bold mb-4 w-full text-center">
+                Reportar Resultados de Votación
+            </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+            <!-- Paso 1: Buscar Testigo -->
+            <div *ngIf="!testigoEncontrado && !envioExitoso">
+                <p class="mb-4 text-gray-600">
+                    Ingrese su número de documento para verificar su asignación como testigo.
+                </p>
+
+                <form [formGroup]="testigoForm" (ngSubmit)="buscarTestigo()" class="flex flex-col gap-4">
+                    <mg-input-text label="Número de Documento" placeholder="Ingrese documento"
+                        [formControlName]="'documento'" [required]="true" [type]="'number'"></mg-input-text>
+
+                    <mg-button [loading]="loading" class="w-full mt-2" text="Verificar" icon="search"
+                        (click)="buscarTestigo()"></mg-button>
+                </form>
+            </div>
+
+            <!-- Paso 2: Confirmar y Enviar Resultados -->
+            <div *ngIf="testigoEncontrado && !envioExitoso">
+                <div class="bg-blue-50 p-4 rounded-lg mb-6 border border-blue-200">
+                    <h3 class="font-bold text-blue-800 mb-2">Información del Testigo</h3>
+                    <p><span class="font-semibold">Nombre:</span> {{ testigoEncontrado.data.nombre }} {{
+                        testigoEncontrado.data.apellido }}</p>
+                    <p><span class="font-semibold">Puesto:</span> {{ testigoEncontrado.data.puestodevotacion }}</p>
+                    <p><span class="font-semibold">Mesa:</span> {{ testigoEncontrado.data.mesadevotacion }}</p>
+                </div>
+
+                <p class="mb-4 font-medium">Ingrese la cantidad de votos obtenidos:</p>
+
+                <form [formGroup]="form" (ngSubmit)="enviarResultados()" class="flex flex-col gap-4">
+                    <mg-input-text label="Votos SENADO" placeholder="0" [formControlName]="'senado'" [required]="true"
+                        [type]="'number'" [min]="0"></mg-input-text>
+
+                    <mg-input-text label="Votos CÁMARA" placeholder="0" [formControlName]="'camara'" [required]="true"
+                        [type]="'number'" [min]="0"></mg-input-text>
+
+                    <div class="flex flex-col gap-3 mt-4">
+                        <mg-button [loading]="loading" class="w-full" text="Enviar Resultados" icon="send"
+                            (click)="enviarResultados()"></mg-button>
+
+                        <button mat-button type="button" (click)="testigoEncontrado = null"
+                            class="w-full text-gray-600">
+                            Volver a buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Paso 3: Confirmación de Éxito -->
+            <div *ngIf="envioExitoso" class="text-center py-6">
+                <mat-icon class="text-green-500 text-6xl h-16 w-16 mb-4">check_circle</mat-icon>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">¡Resultados Enviados!</h3>
+                <p class="text-gray-600 mb-6">
+                    La información ha sido registrada exitosamente en el sistema.
+                </p>
+
+                <mg-button class="w-full" text="Reportar Nuevo Resultado" icon="add_circle"
+                    (click)="resetForm()"></mg-button>
+
+                <button mat-button class="w-full mt-4" (click)="cancelar()">
+                    Volver al Inicio
+                </button>
+            </div>
+
+        </mat-card-content>
+    </mat-card>
+</div>
