@@ -25,7 +25,6 @@ export class CardAprobacionComponent {
 
     onCheckboxChange(event: Event): void {
         const isChecked = (event.target as HTMLInputElement).checked;
-        this.checked = isChecked;
         this.checkedChange.emit(isChecked);
     }
 
