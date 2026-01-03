@@ -1,0 +1,97 @@
+<div class="flex flex-col items-start justify-start pt-8 px-6">
+    <mg-title title="Detalles de Casa de Apoyo"></mg-title>
+</div>
+
+<mat-dialog-content class="!px-6">
+    <div class="flex flex-col gap-4">
+        <!-- Ubicación -->
+        <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+                <mat-icon class="text-blue-600">location_on</mat-icon>
+                Ubicación
+            </h3>
+            <div class="grid grid-cols-1 gap-2 ml-8">
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 font-medium">Municipio</span>
+                    <span class="font-primary text-gray-800">{{ data.data.municipio }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 font-medium">Barrio</span>
+                    <span class="font-primary text-gray-800">{{ data.data.barrio }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 font-medium">Dirección</span>
+                    <span class="font-primary text-gray-800">{{ data.data.direccion }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Habitante -->
+        <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+                <mat-icon class="text-blue-600">person</mat-icon>
+                Habitante
+            </h3>
+            <div class="grid grid-cols-1 gap-2 ml-8">
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 font-medium">Nombre</span>
+                    <span class="font-primary text-gray-800">{{ data.data.nombreHabitante }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 font-medium">Teléfono</span>
+                    <a [href]="'tel:' + data.data.telefonoHabitante" class="font-primary text-blue-600 hover:underline">
+                        {{ data.data.telefonoHabitante }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Responsable -->
+        <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+                <mat-icon class="text-blue-600">admin_panel_settings</mat-icon>
+                Responsable
+            </h3>
+            <div class="grid grid-cols-1 gap-2 ml-8">
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 font-medium">Nombre</span>
+                    <span class="font-primary text-gray-800">{{ data.data.responsableNombre }} {{
+                        data.data.responsableApellido }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs text-gray-500 font-medium">Teléfono</span>
+                    <a [href]="'tel:' + data.data.responsableTelefono"
+                        class="font-primary text-blue-600 hover:underline">
+                        {{ data.data.responsableTelefono }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estado -->
+        <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+                <mat-icon class="text-blue-600">info</mat-icon>
+                Estado
+            </h3>
+            <div class="ml-8">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" [ngClass]="{
+                        'bg-green-100 text-green-800': data.data.aprobado === true,
+                        'bg-red-100 text-red-800': data.data.aprobado === false,
+                        'bg-yellow-100 text-yellow-800': data.data.aprobado === null
+                      }">
+                    <mat-icon class="!w-4 !h-4 !text-[16px] mr-1">
+                        {{ data.data.aprobado === true ? 'check_circle' : data.data.aprobado === false ? 'cancel' :
+                        'pending' }}
+                    </mat-icon>
+                    {{ data.data.aprobado === true ? 'Aprobado' : data.data.aprobado === false ? 'Rechazado' :
+                    'Pendiente' }}
+                </span>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+
+<div class="w-full flex gap-4 p-6">
+    <mg-button [mat-dialog-close]="false" size="big" type="reset" text="Cerrar" class="w-full"></mg-button>
+</div>

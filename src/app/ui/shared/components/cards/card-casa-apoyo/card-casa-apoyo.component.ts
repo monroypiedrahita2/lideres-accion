@@ -10,6 +10,7 @@ import { VehiculoModel } from '../../../../../models/vehiculo/vehiculo.model';
 import { MatDialog } from '@angular/material/dialog';
 import { VehiculoService } from '../../../services/vehiculo/vehiculo.service';
 import { DialogNotificationComponent } from '../../../dialogs/dialog-notification/dialog-nofication.component';
+import { DialogCasaApoyoDetallesComponent } from '../../../dialogs/dialog-casa-apoyo-detalles/dialog-casa-apoyo-detalles.component';
 
 @Component({
     selector: 'app-card-casa-apoyo',
@@ -185,6 +186,14 @@ export class CardCasaApoyoComponent {
                     });
                 });
             }
+        });
+    }
+
+    verDetalles() {
+        this.dialog.open(DialogCasaApoyoDetallesComponent, {
+            data: this.casa,
+            width: '600px',
+            maxWidth: '90vw'
         });
     }
 }

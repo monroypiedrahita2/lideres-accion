@@ -14,13 +14,17 @@
           class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-blue-50 transition-colors text-blue-600">
           <mat-icon>call</mat-icon>
         </a>
+        <button (click)="verDetalles()"
+          class="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors text-gray-600">
+          <mat-icon>visibility</mat-icon>
+        </button>
       </div>
     </mat-expansion-panel-header>
 
     <!-- Información de la casa -->
     <div class="flex flex-col gap-4">
       <div class="flex items-center flex-row gap-2 justify-between">
-        <span class="font-primary font-medium">{{ casa.data.responsableNombre }}</span>
+        <span class="font-primary font-medium">Responsable: {{ casa.data.responsableNombre }}</span>
         <span class="font-primary font-medium">{{ casa.data.direccion }}</span>
       </div>
 
@@ -34,23 +38,27 @@
         </div>
 
         <!-- Vehicle rows -->
-         <span class="font-primary text-xs font-bold text-center">Vehículos asociados</span>
-         
+        <span class="font-primary text-xs font-bold text-center">Vehículos asociados</span>
+
         <div *ngFor="let vehiculo of vehiculos"
           class="bg-white flex flex-row p-2 justify-between items-center rounded-md border border-gray-200 hover:bg-gray-50 transition-colors">
           <span class="font-primary text-xs font-bold">{{ vehiculo.tipoVehiculo || 'N/A' }}</span>
-          <span class="font-primary text-xs font-bold">{{ vehiculo.nombre.split(' ')[0] }} {{ vehiculo.apellidos.split(' ')[0] }}</span>
+          <span class="font-primary text-xs font-bold">{{ vehiculo.nombre.split(' ')[0] }} {{ vehiculo.apellidos.split('
+            ')[0] }}</span>
           <span class="font-primary text-xs font-bold">{{ vehiculo.placa || 'N/A' }}</span>
-          <mat-icon (click)="desasociarVehiculo(vehiculo)" class="text-xs cursor-pointer pt-[5px] text-red-500">block</mat-icon>
+          <mat-icon (click)="desasociarVehiculo(vehiculo)"
+            class="text-xs cursor-pointer pt-[5px] text-red-500">block</mat-icon>
         </div>
 
-         <span class="font-primary text-xs font-bold text-center mt-4">Vehículos no asociados</span>
+        <span class="font-primary text-xs font-bold text-center mt-4">Vehículos disponibles</span>
         <div *ngFor="let vehiculo of vehiculosNoAsociados"
           class="bg-white flex flex-row p-2 justify-between items-center rounded-md border border-gray-200 hover:bg-gray-50 transition-colors">
           <span class="font-primary text-xs font-bold">{{ vehiculo.tipoVehiculo || 'N/A' }}</span>
-          <span class="font-primary text-xs font-bold">{{ vehiculo.nombre.split(' ')[0] }} {{ vehiculo.apellidos.split(' ')[0] }}</span>
+          <span class="font-primary text-xs font-bold">{{ vehiculo.nombre.split(' ')[0] }} {{ vehiculo.apellidos.split('
+            ')[0] }}</span>
           <span class="font-primary text-xs font-bold">{{ vehiculo.placa || 'N/A' }}</span>
-          <mat-icon (click)="asociarVehiculo(vehiculo)" class="text-xs cursor-pointer pt-[5px] text-green-500">link</mat-icon>
+          <mat-icon (click)="asociarVehiculo(vehiculo)"
+            class="text-xs cursor-pointer pt-[5px] text-green-500">link</mat-icon>
         </div>
       </div>
     </div>
