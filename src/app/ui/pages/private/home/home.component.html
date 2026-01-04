@@ -1,7 +1,7 @@
 <mg-skeleton [enableSkeleton]="skeleton" [num]="5"></mg-skeleton>
 
 @if (!skeleton) {
-<div class="flex flex-col gap-2 mt-4">
+<div class="flex flex-col gap-4 mt-4">
   <app-container-alert-information type="info" title="Información" *ngIf="isProfileIncomplete">
     Debes completar tus datos de perfil para poder continuar.
   </app-container-alert-information>
@@ -9,26 +9,66 @@
     Debes comunicarte con algún coordinador de iglesia para que te asocie a la iglesia a la que perteneces y que vas a
     apoyar. Y recuerda reiniciar sesión después de la asociación.
   </app-container-alert-information>
-</div>
 
-<div class="flex sm:flex-col md:flex-row gap-4 mt-4">
-  <mtt-card-info title="Mis datos" icon="account_circle" textInfo="Actualiza y edita el tu perfil"
-    [routerLink]="'../mi-perfil'" [activePoint]="isProfileIncomplete"></mtt-card-info>
-  <ng-container *ngIf="usuario.iglesia">
-    <mtt-card-info *ngIf="usuario.rol === 'Pastor' || usuario.rol === 'Super Usuario'" title="Estadisticas"
-      icon="data_usage" textInfo="Estisticas por iglesia" [routerLink]="'../estadisticas'"></mtt-card-info>
-    <mtt-card-info *ngIf="usuario.rol === 'Super Usuario'" title="DashBoard" icon="developer_board"
-      textInfo="Estisticas generales" [routerLink]="'../dashboards'"></mtt-card-info>
-    <mtt-card-info *ngIf="usuario.postulado?.transporte" title="Apoyo vehicular" icon="directions_car"
-      textInfo="Adminitrar datos de apoyo vehicular" (click)="opcionesVehiculo()"
-      (keydown)="opcionesVehiculo()"></mtt-card-info>
-    <mtt-card-info *ngIf="usuario.postulado?.casaApoyo" title="Casas de apoyo" icon="my_location"
-      textInfo="Puntos centrales de apoyo" (click)="opcionesCasasApoyo()"
-      (keydown)="opcionesCasasApoyo()"></mtt-card-info>
-    <mtt-card-info *ngIf="usuario.postulado?.testigo" title="Gestión de testigos" icon="how_to_vote"
-      textInfo="Realiza tus gestiones como testigo aquí" (click)="opcionesTestigos()"
-      (keydown)="opcionesTestigos()"></mtt-card-info>
-  </ng-container>
-</div>
+  <!-- Profile Section -->
+  <div class="flex justify-center md:justify-start">
+    <div
+      class="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition-shadow border border-gray-200 flex items-center gap-4 min-w-[300px]"
+      [routerLink]="['../mi-perfil']">
+      <div class="bg-primary text-white p-3 rounded-full">
+        <mat-icon class="scale-125">account_circle</mat-icon>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold text-primary">Mis Datos</h3>
+        <p class="text-sm text-gray-500">Ingresa a tu perfil y actualiza tu información</p>
+      </div>
+      <mat-icon class="ml-auto text-gray-400">chevron_right</mat-icon>
+    </div>
+  </div>
 
+  <!-- Postulaciones Status Card -->
+  <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200" *ngIf="usuario.postulado">
+    <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+      <mat-icon>assignment</mat-icon>
+      Estado de Postulaciones
+    </h2>
+    <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-3">
+      <!-- Vehiculo Status -->
+      <div *ngIf="usuario.postulado.transporte" class="p-4 rounded-lg bg-gray-50 border-l-4"
+        [ngClass]="getBorderColor(vehiculoStatus)">
+        <div class="flex justify-between items-center mb-2">
+          <span class="font-semibold text-gray-700">Apoyo Vehicular</span>
+          <mat-icon [class]="getTextColor(vehiculoStatus)">directions_car</mat-icon>
+        </div>
+        <p class="text-sm font-medium" [class]="getTextColor(vehiculoStatus)">
+          {{ vehiculoStatus || 'Cargando...' }}
+        </p>
+      </div>
+
+      <!-- Casa Apoyo Status -->
+      <div *ngIf="usuario.postulado.casaApoyo" class="p-4 rounded-lg bg-gray-50 border-l-4"
+        [ngClass]="getBorderColor(casaApoyoStatus)">
+        <div class="flex justify-between items-center mb-2">
+          <span class="font-semibold text-gray-700">Casa de Apoyo</span>
+          <mat-icon [class]="getTextColor(casaApoyoStatus)">home</mat-icon>
+        </div>
+        <p class="text-sm font-medium" [class]="getTextColor(casaApoyoStatus)">
+          {{ casaApoyoStatus || 'Cargando...' }}
+        </p>
+      </div>
+
+      <!-- Testigo Status -->
+      <div *ngIf="usuario.postulado.testigo" class="p-4 rounded-lg bg-gray-50 border-l-4"
+        [ngClass]="getBorderColor(testigoStatus)">
+        <div class="flex justify-between items-center mb-2">
+          <span class="font-semibold text-gray-700">Testigo Electoral</span>
+          <mat-icon [class]="getTextColor(testigoStatus)">how_to_vote</mat-icon>
+        </div>
+        <p class="text-sm font-medium" [class]="getTextColor(testigoStatus)">
+          {{ testigoStatus || 'Cargando...' }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 }

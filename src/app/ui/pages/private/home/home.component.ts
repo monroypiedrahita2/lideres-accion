@@ -3,21 +3,18 @@ import { IglesiaModel } from './../../../../models/iglesia/iglesia.model';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { CardModel } from '../../../../models/utils/card.model';
-import { CARDS_HOME } from '../../../shared/const/cards.const';
 import { NAME_LONG_APP } from '../../../shared/const/name-app.const';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
 import { MatIconModule } from '@angular/material/icon';
-import { CardInfoComponent } from '../../../shared/components/cards/card-info/card-info.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { DialogOpcionesVehicularComponent } from '../../../shared/dialogs/dialog-opciones-vehicular/dialog-opciones-vehicular.component';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
-import { DialogCasasApoyoComponent } from '../../../shared/dialogs/dialog-casas-apoyo/dialog-casas-apoyo.component';
 import { ContainerAlertInformationComponent } from '../../../shared/components/modules/container-alert-information/container-alert-information.component';
-import { DialogTestigosComponent } from '../../../shared/dialogs/dialog-opciones-testigos/dialog-testigos.component';
+import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
+import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
+import { TestigoService } from '../../../shared/services/testigo/testigo.service';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +24,6 @@ import { DialogTestigosComponent } from '../../../shared/dialogs/dialog-opciones
     CommonModule,
     SkeletonComponent,
     MatIconModule,
-    CardInfoComponent,
     MatDialogModule,
     ContainerAlertInformationComponent,
   ],
@@ -35,13 +31,17 @@ import { DialogTestigosComponent } from '../../../shared/dialogs/dialog-opciones
 })
 export class HomeComponent implements OnInit {
   skeleton: boolean = true;
-  cards: CardModel[] = CARDS_HOME;
   nameLong: string = NAME_LONG_APP;
   usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
   iglesiaData: IglesiaModel = JSON.parse(
     localStorage.getItem('iglesiaData') || '{}'
   );
   showInfoPerfil: boolean = true;
+
+  // Status flags
+  vehiculoStatus: string | null = null;
+  casaApoyoStatus: string | null = null;
+  testigoStatus: string | null = null;
 
   get isProfileIncomplete(): boolean {
     return !this.usuario.nombres || !this.usuario.apellidos || !this.usuario.documento;
@@ -51,14 +51,14 @@ export class HomeComponent implements OnInit {
     return !this.isProfileIncomplete && !this.usuario.iglesia;
   }
 
-
-
   constructor(
     private readonly IglesiaService: IglesiaService,
     private readonly perfilService: PerfilService,
     private readonly auth: AuthService,
-    public dialog: MatDialog
-
+    public dialog: MatDialog,
+    private readonly vehiculoService: VehiculoService,
+    private readonly casaApoyoService: CasaApoyoService,
+    private readonly testigoService: TestigoService
   ) { }
 
   ngOnInit(): void {
@@ -72,6 +72,7 @@ export class HomeComponent implements OnInit {
       if (!this.iglesiaData && this.usuario.iglesia) {
         this.getMyIglesia(this.usuario.iglesia!);
       }
+      this.loadPostulacionesInfo();
       this.skeleton = false;
     } else {
       this.getusuario(this.auth.uidUser());
@@ -98,11 +99,50 @@ export class HomeComponent implements OnInit {
       } else {
         this.openDialogMissingChurch();
       }
+      this.loadPostulacionesInfo();
       this.skeleton = false;
     } catch (error) {
       console.error(error);
       this.skeleton = false;
       this.openDialogNotification()
+    }
+  }
+
+  loadPostulacionesInfo() {
+    if (this.usuario.postulado?.transporte && this.usuario.id) {
+      this.vehiculoService.getVehiculoByConductor(this.usuario.id).subscribe(vehiculos => {
+        if (vehiculos && vehiculos.length > 0) {
+          this.vehiculoStatus = vehiculos[0].aprobado ? 'Aprobado' : 'Pendiente';
+        } else {
+          this.vehiculoStatus = 'No registrado';
+        }
+      });
+    }
+
+    if (this.usuario.postulado?.casaApoyo && this.usuario.id) {
+      this.casaApoyoService.getCasasApoyoByResponsable(this.usuario.id).subscribe(casas => {
+        if (casas && casas.length > 0) {
+          // Accessing data property since it returns BaseModel
+          const casa = casas[0].data;
+          this.casaApoyoStatus = casa.aprobado ? 'Aprobado' : 'Pendiente';
+        } else {
+          this.casaApoyoStatus = 'No registrado';
+        }
+      });
+    }
+
+    if (this.usuario.postulado?.testigo && this.usuario.documento) {
+      this.testigoService.getTestigoByDocument(this.usuario.documento)
+        .then(testigo => {
+          if (testigo) {
+            this.testigoStatus = (testigo.puestodevotacion && testigo.mesadevotacion) ? 'Asignado' : 'Pendiente de asignación';
+          } else {
+            this.testigoStatus = 'No registrado';
+          }
+        })
+        .catch(() => {
+          this.testigoStatus = 'No registrado';
+        });
     }
   }
 
@@ -129,27 +169,33 @@ export class HomeComponent implements OnInit {
     this.showInfoPerfil = false;
   }
 
-
-  opcionesVehiculo() {
-    this.dialog.open(DialogOpcionesVehicularComponent, {
-      data: { name: 'mi-carro' },
-      width: '300px',
-    });
+  getBorderColor(status: string | null): string {
+    switch (status) {
+      case 'Aprobado':
+      case 'Asignado':
+        return 'border-green-500';
+      case 'Pendiente':
+      case 'Pendiente de asignación':
+        return 'border-yellow-500';
+      case 'No registrado':
+        return 'border-gray-500';
+      default:
+        return 'border-red-500';
+    }
   }
 
-  opcionesCasasApoyo() {
-    this.dialog.open(DialogCasasApoyoComponent, {
-      data: { name: 'mi-casa-apoyo' },
-      width: '300px',
-    });
+  getTextColor(status: string | null): string {
+    switch (status) {
+      case 'Aprobado':
+      case 'Asignado':
+        return 'text-green-600';
+      case 'Pendiente':
+      case 'Pendiente de asignación':
+        return 'text-yellow-600';
+      case 'No registrado':
+        return 'text-gray-600';
+      default:
+        return 'text-red-600';
+    }
   }
-
-  opcionesTestigos() {
-    this.dialog.open(DialogTestigosComponent, {
-      data: { name: 'mi-testigos' },
-      width: '300px',
-    });
-  }
-
-
 }

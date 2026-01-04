@@ -56,4 +56,45 @@ export const CARDS_HOME: CardModel[] = [
   //   description: 'Crear líderes',
   //   icon: 'person_add'
   // }
+  {
+    goTo: '../estadisticas',
+    title: 'Estadisticas',
+    description: 'Estadisticas por iglesia',
+    icon: 'data_usage',
+    showIf: ['Pastor', 'Super Usuario']
+  },
+  {
+    goTo: '../dashboards',
+    title: 'DashBoard',
+    description: 'Estadisticas generales',
+    icon: 'developer_board',
+    showIf: ['Super Usuario']
+  },
+  {
+    goTo: '',
+    title: 'Apoyo vehicular',
+    description: 'Administrar datos de apoyo vehicular',
+    icon: 'directions_car',
+    showIf: ['Todos'],
+    action: 'vehiculo',
+    requiresPostulacion: 'transporte'
+  },
+  {
+    goTo: '',
+    title: 'Casas de apoyo',
+    description: 'Puntos centrales de apoyo',
+    icon: 'my_location',
+    showIf: ['Todos'],
+    action: 'casa-apoyo',
+    requiresPostulacion: 'casaApoyo'
+  },
+  {
+    goTo: '',
+    title: 'Gestión de testigos',
+    description: 'Realiza tus gestiones como testigo aquí',
+    icon: 'how_to_vote',
+    showIf: ['Todos'],
+    action: 'testigo',
+    requiresPostulacion: 'testigo'
+  }
 ];
