@@ -43,6 +43,11 @@
         <p class="text-sm font-medium" [class]="getTextColor(vehiculoStatus)">
           {{ vehiculoStatus || 'Cargando...' }}
         </p>
+        <div *ngIf="vehiculoInfo" class="mt-2 pt-2 border-t border-gray-200 text-xs text-gray-600 flex flex-col">
+          <span><strong>Asociado a:</strong> {{ vehiculoInfo.casaApoyo }}</span>
+          <span><strong>Dirección:</strong> {{ vehiculoInfo.direccion }}</span>
+          <span><strong>Barrio:</strong> {{ vehiculoInfo.barrio }}</span>
+        </div>
       </div>
 
       <!-- Casa Apoyo Status -->
@@ -67,6 +72,10 @@
         <p class="text-sm font-medium" [class]="getTextColor(testigoStatus)">
           {{ testigoStatus || 'Cargando...' }}
         </p>
+        <div *ngIf="testigoInfo" class="mt-2 pt-2 border-t border-gray-200 text-xs text-gray-600">
+          <p><strong>Puesto:</strong> {{ testigoInfo.puesto }}</p>
+          <p><strong>Mesa:</strong> {{ testigoInfo.mesa }}</p>
+        </div>
       </div>
     </div>
   </div>

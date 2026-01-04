@@ -108,19 +108,38 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  // Details info
+  testigoInfo: { puesto: string, mesa: string } | null = null;
+  vehiculoInfo: { casaApoyo: string; direccion?: string; barrio?: string } | null = null;
+
   loadPostulacionesInfo() {
-    if (this.usuario.postulado?.transporte && this.usuario.id) {
-      this.vehiculoService.getVehiculoByConductor(this.usuario.id).subscribe(vehiculos => {
+    const uid = this.auth.uidUser();
+
+    if (this.usuario.postulado?.transporte && uid) {
+      this.vehiculoService.getVehiculoByConductor(uid).subscribe(vehiculos => {
         if (vehiculos && vehiculos.length > 0) {
-          this.vehiculoStatus = vehiculos[0].aprobado ? 'Aprobado' : 'Pendiente';
+          const vehiculo = vehiculos[0];
+          this.vehiculoStatus = vehiculo.aprobado ? 'Aprobado' : 'Pendiente';
+
+          if (vehiculo.casaApoyoId) {
+            this.casaApoyoService.getCasaApoyo(vehiculo.casaApoyoId).then(casa => {
+              if (casa && casa.data) {
+                this.vehiculoInfo = {
+                  casaApoyo: casa.data.nombreHabitante || 'Casa asignada',
+                  direccion: casa.data.direccion,
+                  barrio: casa.data.barrio
+                };
+              }
+            });
+          }
         } else {
           this.vehiculoStatus = 'No registrado';
         }
       });
     }
 
-    if (this.usuario.postulado?.casaApoyo && this.usuario.id) {
-      this.casaApoyoService.getCasasApoyoByResponsable(this.usuario.id).subscribe(casas => {
+    if (this.usuario.postulado?.casaApoyo && uid) {
+      this.casaApoyoService.getCasasApoyoByResponsable(uid).subscribe(casas => {
         if (casas && casas.length > 0) {
           // Accessing data property since it returns BaseModel
           const casa = casas[0].data;
@@ -131,11 +150,21 @@ export class HomeComponent implements OnInit {
       });
     }
 
-    if (this.usuario.postulado?.testigo && this.usuario.documento) {
-      this.testigoService.getTestigoByDocument(this.usuario.documento)
-        .then(testigo => {
+    if (this.usuario.postulado?.testigo && uid) {
+      this.testigoService.getTestigoByDocument(uid)
+        .then((testigo: any) => {
           if (testigo) {
-            this.testigoStatus = (testigo.puestodevotacion && testigo.mesadevotacion) ? 'Asignado' : 'Pendiente de asignación';
+            // Check if data is wrapped in 'data' property (BaseModel) or direct
+            const testigoData = testigo.data ? testigo.data : testigo;
+            const asignado = testigoData.puestodevotacion && testigoData.mesadevotacion;
+
+            this.testigoStatus = asignado ? 'Asignado' : 'Pendiente de asignación';
+            if (asignado) {
+              this.testigoInfo = {
+                puesto: testigoData.puestodevotacion,
+                mesa: testigoData.mesadevotacion
+              };
+            }
           } else {
             this.testigoStatus = 'No registrado';
           }

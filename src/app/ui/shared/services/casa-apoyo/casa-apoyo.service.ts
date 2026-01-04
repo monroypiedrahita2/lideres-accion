@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, deleteDoc, doc, updateDoc, query, where, arrayUnion, arrayRemove } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, deleteDoc, doc, updateDoc, query, where, arrayUnion, arrayRemove, getDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
 import { CasaApoyoModel } from '../../../../models/casa-apoyo/casa-apoyo.model';
@@ -21,6 +21,17 @@ export class CasaApoyoService {
     getCasasApoyo(): Observable<BaseModel<CasaApoyoModel>[]> {
         const collectionRef = collection(this.firestore, this._collection);
         return collectionData(collectionRef, { idField: 'id' }) as Observable<BaseModel<CasaApoyoModel>[]>;
+    }
+
+    getCasaApoyo(id: string): Promise<any> {
+        const docRef = doc(this.firestore, this._collection, id);
+        return getDoc(docRef).then((docSnap) => {
+            if (docSnap.exists()) {
+                return docSnap.data() as any;
+            } else {
+                return null;
+            }
+        });
     }
 
     deleteCasaApoyo(id: string): Promise<void> {
