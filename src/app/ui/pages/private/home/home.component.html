@@ -87,7 +87,7 @@
         <mat-accordion *ngIf="casaApoyoStatus === 'Aprobado' && casaApoyoVehiculos.length > 0"
           class="mt-4 block w-full">
           <mat-expansion-panel class="!shadow-none !bg-transparent border border-gray-200">
-            <mat-expansion-panel-header class="!px-3 !h-10">
+            <mat-expansion-panel-header class="!h-10">
               <mat-panel-title class="!text-sm text-gray-600">
                 Vehículos Asociados ({{casaApoyoVehiculos.length}})
               </mat-panel-title>
@@ -100,6 +100,12 @@
                   <div>
                     <p class="text-xs font-bold text-gray-700">{{ vehiculo.tipoVehiculo }} - {{ vehiculo.placa }}</p>
                     <p class="text-xs text-gray-500">{{ vehiculo.nombre }} {{ vehiculo.apellidos }}</p>
+                    <div class="mt-1">
+                      <span
+                        [class]="getStatusColor(vehiculo.estado || 'Inactivo') + ' px-2 py-0.5 rounded-full text-[10px] font-medium border border-opacity-20'">
+                        {{ vehiculo.estado || 'Inactivo' }}
+                      </span>
+                    </div>
                   </div>
                   <div class="flex gap-2">
                     <a *ngIf="vehiculo.celular" [href]="'https://wa.me/' + vehiculo.celular" target="_blank"
