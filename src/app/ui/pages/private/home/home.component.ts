@@ -31,6 +31,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatExpansionModule
   ],
   templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
   skeleton: boolean = true;
