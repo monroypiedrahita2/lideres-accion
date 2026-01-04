@@ -60,6 +60,40 @@
         <p class="text-sm font-medium" [class]="getTextColor(casaApoyoStatus)">
           {{ casaApoyoStatus || 'Cargando...' }}
         </p>
+
+        <!-- Vehicles Accordion -->
+        <mat-accordion *ngIf="casaApoyoStatus === 'Aprobado' && casaApoyoVehiculos.length > 0"
+          class="mt-4 block w-full">
+          <mat-expansion-panel class="!shadow-none !bg-transparent border border-gray-200">
+            <mat-expansion-panel-header class="!px-3 !h-10">
+              <mat-panel-title class="!text-sm text-gray-600">
+                Vehículos Asociados ({{casaApoyoVehiculos.length}})
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="flex flex-col gap-2 mt-2">
+              <div *ngFor="let vehiculo of casaApoyoVehiculos"
+                class="flex flex-col bg-white p-2 rounded border border-gray-100 shadow-sm">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <p class="text-xs font-bold text-gray-700">{{ vehiculo.tipoVehiculo }} - {{ vehiculo.placa }}</p>
+                    <p class="text-xs text-gray-500">{{ vehiculo.nombre }} {{ vehiculo.apellidos }}</p>
+                  </div>
+                  <div class="flex gap-2">
+                    <a *ngIf="vehiculo.celular" [href]="'https://wa.me/' + vehiculo.celular" target="_blank"
+                      class="flex items-center justify-center w-7 h-7 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-colors">
+                      <img src="assets/whatsApp.svg" alt="WhatsApp" class="w-5 h-5">
+                    </a>
+                    <a *ngIf="vehiculo.celular" [href]="'tel:' + vehiculo.celular"
+                      class="flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors">
+                      <mat-icon class="text-sm !w-4 !h-4 flex items-center justify-center">call</mat-icon>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
       </div>
 
       <!-- Testigo Status -->

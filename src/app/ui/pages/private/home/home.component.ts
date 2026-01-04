@@ -15,6 +15,8 @@ import { ContainerAlertInformationComponent } from '../../../shared/components/m
 import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
 import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
 import { TestigoService } from '../../../shared/services/testigo/testigo.service';
+import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-home',
@@ -26,6 +28,7 @@ import { TestigoService } from '../../../shared/services/testigo/testigo.service
     MatIconModule,
     MatDialogModule,
     ContainerAlertInformationComponent,
+    MatExpansionModule
   ],
   templateUrl: './home.component.html',
 })
@@ -42,6 +45,9 @@ export class HomeComponent implements OnInit {
   vehiculoStatus: string | null = null;
   casaApoyoStatus: string | null = null;
   testigoStatus: string | null = null;
+
+  // Data
+  casaApoyoVehiculos: VehiculoModel[] = [];
 
   get isProfileIncomplete(): boolean {
     return !this.usuario.nombres || !this.usuario.apellidos || !this.usuario.documento;
@@ -143,7 +149,15 @@ export class HomeComponent implements OnInit {
         if (casas && casas.length > 0) {
           // Accessing data property since it returns BaseModel
           const casa = casas[0].data;
+          const casaId = casas[0].id; // We need the ID to fetch vehicles
           this.casaApoyoStatus = casa.aprobado ? 'Aprobado' : 'Pendiente';
+
+          if (casa.aprobado && casaId) {
+            this.vehiculoService.getVehiculosByCasaApoyo(casaId).subscribe(vehiculos => {
+              this.casaApoyoVehiculos = vehiculos;
+            });
+          }
+
         } else {
           this.casaApoyoStatus = 'No registrado';
         }
