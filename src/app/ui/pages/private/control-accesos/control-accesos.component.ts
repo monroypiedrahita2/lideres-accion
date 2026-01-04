@@ -51,7 +51,7 @@ export class ControlAccesosComponent implements OnInit {
     private readonly dialog: MatDialog
   ) {
     this.form = this.fb.group({
-      usuario: ['', [Validators.required]],
+      usuario: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -63,7 +63,7 @@ export class ControlAccesosComponent implements OnInit {
     if (this.form.invalid) return;
 
     this.loading = true;
-    this.perfilService.getPerfilByDocumento(this.form.value.usuario).subscribe({
+    this.perfilService.getPerfilByEmail(this.form.value.usuario).subscribe({
       next: (response: any) => {
         this.loading = false;
         if (response && response.length > 0) {

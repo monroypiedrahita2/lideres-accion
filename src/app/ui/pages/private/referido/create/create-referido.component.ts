@@ -113,7 +113,7 @@ export class CreateReferidoComponent implements OnInit {
     if (this.userRol != 'Líder') {
       this.getReferidos();
     } else {
-      this.form.patchValue({ referidoPor: this.user.documento });
+      this.form.patchValue({ referidoPor: this.user.id });
       this.enableSkeleton = false;
     }
     this.getComunas();

@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
   casaApoyoVehiculos: VehiculoModel[] = [];
 
   get isProfileIncomplete(): boolean {
-    return !this.usuario.nombres || !this.usuario.apellidos || !this.usuario.documento;
+    return !this.usuario.nombres || !this.usuario.apellidos;
   }
 
   get isChurchMissing(): boolean {

@@ -1,4 +1,5 @@
-<div class="border border-gray-200 shadow-md hover:shadow-lg rounded-lg bg-white w-full p-4 relative transition-shadow duration-300">
+<div
+  class="border border-gray-200 shadow-md hover:shadow-lg rounded-lg bg-white w-full p-4 relative transition-shadow duration-300">
   <div class="flex justify-between items-start gap-3">
     <!-- Info Section -->
     <div class="flex-1 min-w-0">
@@ -8,41 +9,45 @@
 
       <div class="mt-2 space-y-1">
         <!-- Documento -->
-        <p class="text-sm text-gray-600 flex items-center gap-2">
-          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400 flex items-center justify-center leading-none">badge</mat-icon>
-          <span class="truncate">{{ person.documento }}</span>
-        </p>
+
 
         <!-- Email -->
         <p class="text-sm text-gray-600 flex items-center gap-2">
-           <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400 flex items-center justify-center leading-none">email</mat-icon>
-           <span class="truncate">{{ person.email }}</span>
+          <mat-icon
+            class="!text-[18px] !w-[18px] !h-[18px] text-gray-400 flex items-center justify-center leading-none">email</mat-icon>
+          <span class="truncate">{{ person.email }}</span>
         </p>
 
         <!-- Celular -->
         <p *ngIf="person.celular" class="text-sm text-gray-600 flex items-center gap-2">
-          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400 flex items-center justify-center leading-none">phone</mat-icon>
+          <mat-icon
+            class="!text-[18px] !w-[18px] !h-[18px] text-gray-400 flex items-center justify-center leading-none">phone</mat-icon>
           <span>{{ person.celular }}</span>
         </p>
 
         <!-- Iglesia/Rol replaced by Rol -->
         <p *ngIf="person.rol" class="text-sm text-gray-600 flex items-center gap-2">
-          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400 flex items-center justify-center leading-none">verified_user</mat-icon>
+          <mat-icon
+            class="!text-[18px] !w-[18px] !h-[18px] text-gray-400 flex items-center justify-center leading-none">verified_user</mat-icon>
           <span class="truncate">{{ person.rol }}</span>
         </p>
       </div>
 
-       <!-- Postulado Badges -->
-       <div *ngIf="person.postulado" class="flex flex-wrap gap-2 mt-3">
-        <span *ngIf="person.postulado.casaApoyo" class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">Casa Apoyo</span>
-        <span *ngIf="person.postulado.transporte" class="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">Transporte</span>
-        <span *ngIf="person.postulado.testigo" class="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-0.5 rounded-full">Testigo</span>
+      <!-- Postulado Badges -->
+      <div *ngIf="person.postulado" class="flex flex-wrap gap-2 mt-3">
+        <span *ngIf="person.postulado.casaApoyo"
+          class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">Casa Apoyo</span>
+        <span *ngIf="person.postulado.transporte"
+          class="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">Transporte</span>
+        <span *ngIf="person.postulado.testigo"
+          class="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-0.5 rounded-full">Testigo</span>
       </div>
     </div>
 
     <!-- Actions -->
     <div *ngIf="showDeleteAction">
-      <button (click)="onDelete()" class="text-red-500 hover:text-red-700 hover:bg-red-100 rounded-full p-2 transition-colors">
+      <button (click)="onDelete()"
+        class="text-red-500 hover:text-red-700 hover:bg-red-100 rounded-full p-2 transition-colors">
         <mat-icon class="!w-5 !h-5 flex items-center justify-center">delete</mat-icon>
       </button>
     </div>

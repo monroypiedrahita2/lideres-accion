@@ -11,16 +11,16 @@
 <mat-dialog-content class="w-full">
   <div class="flex flex-col gap-4 mt-4 w-full">
     <p class="text-center font-primary text-gray-600 text-lg leading-relaxed">
-      Ingresa el documento del perfil que deseas asociar a tu iglesia.
+      Ingresa el correo electrónico del perfil que deseas asociar a tu iglesia.
     </p>
 
     <div class="flex gap-2 items-center w-full">
-      <mg-input-text class="w-full" label="Documento" [formControl]="documentoControl" placeholder="Digite el documento"
-        type="number">
+      <mg-input-text class="w-full" label="Correo Electrónico" [formControl]="emailControl"
+        placeholder="Digite el correo" type="email">
       </mg-input-text>
       <div class="mb-4">
         <button *ngIf="!perfilEncontrado" mat-mini-fab color="primary" (click)="buscarPerfil()"
-          [disabled]="documentoControl.invalid">
+          [disabled]="emailControl.invalid">
           <mat-icon>search</mat-icon>
         </button>
         <button *ngIf="perfilEncontrado" mat-mini-fab class="!bg-gray-500" (click)="limpiar()">
@@ -31,7 +31,8 @@
 
     <div *ngIf="perfilEncontrado" class="w-full mt-4">
       <lida-person-info [title]="perfilEncontrado.nombres" [textInfo]="perfilEncontrado.apellidos" icon="person"
-        [textInfo2]="''" [textInfo3]="perfilEncontrado.email.length > 25 ? (perfilEncontrado.email | slice:0:25) + '...' : perfilEncontrado.email">
+        [textInfo2]="''"
+        [textInfo3]="perfilEncontrado.email.length > 25 ? (perfilEncontrado.email | slice:0:25) + '...' : perfilEncontrado.email">
       </lida-person-info>
 
       <div class="mt-2 text-sm text-gray-500" *ngIf="perfilEncontrado.nameIglesia">

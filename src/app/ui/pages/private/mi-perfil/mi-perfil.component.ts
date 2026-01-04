@@ -55,7 +55,7 @@ export class MiPerfilComponent implements OnInit {
     private readonly vehiculoService: VehiculoService
   ) {
     this.form = this.fb.group({
-      documento: ['', Validators.required],
+
       nombres: ['', Validators.required],
       apellidos: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -71,7 +71,6 @@ export class MiPerfilComponent implements OnInit {
       testigo: [false],
       casaApoyo: [false],
       transporte: [false],
-      barrioDondeVive: ['', Validators.required],
     });
   }
 
@@ -83,7 +82,7 @@ export class MiPerfilComponent implements OnInit {
           this.usuario = this.user;
           this.actualizarForm(this.user);
           this.form.get('email')?.disable();
-          this.form.get('documento')?.disable();
+
           this.accion = 'Editar';
         }
         this.enableSkeleton = false;
@@ -103,7 +102,7 @@ export class MiPerfilComponent implements OnInit {
 
   actualizarForm(user: PerfilModel) {
     this.form.patchValue({
-      documento: user.documento,
+
       nombres: user.nombres,
       apellidos: user.apellidos,
       email: user.email,
@@ -111,7 +110,6 @@ export class MiPerfilComponent implements OnInit {
       testigo: user.postulado?.testigo || false,
       casaApoyo: user.postulado?.casaApoyo || false,
       transporte: user.postulado?.transporte || false,
-      barrioDondeVive: user.barrioDondeVive,
     });
   }
 
@@ -167,12 +165,11 @@ export class MiPerfilComponent implements OnInit {
   async onSubmit() {
     const rawValue = this.form.getRawValue();
     const user: PerfilModel = {
-      documento: rawValue.documento,
+
       nombres: rawValue.nombres,
       apellidos: rawValue.apellidos,
       celular: rawValue.celular,
       email: rawValue.email,
-      barrioDondeVive: rawValue.barrioDondeVive,
       rol: this.usuario.rol || null,
       coordinadorCasaApoyo: rawValue.casaApoyo
         ? this.usuario.coordinadorCasaApoyo || null

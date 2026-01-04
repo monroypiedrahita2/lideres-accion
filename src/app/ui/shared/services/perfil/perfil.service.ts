@@ -47,13 +47,11 @@ export class PerfilService {
     return setDoc(dataRef, data);
   }
 
-  getPerfilByDocumento(value: string) {
-    const q = query(collection(this.firestore, this._collection), where('documento', '==', value));
+  getPerfilByEmail(value: string) {
+    const q = query(collection(this.firestore, this._collection), where('email', '==', value));
     const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
     return response;
   }
-
-
 
   getPerfiles(): Observable<PerfilModel[]> {
     const _collection = collection(this.firestore, this._collection);
@@ -66,21 +64,6 @@ export class PerfilService {
       where('postulado.testigo', '==', true)
     );
     return collectionData(q, { idField: 'id' }) as Observable<PerfilModel[]>;
-  }
-
-
-
-
-  getPerfilByEmailoCC(value: string) {
-    if (value.includes('@')) {
-      const q = query(collection(this.firestore, this._collection), where('email', '==', value));
-      const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
-      return response;
-    } else {
-      const q = query(collection(this.firestore, this._collection), where('documento', '==', value));
-      const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
-      return response;
-    }
   }
   getPerfilesByIglesia(value: string) {
     const q = query(collection(this.firestore, this._collection), where('iglesia', '==', value));

@@ -133,12 +133,12 @@ export class ComunaComponent implements OnInit {
   async onSubmit() {
     this.loading = true;
     try {
-      const promises =  this.barrios.map(
-            (barrio) => {
-              this.generateBarrios(this.form.value.nombre + ' - ' + barrio)
-              return Promise.resolve();
-            }
-          )
+      const promises = this.barrios.map(
+        (barrio) => {
+          this.generateBarrios(this.form.value.nombre + ' - ' + barrio)
+          return Promise.resolve();
+        }
+      )
 
       Promise.all(promises)
         .then(() => {
@@ -163,16 +163,16 @@ export class ComunaComponent implements OnInit {
 
   async generateBarrios(barrio: string) {
     const newBarrio: BaseModel<ComunaModel> = {
-        data: {
-          departamento: this.form.value.departamento,
-          municipio: this.form.value.municipio,
-          barrio: barrio.split(' - ')[1],
-          iglesiaId: this.iglesiaIdbyUser,
-          comuna: barrio.split(' - ')[0],
-        },
-        fechaCreacion: new Date().toISOString(),
-        creadoPor: this.auth.uidUser(),
-      };
+      data: {
+        departamento: this.form.value.departamento,
+        municipio: this.form.value.municipio,
+        barrio: barrio.split(' - ')[1],
+        iglesiaId: this.iglesiaIdbyUser,
+        comuna: barrio.split(' - ')[0],
+      },
+      fechaCreacion: new Date().toISOString(),
+      creadoPor: this.auth.uidUser(),
+    };
     try {
       await this.comunaService.createComuna(newBarrio);
       this.toast.success(
@@ -181,8 +181,7 @@ export class ComunaComponent implements OnInit {
     } catch (error) {
       console.error(error);
       this.toast.error(
-        `Error al crear el barrio ${
-          barrio.split(' - ')[1]
+        `Error al crear el barrio ${barrio.split(' - ')[1]
         }. Intente nuevamente.`
       );
     }
@@ -216,7 +215,7 @@ export class ComunaComponent implements OnInit {
           ' ' +
           item?.data?.apellidos +
           ' ' +
-          item?.data?.documento,
+          item?.data?.email,
         value: item.id,
       } as SelectOptionModel<string>;
     });

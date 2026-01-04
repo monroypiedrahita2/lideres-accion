@@ -112,7 +112,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
       this.getComunas();
     }
     if (this.usuario.rol === 'Líder') {
-      this.misReferidos(this.usuario.documento);
+      this.misReferidos(this.usuario.id || '');
     }
     if (this.value_draft != '') {
       this.selectDocument(this.value_draft);

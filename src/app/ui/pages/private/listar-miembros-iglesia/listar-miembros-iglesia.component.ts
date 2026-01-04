@@ -64,12 +64,12 @@ export class ListarMiembrosIglesiaComponent implements AfterViewInit {
 
     applyFilter(filterValue: string) {
         this.dataSource.filterPredicate = (data: PerfilModel, filter: string) => {
-            const doc = data.documento ? data.documento.toString().toLowerCase() : '';
+            const email = data.email ? data.email.toLowerCase() : '';
             const nombre = data.nombres ? data.nombres.toLowerCase() : '';
             const apellido = data.apellidos ? data.apellidos.toLowerCase() : '';
             const searchStr = filter.trim().toLowerCase();
 
-            return doc.includes(searchStr) || nombre.includes(searchStr) || apellido.includes(searchStr);
+            return email.includes(searchStr) || nombre.includes(searchStr) || apellido.includes(searchStr);
         };
         this.dataSource.filter = filterValue.trim().toLowerCase();
 

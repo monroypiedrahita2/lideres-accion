@@ -28,7 +28,7 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
     templateUrl: './dialog-asociar-iglesia.component.html',
 })
 export class DialogAsociarIglesiaComponent {
-    documentoControl = new FormControl('', [Validators.required]);
+    emailControl = new FormControl('', [Validators.required, Validators.email]);
     perfilEncontrado: PerfilModel | null = null;
     usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
 
@@ -39,13 +39,13 @@ export class DialogAsociarIglesiaComponent {
     ) { }
 
     buscarPerfil() {
-        if (this.documentoControl.invalid) return;
+        if (this.emailControl.invalid) return;
 
-        const doc = this.documentoControl.value!;
-        this.perfilService.getPerfilByDocumento(doc).subscribe((perfiles) => {
+        const email = this.emailControl.value!;
+        this.perfilService.getPerfilByEmail(email).subscribe((perfiles) => {
             if (perfiles && perfiles.length > 0) {
                 this.perfilEncontrado = perfiles[0];
-                this.documentoControl.disable();
+                this.emailControl.disable();
             } else {
                 this.perfilEncontrado = null;
                 this.toastr.warning('Perfil no encontrado');
@@ -55,8 +55,8 @@ export class DialogAsociarIglesiaComponent {
 
     limpiar() {
         this.perfilEncontrado = null;
-        this.documentoControl.reset();
-        this.documentoControl.enable();
+        this.emailControl.reset();
+        this.emailControl.enable();
     }
 
     asociarIglesia() {
