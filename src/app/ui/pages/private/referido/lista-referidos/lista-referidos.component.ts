@@ -16,7 +16,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -28,7 +28,7 @@ import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { ConfirmActionComponent } from '../../../../shared/components/modules/modal/confirm-action.component';
 import { ComunaModel } from '../../../../../models/comuna/comuna.model';
 import { Subject, takeUntil } from 'rxjs';
-import { MgPaginatorComponent } from '../../../../shared/components/modules/paginator/paginator.component';
+import { MgPaginatorComponent, PageEvent } from '../../../../shared/components/modules/paginator/paginator.component';
 
 @Component({
   selector: 'app-lista-referidos',
@@ -93,6 +93,8 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   pageStartAfter: any[] = [];
   currentPageIndex: number = 0;
 
+  pageSize: number = 5; // Default page size
+
   constructor(
     private readonly referidoService: ReferidoService,
     private readonly toast: ToastrService,
@@ -116,17 +118,6 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
       this.selectDocument(this.value_draft);
     }
     this.loadFormFromLocalStorage();
-
-    this.formRef
-      .get('documento')
-      ?.valueChanges.pipe(
-        takeUntil(this.unsubscribe$) // 👈 Agrega el operador aquí
-      )
-      .subscribe((value) => {
-        if (value && value.length > 0) {
-          this.selectDocument(value);
-        }
-      });
   }
 
   loadFormFromLocalStorage(): void {
@@ -141,8 +132,8 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsubscribe$.next(); // 👈 Emite un valor para que takeUntil detenga las suscripciones
-    this.unsubscribe$.complete(); // 👈 Completa el Subject para liberar recursos
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   getComunas() {
@@ -158,21 +149,15 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   }
 
   selectDocument(value: string) {
-    if (this.avanceTimeout) {
-      clearTimeout(this.avanceTimeout);
-    }
-
     if (this.optionSelected == 'Cedula') {
-      this.avanceTimeout = setTimeout(() => {
-        this.getReferidoByDocumentoAndIglesia(value);
-        localStorage.setItem('document_search_draft', value);
-      }, 800);
+      this.getReferidoByDocumentoAndIglesia(value);
+      localStorage.setItem('document_search_draft', value);
     } else if (this.optionSelected == 'Nombre') {
       this.nombreBuscado = value;
       // reset pagination state for name search
       this.pageStartAfter = [undefined];
       this.currentPageIndex = 0;
-      this.referidoService.getPageByName(value, this.iglesia).then((res: any) => {
+      this.referidoService.getPageByName(value, this.iglesia, this.pageSize).then((res: any) => {
         this.referidos = res.items;
         this.isFirstPage = true;
         this.isLastPage = !res.hasMore;
@@ -203,7 +188,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   getReferidoByDocumentoAndIglesia(documento: string) {
     this.spinner = true;
     this.referidoService
-      .getReferidoByDocumentoAndIlgesia(documento, this.iglesia)
+      .getReferidoByDocumentoAndIglesia(documento, this.iglesia)
       .subscribe({
         next: (data) => {
           this.referidos = data;
@@ -257,7 +242,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
       // reset pagination for "Todos"
       this.pageStartAfter = [undefined];
       this.currentPageIndex = 0;
-      const res: any = await this.referidoService.getPage(this.iglesia)
+      const res: any = await this.referidoService.getPage(this.iglesia, this.pageSize)
       this.spinner = false;
       this.referidos = res.items;
       this.isFirstPage = true;
@@ -273,7 +258,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
       if (this.optionSelected == 'Todos') {
         const targetIndex = this.currentPageIndex + 1;
         const startAfterDoc = this.pageStartAfter[targetIndex];
-        const res: any = await this.referidoService.getPage(this.iglesia, startAfterDoc);
+        const res: any = await this.referidoService.getPage(this.iglesia, this.pageSize, startAfterDoc);
         // store cursor for next page
         if (res.lastDoc) this.pageStartAfter[targetIndex + 1] = res.lastDoc;
         this.currentPageIndex = targetIndex;
@@ -284,7 +269,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
         if (!this.nombreBuscado) return;
         const targetIndex = this.currentPageIndex + 1;
         const startAfterDoc = this.pageStartAfter[targetIndex];
-        const res: any = await this.referidoService.getPageByName(this.nombreBuscado, this.iglesia, startAfterDoc);
+        const res: any = await this.referidoService.getPageByName(this.nombreBuscado, this.iglesia, this.pageSize, startAfterDoc);
         if (res.lastDoc) this.pageStartAfter[targetIndex + 1] = res.lastDoc;
         this.currentPageIndex = targetIndex;
         this.referidos = res.items;
@@ -304,19 +289,29 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
       const startAfterDoc = this.pageStartAfter[this.currentPageIndex];
 
       if (this.optionSelected == 'Todos') {
-        const res: any = await this.referidoService.getPage(this.iglesia, startAfterDoc);
+        const res: any = await this.referidoService.getPage(this.iglesia, this.pageSize, startAfterDoc);
         this.referidos = res.items;
         this.isLastPage = false;
         this.isFirstPage = this.currentPageIndex === 0;
       } else if (this.optionSelected == 'Nombre') {
         if (!this.nombreBuscado) return;
-        const res: any = await this.referidoService.getPageByName(this.nombreBuscado, this.iglesia, startAfterDoc);
+        const res: any = await this.referidoService.getPageByName(this.nombreBuscado, this.iglesia, this.pageSize, startAfterDoc);
         this.referidos = res.items;
         this.isLastPage = false;
         this.isFirstPage = this.currentPageIndex === 0;
       }
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  onPageEvent(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    // Reload current page/search with new page size
+    if (this.optionSelected === 'Todos') {
+      this.getReferidos(); // Restart from page 0 for simplicity or try to stay on current
+    } else if (this.optionSelected === 'Nombre') {
+      this.selectDocument(this.nombreBuscado);
     }
   }
 

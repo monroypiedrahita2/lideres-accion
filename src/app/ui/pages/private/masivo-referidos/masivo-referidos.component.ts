@@ -65,7 +65,7 @@ export class MasivoReferidosComponent {
   processExcelData(data: any[][]): void {
     const usuarios = data.slice(1).map((row) => ({
       isInterno: row[0] === 'Interno',
-      documento: String(row[1] ?? ''),
+      id: String(row[1] ?? ''),
       nombres: String(row[2] ?? ''),
       apellidos: String(row[3] ?? ''),
       celular: String(row[4] ?? ''),
@@ -125,7 +125,7 @@ export class MasivoReferidosComponent {
 
   async guardarReferido(referido: ReferidoModel) {
     const ref: BaseModel<ReferidoModel> = {
-      id: referido.documento,
+      id: referido.id,
       data: referido,
       fechaCreacion: new Date().toISOString(),
       creadoPor: this.auth.uidUser() ?? '',

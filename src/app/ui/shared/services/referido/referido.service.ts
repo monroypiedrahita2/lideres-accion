@@ -27,7 +27,7 @@ export class ReferidoService {
   _collection: string = environment.collections.referidos;
   lastDoc: any = null; // Para paginación
 
-  constructor(private readonly firestore: Firestore) {}
+  constructor(private readonly firestore: Firestore) { }
 
   crearReferidoConIdDocumento(
     data: BaseModel<ReferidoModel>,
@@ -90,8 +90,8 @@ export class ReferidoService {
     );
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }
-  
-  getReferidoByDocumentoAndIlgesia(
+
+  getReferidoByDocumentoAndIglesia(
     documento: string,
     iglesia: string
   ): Observable<BaseModel<ReferidoModel>[]> {
@@ -131,8 +131,7 @@ export class ReferidoService {
     return updateDoc(document, { ...newData });
   }
 
-  async getFirstPage(iglesia: string) {
-    const pageSize = 5;
+  async getFirstPage(iglesia: string, pageSize: number = 5) {
     const colRef = collection(this.firestore, this._collection);
     const q = query(
       colRef,
@@ -152,8 +151,7 @@ export class ReferidoService {
     return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
   }
 
-  async getNextPage(iglesia: string) {
-    const pageSize = 5;
+  async getNextPage(iglesia: string, pageSize: number = 5) {
     if (!this.lastDoc) return { items: [], hasMore: false };
 
     const colRef = collection(this.firestore, this._collection);
@@ -175,8 +173,7 @@ export class ReferidoService {
     return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
   }
 
-  async getPreviousPage(iglesia: string) {
-    const pageSize = 5;
+  async getPreviousPage(iglesia: string, pageSize: number = 5) {
     if (!this.lastDoc) return { items: [], hasMore: false };
 
     const colRef = collection(this.firestore, this._collection);
@@ -198,8 +195,7 @@ export class ReferidoService {
     return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
   }
 
-  async getFirstPageByName(nombre: string, iglesia: string) {
-    const pageSize = 5;
+  async getFirstPageByName(nombre: string, iglesia: string, pageSize: number = 5) {
     const colRef = collection(this.firestore, this._collection);
     const q = query(
       colRef,
@@ -220,8 +216,7 @@ export class ReferidoService {
     return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
   }
 
-  async getNextPageByName(nombre: string, iglesia: string) {
-    const pageSize = 5;
+  async getNextPageByName(nombre: string, iglesia: string, pageSize: number = 5) {
     if (!this.lastDoc) return { items: [], hasMore: false };
     const colRef = collection(this.firestore, this._collection);
     const q = query(
@@ -244,8 +239,7 @@ export class ReferidoService {
     return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
   }
 
-  async getPreviousPageByName(nombre: string, iglesia: string) {
-    const pageSize = 5;
+  async getPreviousPageByName(nombre: string, iglesia: string, pageSize: number = 5) {
     if (!this.lastDoc) return { items: [], hasMore: false };
     const colRef = collection(this.firestore, this._collection);
     const q = query(
@@ -269,8 +263,7 @@ export class ReferidoService {
   }
 
   // Método genérico para obtener una página, pasando opcionalmente un cursor `startAfterDoc`.
-  async getPage(iglesia: string, startAfterDoc?: any) {
-    const pageSize = 5;
+  async getPage(iglesia: string, pageSize: number = 5, startAfterDoc?: any) {
     const colRef = collection(this.firestore, this._collection);
     const constraints: any[] = [orderBy('data.nombres'), where('data.iglesia', '==', iglesia)];
     if (startAfterDoc) constraints.push(startAfter(startAfterDoc));
@@ -291,8 +284,7 @@ export class ReferidoService {
   }
 
   // Método genérico para obtener una página por nombre, pasando opcionalmente un cursor `startAfterDoc`.
-  async getPageByName(nombre: string, iglesia: string, startAfterDoc?: any) {
-    const pageSize = 5;
+  async getPageByName(nombre: string, iglesia: string, pageSize: number = 5, startAfterDoc?: any) {
     const colRef = collection(this.firestore, this._collection);
     const constraints: any[] = [
       where('data.nombres', '>=', nombre),

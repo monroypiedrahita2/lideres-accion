@@ -2,7 +2,6 @@
 export interface ReferidoModel {
   id?: string; // documento de identidad
   isInterno: boolean;
-  documento?: string;
   nombres: string;
   apellidos: string;
   celular: string;

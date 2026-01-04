@@ -18,14 +18,22 @@
     (click)="getAllReferidos()" (keydown)="getAllReferidos()">Todos</span>
 
 </div>
-<form [formGroup]="formRef" class="flex justify-center mt-4">
+<form [formGroup]="formRef" class="flex justify-center mt-4 items-center gap-2">
   <mg-input-text *ngIf="optionSelected == 'Cedula'" class="w-full" type="text" formControlName="documento"
     id="documento" label="Buscar por cédula"></mg-input-text>
+  <button *ngIf="optionSelected == 'Cedula'" mat-icon-button (click)="selectDocument(formRef.get('documento')?.value)"
+    class="bg-blue-500 text-white rounded-full p-2 hover:bg-blue-600 transition-colors h-10 w-10 flex items-center justify-center mb-6">
+    <span class="material-icons">search</span>
+  </button>
 </form>
 <div class="grid md:grid-cols-1 lg:grid-cols-12 w-full gap-2" *ngIf="optionSelected == 'Nombre'">
-  <form [formGroup]="formRef" class="lg:col-span-8">
+  <form [formGroup]="formRef" class="lg:col-span-8 flex items-center gap-2">
     <mg-input-text class="w-full" type="text" formControlName="documento" id="documentoOrName"
       label="Buscar por nombre"></mg-input-text>
+    <button mat-icon-button (click)="selectDocument(formRef.get('documento')?.value)"
+      class="bg-blue-500 text-white rounded-full p-2 hover:bg-blue-600 transition-colors h-10 w-10 flex items-center justify-center mb-6">
+    <span class="material-icons">search</span>
+    </button>
   </form>
 </div>
 <div *ngIf="optionSelected == 'Todos' && (usuario.rol === 'Pastor' || usuario.rol === 'Super usuario')"
@@ -40,7 +48,8 @@
 
 <div *ngIf="(formRef.value.documento || optionSelected == 'Todos') && optionSelected != 'Cedula'"
   class="flex justify-center p-1">
-  <mg-paginator [isFirstPage]="isFirstPage" [isLastPage]="isLastPage" (previous)="prevPage()" (next)="nextPage()">
+  <mg-paginator [length]="1000" [pageSize]="pageSize" [isFirstPage]="isFirstPage" [isLastPage]="isLastPage"
+    (previous)="prevPage()" (next)="nextPage()" (page)="onPageEvent($event)">
   </mg-paginator>
 </div>
 
