@@ -165,22 +165,22 @@ export class MiPerfilComponent implements OnInit {
   }
 
   async onSubmit() {
-    this.form.get('email')?.enable();
+    const rawValue = this.form.getRawValue();
     const user: PerfilModel = {
-      documento: this.form.value.documento,
-      nombres: this.form.value.nombres,
-      apellidos: this.form.value.apellidos,
-      celular: this.form.value.celular,
-      email: this.form.value.email,
-      barrioDondeVive: this.form.value.barrioDondeVive,
+      documento: rawValue.documento,
+      nombres: rawValue.nombres,
+      apellidos: rawValue.apellidos,
+      celular: rawValue.celular,
+      email: rawValue.email,
+      barrioDondeVive: rawValue.barrioDondeVive,
       rol: this.usuario.rol || null,
-      coordinadorCasaApoyo: this.form.value.casaApoyo
+      coordinadorCasaApoyo: rawValue.casaApoyo
         ? this.usuario.coordinadorCasaApoyo || null
         : null, // Clear if unchecked
       postulado: {
-        casaApoyo: this.form.value.casaApoyo,
-        transporte: this.form.value.transporte,
-        testigo: this.form.value.testigo,
+        casaApoyo: rawValue.casaApoyo,
+        transporte: rawValue.transporte,
+        testigo: rawValue.testigo,
       },
     };
 
@@ -191,15 +191,6 @@ export class MiPerfilComponent implements OnInit {
       await this.updateUser(user);
       return;
     }
-
-    // Check if document exists before creating
-    const documentExists = await firstValueFrom(this.perfilService.getPerfilByDocumento(user.documento?.toString() || ''));
-    if (documentExists && documentExists.length > 0) {
-      this.toast.error('El documento ya existe, por favor verifique.');
-      this.loading = false;
-      return;
-    }
-
     try {
       await this.perfilService.crearPerfilConUId(user, this.auth.uidUser());
       this.toast.success('Perfil de la app creado ');
