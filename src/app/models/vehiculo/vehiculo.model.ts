@@ -13,4 +13,5 @@ export interface VehiculoModel {
   iglesiaId: string | null;
   aprobado: boolean | null;
   casaApoyoId?: string | null;
+  estado?: 'Activo' | 'Inactivo' | 'En carrera';
 }

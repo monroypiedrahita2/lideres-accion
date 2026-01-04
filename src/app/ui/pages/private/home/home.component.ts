@@ -125,6 +125,7 @@ export class HomeComponent implements OnInit {
       this.vehiculoService.getVehiculoByConductor(uid).subscribe(vehiculos => {
         if (vehiculos && vehiculos.length > 0) {
           const vehiculo = vehiculos[0];
+          this.currentVehiculo = vehiculo;
           this.vehiculoStatus = vehiculo.aprobado ? 'Aprobado' : 'Pendiente';
 
           if (vehiculo.casaApoyoId) {
@@ -239,6 +240,29 @@ export class HomeComponent implements OnInit {
         return 'text-gray-600';
       default:
         return 'text-red-600';
+    }
+  }
+
+  // Vehicle status management
+  currentVehiculo: VehiculoModel | null = null;
+
+  updateVehiculoStatus(estado: 'Activo' | 'Inactivo' | 'En carrera') {
+    if (this.currentVehiculo && this.currentVehiculo.id) {
+      this.vehiculoService.updateVehiculo(this.currentVehiculo.id, { ...this.currentVehiculo, estado: estado }).then(() => {
+        if (this.currentVehiculo) {
+          this.currentVehiculo.estado = estado;
+        }
+      });
+    }
+  }
+
+  // Helper for UI class
+  getStatusColor(estado: string | undefined): string {
+    switch (estado) {
+      case 'Activo': return 'bg-green-100 text-green-800';
+      case 'Inactivo': return 'bg-red-100 text-red-800';
+      case 'En carrera': return 'bg-blue-100 text-blue-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   }
 }

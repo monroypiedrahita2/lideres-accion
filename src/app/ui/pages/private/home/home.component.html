@@ -48,6 +48,28 @@
           <span><strong>Dirección:</strong> {{ vehiculoInfo.direccion }}</span>
           <span><strong>Barrio:</strong> {{ vehiculoInfo.barrio }}</span>
         </div>
+
+        <!-- Status Selector -->
+        <div *ngIf="vehiculoStatus === 'Aprobado' && currentVehiculo" class="mt-4 pt-2 border-t border-gray-100">
+          <p class="text-xs font-semibold text-gray-600 mb-2">Estado del vehículo:</p>
+          <div class="flex flex-wrap gap-2">
+            <button (click)="updateVehiculoStatus('Activo')"
+              [class]="currentVehiculo.estado === 'Activo' ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+              class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
+              Activo
+            </button>
+            <button (click)="updateVehiculoStatus('Inactivo')"
+              [class]="currentVehiculo.estado === 'Inactivo' ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+              class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
+              Inactivo
+            </button>
+            <button (click)="updateVehiculoStatus('En carrera')"
+              [class]="currentVehiculo.estado === 'En carrera' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+              class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
+              En carrera
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Casa Apoyo Status -->
