@@ -83,6 +83,7 @@ export class MiPerfilComponent implements OnInit {
           this.usuario = this.user;
           this.actualizarForm(this.user);
           this.form.get('email')?.disable();
+          this.form.get('documento')?.disable();
           this.accion = 'Editar';
         }
         this.enableSkeleton = false;
@@ -190,6 +191,15 @@ export class MiPerfilComponent implements OnInit {
       await this.updateUser(user);
       return;
     }
+
+    // Check if document exists before creating
+    const documentExists = await firstValueFrom(this.perfilService.getPerfilByDocumento(user.documento?.toString() || ''));
+    if (documentExists && documentExists.length > 0) {
+      this.toast.error('El documento ya existe, por favor verifique.');
+      this.loading = false;
+      return;
+    }
+
     try {
       await this.perfilService.crearPerfilConUId(user, this.auth.uidUser());
       this.toast.success('Perfil de la app creado ');

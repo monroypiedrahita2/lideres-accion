@@ -66,7 +66,6 @@ export class DialogAsociarIglesiaComponent {
             this.toastr.error('No tienes una iglesia asignada para asociar.');
             return;
         }
-
         this.perfilService.updateIglesia(this.perfilEncontrado.id, this.usuario.iglesia)
             .then(() => {
                 this.toastr.success('Perfil asociado correctamente');
