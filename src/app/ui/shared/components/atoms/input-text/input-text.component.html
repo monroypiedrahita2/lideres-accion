@@ -1,26 +1,10 @@
-<mat-form-field class="w-full z-10">
-  <mat-label >{{ label }}</mat-label>
-  <input
-    [id]="id"
-    [name]="id"
-    [type]="type"
-    [autocomplete]="autocomplete"
-    [placeholder]="placeholder"
-    [disabled]="disabled"
-    [required]="required"
-    [minlength]="minlength"
-    [maxlength]="maxlength"
-    [min]="min"
-    [max]="max"
-    [placeholder]="placeholder"
-    [(ngModel)]="rifInput"
-    [ngModelOptions]="{ standalone: true }"
-    (input)="onChange()"
-    (change)="onChange()"
-    (blur)="onTouchedFn()"
-    [errorStateMatcher]="matcher"
-    matInput>
-    @if (showError) {
-      <mat-error>{{ textError ? textError : errors[0] }}</mat-error>
-    }
+<mat-form-field class="w-full z-10" [class.input-success]="isSuccess">
+  <mat-label>{{ label }}</mat-label>
+  <input [id]="id" [name]="id" [type]="type" [autocomplete]="autocomplete" [placeholder]="placeholder"
+    [disabled]="disabled" [required]="required" [minlength]="minlength" [maxlength]="maxlength" [min]="min" [max]="max"
+    [placeholder]="placeholder" [(ngModel)]="rifInput" [ngModelOptions]="{ standalone: true }" (input)="onChange()"
+    (change)="onChange()" (blur)="onTouchedFn()" [errorStateMatcher]="matcher" matInput>
+  @if (showError) {
+  <mat-error>{{ textError ? textError : errors[0] }}</mat-error>
+  }
 </mat-form-field>

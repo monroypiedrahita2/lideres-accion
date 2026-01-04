@@ -30,6 +30,14 @@ export interface SelectOption {
   ],
   providers: [],
   templateUrl: './input-select.component.html',
+  styles: [`
+    ::ng-deep .mat-mdc-form-field.mat-form-field-invalid .mdc-text-field {
+      border: 1px solid red !important;
+    }
+    ::ng-deep .mat-mdc-form-field.input-success .mdc-text-field {
+      border: 1px solid green !important;
+    }
+  `]
 })
 export class InputSelectComponent implements ControlValueAccessor, ErrorStateMatcher, OnInit, OnChanges {
 
@@ -66,7 +74,7 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
   }
 
   compareWith(o1: any, o2: any) {
-    return o1?.id && o2?.id ? o1.id == o2.id: o1 == o2;
+    return o1?.id && o2?.id ? o1.id == o2.id : o1 == o2;
   }
 
   public get invalid(): boolean {
@@ -79,6 +87,14 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
     }
     const { dirty, touched } = this.control;
     return this.invalid ? ((dirty ?? false) || (touched ?? false)) : false;
+  }
+
+  public get isSuccess(): boolean {
+    if (!this.control) {
+      return false;
+    }
+    const { dirty, touched } = this.control;
+    return !this.invalid && ((dirty ?? false) || (touched ?? false));
   }
 
   public get errors(): Array<string> {

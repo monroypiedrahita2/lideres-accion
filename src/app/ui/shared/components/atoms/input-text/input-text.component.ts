@@ -58,6 +58,14 @@ export class InputTextComponent implements ControlValueAccessor, ErrorStateMatch
     return this.invalid ? ((dirty ?? false) || (touched ?? false)) : false;
   }
 
+  public get isSuccess(): boolean {
+    if (!this.control) {
+      return false;
+    }
+    const { dirty, touched } = this.control;
+    return !this.invalid && ((dirty ?? false) || (touched ?? false));
+  }
+
   public get errors(): Array<string> {
     if (!this.control) {
       return [];
