@@ -268,6 +268,8 @@ export class CreateReferidoComponent implements OnInit {
         data: {
           ...this.dataReferido.data,
           ...this.form.value,
+          nombres: this.form.get('nombres')?.value?.toUpperCase(),
+          apellidos: this.form.get('apellidos')?.value?.toUpperCase(),
           referidoPor: this.form.get('referidoPor')?.value ? this.form.get('referidoPor')?.value : '',
         },
       }
@@ -288,6 +290,8 @@ export class CreateReferidoComponent implements OnInit {
       creadoPor: this.auth.uidUser(),
       data: {
         ...dataRest,
+        nombres: dataRest.nombres?.toUpperCase(),
+        apellidos: dataRest.apellidos?.toUpperCase(),
         iglesia: this.iglesia,
       },
     };

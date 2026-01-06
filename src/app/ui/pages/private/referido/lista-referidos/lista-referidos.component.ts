@@ -153,7 +153,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
       this.getReferidoByDocumentoAndIglesia(value);
       localStorage.setItem('document_search_draft', value);
     } else if (this.optionSelected == 'Nombre') {
-      this.nombreBuscado = value;
+      this.nombreBuscado = value.toUpperCase();
       // reset pagination state for name search
       this.pageStartAfter = [undefined];
       this.currentPageIndex = 0;
@@ -322,8 +322,8 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   onSearch(data: string) {
     this.referidos = this.data.filter(
       (referido) =>
-        referido.data.nombres.toLowerCase().includes(data.toLowerCase()) ||
-        referido.data.apellidos.toLowerCase().includes(data.toLowerCase()) ||
+        referido.data.nombres.toUpperCase().includes(data.toUpperCase()) ||
+        referido.data.apellidos.toUpperCase().includes(data.toUpperCase()) ||
         referido.data.celular.toLowerCase().includes(data.toLowerCase()) ||
         referido.id?.toLowerCase().includes(data.toLowerCase() || '')
     );

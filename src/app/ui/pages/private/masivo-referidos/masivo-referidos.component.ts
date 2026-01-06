@@ -66,8 +66,8 @@ export class MasivoReferidosComponent {
     const usuarios = data.slice(1).map((row) => ({
       isInterno: row[0] === 'Interno',
       id: String(row[1] ?? ''),
-      nombres: String(row[2] ?? ''),
-      apellidos: String(row[3] ?? ''),
+      nombres: String(row[2] ?? '').toUpperCase(),
+      apellidos: String(row[3] ?? '').toUpperCase(),
       celular: String(row[4] ?? ''),
       email: String(row[5] ?? ''),
       esEmprendedor: row[6] === 'SI',
