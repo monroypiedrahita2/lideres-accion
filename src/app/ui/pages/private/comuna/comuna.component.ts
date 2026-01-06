@@ -13,6 +13,7 @@ import { lastValueFrom } from 'rxjs';
 import { CommonModule, Location } from '@angular/common';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { ComunaService } from '../../../shared/services/comuna/comuna.service';
+import { IglesiaService } from '../../../shared/services/iglesia/iglesia.service';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { ContainerGridComponent } from '../../../shared/components/atoms/container-grid/container-grid.component';
 import { InputSelectComponent } from '../../../shared/components/atoms/input-select/input-select.component';
@@ -49,10 +50,11 @@ export class ComunaComponent implements OnInit {
   departamentos: SelectOptionModel<string>[] = [];
   municipios: SelectOptionModel<number>[] = [];
   usuarios: SelectOptionModel<string>[] = [];
+  iglesias: SelectOptionModel<string>[] = [];
   barrios: string[] = [];
   loading: boolean = false;
   enableSkeleton: boolean = true;
-  iglesiaIdbyUser: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
+  user: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
 
   constructor(
     private readonly fb: FormBuilder,
@@ -60,12 +62,14 @@ export class ComunaComponent implements OnInit {
     private readonly toast: ToastrService,
     private readonly location: Location,
     private readonly auth: AuthService,
-    private readonly comunaService: ComunaService
+    private readonly comunaService: ComunaService,
+    private readonly iglesiaService: IglesiaService
   ) {
     this.form = this.fb.group({
       departamento: ['', Validators.required],
       municipio: ['', Validators.required],
       nombre: ['', [Validators.required, Validators.pattern(/^[^-]*$/)]],
+      iglesia: ['', Validators.required]
     });
 
     this.formBarrios = this.fb.group({
@@ -74,6 +78,11 @@ export class ComunaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.user.rol !== 'Super Usuario') {
+      this.toast.error('No tienes permisos para crear comunas');
+      this.location.back();
+      return;
+    }
     this.initComponent();
     this.form
       .get('departamento')
@@ -91,6 +100,7 @@ export class ComunaComponent implements OnInit {
 
   async initComponent() {
     await this.getDepartamentos();
+    this.getIglesias();
     this.form.get('municipio')?.disable();
     this.enableSkeleton = false;
   }
@@ -127,6 +137,20 @@ export class ComunaComponent implements OnInit {
       console.error('Error al cargar los municipios:', error);
       this.toast.error('Error al cargar los municipios');
       this.location.back();
+    }
+  }
+
+  async getIglesias() {
+    try {
+      this.iglesiaService.getIglesias().subscribe((res) => {
+        this.iglesias = res.map((item: any) => ({
+          label: item.data.nombre,
+          value: item.id,
+        }));
+      });
+    } catch (error) {
+      console.error('Error al cargar las iglesias:', error);
+      this.toast.error('Error al cargar las iglesias');
     }
   }
 
@@ -167,7 +191,7 @@ export class ComunaComponent implements OnInit {
         departamento: this.form.value.departamento,
         municipio: this.form.value.municipio,
         barrio: barrio.split(' - ')[1],
-        iglesiaId: this.iglesiaIdbyUser,
+        iglesiaId: this.form.value.iglesia,
         comuna: barrio.split(' - ')[0],
       },
       fechaCreacion: new Date().toISOString(),

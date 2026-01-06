@@ -10,11 +10,9 @@
   </div>
 
   <div class="flex flex-col gap-4">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      <mtt-card-info *ngFor="let voluntarios of paginatedVoluntarios"
-        [title]="voluntarios.nombres + ' ' + voluntarios.apellidos"
-        [textInfo]="(voluntarios.rol ? voluntarios.rol : '')" icon="person" [activePoint]="true"></mtt-card-info>
-    </div>
+    <mtt-card-info *ngFor="let voluntarios of paginatedVoluntarios"
+      [title]="voluntarios.nombres + ' ' + voluntarios.apellidos"
+      [textInfo]="(voluntarios.rol ? voluntarios.rol : '')" icon="person" [activePoint]="true"></mtt-card-info>
 
     <div *ngIf="paginatedVoluntarios.length === 0" class="text-center p-4 text-gray-500 bg-white rounded-lg shadow">
       No se encontraron voluntarios que coincidan con la búsqueda.

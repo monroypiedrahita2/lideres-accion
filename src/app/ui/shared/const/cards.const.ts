@@ -2,69 +2,69 @@ import { CardModel } from '../../../models/utils/card.model';
 
 export const CARDS_HOME: CardModel[] = [
   {
-    goTo: '../control-accesos',
+    goTo: '/private/control-accesos',
     title: 'Control y accesos',
     description: 'Gestionar el control y los accesos',
     icon: 'lock',
     showIf: ['Pastor', 'Super usuario'],
   },
   {
-    goTo: '../crear-pastor',
+    goTo: '/private/crear-pastor',
     title: 'Crear pastor',
     description: 'Asignar un pastor a iglesia',
     icon: 'record_voice_over',
     showIf: ['Super usuario'],
   },
   {
-    goTo: '../crear-iglesia',
+    goTo: '/private/crear-iglesia',
     title: 'Iglesia',
     description: 'Ver y gestionar iglesias',
     icon: 'favorite',
     showIf: ['Super usuario'],
   },
   {
-    goTo: '../listar-comunas',
+    goTo: '/private/listar-comunas',
     title: 'Comunas y Barrios',
     description: 'Listar, eliminar o editar barrios y comunas',
     icon: 'location_city',
     showIf: ['Pastor', 'Coordinador de iglesia'],
   },
   {
-    goTo: '../crear-comuna',
+    goTo: '/private/crear-comuna',
     title: 'Añadir Barrios',
     description: 'Crear una nueva comuna',
     icon: 'location_city',
     showIf: ['Pastor', 'Coordinador de iglesia'],
   },
   {
-    goTo: '../masivo-referidos',
+    goTo: '/private/masivo-referidos',
     title: 'Carga masiva',
     description: 'Carga masiva de referidos a través de un archivo Excel',
     icon: 'upload_file',
     showIf: ['Super usuario', 'Pastor'],
   },
   {
-    goTo: '../listar-voluntarios',
+    goTo: '/private/listar-voluntarios',
     title: 'Voluntarios Iglesia',
     description: 'Listar y adminstrar voluntarios de la iglesia',
     icon: 'groups',
     showIf: ['Pastor', 'Coordinador de iglesia'],
   },
   // {
-  //   goTo: '../crear-lider',
+  //   goTo: '/private/crear-lider',
   //   title: 'Crear líder',
   //   description: 'Crear líderes',
   //   icon: 'person_add'
   // }
   {
-    goTo: '../estadisticas',
+    goTo: '/private/estadisticas',
     title: 'Estadisticas',
     description: 'Estadisticas por iglesia',
     icon: 'data_usage',
     showIf: ['Pastor', 'Super Usuario']
   },
   {
-    goTo: '../dashboards',
+    goTo: '/private/dashboards',
     title: 'DashBoard',
     description: 'Estadisticas generales',
     icon: 'developer_board',

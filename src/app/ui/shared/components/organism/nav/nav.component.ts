@@ -9,6 +9,7 @@ import { DialogNotificationComponent } from '../../../dialogs/dialog-notificatio
 import { Subscription } from 'rxjs';
 import { PerfilService } from '../../../services/perfil/perfil.service';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
+import { SidenavComponent } from '../sidenav/sidenav.component';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { PerfilModel } from '../../../../../models/perfil/perfil.model';
     CommonModule,
     MatIconModule,
     RouterModule,
+    SidenavComponent
   ],
 })
 export class NavComponent implements OnInit, OnDestroy {
@@ -28,6 +30,7 @@ export class NavComponent implements OnInit, OnDestroy {
   @Input() foto: string | undefined;
   nameApp = NAME_LONG_APP;
   sub!: Subscription;
+  isMenuOpen = false;
 
   constructor(
     private readonly auth: AuthService,
@@ -47,6 +50,10 @@ export class NavComponent implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
   }
 
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
   Logout() {
     const dialogRef = this.dialog.open(DialogNotificationComponent, {
       data: { title: 'Cerrar sesión', message: '¿Estás seguro que deseas cerrar sesión?', type: 'warning', bottons: 'two' },
@@ -61,7 +68,4 @@ export class NavComponent implements OnInit, OnDestroy {
     });
 
   }
-
-
-
 }

@@ -2,19 +2,21 @@
 'z-20 fixed w-full top-0 h-[64px]': true,
 'bg-primary': true,
 'shadow-xl': true
-}" >
+}">
   <div class="flex justify-between items-center h-full px-4">
     @if (usuario.rol != 'Coordinador de iglesia' && usuario.rol != 'Líder') {
-      <div  class=" flex items-center justify-center gap-2 hover:cursor-pointer hover:shadow-xl">
-        <mat-icon class="text-white hover:cursor-pointer text-center w-full text-shadow" [routerLink]="['./settings']">settings</mat-icon>
-      </div>
+    <div class="flex items-center justify-center gap-2 hover:cursor-pointer hover:shadow-xl" (click)="toggleMenu()">
+      <mat-icon class="text-white hover:cursor-pointer text-center w-full text-shadow">menu</mat-icon>
+    </div>
     }
     <div class="flex flex-col items-center justify-center">
-      <span class="font-primary text-white text-xl md:text-2xl font-bold tracking-wide uppercase text-shadow leading-none">{{nameApp}}</span>
+      <span
+        class="font-primary text-white text-xl md:text-2xl font-bold tracking-wide uppercase text-shadow leading-none">{{nameApp}}</span>
       <span class="text-gray-200 text-xs md:text-sm font-light tracking-wider">{{usuario.email}}</span>
     </div>
-        <div class=" flex items-center justify-center">
-      <mat-icon class="text-white text-center w-full hover:text-yellow-400 hover:cursor-pointer" (click)="Logout()" (keyup)="Logout()">exit_to_app</mat-icon>
-    </div>
+    <div class="w-6"></div> <!-- Spacer to balance layout if needed, or just empty -->
   </div>
 </nav>
+
+<mg-sidenav [isOpen]="isMenuOpen" [usuario]="usuario" (close)="isMenuOpen = false">
+</mg-sidenav>
