@@ -11,40 +11,42 @@
   </app-container-alert-information>
 
   <!-- Profile Section -->
-  <div class="flex justify-center md:justify-start">
+       <div
+      class="mt-2 flex flex-row gap-1 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+      <span *ngIf="usuario.rol"
+        class="text-[10px] sm:text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full border border-blue-200 shrink-0">
+        {{ usuario.rol }}
+      </span>
+      <span *ngIf="usuario.coordinadorCasaApoyo"
+        class="text-[10px] sm:text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full border border-purple-200 shrink-0">
+        Coord. Casa Apoyo
+      </span>
+      <span *ngIf="usuario.coordinadorTransporte"
+        class="text-[10px] sm:text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full border border-indigo-200 shrink-0">
+        Coord. Transporte
+      </span>
+      <span *ngIf="usuario.coordinadorTestigos"
+        class="text-[10px] sm:text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full border border-teal-200 shrink-0">
+        Coord. Testigos
+      </span>
+    </div>
+  <div class="flex flex-col justify-center md:justify-start">
     <div
       class="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition-shadow border border-gray-200 flex items-center gap-4 min-w-[300px]"
       [routerLink]="['../mi-perfil']">
-      <div class="bg-primary text-white p-3 rounded-full overflow-hidden flex justify-center items-center w-12 h-12">
-        <mat-icon *ngIf="!userPhotoUrl" class="scale-125">account_circle</mat-icon>
-        <img *ngIf="userPhotoUrl" [src]="userPhotoUrl" (error)="userPhotoUrl = null" alt="Foto de perfil"
-          class="w-full h-full object-cover">
+      <div *ngIf="!userPhotoUrl"
+        class="bg-primary text-white p-3 rounded-full overflow-hidden flex justify-center items-center w-12 h-12">
+        <mat-icon class="scale-125">account_circle</mat-icon>
       </div>
+      <img *ngIf="userPhotoUrl" [src]="userPhotoUrl" (error)="userPhotoUrl = null" alt="Foto de perfil"
+        class="w-12 h-12 rounded-full object-cover">
       <div>
-        <h3 class="text-lg font-semibold text-base">Mis Datos</h3>
+        <span class="text-lg font-primary text-primary font-bold">Mis Datos</span>
         <p class="text-sm text-gray-500">Ingresa a tu perfil y actualiza tu información</p>
-
-        <div class="mt-2 flex flex-wrap gap-1">
-          <span *ngIf="usuario.rol"
-            class="text-[10px] sm:text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full border border-blue-200">
-            {{ usuario.rol }}
-          </span>
-          <span *ngIf="usuario.coordinadorCasaApoyo"
-            class="text-[10px] sm:text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full border border-purple-200">
-            Coord. Casa Apoyo
-          </span>
-          <span *ngIf="usuario.coordinadorTransporte"
-            class="text-[10px] sm:text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full border border-indigo-200">
-            Coord. Transporte
-          </span>
-          <span *ngIf="usuario.coordinadorTestigos"
-            class="text-[10px] sm:text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full border border-teal-200">
-            Coord. Testigos
-          </span>
-        </div>
       </div>
       <mat-icon class="ml-auto text-gray-400">chevron_right</mat-icon>
     </div>
+
   </div>
 
   <!-- Postulaciones Status Card -->

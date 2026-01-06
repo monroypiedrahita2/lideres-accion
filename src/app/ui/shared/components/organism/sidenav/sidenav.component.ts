@@ -38,7 +38,7 @@ export class SidenavComponent {
     showCard(rol: string[] | undefined, requiresPostulacion?: string): boolean {
         if (!rol) return false;
         if (!this.usuario) return false;
-        const roleAllowed = rol.includes(this.userRol) || rol.includes('Todos') || rol.includes('Super Usuario');
+        const roleAllowed = rol.includes(this.userRol) || rol.includes('Todos');
         if (!roleAllowed) return false;
         if (requiresPostulacion) {
             if (!this.usuario.postulado) return false;

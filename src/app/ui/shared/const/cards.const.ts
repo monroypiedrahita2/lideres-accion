@@ -27,7 +27,7 @@ export const CARDS_HOME: CardModel[] = [
     title: 'Comunas y Barrios',
     description: 'Listar, eliminar o editar barrios y comunas',
     icon: 'location_city',
-    showIf: ['Pastor', 'Coordinador de iglesia'],
+    showIf: ['Super usuario'],
   },
   {
     goTo: '/private/crear-comuna',
@@ -62,7 +62,7 @@ export const CARDS_HOME: CardModel[] = [
     title: 'DashBoard',
     description: 'Estadisticas generales',
     icon: 'developer_board',
-    showIf: ['Super Usuario']
+    showIf: ['Super usuario']
   },
   {
     goTo: '',
