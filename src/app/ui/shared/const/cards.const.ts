@@ -34,7 +34,7 @@ export const CARDS_HOME: CardModel[] = [
     title: 'Añadir Barrios',
     description: 'Crear una nueva comuna',
     icon: 'location_city',
-    showIf: ['Pastor', 'Coordinador de iglesia'],
+    showIf: ['Super usuario'],
   },
   {
     goTo: '/private/masivo-referidos',
@@ -48,20 +48,14 @@ export const CARDS_HOME: CardModel[] = [
     title: 'Voluntarios Iglesia',
     description: 'Listar y adminstrar voluntarios de la iglesia',
     icon: 'groups',
-    showIf: ['Pastor', 'Coordinador de iglesia'],
+    showIf: ['Pastor', 'Super usuario'],
   },
-  // {
-  //   goTo: '/private/crear-lider',
-  //   title: 'Crear líder',
-  //   description: 'Crear líderes',
-  //   icon: 'person_add'
-  // }
   {
     goTo: '/private/estadisticas',
     title: 'Estadisticas',
     description: 'Estadisticas por iglesia',
     icon: 'data_usage',
-    showIf: ['Pastor', 'Super Usuario']
+    showIf: ['Pastor']
   },
   {
     goTo: '/private/dashboards',

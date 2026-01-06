@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private readonly auth: Auth, private readonly router: Router) {}
+  constructor(private readonly auth: Auth, private readonly router: Router) { }
 
   createUserWithEmailAndPassword(email: string, password: string) {
     return createUserWithEmailAndPassword(
@@ -72,5 +72,9 @@ export class AuthService {
 
   uidUser(): string {
     return this.getAuth().currentUser?.uid ?? '';
+  }
+
+  getPhotoUrl(): string | null {
+    return this.getAuth().currentUser?.photoURL ?? null;
   }
 }

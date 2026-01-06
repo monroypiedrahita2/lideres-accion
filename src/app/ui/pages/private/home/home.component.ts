@@ -41,6 +41,7 @@ export class HomeComponent implements OnInit {
     localStorage.getItem('iglesiaData') || '{}'
   );
   showInfoPerfil: boolean = true;
+  userPhotoUrl: string | null = null;
 
   // Status flags
   vehiculoStatus: string | null = null;
@@ -80,6 +81,8 @@ export class HomeComponent implements OnInit {
         this.getMyIglesia(this.usuario.iglesia!);
       }
       this.loadPostulacionesInfo();
+      this.userPhotoUrl = this.auth.getPhotoUrl();
+      console.log(this.userPhotoUrl, 'foto');
       this.skeleton = false;
     } else {
       this.getusuario(this.auth.uidUser());
@@ -107,6 +110,7 @@ export class HomeComponent implements OnInit {
         this.openDialogMissingChurch();
       }
       this.loadPostulacionesInfo();
+      this.userPhotoUrl = this.auth.getPhotoUrl();
       this.skeleton = false;
     } catch (error) {
       console.error(error);
