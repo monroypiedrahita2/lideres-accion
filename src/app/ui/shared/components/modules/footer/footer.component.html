@@ -1,7 +1,12 @@
 <div
   class="w-full h-16 flex justify-between items-center z-40 fixed bottom-0 bg-primary pt-3"
 >
-
+  <app-button-footer
+    class="w-full flex justify-center"
+    [option]="'Home'"
+    [icon]="'home'"
+    [goTo]="'./home'"
+  ></app-button-footer>
   <app-button-footer
     *ngIf="usuario.rol == 'Coordinador de iglesia' || usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'"
     class="w-full flex justify-center"
@@ -9,12 +14,7 @@
     [icon]="'view_list'"
     [goTo]="'./listar-referidos'"
   ></app-button-footer>
-    <app-button-footer
-    class="w-full flex justify-center"
-    [option]="'Home'"
-    [icon]="'home'"
-    [goTo]="'./home'"
-  ></app-button-footer>
+
   <app-button-footer
     *ngIf="usuario.rol == 'Coordinador de iglesia' || usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'"
     class="w-full flex justify-center"

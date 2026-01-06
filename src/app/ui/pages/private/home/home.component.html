@@ -11,25 +11,25 @@
   </app-container-alert-information>
 
   <!-- Profile Section -->
-       <div
-      class="mt-2 flex flex-row gap-1 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-      <span *ngIf="usuario.rol"
-        class="text-[10px] sm:text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full border border-blue-200 shrink-0">
-        {{ usuario.rol }}
-      </span>
-      <span *ngIf="usuario.coordinadorCasaApoyo"
-        class="text-[10px] sm:text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full border border-purple-200 shrink-0">
-        Coord. Casa Apoyo
-      </span>
-      <span *ngIf="usuario.coordinadorTransporte"
-        class="text-[10px] sm:text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full border border-indigo-200 shrink-0">
-        Coord. Transporte
-      </span>
-      <span *ngIf="usuario.coordinadorTestigos"
-        class="text-[10px] sm:text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full border border-teal-200 shrink-0">
-        Coord. Testigos
-      </span>
-    </div>
+  <div
+    class="mt-2 flex flex-row gap-1 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+    <span *ngIf="usuario.rol"
+      class="text-[10px] sm:text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full border border-blue-200 shrink-0">
+      {{ usuario.rol }}
+    </span>
+    <span *ngIf="usuario.coordinadorCasaApoyo"
+      class="text-[10px] sm:text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full border border-purple-200 shrink-0">
+      Coord. Casa Apoyo
+    </span>
+    <span *ngIf="usuario.coordinadorTransporte"
+      class="text-[10px] sm:text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full border border-indigo-200 shrink-0">
+      Coord. Transporte
+    </span>
+    <span *ngIf="usuario.coordinadorTestigos"
+      class="text-[10px] sm:text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full border border-teal-200 shrink-0">
+      Coord. Testigos
+    </span>
+  </div>
   <div class="flex flex-col justify-center md:justify-start">
     <div
       class="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition-shadow border border-gray-200 flex items-center gap-4 min-w-[300px]"
@@ -66,6 +66,17 @@
           <span><strong>Asociado a:</strong> {{ vehiculoInfo.casaApoyo }}</span>
           <span><strong>Dirección:</strong> {{ vehiculoInfo.direccion }}</span>
           <span><strong>Barrio:</strong> {{ vehiculoInfo.barrio }}</span>
+
+          <div class="flex gap-2 mt-2" *ngIf="vehiculoInfo.responsableTelefono">
+            <a [href]="'https://wa.me/' + vehiculoInfo.responsableTelefono" target="_blank"
+              class="flex items-center justify-center w-8 h-8 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-colors">
+              <img src="assets/whatsApp.svg" alt="WhatsApp" class="w-5 h-5">
+            </a>
+            <a [href]="'tel:' + vehiculoInfo.responsableTelefono"
+              class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors">
+              <mat-icon class="!text-sm !w-4 !h-4 flex items-center justify-center">call</mat-icon>
+            </a>
+          </div>
         </div>
 
         <!-- Status Selector -->

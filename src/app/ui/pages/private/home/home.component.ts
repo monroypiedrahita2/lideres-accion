@@ -121,7 +121,7 @@ export class HomeComponent implements OnInit {
 
   // Details info
   testigoInfo: { puesto: string, mesa: string } | null = null;
-  vehiculoInfo: { casaApoyo: string; direccion?: string; barrio?: string } | null = null;
+  vehiculoInfo: { casaApoyo: string; direccion?: string; barrio?: string; responsableTelefono?: string } | null = null;
 
   loadPostulacionesInfo() {
     const uid = this.auth.uidUser();
@@ -139,7 +139,8 @@ export class HomeComponent implements OnInit {
                 this.vehiculoInfo = {
                   casaApoyo: casa.data.nombreHabitante || 'Casa asignada',
                   direccion: casa.data.direccion,
-                  barrio: casa.data.barrio
+                  barrio: casa.data.barrio,
+                  responsableTelefono: casa.data.responsableTelefono
                 };
               }
             });
