@@ -45,7 +45,6 @@ export class ListaVehiculosAprobadosComponent implements OnInit {
     // Get approved vehicles from user's church using service method
     this.vehiculoService.getVehiculosAprobadosByIglesia(this.usuario.iglesia).subscribe({
       next: (data) => {
-        console.log(data);
         this.vehiculos = data;
         this.loading = false;
       },

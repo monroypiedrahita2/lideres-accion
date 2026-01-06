@@ -98,25 +98,68 @@ export class AprobarVehiculosComponent implements OnInit, AfterViewInit {
         });
     }
 
+    loadingItems = new Set<string>();
+
     aprobarVehiculo(vehiculo: VehiculoModel, estado: boolean) {
-        this.vehiculoService.updateVehiculo(vehiculo.id!, { ...vehiculo, aprobado: estado, casaApoyoId: null }).then(() => {
-            this.dialog.open(DialogNotificationComponent, {
+        if (this.loadingItems.has(vehiculo.id!)) return;
+
+        const executeUpdate = () => {
+            this.loadingItems.add(vehiculo.id!);
+            this.vehiculoService.updateVehiculo(vehiculo.id!, {
+                ...vehiculo,
+                aprobado: estado,
+                casaApoyoId: null,
+                aprobadoPor: estado ? this.usuario.email : null
+            })
+                .then(() => {
+                    this.dialog.open(DialogNotificationComponent, {
+                        data: {
+                            title: 'Éxito',
+                            message: `Vehículo ${estado ? 'aprobado' : 'desaprobado'} correctamente.`,
+                            type: 'success'
+                        }
+                    });
+                    this.loadVehiculos();
+                })
+                .catch(err => {
+                    console.error(err);
+                    this.dialog.open(DialogNotificationComponent, {
+                        data: {
+                            title: 'Error',
+                            message: 'Ocurrió un error al actualizar el estado del vehículo.',
+                            type: 'error'
+                        }
+                    });
+                })
+                .finally(() => {
+                    this.loadingItems.delete(vehiculo.id!);
+                });
+        };
+
+        if (!estado) {
+            const dialogRef = this.dialog.open(DialogNotificationComponent, {
                 data: {
-                    title: 'Éxito',
-                    message: `Vehículo ${estado ? 'aprobado' : 'desaprobado'} correctamente.`,
-                    type: 'success'
+                    title: 'Confirmación',
+                    message: `¿Estás seguro de desaprobar el vehículo ${vehiculo.placa}?`,
+                    type: 'warning',
+                    bottons: 'two',
+                    actionText: 'Desaprobar'
                 }
             });
-            this.loadVehiculos();
-        }).catch(err => {
-            console.error(err);
-            this.dialog.open(DialogNotificationComponent, {
-                data: {
-                    title: 'Error',
-                    message: 'Ocurrió un error al actualizar el estado del vehículo.',
-                    type: 'error'
+
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    executeUpdate();
+                } else {
+                    // Revert checkbox state if cancelled (optional/complex depending on UI reflow)
+                    // For now we just don't execute. Ideally we should reload or handle UI state if it was optimistic.
+                    // Since it's triggered by checking/unchecking, the UI might be out of sync if we don't refresh or revert.
+                    // But typically the checked property is bound to data. reloading might be safest or manually toggling back.
+                    this.loadVehiculos(); // Refresh to ensure UI matches state
                 }
             });
-        });
+        } else {
+            executeUpdate();
+        }
     }
 }

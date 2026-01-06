@@ -14,4 +14,6 @@ export interface VehiculoModel {
   aprobado: boolean | null;
   casaApoyoId?: string | null;
   estado?: 'Activo' | 'Inactivo' | 'En carrera';
+  aprobadoPor: string | null; //email de quien aprobo con authService
+
 }

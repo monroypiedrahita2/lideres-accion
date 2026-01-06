@@ -21,8 +21,11 @@
     </div>
 
     <div class="flex flex-col items-center justify-center gap-2">
-      <div class="h-10 w-10 flex items-center justify-center">
-        <input id="default-checkbox" type="checkbox" [checked]="checked" (change)="onCheckboxChange($event)"
+      <div class="h-10 w-10 flex items-center justify-center relative">
+        <app-spinner [showSpinner]="true" *ngIf="isLoading"
+          class="absolute inset-0 flex items-center justify-center"></app-spinner>
+        <input *ngIf="!isLoading" id="default-checkbox" type="checkbox" [checked]="checked"
+          (change)="onCheckboxChange($event)"
           class="w-6 h-6 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300">
       </div>
       @if (phoneNumber) {

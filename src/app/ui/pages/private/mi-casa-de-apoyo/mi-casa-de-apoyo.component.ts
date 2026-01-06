@@ -147,7 +147,8 @@ export class MiCasaDeApoyoComponent implements OnInit {
             responsableApellido: this.usuario.apellidos,
             responsableTelefono: this.usuario.celular || '',
             iglesiaId: this.usuario.iglesia || null,
-            aprobado: null
+            aprobado: null,
+            aprobadoPor: null
         };
 
         try {

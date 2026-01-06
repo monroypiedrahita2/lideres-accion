@@ -59,34 +59,67 @@ export class AprobarCasasApoyoComponent implements OnInit {
         this.updatePaginatedList();
     }
 
+    loadingItems = new Set<string>();
+
     aprobar(casa: BaseModel<CasaApoyoModel>, estado: boolean) {
-        // Update the approval status of the support house
-        const updateData: CasaApoyoModel = {
-            ...casa.data,
-            aprobado: estado
+        if (this.loadingItems.has(casa.id!)) return;
+
+        const executeUpdate = () => {
+            this.loadingItems.add(casa.id!);
+            const updateData: CasaApoyoModel = {
+                ...casa.data,
+                aprobado: estado,
+                aprobadoPor: estado ? this.usuario.email : null
+            };
+
+            this.casaApoyoService.updateCasaApoyo(casa.id!, updateData)
+                .then(() => {
+                    this.dialog.open(DialogNotificationComponent, {
+                        data: {
+                            title: 'Éxito',
+                            message: `Casa ${estado ? 'aprobada' : 'desaprobada'} correctamente.`,
+                            type: 'success'
+                        }
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    this.dialog.open(DialogNotificationComponent, {
+                        data: {
+                            title: 'Error',
+                            message: 'Ocurrió un error al actualizar.',
+                            type: 'error'
+                        }
+                    });
+                })
+                .finally(() => {
+                    this.loadingItems.delete(casa.id!);
+                });
         };
 
-        this.casaApoyoService.updateCasaApoyo(casa.id!, updateData).then(() => {
-            this.dialog.open(DialogNotificationComponent, {
+        if (!estado) {
+            const dialogRef = this.dialog.open(DialogNotificationComponent, {
                 data: {
-                    title: 'Éxito',
-                    message: `Casa ${estado ? 'aprobada' : 'desaprobada'} correctamente.`,
-                    type: 'success'
+                    title: 'Confirmación',
+                    message: `¿Estás seguro de desaprobar esta Casa de Apoyo?`,
+                    type: 'warning',
+                    bottons: 'two',
+                    actionText: 'Desaprobar'
                 }
             });
-            // No need to reload manually if subscription updates automatically, but good to have if it's one-shot.
-            // Since we use collectionData, it should be real-time, but let's leave load if needed.
-            // Actually collectionData is observable, so local data should update automatically.
-        }).catch(err => {
-            console.error(err);
-            this.dialog.open(DialogNotificationComponent, {
-                data: {
-                    title: 'Error',
-                    message: 'Ocurrió un error al actualizar.',
-                    type: 'error'
+
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    executeUpdate();
+                } else {
+                    // Reload to revert UI state if needed, or if data is bound via observable it might auto-revert if we didn't touch model locally.
+                    // But let's trigger a load just in case or trust the next emission.
+                    this.loadCasas();
                 }
             });
-        });
+        } else {
+            executeUpdate();
+        }
     }
     asignarVehiculos(casa: BaseModel<CasaApoyoModel>) {
         this.dialog.open(DialogAsignarVehiculoComponent, {

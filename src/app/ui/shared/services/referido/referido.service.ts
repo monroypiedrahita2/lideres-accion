@@ -321,7 +321,6 @@ export class ReferidoService {
 
     // Filtro: solo los que tengan estado == "activo"
     const q = query(colRef, where(condicion, '==', valor));
-    console.log(q);
 
     const snapshot = await getCountFromServer(q);
 

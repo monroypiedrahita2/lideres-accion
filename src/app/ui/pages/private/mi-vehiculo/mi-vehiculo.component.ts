@@ -27,6 +27,7 @@ export class MiVehiculoComponent implements OnInit {
   loading: boolean = false;
   tipoVehiculos: SelectOptionsModel[] = TIPOS_VEHICULOS
   vehiculoId: string = '';
+  currentVehiculo: VehiculoModel | null = null;
   usuario: PerfilModel = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario') || '') : {} as PerfilModel;
 
 
@@ -69,6 +70,7 @@ export class MiVehiculoComponent implements OnInit {
       this.accion = 'Editar';
 
       const vehiculo: VehiculoModel = vehiculos[0];
+      this.currentVehiculo = vehiculo;
       this.vehiculoId = vehiculos[0].id || '';
       this.form.patchValue({
         tipoVehiculo: vehiculo.tipoVehiculo,
@@ -113,7 +115,8 @@ export class MiVehiculoComponent implements OnInit {
       celular: this.form.value.celular,
       placa: `${this.form.value.placaLetras.toUpperCase()}-${this.form.value.placaNumeros.toString().toUpperCase()}`,
       iglesiaId: this.usuario.iglesia || null,
-      aprobado: this.accion === 'Crear' ? false : this.form.value.aprobado
+      aprobado: this.accion === 'Crear' ? false : this.currentVehiculo?.aprobado || false,
+      aprobadoPor: this.accion === 'Crear' ? null : this.currentVehiculo?.aprobadoPor || null
     }
     if (this.accion === 'Crear') {
       this.createVehiculo(vehiculo);

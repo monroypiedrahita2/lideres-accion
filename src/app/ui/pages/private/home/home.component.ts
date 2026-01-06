@@ -82,7 +82,6 @@ export class HomeComponent implements OnInit {
       }
       this.loadPostulacionesInfo();
       this.userPhotoUrl = this.auth.getPhotoUrl();
-      console.log(this.userPhotoUrl, 'foto');
       this.skeleton = false;
     } else {
       this.getusuario(this.auth.uidUser());

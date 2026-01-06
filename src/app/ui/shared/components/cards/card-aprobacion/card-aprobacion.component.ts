@@ -2,11 +2,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { SpinnerComponent } from '../../modules/spinner/spinner.component';
 
 @Component({
     selector: 'app-card-aprobacion',
     standalone: true,
-    imports: [CommonModule, MatIconModule, MatButtonModule,],
+    imports: [CommonModule, MatIconModule, MatButtonModule, SpinnerComponent],
     templateUrl: './card-aprobacion.component.html',
     styleUrls: ['./card-aprobacion.component.scss']
 })
@@ -20,6 +21,7 @@ export class CardAprobacionComponent {
 
     @Input() checked: boolean = false;
     @Input() showAssignAction: boolean = false;
+    @Input() isLoading: boolean = false;
     @Output() checkedChange = new EventEmitter<boolean>();
 
     onCheckboxChange(event: Event): void {

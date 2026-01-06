@@ -61,7 +61,6 @@ export class NavComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('ingresa', result);
       if (result === true) {
         this.auth.logout();
       }

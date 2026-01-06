@@ -8,7 +8,7 @@
                 [subtitle]="casa.data.direccion + ' - ' + casa.data.barrio" [date]="''" [status]="casa.data.municipio"
                 [checked]="!!casa.data.aprobado" [phoneNumber]="casa.data.responsableTelefono || ''"
                 [showAssignAction]="true" (checkedChange)="aprobar(casa, $event)"
-                (onAssignAction)="asignarVehiculos(casa)">
+                (onAssignAction)="asignarVehiculos(casa)" [isLoading]="loadingItems.has(casa.id!)">
             </app-card-aprobacion>
         </div>
     </div>

@@ -89,7 +89,6 @@ export class MiPerfilComponent implements OnInit {
       } catch (error) {
         this.form.get('email')?.enable();
         this.accion = 'Crear';
-        console.log('email auth', this.auth.getEmail());
         this.form.patchValue({
           email: this.auth.getEmail(),
         });

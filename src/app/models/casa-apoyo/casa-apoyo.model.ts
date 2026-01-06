@@ -11,5 +11,6 @@ export interface CasaApoyoModel {
     responsableTelefono: string;
     iglesiaId: string | null;
     aprobado: boolean | null;
+    aprobadoPor: string | null; //email de quien aprobo con authService
 }
 

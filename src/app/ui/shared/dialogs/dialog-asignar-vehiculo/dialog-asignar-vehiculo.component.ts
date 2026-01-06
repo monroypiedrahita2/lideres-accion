@@ -1,5 +1,5 @@
 
-import { Component, Inject, OnInit, inject } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -8,9 +8,9 @@ import { InputTextComponent } from '../../components/atoms/input-text/input-text
 import { ButtonComponent } from '../../components/atoms/button/button.component';
 import { VehiculoService } from '../../services/vehiculo/vehiculo.service';
 import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatButtonModule } from '@angular/material/button'; // Ensure button types are correct
+import { MatButtonModule } from '@angular/material/button';
 import { CasaApoyoService } from '../../services/casa-apoyo/casa-apoyo.service';
 
 @Component({
@@ -28,10 +28,11 @@ import { CasaApoyoService } from '../../services/casa-apoyo/casa-apoyo.service';
     templateUrl: './dialog-asignar-vehiculo.component.html',
     styleUrls: ['./dialog-asignar-vehiculo.component.scss']
 })
-export class DialogAsignarVehiculoComponent implements OnInit {
+export class DialogAsignarVehiculoComponent implements OnInit, OnDestroy {
     vehiculos: VehiculoModel[] = [];
     selectedVehiculos: Set<string> = new Set();
     loading: boolean = true;
+    private subscription: Subscription = new Subscription();
 
     private casaApoyoService = inject(CasaApoyoService);
 
@@ -45,6 +46,10 @@ export class DialogAsignarVehiculoComponent implements OnInit {
         this.loadVehiculos();
     }
 
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+    }
+
     loadVehiculos() {
         if (!this.data.iglesiaId) {
             console.error('No iglesiaId provided');
@@ -52,10 +57,12 @@ export class DialogAsignarVehiculoComponent implements OnInit {
             return;
         }
 
-        this.vehiculoService.getVehiculosByIglesia(this.data.iglesiaId).subscribe({
+        // Use getVehiculosAprobadosByIglesia and filter locally to ensure consistency
+        // This subscription will stay active until the dialog is closed, receiving real-time updates
+        const sub = this.vehiculoService.getVehiculosAprobadosByIglesia(this.data.iglesiaId).subscribe({
             next: (val) => {
-                // Filter: not assigned (no casaApoyoId) AND approved
-                this.vehiculos = val.filter(v => !v.casaApoyoId && v.aprobado === true);
+                // Strict filter: Exclude any vehicle that has a truthy casaApoyoId
+                this.vehiculos = val.filter(v => !v.casaApoyoId);
                 this.loading = false;
             },
             error: (err) => {
@@ -63,6 +70,8 @@ export class DialogAsignarVehiculoComponent implements OnInit {
                 this.loading = false;
             }
         });
+
+        this.subscription.add(sub);
     }
 
     toggleSelection(vehiculoId: string) {
@@ -82,10 +91,6 @@ export class DialogAsignarVehiculoComponent implements OnInit {
             await this.vehiculoService.updateVehiculo(vehiculo.id!, { casaApoyoId: this.data.casaId } as unknown as VehiculoModel);
 
             // 2. Update House: add to vehiculos array
-            // Note: addVehiculoToCasa expects 'any' (the whole vehicle object or partial?)
-            // Usually we store the whole object in array or just ID. 
-            // Existing code pushed the whole object. Let's do that.
-            // But we should probably update checks to ensure no duplication, but we heavily rely on UI state here.
             await this.casaApoyoService.addVehiculoToCasa(this.data.casaId, vehiculo);
         });
 
@@ -94,7 +99,6 @@ export class DialogAsignarVehiculoComponent implements OnInit {
             this.dialogRef.close(selectedList);
         } catch (error) {
             console.error('Error assigning vehicles', error);
-            // Handle error
         } finally {
             this.loading = false;
         }
