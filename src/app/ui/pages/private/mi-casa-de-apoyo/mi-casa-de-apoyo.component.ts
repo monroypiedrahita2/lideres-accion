@@ -39,6 +39,7 @@ export class MiCasaDeApoyoComponent implements OnInit {
     existingCasaId: string | null = null;
     accion: 'Crear' | 'Editar' = 'Crear';
     usuario: PerfilModel = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario') || '') : {} as PerfilModel;
+    existingCasaData: CasaApoyoModel | null = null;
 
     constructor(
         private fb: FormBuilder,
@@ -90,6 +91,7 @@ export class MiCasaDeApoyoComponent implements OnInit {
             if (casas && casas.length > 0) {
                 const casa = casas[0];
                 this.existingCasaId = casa.id || null;
+                this.existingCasaData = casa.data;
                 this.accion = 'Editar';
 
                 // Patch form
@@ -147,8 +149,8 @@ export class MiCasaDeApoyoComponent implements OnInit {
             responsableApellido: this.usuario.apellidos,
             responsableTelefono: this.usuario.celular || '',
             iglesiaId: this.usuario.iglesia || null,
-            aprobado: null,
-            aprobadoPor: null
+            aprobado: (this.accion === 'Editar' && this.existingCasaData) ? this.existingCasaData.aprobado : null,
+            aprobadoPor: (this.accion === 'Editar' && this.existingCasaData) ? this.existingCasaData.aprobadoPor : null
         };
 
         try {

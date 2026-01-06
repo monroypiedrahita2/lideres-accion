@@ -123,10 +123,18 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   loadFormFromLocalStorage(): void {
     const savedData = localStorage.getItem('document_search_draft');
     if (savedData) {
-      const data = JSON.parse(savedData);
-      const currentValue = this.formRef.get('documento')?.value;
-      if (currentValue !== data) {
-        this.formRef.patchValue({ documento: data });
+      try {
+        const data = JSON.parse(savedData);
+        const currentValue = this.formRef.get('documento')?.value;
+        if (currentValue !== data) {
+          this.formRef.patchValue({ documento: data });
+        }
+      } catch (error) {
+        // Fallback for plain strings (e.g. "JUAN") that are not valid JSON
+        const currentValue = this.formRef.get('documento')?.value;
+        if (currentValue !== savedData) {
+          this.formRef.patchValue({ documento: savedData });
+        }
       }
     }
   }
