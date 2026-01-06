@@ -8,7 +8,7 @@ export interface PerfilModel {
   email: string;
   rol: string | null; // solo lo puede administrar el Pastor y Super Usuario
   postulado?: PostuladoModel; // solo lo puede Crear administrar y eliminar el mismo usuario
-  coordinadorCasaApoyo?: string | null;  // solo lo puede Crear administrar y eliminar el Pastor
+  coordinadorCasaApoyo?: boolean | null;  // solo lo puede Crear administrar y eliminar el Pastor
   coordinadorTransporte?: boolean | null; // solo lo puede Crear administrar y eliminar el Pastor
   coordinadorTestigos?: boolean | null; // solo lo puede Crear administrar y eliminar el Pastor
 }

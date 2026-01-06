@@ -15,6 +15,10 @@
           <div class="relative flex justify-center items-center">
             <mg-input-text class="w-full" type="text" formControlName="usuario" id="user"
               label="Correo electrónico"></mg-input-text>
+            <button *ngIf="form.get('usuario')?.value" type="button" (click)="clear()"
+              class="absolute right-2 text-gray-400 hover:text-gray-600">
+              <mat-icon>close</mat-icon>
+            </button>
           </div>
 
           <div class="flex justify-center items-center gap-3">
@@ -106,7 +110,8 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <lida-person-card *ngFor="let user of usuarios" [person]="user"
-        [showDeleteAction]="user.rol !== 'Sin rol asignado'" (deleteClicked)="deleteRol(user.id!)"></lida-person-card>
+        [showDeleteAction]="user.rol !== 'Sin rol asignado'" [showEditAction]="true"
+        (deleteClicked)="deleteRol(user.id!)" (editClicked)="gestionarRol(user)"></lida-person-card>
     </div>
 
     <div *ngIf="usuarios.length === 0"

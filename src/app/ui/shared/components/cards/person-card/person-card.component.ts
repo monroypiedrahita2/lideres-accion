@@ -12,9 +12,15 @@ import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 export class PersonCardComponent {
   @Input({ required: true }) person!: PerfilModel;
   @Input() showDeleteAction: boolean = false;
+  @Input() showEditAction: boolean = false;
   @Output() deleteClicked = new EventEmitter<void>();
+  @Output() editClicked = new EventEmitter<void>();
 
   onDelete() {
     this.deleteClicked.emit();
+  }
+
+  onEdit() {
+    this.editClicked.emit();
   }
 }

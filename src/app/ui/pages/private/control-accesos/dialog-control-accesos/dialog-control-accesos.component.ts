@@ -25,7 +25,14 @@ import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 })
 export class DialogControlAccesosComponent implements OnInit {
     roles = LIST_ROLES;
-    selectedRole: string = '';
+
+    // State for each role
+    roleStates: { [key: string]: boolean } = {
+        'Coordinador de iglesia': false,
+        'Coordinador de testigos': false,
+        'Coordinador de transporte': false,
+        'Coordinador de casa de apoyo': false,
+    };
 
     constructor(
         public dialogRef: MatDialogRef<DialogControlAccesosComponent>,
@@ -33,24 +40,68 @@ export class DialogControlAccesosComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        if (this.data.rol && this.data.rol !== 'Sin rol asignado') {
-            const found = this.roles.find(r => r.value === this.data.rol);
-            if (found) {
-                this.selectedRole = found.value;
+        this.initializeRoles();
+    }
+
+    initializeRoles() {
+        // Initialize based on user data
+        if (this.data.rol === 'Coordinador de iglesia') {
+            this.roleStates['Coordinador de iglesia'] = true;
+        }
+
+        if (this.data.coordinadorTransporte) {
+            this.roleStates['Coordinador de transporte'] = true;
+            this.roleStates['Coordinador de iglesia'] = true; // Enforce dependency
+        }
+
+        if (this.data.coordinadorTestigos) {
+            this.roleStates['Coordinador de testigos'] = true;
+            this.roleStates['Coordinador de iglesia'] = true; // Enforce dependency
+        }
+
+        if (this.data.coordinadorCasaApoyo) {
+            this.roleStates['Coordinador de casa de apoyo'] = true;
+            this.roleStates['Coordinador de iglesia'] = true; // Enforce dependency
+        }
+    }
+
+    isSelected(roleValue: string): boolean {
+        return this.roleStates[roleValue] || false;
+    }
+
+    toggleRole(roleValue: string) {
+        const newState = !this.roleStates[roleValue];
+        this.roleStates[roleValue] = newState;
+
+        // Logic:
+        // "El pastor puede elegir Coordinador de iglesia y ya, que son permisos basicos"
+        // "pero si escoge alguno de los demas tambien si o si debe seleccionar coordindor de iglesia"
+
+        if (roleValue === 'Coordinador de iglesia') {
+            if (!newState) {
+                // If unchecking "Coordinador de iglesia", uncheck everything else
+                this.roleStates['Coordinador de testigos'] = false;
+                this.roleStates['Coordinador de transporte'] = false;
+                this.roleStates['Coordinador de casa de apoyo'] = false;
+            }
+        } else {
+            // If checking any other role, ensure "Coordinador de iglesia" is checked
+            if (newState) {
+                this.roleStates['Coordinador de iglesia'] = true;
             }
         }
     }
 
-    toggleRole(roleValue: string) {
-        if (this.selectedRole === roleValue) {
-            this.selectedRole = '';
-        } else {
-            this.selectedRole = roleValue;
-        }
-    }
-
     confirm() {
-        this.dialogRef.close(this.selectedRole);
+        // Prepare the result object
+        const result = {
+            rol: this.roleStates['Coordinador de iglesia'] ? 'Coordinador de iglesia' : null,
+            coordinadorTransporte: this.roleStates['Coordinador de transporte'],
+            coordinadorTestigos: this.roleStates['Coordinador de testigos'],
+            coordinadorCasaApoyo: this.roleStates['Coordinador de casa de apoyo']
+        };
+
+        this.dialogRef.close(result);
     }
 
     close() {

@@ -9,7 +9,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogCasasApoyoComponent } from '../../../shared/dialogs/dialog-casas-apoyo/dialog-casas-apoyo.component';
 import { DialogOpcionesVehicularComponent } from '../../../shared/dialogs/dialog-opciones-vehicular/dialog-opciones-vehicular.component';
 import { DialogTestigosComponent } from '../../../shared/dialogs/dialog-opciones-testigos/dialog-testigos.component';
-import { PerfilModel, PostuladoModel } from '../../../../models/perfil/perfil.model';
+import { PerfilModel } from '../../../../models/perfil/perfil.model';
 
 @Component({
   selector: 'app-settings',
