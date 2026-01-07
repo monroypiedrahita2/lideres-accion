@@ -11,6 +11,7 @@ export interface PerfilModel {
   coordinadorCasaApoyo?: boolean | null;  // solo lo puede Crear administrar y eliminar el Pastor
   coordinadorTransporte?: boolean | null; // solo lo puede Crear administrar y eliminar el Pastor
   coordinadorTestigos?: boolean | null; // solo lo puede Crear administrar y eliminar el Pastor
+  noCuenta: string; // dato random alfanumerico de 6 caracteres no editable
 }
 
 export interface AsigmentRolePerfilModel {

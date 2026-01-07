@@ -178,6 +178,7 @@ export class MiPerfilComponent implements OnInit {
         transporte: rawValue.transporte,
         testigo: rawValue.testigo,
       },
+      noCuenta: this.usuario.noCuenta,
     };
 
     this.loading = true;

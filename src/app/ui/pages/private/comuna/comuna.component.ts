@@ -78,7 +78,7 @@ export class ComunaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.user.rol !== 'Super Usuario') {
+    if (this.user.rol !== 'Super usuario') {
       this.toast.error('No tienes permisos para crear comunas');
       this.location.back();
       return;

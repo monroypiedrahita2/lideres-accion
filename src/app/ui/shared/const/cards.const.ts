@@ -38,7 +38,7 @@ export const CARDS_HOME: CardModel[] = [
   },
   {
     goTo: '/private/masivo-referidos',
-    title: 'Carga masiva',
+    title: 'Carga masiva referidos',
     description: 'Carga masiva de referidos a través de un archivo Excel',
     icon: 'upload_file',
     showIf: ['Super usuario', 'Pastor'],

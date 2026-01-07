@@ -91,7 +91,7 @@ export class EnviarResultadosVotacionComponent {
 
         } catch (error) {
             console.error('Error fetching witness:', error);
-            this.showNotification('error', 'Error', 'Error al verificar la información del testigo.');
+            this.showNotification('error', 'Error', 'Actualmente no estas aprobado como testigo.');
         } finally {
             this.loading = false;
         }
