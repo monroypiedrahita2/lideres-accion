@@ -4,38 +4,14 @@
 </div>
 
 <form [formGroup]="form">
-  <mg-container-grid
-    (onSubmit)="onSubmit()"
-    [loading]="loading"
-    [disabled]="form.invalid"
-  >
-    <mg-input-select
-      label="Departamento"
-      [items]="departamentos"
-      formControlName="departamento"
-      id="departamento"
-    >
+  <mg-container-grid (onSubmit)="onSubmit()" [loading]="loading" [disabled]="form.invalid">
+    <mg-input-select label="Departamento" [items]="departamentos" formControlName="departamento" id="departamento">
     </mg-input-select>
-    <mg-input-select
-      label="Municipio"
-      [items]="municipios"
-      formControlName="municipio"
-      id="municipio"
-    >
+    <mg-input-select label="Municipio" [items]="municipios" formControlName="municipio" id="municipio">
     </mg-input-select>
-    <mg-input-text
-      type="text"
-      formControlName="nombre"
-      label="Nombre de la iglesia"
-      id="name"
-    ></mg-input-text>
-    <mg-input-select
-      type="text"
-      formControlName="horario"
-      label="horario del culto"
-      id="horario"
-      [items]="horarios"
-    ></mg-input-select>
+    <mg-input-text type="text" formControlName="nombre" label="Nombre de la iglesia" id="name"></mg-input-text>
+    <mg-input-select type="text" formControlName="horario" label="horario del culto" id="horario"
+      [items]="horarios"></mg-input-select>
   </mg-container-grid>
 </form>
 
@@ -43,17 +19,20 @@
   <mg-sub-title title="Lista de iglesias"></mg-sub-title>
 </div>
 
-<div class="font-primary text-lg">
-  Total registros: {{ data.length }} iglesias
+<div class="flex justify-between items-center mt-4">
+  <div class="font-primary text-lg">
+    Total registros: {{ length }} iglesias
+  </div>
+  <div class="w-1/3">
+    <mg-input-text [formControl]="searchControl" label="Buscar iglesia"
+      placeholder="Buscar por nombre, departamento o municipio" id="search-iglesia"></mg-input-text>
+  </div>
 </div>
-<div *ngIf="data.length > 0" class="relative overflow-x-auto mt-10">
+
+<div *ngIf="paginatedData.length > 0; else noData" class="relative overflow-x-auto mt-4">
   <div>
-    <table
-      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-    >
-      <thead
-        class="text-sm text-white uppercase bg-primary dark:bg-primary dark:text-gray-400 font-primary"
-      >
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead class="text-sm text-white uppercase bg-primary dark:bg-primary dark:text-gray-400 font-primary">
         <tr>
           <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
             Departamento
@@ -73,14 +52,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let iglesia of data"
-          class="bg-white border-b dark:bg-base dark:border-gray-700 border-gray-200 hover:bg-gray-300"
-        >
-          <th
-            scope="row"
-            class="px-6 py-4 font-medium whitespace-nowrap text-black text-center"
-          >
+        <tr *ngFor="let iglesia of paginatedData"
+          class="bg-white border-b dark:bg-base dark:border-gray-700 border-gray-200 hover:bg-gray-300">
+          <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap text-black text-center">
             {{ iglesia.data.departamento.split("-")[1] }}
           </th>
           <td class="px-6 py-4 text-center whitespace-nowrap text-black">
@@ -94,13 +68,26 @@
           </td>
           <td class="px-6 py-4 text-center whitespace-nowrap text-black">
             <div class="flex justify-center gap-4">
-              <span class="material-icons text-primary hover:cursor-pointer" (click)="editarIglesia(iglesia)" (keydown)="editarIglesia(iglesia)">edit</span>
+              <span class="material-icons text-primary hover:cursor-pointer" (click)="editarIglesia(iglesia)"
+                (keydown)="editarIglesia(iglesia)">edit</span>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
+    <mg-paginator [length]="length" [pageSize]="pageSize" [pageIndex]="pageIndex" [pageSizeOptions]="pageSizeOptions"
+      [showPageSizeOptions]="true" (page)="onPageChange($event)">
+    </mg-paginator>
   </div>
 </div>
+
+<ng-template #noData>
+  <div *ngIf="!spinner && iglesias.length > 0" class="text-center mt-4 text-gray-500">
+    No se encontraron iglesias con el criterio de búsqueda.
+  </div>
+  <div *ngIf="!spinner && iglesias.length === 0" class="text-center mt-4 text-gray-500">
+    No hay iglesias registradas.
+  </div>
+</ng-template>
 
 <app-spinner [showSpinner]="spinner"></app-spinner>

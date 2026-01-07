@@ -2,10 +2,12 @@ import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MgPaginatorComponent, PageEvent } from '../../../shared/components/modules/paginator/paginator.component';
 import { ContainerGridComponent } from '../../../shared/components/atoms/container-grid/container-grid.component';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { LugaresService } from '../../../shared/services/lugares/lugares.service';
@@ -38,13 +40,15 @@ import { DialogEditarIglesiaComponent } from '../../../shared/dialogs/dialog-edi
     TitleComponent,
     SpinnerComponent,
     SubTitleComponent,
-    MatDialogModule
+    MatDialogModule,
+    MgPaginatorComponent
   ],
   providers: [LugaresService, IglesiaService],
   templateUrl: './crear-iglesia.component.html',
 })
 export class CrearIglesiaComponent implements OnInit {
   form!: FormGroup;
+  searchControl = new FormControl('');
   departamentos: SelectOptionModel<string>[] = [];
   municipios: SelectOptionModel<string>[] = [];
   iglesia!: BaseModel<IglesiaModel>;
@@ -52,7 +56,16 @@ export class CrearIglesiaComponent implements OnInit {
   loading: boolean = false;
   spinner: boolean = true;
   iglesias: BaseModel<IglesiaModel>[] = [];
-  data: BaseModel<IglesiaModel>[] = [];
+
+  // Pagination and Search
+  filteredData: BaseModel<IglesiaModel>[] = [];
+  paginatedData: BaseModel<IglesiaModel>[] = [];
+  pageIndex: number = 0;
+  pageSize: number = 5;
+  length: number = 0;
+  pageSizeOptions: number[] = [5, 10, 20, 50];
+
+
   horarios: SelectOptionModel<string>[] = [
     { value: 'Externo', label: 'Externo' },
     { value: '7:00 AM', label: '7:00 AM' },
@@ -81,6 +94,7 @@ export class CrearIglesiaComponent implements OnInit {
   ngOnInit(): void {
     this.getDepartamentos();
     this.getIglesias();
+    this.setupSearch();
     this.form.get('municipio')?.disable();
     this.form.get('departamento')?.valueChanges.subscribe((departamento) => {
       if (departamento) {
@@ -94,7 +108,44 @@ export class CrearIglesiaComponent implements OnInit {
     });
   }
 
+  setupSearch() {
+    this.searchControl.valueChanges.subscribe((value) => {
+      this.filterData(value || '');
+    });
+  }
 
+  filterData(query: string) {
+    if (!query) {
+      this.filteredData = [...this.iglesias];
+    } else {
+      const lowerQuery = query.toLowerCase();
+      this.filteredData = this.iglesias.filter((iglesia) => {
+        const nombre = iglesia.data.nombre.toLowerCase();
+        const departamento = iglesia.data.departamento.split('-')[1]?.toLowerCase() || '';
+        const municipio = iglesia.data.municipio.split('-')[1]?.toLowerCase() || '';
+        return (
+          nombre.includes(lowerQuery) ||
+          departamento.includes(lowerQuery) ||
+          municipio.includes(lowerQuery)
+        );
+      });
+    }
+    this.length = this.filteredData.length;
+    this.pageIndex = 0; // Reset to first page on search
+    this.updatePaginatedData();
+  }
+
+  updatePaginatedData() {
+    const start = this.pageIndex * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedData = this.filteredData.slice(start, end);
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePaginatedData();
+  }
 
   editarIglesia(iglesia: BaseModel<IglesiaModel>) {
     const dialogRef = this.dialog.open(DialogEditarIglesiaComponent, {
@@ -174,7 +225,14 @@ export class CrearIglesiaComponent implements OnInit {
       next: (iglesias) => {
         this.iglesias = iglesias;
         this.spinner = false;
-        this.data = [...this.iglesias];
+        // Search & Pagination Init
+        this.filteredData = [...this.iglesias];
+        this.length = this.filteredData.length;
+        this.updatePaginatedData();
+        // Re-apply search if it exists
+        if (this.searchControl.value) {
+          this.filterData(this.searchControl.value);
+        }
       },
       error: (error) => {
         console.error(error);
@@ -182,9 +240,5 @@ export class CrearIglesiaComponent implements OnInit {
         this.spinner = false;
       },
     });
-  }
-
-  onSearch(data: BaseModel<IglesiaModel>[]) {
-    this.data = data;
   }
 }
