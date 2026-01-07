@@ -178,7 +178,7 @@ export class MiPerfilComponent implements OnInit {
         transporte: rawValue.transporte,
         testigo: rawValue.testigo,
       },
-      noCuenta: this.usuario.noCuenta,
+      noCuenta: this.usuario.noCuenta || this.generateNoCuenta(),
     };
 
     this.loading = true;
@@ -198,6 +198,16 @@ export class MiPerfilComponent implements OnInit {
     } finally {
       this.loading = false;
     }
+  }
+
+  generateNoCuenta(): string {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < 6; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   }
 
   async updateUser(data: any) {

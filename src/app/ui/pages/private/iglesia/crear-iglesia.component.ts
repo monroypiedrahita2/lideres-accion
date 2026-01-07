@@ -21,6 +21,8 @@ import { BaseModel } from '../../../../models/base/base.model';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { SpinnerComponent } from '../../../shared/components/modules/spinner/spinner.component';
 import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/sub-title.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DialogEditarIglesiaComponent } from '../../../shared/dialogs/dialog-editar-iglesia/dialog-editar-iglesia.component';
 
 
 @Component({
@@ -36,6 +38,7 @@ import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/su
     TitleComponent,
     SpinnerComponent,
     SubTitleComponent,
+    MatDialogModule
   ],
   providers: [LugaresService, IglesiaService],
   templateUrl: './crear-iglesia.component.html',
@@ -61,10 +64,11 @@ export class CrearIglesiaComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly lugarService: LugaresService,
-    private readonly toast: ToastrService,
+    private readonly toastr: ToastrService,
     private readonly location: Location,
     private readonly auth: AuthService,
     private readonly iglesiaService: IglesiaService,
+    private readonly dialog: MatDialog
   ) {
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.pattern(/^[^-]*$/)]],
@@ -93,11 +97,15 @@ export class CrearIglesiaComponent implements OnInit {
 
 
   editarIglesia(iglesia: BaseModel<IglesiaModel>) {
-    this.form.patchValue({
-      nombre: iglesia.data.nombre.split(' - ')[0],
-      departamento: iglesia.data.departamento,
-      municipio: iglesia.data.municipio,
-      horario: iglesia.data.nombre.split(' - ')[1],
+    const dialogRef = this.dialog.open(DialogEditarIglesiaComponent, {
+      width: '600px',
+      data: iglesia
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getIglesias();
+      }
     });
   }
 
@@ -111,7 +119,7 @@ export class CrearIglesiaComponent implements OnInit {
         value: item.id + '-' + item.name,
       }));
     } catch {
-      this.toast.error('Error al cargar los departamentos');
+      this.toastr.error('Error al cargar los departamentos');
       this.location.back();
     }
   }
@@ -129,7 +137,7 @@ export class CrearIglesiaComponent implements OnInit {
         value: item.id + '-' + item.name,
       }));
     } catch {
-      this.toast.error('Error al cargar los municipios');
+      this.toastr.error('Error al cargar los municipios');
       this.location.back();
     }
   }
@@ -146,16 +154,17 @@ export class CrearIglesiaComponent implements OnInit {
         fechaCreacion: new Date().toISOString(),
         creadoPor: this.auth.uidUser(),
       };
-      const response =await this.iglesiaService.createIglesia(this.iglesia);
-      this.toast.success('Iglesia creada correctamente');
+      const response = await this.iglesiaService.createIglesia(this.iglesia);
+      this.toastr.success('Iglesia creada correctamente');
       this.loading = false;
+      this.getIglesias(); // Refresh list after creation
       this.form.patchValue({
         nombre: '',
         horario: '',
       });
     } catch (error) {
       console.error(error);
-      this.toast.error('Error al crear la iglesia. Intente nuevamente.');
+      this.toastr.error('Error al crear la iglesia. Intente nuevamente.');
       this.loading = false;
     }
   }
@@ -169,7 +178,7 @@ export class CrearIglesiaComponent implements OnInit {
       },
       error: (error) => {
         console.error(error);
-        this.toast.error('Error al cargar las iglesias');
+        this.toastr.error('Error al cargar las iglesias');
         this.spinner = false;
       },
     });

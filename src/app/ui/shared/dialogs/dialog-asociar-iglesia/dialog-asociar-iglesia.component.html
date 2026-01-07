@@ -11,12 +11,12 @@
 <mat-dialog-content class="w-full">
   <div class="flex flex-col gap-4 mt-4 w-full">
     <p class="text-center font-primary text-gray-600 text-lg leading-relaxed">
-      Ingresa el correo electrónico del perfil que deseas asociar a tu iglesia.
+      Ingresa el número de cuenta del perfil que deseas asociar a tu iglesia.
     </p>
 
     <div class="flex gap-2 items-center w-full">
-      <mg-input-text class="w-full" label="Correo Electrónico" [formControl]="emailControl"
-        placeholder="Digite el correo" type="email">
+      <mg-input-text class="w-full" label="Número de Cuenta" [formControl]="emailControl" placeholder="Digite el código"
+        type="text">
       </mg-input-text>
       <div class="mb-4">
         <button *ngIf="!perfilEncontrado" mat-mini-fab color="primary" (click)="buscarPerfil()"

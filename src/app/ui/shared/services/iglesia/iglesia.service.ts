@@ -30,16 +30,21 @@ export class IglesiaService {
     return response;
   }
 
-getMyIglesia(id: string): Promise<any> {
-  const docRef = doc(this.firestore, this._collection, id);
-  return getDoc(docRef).then((docSnap) => {
-    if (docSnap.exists()) {
-      return docSnap.data() as any;
-    } else {
-      throw new Error('No existe o es nuevo');
-    }
-  });
-}
+  getMyIglesia(id: string): Promise<any> {
+    const docRef = doc(this.firestore, this._collection, id);
+    return getDoc(docRef).then((docSnap) => {
+      if (docSnap.exists()) {
+        return docSnap.data() as any;
+      } else {
+        throw new Error('No existe o es nuevo');
+      }
+    });
+  }
 
-
+  updateIglesia(id: string, iglesia: BaseModel<IglesiaModel>) {
+    const docRef = doc(this.firestore, this._collection, id);
+    return import('@angular/fire/firestore').then(({ updateDoc }) => {
+      return updateDoc(docRef, { ...iglesia });
+    });
+  }
 }

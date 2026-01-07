@@ -56,6 +56,15 @@ export const routes: Routes = [
         loadComponent: () => import('./masivo-referidos/masivo-referidos.component').then(m => m.MasivoReferidosComponent),
       },
       {
+        path: 'masivo-comunas',
+        loadComponent: () => import('./masivo-comunas/masivo-comunas.component').then(m => m.MasivoComunasComponent),
+      },
+      {
+        path: 'masivo-puestos-votacion',
+        loadComponent: () => import('./masivo-puestos-votacion/masivo-puestos-votacion.component').then(m => m.MasivoPuestosVotacionComponent),
+      },
+
+      {
         path: 'activar-testigo',
         loadComponent: () => import('./testigos/activar-testigo/activar-testigo.component').then(m => m.ActivarTestigoComponent),
       },

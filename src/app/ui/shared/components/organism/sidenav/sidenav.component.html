@@ -11,6 +11,9 @@
                 <span class="font-bold text-lg tracking-wide">Menú</span>
                 <span class="text-xs opacity-90 font-light truncate max-w-[200px]"
                     *ngIf="usuario">{{usuario.email}}</span>
+                <span
+                    class="text-xs opacity-90 font-light truncate max-w-[200px] mt-1 font-mono bg-white/10 px-2 py-0.5 rounded"
+                    *ngIf="usuario?.noCuenta">ID: {{usuario.noCuenta}}</span>
             </div>
             <button class="hover:bg-white/20 rounded-full p-1 transition-colors" (click)="close.emit()">
                 <mat-icon>close</mat-icon>

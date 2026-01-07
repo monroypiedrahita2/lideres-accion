@@ -1,0 +1,31 @@
+<div class="flex flex-col items-center justify-center pt-8 px-6 relative">
+    <button mat-icon-button (click)="onNoClick()" class="!absolute top-2 right-2 text-gray-500">
+        <mat-icon>close</mat-icon>
+    </button>
+    <div class="bg-blue-100 rounded-full p-5 mb-4 flex items-center justify-center">
+        <mat-icon class="text-blue-600 !w-12 !h-12 !text-[48px] flex items-center justify-center">church</mat-icon>
+    </div>
+    <span class="text-blue-600 font-bold text-center text-2xl uppercase tracking-wide">Editar Iglesia</span>
+</div>
+
+<mat-dialog-content class="w-full">
+    <form [formGroup]="form" class="flex flex-col gap-4 mt-4 px-2">
+
+        <mg-input-select label="Departamento" [items]="departamentos" formControlName="departamento" id="departamento">
+        </mg-input-select>
+
+        <mg-input-select label="Municipio" [items]="municipios" formControlName="municipio" id="municipio">
+        </mg-input-select>
+
+        <mg-input-text type="text" formControlName="nombre" label="Nombre de la iglesia" id="nombre"></mg-input-text>
+
+        <mg-input-select type="text" formControlName="horario" label="Horario del culto" id="horario"
+            [items]="horarios"></mg-input-select>
+
+    </form>
+</mat-dialog-content>
+
+<div class="w-full flex gap-4 p-4">
+    <mg-button size="big" text="Actualizar" class="w-full" (onClick)="onSubmit()" [loading]="loading"
+        [disabled]="form.invalid || loading"></mg-button>
+</div>

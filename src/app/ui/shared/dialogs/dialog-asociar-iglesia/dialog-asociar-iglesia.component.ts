@@ -28,7 +28,7 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
     templateUrl: './dialog-asociar-iglesia.component.html',
 })
 export class DialogAsociarIglesiaComponent {
-    emailControl = new FormControl('', [Validators.required, Validators.email]);
+    emailControl = new FormControl('', [Validators.required]);
     perfilEncontrado: PerfilModel | null = null;
     usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
 
@@ -41,8 +41,10 @@ export class DialogAsociarIglesiaComponent {
     buscarPerfil() {
         if (this.emailControl.invalid) return;
 
-        const email = this.emailControl.value!;
-        this.perfilService.getPerfilByEmail(email).subscribe((perfiles) => {
+        const noCuenta = this.emailControl.value!.toUpperCase();
+        this.emailControl.setValue(noCuenta);
+
+        this.perfilService.getPerfilByNoCuenta(noCuenta).subscribe((perfiles) => {
             if (perfiles && perfiles.length > 0) {
                 this.perfilEncontrado = perfiles[0];
                 this.emailControl.disable();

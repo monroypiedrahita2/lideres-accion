@@ -36,6 +36,7 @@ export const CARDS_HOME: CardModel[] = [
     icon: 'location_city',
     showIf: ['Super usuario'],
   },
+
   {
     goTo: '/private/masivo-referidos',
     title: 'Carga masiva referidos',
@@ -43,6 +44,21 @@ export const CARDS_HOME: CardModel[] = [
     icon: 'upload_file',
     showIf: ['Super usuario', 'Pastor'],
   },
+  {
+    goTo: '/private/masivo-comunas',
+    title: 'Carga masiva comunas',
+    description: 'Carga masiva de comunas y barrios',
+    icon: 'upload_file',
+    showIf: ['Super usuario'],
+  },
+  {
+    goTo: '/private/masivo-puestos-votacion',
+    title: 'Carga masiva puestos',
+    description: 'Carga masiva de puestos de votación',
+    icon: 'upload_file',
+    showIf: ['Super usuario'],
+  },
+
   {
     goTo: '/private/listar-voluntarios',
     title: 'Voluntarios Iglesia',

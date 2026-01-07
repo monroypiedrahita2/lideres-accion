@@ -14,7 +14,7 @@
         <form [formGroup]="form" class="flex flex-col gap-4">
           <div class="relative flex justify-center items-center">
             <mg-input-text class="w-full" type="text" formControlName="usuario" id="user"
-              label="Correo electrónico"></mg-input-text>
+              label="Número de Cuenta"></mg-input-text>
             <button *ngIf="form.get('usuario')?.value" type="button" (click)="clear()"
               class="absolute right-2 text-gray-400 hover:text-gray-600">
               <mat-icon>close</mat-icon>

@@ -53,6 +53,12 @@ export class PerfilService {
     return response;
   }
 
+  getPerfilByNoCuenta(value: string) {
+    const q = query(collection(this.firestore, this._collection), where('noCuenta', '==', value));
+    const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
+    return response;
+  }
+
   getPerfiles(): Observable<PerfilModel[]> {
     const _collection = collection(this.firestore, this._collection);
     return collectionData(_collection, { idField: 'id' }) as Observable<any>;
