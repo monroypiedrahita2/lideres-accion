@@ -14,6 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
+import { UserPhotoComponent } from '../../../shared/components/atoms/user-photo/user-photo.component';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -32,6 +33,7 @@ import { firstValueFrom } from 'rxjs';
     TitleComponent,
     ReactiveFormsModule,
     ButtonComponent,
+    UserPhotoComponent,
   ],
 })
 export class MiPerfilComponent implements OnInit {
@@ -43,6 +45,7 @@ export class MiPerfilComponent implements OnInit {
   accion: 'Crear' | 'Editar' = 'Crear';
   enableSkeleton: boolean = true;
   emailEnabled: boolean = true;
+  foto: string | null = null;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -75,6 +78,7 @@ export class MiPerfilComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.foto = this.auth.getFoto();
     (async () => {
       try {
         this.user = await this.perfilService.getMiPerfil(this.auth.uidUser());
@@ -161,10 +165,27 @@ export class MiPerfilComponent implements OnInit {
     }
   }
 
+  async removePhoto() {
+    const dialogRef = this.dialog.open(DialogNotificationComponent, {
+      data: {
+        title: 'Atención',
+        message: '¿Está seguro de eliminar su foto de perfil?',
+        bottons: 'two',
+        type: 'warning',
+      },
+    });
+
+    const result = await firstValueFrom(dialogRef.afterClosed());
+
+    if (result) {
+      this.foto = null;
+    }
+  }
+
   async onSubmit() {
     const rawValue = this.form.getRawValue();
     const user: PerfilModel = {
-
+      foto: this.foto || undefined,
       nombres: rawValue.nombres,
       apellidos: rawValue.apellidos,
       celular: rawValue.celular,
@@ -179,7 +200,28 @@ export class MiPerfilComponent implements OnInit {
         testigo: rawValue.testigo,
       },
       noCuenta: this.usuario.noCuenta || this.generateNoCuenta(),
+      apruebaUsodeDatos: this.usuario.apruebaUsodeDatos || false,
     };
+
+
+    if (this.accion == 'Crear') {
+      const dialogRef = this.dialog.open(DialogNotificationComponent, {
+        data: {
+          title: 'Autorización de Datos',
+          message:
+            'Autorizo de manera voluntaria, previa, explícita, informada e inequívoca el tratamiento de mis datos personales para la recolección, almacenamiento, uso, circulación y supresión de los mismos, conforme a la Ley Estatutaria 1581 de 2012 y sus decretos reglamentarios.',
+          bottons: 'two',
+          type: 'info',
+        },
+      });
+
+      const result = await firstValueFrom(dialogRef.afterClosed());
+      if (!result) {
+        this.toast.info('No se guardo la información, se canceló.');
+        return;
+      }
+      user.apruebaUsodeDatos = true;
+    }
 
     this.loading = true;
 

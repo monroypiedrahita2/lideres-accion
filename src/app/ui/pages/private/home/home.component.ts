@@ -1,7 +1,8 @@
 import { IglesiaService } from '../../../shared/services/iglesia/iglesia.service';
 import { IglesiaModel } from './../../../../models/iglesia/iglesia.model';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
 import { CommonModule } from '@angular/common';
 import { NAME_LONG_APP } from '../../../shared/const/name-app.const';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
@@ -28,7 +29,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatIconModule,
     MatDialogModule,
     ContainerAlertInformationComponent,
-    MatExpansionModule
+    ContainerAlertInformationComponent,
+    MatExpansionModule,
+    ButtonComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
@@ -66,7 +69,8 @@ export class HomeComponent implements OnInit {
     public dialog: MatDialog,
     private readonly vehiculoService: VehiculoService,
     private readonly casaApoyoService: CasaApoyoService,
-    private readonly testigoService: TestigoService
+    private readonly testigoService: TestigoService,
+    private readonly router: Router
   ) { }
 
   ngOnInit(): void {
@@ -269,5 +273,9 @@ export class HomeComponent implements OnInit {
       case 'En carrera': return 'bg-blue-100 text-blue-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  }
+
+  goToResultados() {
+    this.router.navigate(['/private/enviar-resultados-votacion']);
   }
 }

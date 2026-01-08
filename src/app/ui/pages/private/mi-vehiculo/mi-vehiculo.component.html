@@ -1,14 +1,18 @@
 <mg-sub-title title="Mi vehiculo"></mg-sub-title>
+<div class="flex justify-center items-center gap-4 mb-4">
+  <mg-user-photo [photoUrl]="usuario.foto"></mg-user-photo>
+   <div class="flex justify-center items-center">
+    <span
+      class="font-primary font-semibold text-center text-lg bg-yellow-500 border-2 rounded-lg px-1 mb-1 border-black">{{
+      (form.get('placaLetras')?.value || '').toUpperCase() }} - {{ form.get('placaNumeros')?.value }}</span>
+  </div>
+</div>
 
 <mg-skeleton [enableSkeleton]="skeleton" [num]="5"></mg-skeleton>
 
 @if (!skeleton) {
 <form [formGroup]="form" class="w-full">
-  <div class="w-full flex justify-center items-center">
-    <span
-      class="font-primary font-semibold text-center text-lg bg-yellow-500 border-2 rounded-lg px-1 mb-1 border-black">{{
-      (form.get('placaLetras')?.value || '').toUpperCase() }} - {{ form.get('placaNumeros')?.value }}</span>
-  </div>
+ 
 
   <mg-input-text class="w-full" type="text" formControlName="placaLetras" id="placaLetras" label="Letras de la placa"
     [textError]="form.get('placaLetras')?.hasError('pattern') ? 'Solo puedes digitar letras mayúsculas (A-Z), máximo 3' : form.get('placaLetras')?.hasError('maxlength') ? 'Máximo 3 letras' : ''"></mg-input-text>

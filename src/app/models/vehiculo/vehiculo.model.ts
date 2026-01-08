@@ -15,5 +15,6 @@ export interface VehiculoModel {
   casaApoyoId?: string | null;
   estado?: 'Activo' | 'Inactivo' | 'En carrera';
   aprobadoPor: string | null; //email de quien aprobo con authService
+  foto?: string | null; // foto se toma de authService de foto       
 
 }

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { SpinnerComponent } from '../../modules/spinner/spinner.component';
+import { UserPhotoComponent } from '../../atoms/user-photo/user-photo.component';
 
 @Component({
     selector: 'app-card-aprobacion',
     standalone: true,
-    imports: [CommonModule, MatIconModule, MatButtonModule, SpinnerComponent],
+    imports: [CommonModule, MatIconModule, MatButtonModule, SpinnerComponent, UserPhotoComponent],
     templateUrl: './card-aprobacion.component.html',
     styleUrls: ['./card-aprobacion.component.scss']
 })
@@ -17,6 +18,7 @@ export class CardAprobacionComponent {
     @Input() date: string = '';
     @Input() status: string = '';
     @Input() phoneNumber: string = '';
+    @Input() photoUrl: string | null | undefined;
 
 
     @Input() checked: boolean = false;

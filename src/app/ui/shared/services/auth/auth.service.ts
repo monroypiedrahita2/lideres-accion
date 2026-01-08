@@ -77,4 +77,8 @@ export class AuthService {
   getPhotoUrl(): string | null {
     return this.getAuth().currentUser?.photoURL ?? null;
   }
+
+  getFoto(): string | null {
+    return this.getAuth().currentUser?.photoURL ?? null;
+  }
 }

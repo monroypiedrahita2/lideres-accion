@@ -5,4 +5,5 @@ export interface TestigoModel {
     celular: string;
     puestodevotacion: string;
     mesadevotacion: string;
+    foto?: string | null; // foto se toma de authService de foto       
 }

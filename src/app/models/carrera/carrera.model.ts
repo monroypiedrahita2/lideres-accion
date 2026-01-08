@@ -1,6 +1,7 @@
+
 export interface CreateCarreraModel {
     id?: string; // el id se genera automaticamente
-    casaApoyoId: string;
+    casa: CasaApoyoCarreraModel;
     cantidadPersonas: number;
     tipoVehiculo: string;
     hora?: string;
@@ -12,5 +13,20 @@ export interface CreateCarreraModel {
     telefonoInformacion: string;
     tiempoRecogida: string;
 }
+
+
+export interface CasaApoyoCarreraModel {
+    barrioId: string;
+    barrio: string;  //nombre segun el barrioId
+    municipio: string; //nombre segun el barrioId
+    direccion: string;
+    responsableId: string;
+    responsableNombre: string;
+    responsableApellido: string;
+    responsableTelefono: string;
+}
+
+
+
 
 

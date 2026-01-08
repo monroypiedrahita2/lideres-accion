@@ -14,6 +14,7 @@ import { ButtonComponent } from '../../../shared/components/atoms/button/button.
 
 import { MatIconModule } from '@angular/material/icon';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
+import { UserPhotoComponent } from '../../../shared/components/atoms/user-photo/user-photo.component';
 import { ReferidoService } from '../../../shared/services/referido/referido.service';
 import { ReferidoModel } from '../../../../models/referido/referido.model';
 import { PrivateRoutingModule } from '../private-routing.module';
@@ -24,6 +25,7 @@ import { PrivateRoutingModule } from '../private-routing.module';
   imports: [
     CommonModule,
     InputTextComponent,
+    UserPhotoComponent,
     TitleComponent,
     ReactiveFormsModule,
     CommonModule,

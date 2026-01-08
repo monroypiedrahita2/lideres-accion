@@ -3,6 +3,11 @@
   <mg-title title="Mis datos"></mg-title>
   <form [formGroup]="form">
 
+    <div class="mb-6">
+      <mg-user-photo [photoUrl]="foto" [showDeleteAndEditAction]="true" (deleteAction)="removePhoto()"></mg-user-photo>
+    </div>
+
+
     <mg-input-text type="name" formControlName="nombres" label="Nombres" id="nombres"></mg-input-text>
     <mg-input-text type="lastmane" formControlName="apellidos" label="Apellidos" id="apellidos"></mg-input-text>
     <mg-input-text type="email" formControlName="email" label="Escriba su correo electrónico"

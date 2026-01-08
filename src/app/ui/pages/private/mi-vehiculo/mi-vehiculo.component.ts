@@ -15,11 +15,12 @@ import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-noti
 import { MatDialog } from '@angular/material/dialog';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
+import { UserPhotoComponent } from '../../../shared/components/atoms/user-photo/user-photo.component';
 
 @Component({
   selector: 'app-mi-vehiculo',
   standalone: true,
-  imports: [SubTitleComponent, InputTextComponent, InputSelectComponent, FormsModule, ReactiveFormsModule, ButtonComponent, SkeletonComponent],
+  imports: [SubTitleComponent, InputTextComponent, InputSelectComponent, FormsModule, ReactiveFormsModule, ButtonComponent, SkeletonComponent, UserPhotoComponent],
   templateUrl: './mi-vehiculo.component.html',
 })
 export class MiVehiculoComponent implements OnInit {
