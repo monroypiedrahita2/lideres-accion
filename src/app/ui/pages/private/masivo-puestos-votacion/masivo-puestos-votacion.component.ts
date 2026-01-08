@@ -16,12 +16,16 @@ import { InputSelectComponent } from '../../../shared/components/atoms/input-sel
 import { IglesiaService } from '../../../shared/services/iglesia/iglesia.service';
 import { SelectOptionModel } from '../../../../models/base/select-options.model';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MgPaginatorComponent } from '../../../shared/components/modules/paginator/paginator.component';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
+import { DialogNotificationModel } from '../../../../models/base/dialog-notification.model';
 
 @Component({
     selector: 'app-masivo-puestos-votacion',
     templateUrl: './masivo-puestos-votacion.component.html',
     standalone: true,
-    imports: [CommonModule, ButtonComponent, ContainerAlertInformationComponent, InputSelectComponent, ReactiveFormsModule],
+    imports: [CommonModule, ButtonComponent, ContainerAlertInformationComponent, InputSelectComponent, ReactiveFormsModule, MgPaginatorComponent],
 })
 export class MasivoPuestosVotacionComponent implements OnInit {
     loading: boolean = false;
@@ -30,20 +34,107 @@ export class MasivoPuestosVotacionComponent implements OnInit {
     iglesias: SelectOptionModel<string>[] = [];
     form: FormGroup;
 
+    puestosExistentes: any[] = [];
+    totalRecords: number = 0;
+    pageSize: number = 5;
+    pageIndex: number = 0;
+
     constructor(
         private readonly puestoService: PuestoVotacionService,
         private readonly toast: ToastrService,
         private readonly auth: AuthService,
         private readonly iglesiaService: IglesiaService,
-        private readonly fb: FormBuilder
+        private readonly fb: FormBuilder,
+        private readonly dialog: MatDialog
     ) {
         this.form = this.fb.group({
             iglesia: ['', Validators.required]
+        });
+
+        this.form.get('iglesia')?.valueChanges.subscribe((iglesiaId) => {
+            if (iglesiaId) {
+                this.pageIndex = 0;
+                this.puestoService.countByIglesia(iglesiaId).then((count) => {
+                    this.totalRecords = count;
+                });
+                this.puestoService.getFirstPageByIglesia(iglesiaId, this.pageSize).then((res) => {
+                    this.puestosExistentes = res.items;
+                });
+            } else {
+                this.puestosExistentes = [];
+                this.totalRecords = 0;
+            }
         });
     }
 
     ngOnInit(): void {
         this.getIglesias();
+    }
+
+    onNextPage() {
+        const iglesiaId = this.form.get('iglesia')?.value;
+        if (iglesiaId) {
+            this.puestoService.getNextPageByIglesia(iglesiaId, this.pageSize).then((res) => {
+                if (res.items.length > 0) {
+                    this.puestosExistentes = res.items;
+                    this.pageIndex++;
+                }
+            });
+        }
+    }
+
+    onPreviousPage() {
+        const iglesiaId = this.form.get('iglesia')?.value;
+        if (iglesiaId && this.pageIndex > 0) {
+            this.puestoService.getPreviousPageByIglesia(iglesiaId, this.pageSize).then((res) => {
+                if (res.items.length > 0) {
+                    this.puestosExistentes = res.items;
+                    this.pageIndex--;
+                }
+            });
+        }
+    }
+
+    deletePuesto(puesto: BaseModel<PuestoVotacionModel>) {
+        const data: DialogNotificationModel = {
+            title: 'Eliminar Puesto',
+            message: `¿Estás seguro de eliminar el puesto ${puesto.data.nombre}?`,
+            bottons: 'Si, Eliminar',
+            type: 'warning',
+            actionText: 'Cancelar'
+        };
+
+        const dialogRef = this.dialog.open(DialogNotificationComponent, {
+            width: '450px',
+            data: data
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.puestoService.deletePuestoVotacion(puesto.id!).then(() => {
+                    this.toast.success('Puesto eliminado correctamente');
+                    this.loadPuestos(); // Refresh list
+                }).catch((error) => {
+                    this.toast.error('Error al eliminar el puesto');
+                    console.error(error);
+                });
+            }
+        });
+    }
+
+    loadPuestos() {
+        const iglesiaId = this.form.get('iglesia')?.value;
+        if (iglesiaId) {
+            // Simplification: Reload first page or current page logic could be complex with cursors.
+            // For now, reloading first page is safest to reset state properly.
+            this.pageIndex = 0;
+            this.puestoService.countByIglesia(iglesiaId).then((count) => {
+                this.totalRecords = count;
+            });
+            this.puestoService.getFirstPageByIglesia(iglesiaId, this.pageSize).then((res) => {
+                this.puestosExistentes = res.items;
+            });
+        }
     }
 
     getIglesias() {

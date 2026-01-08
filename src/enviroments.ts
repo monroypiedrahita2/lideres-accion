@@ -30,6 +30,7 @@ export const environment = {
     casasApoyo: 'Casas',
     testigos: 'Testigos',
     cuentavotos: 'Cuentavotos',
+    puestosVotacion: 'PuestosVotacion',
   },
   alerts: { timeOut: 3000, preventDuplicates: true },
 };

@@ -68,6 +68,7 @@ export class ActivarTestigoComponent implements OnInit {
             const dialogRef = this.dialog.open(DialogAsignarPuestoMesaComponent, {
                 width: '400px',
                 disableClose: true,
+                data: { iglesiaId: perfil.iglesia }
             });
 
             dialogRef.afterClosed().subscribe(async (result) => {
@@ -79,6 +80,7 @@ export class ActivarTestigoComponent implements OnInit {
                         celular: perfil.celular || '',
                         puestodevotacion: result.puestodevotacion,
                         mesadevotacion: result.mesadevotacion,
+                        puestoId: result.puestoId,
                     };
 
                     const baseData: BaseModel<TestigoModel> = {

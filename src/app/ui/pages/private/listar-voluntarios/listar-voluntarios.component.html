@@ -11,15 +11,15 @@
 
   <div class="flex flex-col gap-4">
     <mtt-card-info *ngFor="let voluntarios of paginatedVoluntarios"
-      [title]="voluntarios.nombres + ' ' + voluntarios.apellidos"
-      [textInfo]="(voluntarios.rol ? voluntarios.rol : '')" icon="person" [activePoint]="false"></mtt-card-info>
+      [title]="voluntarios.nombres + ' ' + voluntarios.apellidos" [textInfo]="(voluntarios.rol ? voluntarios.rol : '')"
+      icon="person" [activePoint]="false"></mtt-card-info>
 
     <div *ngIf="paginatedVoluntarios.length === 0" class="text-center p-4 text-gray-500 bg-white rounded-lg shadow">
       No se encontraron voluntarios que coincidan con la búsqueda.
     </div>
 
-    <mat-paginator [length]="dataSource.filteredData.length" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5"
-      aria-label="Select page of users" class="rounded-lg shadow-lg">
-    </mat-paginator>
+    <mg-paginator [length]="dataSource.filteredData.length" [pageSize]="pageSize" [pageIndex]="pageIndex"
+      [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)">
+    </mg-paginator>
   </div>
 </div>

@@ -63,3 +63,33 @@
         </table>
     </div>
 </div>
+
+<div class="mt-8" *ngIf="puestosExistentes.length > 0">
+    <h3 class="text-lg font-semibold mb-4">Puestos ya creados para esta iglesia</h3>
+    <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-sm text-white uppercase bg-primary font-primary">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-center">Nombre Puesto</th>
+                    <th scope="col" class="px-6 py-3 text-center">Mesas Totales</th>
+                    <th scope="col" class="px-6 py-3 text-center">Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of puestosExistentes" class="bg-white border-b hover:bg-gray-200">
+                    <td class="px-6 py-4 text-center text-black">{{ item.data.nombre }}</td>
+                    <td class="px-6 py-4 text-center text-black">{{ item.data.mesastotales }}</td>
+                    <td class="px-6 py-4 text-center text-black">
+                        <span class="material-icons text-red-500 cursor-pointer"
+                            (click)="deletePuesto(item)">delete_forever</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4">
+        <mg-paginator [length]="totalRecords" [pageSize]="pageSize" [pageIndex]="pageIndex" (next)="onNextPage()"
+            (previous)="onPreviousPage()" [isFirstPage]="pageIndex === 0"
+            [isLastPage]="(pageIndex + 1) * pageSize >= totalRecords"></mg-paginator>
+    </div>
+</div>

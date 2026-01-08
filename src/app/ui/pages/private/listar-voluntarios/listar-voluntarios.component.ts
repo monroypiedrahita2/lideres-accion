@@ -1,6 +1,6 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MgPaginatorComponent, PageEvent } from '../../../shared/components/modules/paginator/paginator.component';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -18,8 +18,9 @@ import { TitleComponent } from '../../../shared/components/atoms/title/title.com
     standalone: true,
     imports: [
         CommonModule,
+        CommonModule,
         MatTableModule, // Keep for DataSource type usage if needed, though we don't use mat-table in template
-        MatPaginatorModule,
+        MgPaginatorComponent,
         MatFormFieldModule,
         MatInputModule,
         MatIconModule,
@@ -37,7 +38,11 @@ export class ListarVoluntariosComponent implements AfterViewInit {
     usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
     searchControl = new FormControl('');
 
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
+    // Pagination state
+    pageIndex: number = 0;
+    pageSize: number = 5;
+    pageSizeOptions: number[] = [5, 10, 25, 100];
+
 
     constructor(private perfilService: PerfilService) {
         this.cargarVoluntarios();
@@ -50,7 +55,15 @@ export class ListarVoluntariosComponent implements AfterViewInit {
     }
 
     cargarVoluntarios() {
-        if (this.usuario.iglesia) {
+        if (this.usuario.rol === 'Super Usuario') {
+            this.perfilService.getPerfiles().subscribe(data => {
+                this.dataSource.data = data.filter(perfil => perfil.rol !== 'Pastor');
+                this.updatePaginatedList();
+                if (this.searchControl.value) {
+                    this.applyFilter(this.searchControl.value);
+                }
+            });
+        } else if (this.usuario.iglesia) {
             this.perfilService.getPerfilesByIglesia(this.usuario.iglesia).subscribe(data => {
                 this.dataSource.data = data.filter(perfil => perfil.rol !== 'Pastor');
                 // Initialize paginated list after data load
@@ -65,12 +78,7 @@ export class ListarVoluntariosComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-
-        // Subscribe to paginator updates to refresh the list
-        this.paginator.page.subscribe(() => {
-            this.updatePaginatedList();
-        });
+        // Removed MatPaginator logic
     }
 
     applyFilter(filterValue: string) {
@@ -84,20 +92,21 @@ export class ListarVoluntariosComponent implements AfterViewInit {
         };
         this.dataSource.filter = filterValue.trim().toLowerCase();
 
-        if (this.paginator) {
-            this.paginator.firstPage();
-        }
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+
+        this.pageIndex = 0; // Reset to first page on filter
         this.updatePaginatedList();
     }
 
     updatePaginatedList() {
-        if (!this.paginator) {
-            // If paginator is not ready yet, just show the first chunk
-            this.paginatedVoluntarios = this.dataSource.filteredData.slice(0, 5);
-            return;
-        }
-        const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-        const endIndex = startIndex + this.paginator.pageSize;
+        const startIndex = this.pageIndex * this.pageSize;
+        const endIndex = startIndex + this.pageSize;
         this.paginatedVoluntarios = this.dataSource.filteredData.slice(startIndex, endIndex);
+    }
+
+    onPageChange(event: PageEvent) {
+        this.pageIndex = event.pageIndex;
+        this.pageSize = event.pageSize;
+        this.updatePaginatedList();
     }
 }
