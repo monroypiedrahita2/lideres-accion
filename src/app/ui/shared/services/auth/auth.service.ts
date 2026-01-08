@@ -10,6 +10,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   User,
+  sendEmailVerification
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 
@@ -80,5 +81,13 @@ export class AuthService {
 
   getFoto(): string | null {
     return this.getAuth().currentUser?.photoURL ?? null;
+  }
+
+  sendEmailVerification(user: User) {
+    return sendEmailVerification(user);
+  }
+
+  isEmailVerified(user: User | null): boolean {
+    return user?.emailVerified ?? false;
   }
 }

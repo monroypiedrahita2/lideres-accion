@@ -59,12 +59,16 @@ export class NuevaCuentaComponent {
       return;
     }
     try {
-      await this.authService
+      const credential = await this.authService
         .createUserWithEmailAndPassword(
           this.form.value.email,
           this.form.value.password
-        )
-        this.openNotification();
+        );
+
+      await this.authService.sendEmailVerification(credential.user);
+      await this.authService.logout();
+      this.location.back();
+      this.openNotification();
     } catch (error) {
       this.toast.error(
         'Error al crear la cuenta. Intente nuevamente. Ya existe una cuenta con ese correo.'
@@ -78,7 +82,7 @@ export class NuevaCuentaComponent {
     const dialogRef = this.dialog.open(DialogNotificationComponent, {
       data: {
         title: 'Cuenta creada exitosamente',
-        message: 'Por favor, inicie sesión con su nuevo usuario.',
+        message: 'Hemos enviado un correo de verificación. Por favor, verifica tu correo antes de iniciar sesión.',
         bottons: 'Aceptar'
       }
     });
@@ -98,7 +102,7 @@ export class NuevaCuentaComponent {
       this.location.back();
     } catch {
       this.toast.error('Error al crear el perfil. Intente nuevamente.');
-        this.disableBtn = false;
+      this.disableBtn = false;
     }
   }
 

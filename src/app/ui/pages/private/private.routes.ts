@@ -1,11 +1,13 @@
-import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { Routes } from '@angular/router';
+import { emailVerifiedGuard } from '../../shared/guards/email-verified.guard';
 
 export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./private.component').then(m => m.PrivateComponent),
-    ...canActivate(() => redirectUnauthorizedTo(['./public/login'])),
+    canActivate: [AuthGuard, emailVerifiedGuard],
+    data: { authGuardPipe: () => redirectUnauthorizedTo(['./public/login']) },
     children: [
       {
         path: 'home',

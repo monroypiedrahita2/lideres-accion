@@ -52,8 +52,13 @@ export class LoginComponent {
     this.loading = true;
     try {
       await this.auth.login(email, password);
-      this.router.navigate(['./private/home']);
-      this.toast.success('Bienvenido a LIDA')
+      if (this.auth.isEmailVerified(this.auth.getAuth().currentUser)) {
+        this.router.navigate(['./private/home']);
+        this.toast.success('Bienvenido a LIDA')
+      } else {
+        await this.auth.logout();
+        this.toast.warning('Por favor verifica tu correo electrónico para ingresar.');
+      }
       this.loading = false;
     } catch (error) {
       console.error(error)
