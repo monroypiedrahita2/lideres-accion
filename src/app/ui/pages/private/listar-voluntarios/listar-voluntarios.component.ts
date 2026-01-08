@@ -12,6 +12,13 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { CardInfoComponent } from '../../../shared/components/cards/card-info/card-info.component';
 import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
+import { ConfirmActionComponent } from '../../../shared/components/modules/modal/confirm-action.component';
+import { ToastrService } from 'ngx-toastr';
+import { TestigoService } from '../../../shared/services/testigo/testigo.service';
+import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
+import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
+import { firstValueFrom } from 'rxjs';
+import { SpinnerComponent } from '../../../shared/components/modules/spinner/spinner.component';
 
 @Component({
     selector: 'app-listar-voluntarios',
@@ -27,7 +34,9 @@ import { TitleComponent } from '../../../shared/components/atoms/title/title.com
         InputTextComponent,
         ReactiveFormsModule,
         CardInfoComponent,
-        TitleComponent
+        TitleComponent,
+        ConfirmActionComponent,
+        SpinnerComponent
     ],
     templateUrl: './listar-voluntarios.component.html',
     styleUrls: ['./listar-voluntarios.component.scss']
@@ -43,8 +52,21 @@ export class ListarVoluntariosComponent implements AfterViewInit {
     pageSize: number = 5;
     pageSizeOptions: number[] = [5, 10, 25, 100];
 
+    displayedColumns: string[] = ['nombres', 'apellidos', 'email', 'rol', 'celular', 'acciones'];
 
-    constructor(private perfilService: PerfilService) {
+    // Modal state
+    showModal: boolean = false;
+    dataModal: { name: string; id: string } = { name: '', id: '' };
+    showSpinner: boolean = false;
+
+
+    constructor(
+        private perfilService: PerfilService,
+        private toast: ToastrService,
+        private testigoService: TestigoService,
+        private vehiculoService: VehiculoService,
+        private casaApoyoService: CasaApoyoService
+    ) {
         this.cargarVoluntarios();
         this.searchControl.valueChanges.pipe(
             debounceTime(300),
@@ -55,7 +77,7 @@ export class ListarVoluntariosComponent implements AfterViewInit {
     }
 
     cargarVoluntarios() {
-        if (this.usuario.rol === 'Super Usuario') {
+        if (this.usuario.rol === 'Super usuario') {
             this.perfilService.getPerfiles().subscribe(data => {
                 this.dataSource.data = data.filter(perfil => perfil.rol !== 'Pastor');
                 this.updatePaginatedList();
@@ -108,5 +130,58 @@ export class ListarVoluntariosComponent implements AfterViewInit {
         this.pageIndex = event.pageIndex;
         this.pageSize = event.pageSize;
         this.updatePaginatedList();
+    }
+
+    abrirModalEliminar(perfil: PerfilModel) {
+        this.dataModal = { name: `${perfil.nombres} ${perfil.apellidos}`, id: perfil.id || '' };
+        this.showModal = true;
+    }
+
+    async confirmarEliminacion(id: string) {
+        this.showSpinner = true;
+        try {
+            // 1. Delete associated Vehicles
+            const vehiculos = await firstValueFrom(this.vehiculoService.getVehiculoByConductor(id));
+            if (vehiculos && vehiculos.length > 0) {
+                for (const vehiculo of vehiculos) {
+                    if (vehiculo.id) {
+                        await this.vehiculoService.deleteVehiculo(vehiculo.id);
+                    }
+                }
+            }
+
+            // 2. Delete associated Casas Apoyo
+            const casas = await firstValueFrom(this.casaApoyoService.getCasasApoyoByResponsable(id));
+            if (casas && casas.length > 0) {
+                for (const casa of casas) {
+                    if (casa.id) {
+                        await this.casaApoyoService.deleteCasaApoyo(casa.id);
+                    }
+                }
+            }
+
+            // 3. Delete Testigo record (if exists, usually ID matches User ID)
+            try {
+                // We attempt even if we are not sure it exists, deleteDoc handles it.
+                // Or check existence first? deleteDoc is idempotent if it doesn't exist? 
+                // Firestore delete non-existing document is success.
+                await this.testigoService.deleteTestigo(id);
+            } catch (e) {
+                // Ignore if not exists or error, but logging is good
+                console.log('Testigo not found or error deleting', e);
+            }
+
+            // 4. Delete Profile
+            await this.perfilService.deleteperfil(id);
+
+            // Refresh list
+            this.cargarVoluntarios();
+            this.showModal = false;
+        } catch (error) {
+            console.error(error);
+            this.toast.error('Error al eliminar usuario y sus datos asociados.');
+        } finally {
+            this.showSpinner = false;
+        }
     }
 }
