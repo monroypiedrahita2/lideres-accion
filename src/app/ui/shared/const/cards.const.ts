@@ -11,14 +11,14 @@ export const CARDS_HOME: CardModel[] = [
   {
     goTo: '/private/crear-pastor',
     title: 'Crear pastor',
-    description: 'Asignar un pastor a iglesia',
+    description: 'Asignar un pastor a zona',
     icon: 'record_voice_over',
     showIf: ['Super usuario'],
   },
   {
     goTo: '/private/crear-iglesia',
-    title: 'Iglesia',
-    description: 'Ver y gestionar iglesias',
+    title: 'Zonas',
+    description: 'Ver y gestionar zonas',
     icon: 'favorite',
     showIf: ['Super usuario'],
   },
@@ -61,15 +61,15 @@ export const CARDS_HOME: CardModel[] = [
 
   {
     goTo: '/private/listar-voluntarios',
-    title: 'Voluntarios Iglesia',
-    description: 'Listar y adminstrar voluntarios de la iglesia',
+    title: 'Voluntarios app',
+    description: 'Listar y adminstrar voluntarios de la app',
     icon: 'groups',
     showIf: ['Pastor', 'Super usuario'],
   },
   {
     goTo: '/private/estadisticas',
     title: 'Estadisticas',
-    description: 'Estadisticas por iglesia',
+    description: 'Estadisticas por zona',
     icon: 'data_usage',
     showIf: ['Pastor']
   },
