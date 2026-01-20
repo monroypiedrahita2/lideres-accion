@@ -97,7 +97,7 @@ export class CreateReferidoComponent implements OnInit {
       email: [''],
       fechaNacimiento: [''],
       esEmprendedor: [false],
-      barrio: ['', Validators.required],
+      barrio: [''],
       direccion: ['', Validators.required],
       camara: [true],
       senado: [true],
@@ -257,7 +257,7 @@ export class CreateReferidoComponent implements OnInit {
     try {
       const results = await this.comunasService.searchComunas(searchTerm);
       this.barrios = results.map((comuna: any) => ({
-        label: comuna.data.barrio + ' - ' + comuna.data.municipio,
+        label: comuna.data.barrio + ' - ' + comuna.data.municipio.split('-')[1].trim(),
         value: comuna.id,
       }));
     } catch (error) {
