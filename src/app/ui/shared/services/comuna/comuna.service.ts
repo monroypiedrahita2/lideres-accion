@@ -285,4 +285,20 @@ export class ComunaService {
 
     return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
   }
+
+  async searchComunas(searchText: string) {
+    const pageSize = 20;
+    // Normalize search text to capital case if that matches the DB, usually it's better to rely on what user types or standard.
+    // Assuming data.barrio is stored as is.
+    // The user requirement said: "independiente de la iglesia".
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      where('data.barrio', '>=', searchText),
+      where('data.barrio', '<=', searchText + '\uf8ff'),
+      limit(pageSize)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as any) }));
+  }
 }

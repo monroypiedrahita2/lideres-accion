@@ -3,221 +3,118 @@
 @if (!enableSkeleton) {
 
 <form [formGroup]="form">
+  <!-- Section 1: Referrer (Optional but at top) -->
   <div class="bg-green-50 border border-green-300 rounded-lg shadow-md p-2">
-    <mg-sub-title title="¿Líder quie lo refiere? (Opcional)"></mg-sub-title>
-    <mg-input-select
-      *ngIf="userRol != 'Líder'"
-      formControlName="referidoPor"
-      [label]="'Nombre de quien lo refiere'"
-      id="isInterno"
-      [items]="referidos"
-    ></mg-input-select>
+    <mg-sub-title title="¿Líder que lo refiere? (Opcional)"></mg-sub-title>
+    <mg-input-select *ngIf="userRol != 'Líder'" formControlName="referidoPor" [label]="'Nombre de quien lo refiere'"
+      id="isInterno" [items]="referidos"></mg-input-select>
   </div>
 
-  <div
-    [class]="
+  <!-- Section 2: Mandatory Personal Data -->
+  <div [class]="
       form.value.isInterno
         ? 'my-5 bg-blue-100 border border-blue-300 rounded-lg shadow-md p-2'
         : 'my-5 bg-gray-200 border border-blue-300 rounded-lg shadow-md p-2'
-    "
-    class="flex flex-col gap-3"
-  >
+    " class="flex flex-col gap-3">
     <mg-sub-title title="Datos del referido (Obligatorios)"></mg-sub-title>
     <div class="w-full flex justify-center">
-      <label
-        class="flex flex-col-reverse gap-1 items-center p-2 cursor-pointer min-w-3"
-      >
-        <input
-          type="checkbox"
-          [value]="true"
-          class="sr-only peer"
-          formControlName="isInterno"
-        />
+      <label class="flex flex-col-reverse gap-1 items-center p-2 cursor-pointer min-w-3">
+        <input type="checkbox" [value]="true" class="sr-only peer" formControlName="isInterno" />
         <div
-          class="relative w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
-        ></div>
+          class="relative w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+        </div>
         <span class="text-sm font-medium text-black">{{
           form.value.isInterno ? "Es interno" : "Es externo"
-        }}</span>
+          }}</span>
       </label>
     </div>
-    <mg-input-text
-      type="text"
-      formControlName="documento"
-      id="document"
-      label="Número de cédula"
-      [textError]="form.get('documento')?.hasError('pattern') ? 'Solo puedes digitar números' : ''"
-    ></mg-input-text>
-    <mg-input-text
-      type="text"
-      formControlName="nombres"
-      id="names"
-      label="Nombres"
-    ></mg-input-text>
-    <mg-input-text
-      type="text"
-      formControlName="apellidos"
-      id="lastNames"
-      label="Apellidos"
-    ></mg-input-text>
+    <mg-input-text type="text" formControlName="documento" id="document" label="Número de cédula"
+      [textError]="form.get('documento')?.hasError('pattern') ? 'Solo puedes digitar números' : ''"></mg-input-text>
+    <mg-input-text type="text" formControlName="nombres" id="names" label="Nombres"></mg-input-text>
+    <mg-input-text type="text" formControlName="apellidos" id="lastNames" label="Apellidos"></mg-input-text>
+
+    <mg-input-text type="phone" formControlName="celular" id="phone" label="Célular o télefono" [minlength]="10"
+      [maxlength]="10"></mg-input-text>
+
+    <div class="mt-2">
+      <mg-sub-title title="Lugar donde vive el referido"></mg-sub-title>
+      <p class="text-xs text-gray-500 mb-2">Escriba al menos 3 caracteres para buscar el barrio</p>
+      <mg-input-select formControlName="barrio" [label]="'Barrio (Busque por nombre)'" id="barrio" [items]="barrios"
+        [asyncSearch]="true" (search)="onSearchBarrio($event)"></mg-input-select>
+      <mg-input-text type="text" formControlName="direccion" id="direccion" label="Direccion"></mg-input-text>
+    </div>
   </div>
 
   @if (existDocument && accion == 'Crear') {
-  <lida-tarjeta-informativa
-    [mensaje]="'Este referido ya se encuentra registrado'"
-  ></lida-tarjeta-informativa>
+  <lida-tarjeta-informativa [mensaje]="'Este referido ya se encuentra registrado'"></lida-tarjeta-informativa>
   } @if (!existDocument || accion == 'Editar') {
 
-  <div
-    [class]="
-      form.value.isInterno
-        ? 'my-5 bg-blue-100 border border-blue-300 rounded-lg shadow-md p-2'
-        : 'my-5 bg-gray-200 border border-blue-300 rounded-lg shadow-md p-2'
-    "
-    class="flex flex-col gap-3"
-  >
-    <mg-sub-title title="No obligatorios"></mg-sub-title>
-    <mg-input-text
-      type="phone"
-      formControlName="celular"
-      id="phone"
-      label="Célular o télefono"
-      [minlength]="10"
-      [maxlength]="10"
-    ></mg-input-text>
-    <mg-input-text
-      type="text"
-      formControlName="email"
-      id="email"
-      label="Correo electrónico (opcional)"
-    ></mg-input-text>
-    <mg-input-text
-      type="date"
-      formControlName="fechaNacimiento"
-      id="date"
-      label="Fecha de nacimiento (opcional)"
-    ></mg-input-text>
-    <mg-sub-title
-      title="Lugar donde vive el referido (opcional)"
-    ></mg-sub-title>
-    <mg-input-select
-      formControlName="barrio"
-      [label]="'Barrio'"
-      id="barrio"
-      [items]="barrios"
-    ></mg-input-select>
-    <mg-input-text
-      type="text"
-      formControlName="direccion"
-      id="direccion"
-      label="Direccion"
-    ></mg-input-text>
-    <label
-      class="flex flex-col mb-3 gap-2 items-center justify-between p-2 cursor-pointer min-w-3"
-    >
-      <span class="ms-3 text-sm font-medium text-black">¿Es emprendedor?</span>
-      <input
-        type="checkbox"
-        [value]="true"
-        class="sr-only peer"
-        formControlName="esEmprendedor"
-      />
-      <div
-        class="relative w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
-      ></div>
-    </label>
-  </div>
-
-  <div
-    [class]="
-      form.value.isInterno
-        ? 'my-5 bg-blue-100 border border-blue-300 rounded-lg shadow-md p-2'
-        : 'my-5 bg-gray-200 border border-blue-300 rounded-lg shadow-md p-2'
-    "
-    class="flex flex-col gap-3"
-  >
-    <mg-sub-title title="Nos va apoyar en"></mg-sub-title>
-    <div class="mb-10 flex justify-around gap-4">
-      <label
-        class="inline-flex gap-2 items-center justify-between p-2 cursor-pointer min-w-3"
-      >
-        <span class="ms-3 text-sm font-medium text-black">Senado</span>
-        <input
-          type="checkbox"
-          [value]="true"
-          class="sr-only peer"
-          formControlName="senado"
-        />
-        <div
-          class="relative w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
-        ></div>
-      </label>
-      <label
-        class="inline-flex gap-2 items-center justify-between p-2 cursor-pointer min-w-3"
-      >
-        <span class="ms-3 text-sm font-medium text-black">Camara</span>
-        <input
-          type="checkbox"
-          [value]="true"
-          class="sr-only peer"
-          formControlName="camara"
-        />
-        <div
-          class="relative w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
-        ></div>
-      </label>
-    </div>
-  </div>
-
+  <!-- Section 3: Voting Location (High Priority) -->
   <div class="my-5 bg-red-50 border border-red-300 rounded-lg shadow-md p-2">
-    <div
-      class="mb-4 flex flex-col lg:flex-row justify-center items-center gap-4"
-    >
-      <mg-button
-        text="Policia Nacional (confirmar nombre)"
-        icon="local_police"
-        type="reset"
-        (onClick)="
+    <mg-sub-title title="Información de Votación (Prioritario)"></mg-sub-title>
+    <div class="mb-4 flex flex-col lg:flex-row justify-center items-center gap-4">
+      <mg-button text="Policia Nacional (confirmar nombre)" icon="local_police" type="reset" (onClick)="
           goToPage(
             'https://antecedentes.policia.gov.co:7005/WebJudicial/antecedentes.xhtml'
           )
-        "
-      ></mg-button>
-      <mg-button
-        text="Consultar lugar de votación"
-        icon="how_to_vote"
-        type="submit"
-        (onClick)="
+        "></mg-button>
+      <mg-button text="Consultar lugar de votación" icon="how_to_vote" type="submit" (onClick)="
           goToPage('https://wsp.registraduria.gov.co/censo/consultar/')
-        "
-      ></mg-button>
+        "></mg-button>
     </div>
-    <mg-input-text
-      type="text"
-      formControlName="lugarVotacion"
-      id="lugarVotacion"
-      label="Lugar de votación"
-    ></mg-input-text>
-    <mg-input-text
-      type="text"
-      formControlName="mesaVotacion"
-      id="mesa"
-      label="Mesa de votación"
-    ></mg-input-text>
+    <mg-input-text type="text" formControlName="lugarVotacion" id="lugarVotacion"
+      label="Lugar de votación"></mg-input-text>
+    <mg-input-text type="text" formControlName="mesaVotacion" id="mesa" label="Mesa de votación"></mg-input-text>
   </div>
 
-  <div class="flex flex-row-reverse justify-around sm:pt-5 lg:pt-4">
-    <mg-button
-      [text]="accion"
-      [loading]="loading"
-      [disabled]="form.invalid"
-      (onClick)="onSubmit()"
-    ></mg-button>
-    <mg-button
-      [text]="'Regresar'"
-      [type]="'reset'"
-      (onClick)="back()"
-    ></mg-button>
+  <!-- Section 4: Toggle Optional Fields -->
+  <div class="w-full flex justify-center my-4">
+    <button type="button" (click)="toggleOptionalFields()"
+      class="text-blue-600 font-semibold hover:underline focus:outline-none">
+      {{ showOptionalFields ? 'Ocultar información adicional' : 'Ver más información (Opcional)' }}
+    </button>
+  </div>
+
+  <!-- Section 5: Optional Fields (Hidden by default) -->
+  @if (showOptionalFields) {
+  <div class="my-5 bg-gray-100 border border-gray-300 rounded-lg shadow-sm p-4 animate-fade-in-down">
+    <mg-sub-title title="Otros Datos (Opcional)"></mg-sub-title>
+    <mg-input-text type="text" formControlName="email" id="email" label="Correo electrónico"></mg-input-text>
+    <mg-input-text type="date" formControlName="fechaNacimiento" id="date" label="Fecha de nacimiento"></mg-input-text>
+
+    <label class="flex flex-col my-3 gap-2 items-center justify-between p-2 cursor-pointer min-w-3">
+      <span class="ms-3 text-sm font-medium text-black">¿Es emprendedor?</span>
+      <input type="checkbox" [value]="true" class="sr-only peer" formControlName="esEmprendedor" />
+      <div
+        class="relative w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600">
+      </div>
+    </label>
+
+    <div class="flex flex-col gap-3 mt-4">
+      <mg-sub-title title="Nos va apoyar en"></mg-sub-title>
+      <div class="flex justify-around gap-4">
+        <label class="inline-flex gap-2 items-center justify-between p-2 cursor-pointer min-w-3">
+          <span class="ms-3 text-sm font-medium text-black">Senado</span>
+          <input type="checkbox" [value]="true" class="sr-only peer" formControlName="senado" />
+          <div
+            class="relative w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+          </div>
+        </label>
+        <label class="inline-flex gap-2 items-center justify-between p-2 cursor-pointer min-w-3">
+          <span class="ms-3 text-sm font-medium text-black">Camara</span>
+          <input type="checkbox" [value]="true" class="sr-only peer" formControlName="camara" />
+          <div
+            class="relative w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+  }
+
+  <div class="flex flex-row-reverse justify-around sm:pt-5 lg:pt-4 my-6">
+    <mg-button [text]="accion" [loading]="loading" [disabled]="form.invalid" (onClick)="onSubmit()"></mg-button>
+    <mg-button [text]="'Regresar'" [type]="'reset'" (onClick)="back()"></mg-button>
   </div>
   }
 </form>

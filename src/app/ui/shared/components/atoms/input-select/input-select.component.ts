@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, Optional, Self, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, Optional, Self, SimpleChanges, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import {
@@ -50,6 +50,8 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
   @Input() required: boolean = false;
   @Input() disabled: boolean = false;
   @Input() multiple: boolean = false;
+  @Input() asyncSearch: boolean = false;
+  @Output() search = new EventEmitter<string>();
   filteredOptions: Array<SelectOption> = [];
   private errorMessages = new Map<string, () => string>();
   public rifInput: any;
@@ -63,14 +65,21 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
   }
 
   ngOnInit(): void {
-    this.filter();
+    if (!this.asyncSearch) {
+      this.filter();
+    } else {
+      this.filteredOptions = this.items;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['items']) {
-      return;
+    if (changes['items']) {
+      if (this.asyncSearch) {
+        this.filteredOptions = this.items;
+      } else {
+        this.filter();
+      }
     }
-    this.filter();
   }
 
   compareWith(o1: any, o2: any) {
@@ -131,8 +140,14 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
   }
 
   filter(): void {
-    const filterValue = this.input?.nativeElement.value.toLowerCase() ?? '';
-    this.filteredOptions = this.items.filter(o => o.label.toLowerCase().includes(filterValue));
+    const rawValue = this.input?.nativeElement.value ?? '';
+    const filterValue = rawValue.toLowerCase();
+
+    if (this.asyncSearch) {
+      this.search.emit(rawValue);
+    } else {
+      this.filteredOptions = this.items.filter(o => o.label.toLowerCase().includes(filterValue));
+    }
   }
 
   inputLabel = (value: number) => {

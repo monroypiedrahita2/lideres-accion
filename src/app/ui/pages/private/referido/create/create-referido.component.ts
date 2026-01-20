@@ -22,6 +22,7 @@ import { ButtonComponent } from '../../../../shared/components/atoms/button/butt
 import { ActivatedRoute } from '@angular/router';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { TarjetaInformativaComponent } from '../../../../shared/components/modules/tarjeta-informativa/tarjeta-informativa.component';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-create-referido',
@@ -64,6 +65,8 @@ export class CreateReferidoComponent implements OnInit {
     { label: 'Si', value: true },
     { label: 'No', value: false },
   ];
+  showOptionalFields: boolean = false;
+  barrioSearch$ = new Subject<string>();
   private avanceTimeout: any;
 
   constructor(
@@ -85,6 +88,7 @@ export class CreateReferidoComponent implements OnInit {
       celular: [
         '',
         [
+          Validators.required,
           Validators.maxLength(10),
           Validators.minLength(10),
           Validators.pattern('^[0-9]*$'),
@@ -93,13 +97,20 @@ export class CreateReferidoComponent implements OnInit {
       email: [''],
       fechaNacimiento: [''],
       esEmprendedor: [false],
-      barrio: [''],
-      direccion: [''],
+      barrio: ['', Validators.required],
+      direccion: ['', Validators.required],
       camara: [true],
       senado: [true],
       iglesia: [''],
       lugarVotacion: [''],
       mesaVotacion: [''],
+    });
+
+    this.barrioSearch$.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(searchTerm => {
+      this.performBarrioSearch(searchTerm);
     });
   }
 
@@ -116,7 +127,7 @@ export class CreateReferidoComponent implements OnInit {
       this.form.patchValue({ referidoPor: this.user.id });
       this.enableSkeleton = false;
     }
-    this.getComunas();
+    // Removed getComunas() to avoid loading all barrios on start
     if (this.id) {
       this.accion = 'Editar';
       this.title = this.accion + ' ' + 'referido';
@@ -164,6 +175,17 @@ export class CreateReferidoComponent implements OnInit {
       .getReferido(documento)
       .then((res: BaseModel<ReferidoModel>) => {
         this.dataReferido = res;
+
+        if (res.data.barrio) {
+          // Need to fetch or manually set the barrio in the list because it might not be searched yet
+          // Here we might need to fetch the specific barrio by ID or name to show it
+          this.comunasService.getComuna(res.data.barrio).then(comuna => {
+            if (comuna) {
+              this.barrios = [{ label: comuna.data.barrio + ' - ' + comuna.data.municipio, value: res.data.barrio }];
+            }
+          });
+        }
+
         this.form.patchValue({
           documento: this.id,
           referidoPor: res.data.referidoPor,
@@ -214,19 +236,37 @@ export class CreateReferidoComponent implements OnInit {
     this.location.back();
   }
 
-  getComunas() {
-    this.comunasService.getComunas().subscribe({
-      next: (res) => {
-        this.barrios = res.map((comuna: BaseModel<ComunaModel>) => ({
-          label: comuna.data.barrio,
-          value: comuna.id,
-        }));
-      },
-      error: (err) => {
-        console.error('Error getting lideres', err);
-      },
-      complete: () => { },
-    });
+  onSearchBarrio(term: string) {
+    this.barrioSearch$.next(term);
+  }
+
+  async performBarrioSearch(term: string) {
+    if (term.length < 3) {
+      this.barrios = [];
+      return;
+    }
+
+    // Convert to Title Case (e.g., "san javier" -> "San Javier") assuming DB uses Title Case
+    const searchTerm = term.replace(/\b\w/g, (char) => char.toUpperCase());
+
+    // Also try Uppercase if TitleCase doesn't return? Or just trust TitleCase?
+    // Let's try to search with TitleCase first as it's common for names.
+    // If we want to be robust we might need to search both or know the DB format.
+    // For now, replacing toUpperCase with Title Case logic.
+
+    try {
+      const results = await this.comunasService.searchComunas(searchTerm);
+      this.barrios = results.map((comuna: any) => ({
+        label: comuna.data.barrio + ' - ' + comuna.data.municipio,
+        value: comuna.id,
+      }));
+    } catch (error) {
+      console.error("Error searching barrios", error);
+    }
+  }
+
+  toggleOptionalFields() {
+    this.showOptionalFields = !this.showOptionalFields;
   }
 
   getReferidos() {
