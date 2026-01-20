@@ -26,6 +26,11 @@ export const environment = {
     lideres: 'Lideres',
     barrios: 'Barrios',
     perfil: 'Perfiles',
+    vehiculos: 'Vehiculos',
+    casasApoyo: 'Casas',
+    testigos: 'Testigos',
+    cuentavotos: 'Cuentavotos',
+    puestosVotacion: 'PuestosVotacion',
   },
   alerts: { timeOut: 3000, preventDuplicates: true },
 };

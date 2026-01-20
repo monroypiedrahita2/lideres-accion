@@ -8,21 +8,27 @@
     [goTo]="'./home'"
   ></app-button-footer>
   <app-button-footer
+    *ngIf="usuario.rol == 'Coordinador de iglesia' || usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'"
     class="w-full flex justify-center"
-    [option]="'Listar'"
+    [option]="'Referidos'"
     [icon]="'view_list'"
     [goTo]="'./listar-referidos'"
   ></app-button-footer>
+
   <app-button-footer
+    *ngIf="usuario.rol == 'Coordinador de iglesia' || usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'"
     class="w-full flex justify-center"
     [option]="'Referido'"
     [icon]="'person_add'"
     [goTo]="'./crear-referido'"
   ></app-button-footer>
+
   <app-button-footer
+    *ngIf="usuario.rol == 'Coordinador de iglesia' || usuario.rol == 'Pastor'"
     class="w-full flex justify-center"
-    [option]="'Testigos'"
-    [icon]="'record_voice_over'"
-    [goTo]="'./testigos'"
+    [option]="'Asociar'"
+    [icon]="'assignment_ind'"
+    [goTo]="$any(null)"
+    (click)="openAsociarIglesia()"
   ></app-button-footer>
 </div>

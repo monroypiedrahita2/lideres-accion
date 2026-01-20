@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, input } from '@angular/core';
-import { DividerComponent } from '../divider/divider.component';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'mg-sub-title',
   templateUrl: './sub-title.component.html',
   standalone: true,
-  imports: [CommonModule, DividerComponent],
+  imports: [CommonModule],
 })
 export class SubTitleComponent {
   @Input() title: string = 'title';

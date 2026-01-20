@@ -14,10 +14,12 @@ import { MatInputModule } from '@angular/material/input';
   ],
   providers: [],
   templateUrl: './input-text.component.html',
+  styleUrls: ['./input-text.component.scss'],
 })
 export class InputTextComponent implements ControlValueAccessor, ErrorStateMatcher {
 
   @Input() id: string = 'id';
+  @Input() textError: string = '';
   @Input() label: string = 'label';
   @Input() autocomplete: string = 'off';
   @Input() type: string = 'text';
@@ -28,13 +30,13 @@ export class InputTextComponent implements ControlValueAccessor, ErrorStateMatch
   @Input() max: number | null = null;
   @Input() disabled: boolean = false;
   @Input() required = false;
-  private errorMessages = new Map<string, () => string>();
+  private readonly errorMessages = new Map<string, () => string>();
   public rifInput: any;
   public onChangeFn!: (value: any) => void;
   public onTouchedFn!: () => void;
   matcher = this;
 
-  constructor(@Self() private control: NgControl) {
+  constructor(@Self() private readonly control: NgControl) {
     this.control.valueAccessor = this;
     this.errorMessages.set('email', () => `${this.label} incorrecto.`);
     this.errorMessages.set('required', () => `El dato es obligatorio.`);
@@ -54,6 +56,14 @@ export class InputTextComponent implements ControlValueAccessor, ErrorStateMatch
     }
     const { dirty, touched } = this.control;
     return this.invalid ? ((dirty ?? false) || (touched ?? false)) : false;
+  }
+
+  public get isSuccess(): boolean {
+    if (!this.control) {
+      return false;
+    }
+    const { dirty, touched } = this.control;
+    return !this.invalid && ((dirty ?? false) || (touched ?? false));
   }
 
   public get errors(): Array<string> {

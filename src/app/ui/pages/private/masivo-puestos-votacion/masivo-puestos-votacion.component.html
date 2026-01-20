@@ -1,0 +1,95 @@
+<div class="p-4 bg-white rounded-lg shadow-md mb-4">
+    <form [formGroup]="form">
+        <mg-input-select [items]="iglesias" label="Seleccione Iglesia" placeholder="Seleccione una iglesia"
+            formControlName="iglesia"></mg-input-select>
+    </form>
+</div>
+
+<label *ngIf="puestos.length == 0"
+    class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
+    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+        <span class="material-symbols-outlined text-gray-400 py-2">
+            cloud_upload
+        </span>
+
+        <p class="mb-2 text-sm text-gray-500">
+            <span class="font-semibold text-center">Haz clic para subir archivo Puestos de Votación</span>
+        </p>
+        <p class="text-xs text-gray-500">Debes utilizar la plantilla y seleccionar una iglesia</p>
+    </div>
+    <input type="file" class="hidden" (change)="onFileChange($event)" [disabled]="form.invalid" />
+</label>
+
+<div class="p-4 flex justify-center gap-4">
+    <mg-button *ngIf="puestos.length == 0" (onClick)="descargar()" icon="cloud_download" text="Plantilla"></mg-button>
+    <mg-button *ngIf="puestos.length > 0" [loading]="loading" (onClick)="save()" icon="save"
+        text="Guardar masivo"></mg-button>
+    <mg-button *ngIf="puestos.length > 0" (onClick)="clear()" icon="clear" text="Borrar recarga"
+        type="reset"></mg-button>
+</div>
+
+<div class="sm:block lg:hidden">
+    <app-container-alert-information type="warning" title="Atención!">
+        Este funcionalidad es de uso exclusivo para computadores.
+    </app-container-alert-information>
+</div>
+
+<div *ngIf="puestos.length > 0" class="flex gap-4 mb-2">
+    <span>Total registros: {{ puestos.length }}</span>
+    <span>Guardados: {{ contador }}</span>
+</div>
+
+<div class="sm:hidden lg:block" *ngIf="puestos.length > 0">
+    <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-sm text-white uppercase bg-primary font-primary">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-center">Nombre Puesto</th>
+                    <th scope="col" class="px-6 py-3 text-center">Mesas Totales</th>
+                    <th scope="col" class="px-6 py-3 text-center">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of puestos" class="bg-white border-b hover:bg-gray-200">
+                    <td class="px-6 py-4 text-center text-black">{{ item.nombre }}</td>
+                    <td class="px-6 py-4 text-center text-black">{{ item.mesastotales }}</td>
+                    <td class="px-6 py-4 text-center text-black">
+                        <span class="material-icons text-primary" *ngIf="item.guardado === true">done</span>
+                        <span class="material-icons text-red-500" *ngIf="item.guardado === 'error'">error</span>
+                        <span class="material-icons text-gray-400" *ngIf="item.guardado === false">pending</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-8" *ngIf="puestosExistentes.length > 0">
+    <h3 class="text-lg font-semibold mb-4">Puestos ya creados para esta iglesia</h3>
+    <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-sm text-white uppercase bg-primary font-primary">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-center">Nombre Puesto</th>
+                    <th scope="col" class="px-6 py-3 text-center">Mesas Totales</th>
+                    <th scope="col" class="px-6 py-3 text-center">Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of puestosExistentes" class="bg-white border-b hover:bg-gray-200">
+                    <td class="px-6 py-4 text-center text-black">{{ item.data.nombre }}</td>
+                    <td class="px-6 py-4 text-center text-black">{{ item.data.mesastotales }}</td>
+                    <td class="px-6 py-4 text-center text-black">
+                        <span class="material-icons text-red-500 cursor-pointer"
+                            (click)="deletePuesto(item)">delete_forever</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4">
+        <mg-paginator [length]="totalRecords" [pageSize]="pageSize" [pageIndex]="pageIndex" (next)="onNextPage()"
+            (previous)="onPreviousPage()" [isFirstPage]="pageIndex === 0"
+            [isLastPage]="(pageIndex + 1) * pageSize >= totalRecords"></mg-paginator>
+    </div>
+</div>

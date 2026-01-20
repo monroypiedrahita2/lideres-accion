@@ -1,0 +1,15 @@
+<span class="mt-4 font-primary font-bold text-center text-[24px] ">Apoyo vehícular</span>
+<mat-dialog-content>
+  <p class="text-center font-primary">Seleccione la opcion que desea</p>
+</mat-dialog-content>
+<mat-dialog-actions class="w-full flex flex-col gap-4">
+  <mg-button mat-dialog-close size="big" text="Mi vehículo" class="w-full" icon="directions_car"
+    routerLink="/private/mi-vehiculo"></mg-button>
+  @if(this.usuario.coordinadorTransporte || this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super Usuario') {
+  <mg-button mat-dialog-close size="big" text="Aprobar vehículos" class="w-full" icon="check_circle"
+    routerLink="/private/aprobar-vehiculos"></mg-button>
+  <mg-button mat-dialog-close size="big" text="Vehículos aprobados" class="w-full" icon="list"
+    routerLink="/private/listar-vehiculos-aprobados"></mg-button>
+  }
+  <button mat-button (click)="onNoClick()">Cerrar</button>
+</mat-dialog-actions>

@@ -1,0 +1,29 @@
+<div class="w-full max-w-7xl mx-auto">
+
+    <mg-title title="Aprobar Casas de Apoyo"></mg-title>
+
+    <div *ngIf="paginatedCasas.length > 0; else noItems" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let casa of paginatedCasas">
+            <app-card-aprobacion [title]="casa.data.responsableNombre + ' ' + casa.data.responsableApellido"
+                [subtitle]="casa.data.direccion + ' - ' + casa.data.barrio" [date]="''" [status]="casa.data.municipio"
+                [checked]="!!casa.data.aprobado" [phoneNumber]="casa.data.responsableTelefono || ''"
+                [showAssignAction]="true" (checkedChange)="aprobar(casa, $event)"
+                (onAssignAction)="asignarVehiculos(casa)" [isLoading]="loadingItems.has(casa.id!)">
+            </app-card-aprobacion>
+        </div>
+    </div>
+
+    <mg-paginator [length]="dataSource.data.length" [pageSize]="pageSize" [pageIndex]="pageIndex"
+        [pageSizeOptions]="[5, 10, 20]" [showPageSizeOptions]="true" (page)="onPageChange($event)">
+    </mg-paginator>
+
+    <ng-template #noItems>
+        <div class="text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-100">
+            <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
+                <mat-icon class="text-xl">home</mat-icon>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-1">No hay solicitudes</h3>
+            <p class="text-gray-500 max-w-md mx-auto">No hay personas postuladas para Casa de Apoyo en este momento.</p>
+        </div>
+    </ng-template>
+</div>

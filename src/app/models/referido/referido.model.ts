@@ -2,11 +2,11 @@
 export interface ReferidoModel {
   id?: string; // documento de identidad
   isInterno: boolean;
-  documento?: string;
   nombres: string;
   apellidos: string;
   celular: string;
   email?: string;
+  sexo?: 'M' | 'F';
   esEmprendedor?: boolean | string;
   comuna?: string;
   barrio?: string;
@@ -20,12 +20,4 @@ export interface ReferidoModel {
   camara: boolean | string;
   cantidadReferidos?: string;
   guardado?: 'error' | boolean;
-  testigo?: TestigoModel;
-}
-
-export interface TestigoModel {
-  quiereApoyar: boolean;
-  aprobadoPorPastor?: boolean;
-  mesa?: string;
-  puesto?: string;
 }

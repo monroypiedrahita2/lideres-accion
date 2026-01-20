@@ -14,6 +14,8 @@ import { ToastrService } from 'ngx-toastr';
 import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 import { SelectOptionModel } from '../../../../models/base/select-options.model';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 
 @Component({
   selector: 'app-nueva-cuenta',
@@ -37,15 +39,14 @@ export class NuevaCuentaComponent {
     private readonly authService: AuthService,
     private readonly perfilService: PerfilService,
     private readonly location: Location,
-    private readonly toast: ToastrService
+    private readonly toast: ToastrService,
+    public dialog: MatDialog
   ) {
     this.form = this.fb.group({
-      documento: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       email: ['', [Validators.required, Validators.email]],
-      nombres: ['', [Validators.required]],
-      apellidos: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(5)]],
       confirm: ['', [Validators.required, Validators.minLength(5)]],
+
     });
   }
 
@@ -58,22 +59,16 @@ export class NuevaCuentaComponent {
       return;
     }
     try {
-      const user: PerfilModel = {
-        documento: this.form.value.documento,
-        nombres: this.form.value.nombres,
-        apellidos: this.form.value.apellidos,
-        email: this.form.value.email,
-        rol: null,
-      }
-      await this.authService
+      const credential = await this.authService
         .createUserWithEmailAndPassword(
           this.form.value.email,
           this.form.value.password
-        )
-        .then(async (userCredential) => {
-          this.toast.info('Creando cuenta...');
-          await this.crearNuevaCuenta(user, userCredential.user.uid);
-        });
+        );
+
+      await this.authService.sendEmailVerification(credential.user);
+      await this.authService.logout();
+      this.location.back();
+      this.openNotification();
     } catch (error) {
       this.toast.error(
         'Error al crear la cuenta. Intente nuevamente. Ya existe una cuenta con ese correo.'
@@ -81,6 +76,20 @@ export class NuevaCuentaComponent {
       console.error(error);
       this.disableBtn = false;
     }
+  }
+
+  openNotification() {
+    const dialogRef = this.dialog.open(DialogNotificationComponent, {
+      data: {
+        title: 'Cuenta creada exitosamente',
+        message: 'Hemos enviado un correo de verificación. Por favor, verifica tu correo antes de iniciar sesión.',
+        bottons: 'Aceptar'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.location.back();
+    });
   }
 
   async crearNuevaCuenta(user: PerfilModel, uid: string) {
@@ -93,7 +102,7 @@ export class NuevaCuentaComponent {
       this.location.back();
     } catch {
       this.toast.error('Error al crear el perfil. Intente nuevamente.');
-        this.disableBtn = false;
+      this.disableBtn = false;
     }
   }
 

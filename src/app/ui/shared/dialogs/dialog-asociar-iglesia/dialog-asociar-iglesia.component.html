@@ -1,0 +1,47 @@
+<div class="flex flex-col items-center justify-center pt-8 px-6 relative">
+  <button mat-icon-button (click)="onNoClick()" class="!absolute top-2 right-2 text-gray-500">
+    <mat-icon>close</mat-icon>
+  </button>
+  <div class="bg-blue-100 rounded-full p-5 mb-4 flex items-center justify-center">
+    <mat-icon class="text-blue-600 !w-12 !h-12 !text-[48px] flex items-center justify-center">assignment_ind</mat-icon>
+  </div>
+  <span class="text-blue-600 font-bold text-center text-2xl uppercase tracking-wide">Asociar a Iglesia</span>
+</div>
+
+<mat-dialog-content class="w-full">
+  <div class="flex flex-col gap-4 mt-4 w-full">
+    <p class="text-center font-primary text-gray-600 text-lg leading-relaxed">
+      Ingresa el número de cuenta del perfil que deseas asociar a tu iglesia.
+    </p>
+
+    <div class="flex gap-2 items-center w-full">
+      <mg-input-text class="w-full" label="Número de Cuenta" [formControl]="emailControl" placeholder="Digite el código"
+        type="text">
+      </mg-input-text>
+      <div class="mb-4">
+        <button *ngIf="!perfilEncontrado" mat-mini-fab color="primary" (click)="buscarPerfil()"
+          [disabled]="emailControl.invalid">
+          <mat-icon>search</mat-icon>
+        </button>
+        <button *ngIf="perfilEncontrado" mat-mini-fab class="!bg-gray-500" (click)="limpiar()">
+          <mat-icon>cleaning_services</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="perfilEncontrado" class="w-full mt-4">
+      <lida-person-info [title]="perfilEncontrado.nombres" [textInfo]="perfilEncontrado.apellidos" icon="person"
+        [textInfo2]="''"
+        [textInfo3]="perfilEncontrado.email.length > 25 ? (perfilEncontrado.email | slice:0:25) + '...' : perfilEncontrado.email">
+      </lida-person-info>
+
+      <div class="mt-2 text-sm text-gray-500" *ngIf="perfilEncontrado.nameIglesia">
+        Iglesia actual: {{perfilEncontrado.nameIglesia}}
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<div class="w-full flex gap-4 p-4" *ngIf="perfilEncontrado">
+  <mg-button size="big" text="Asociar" class="w-full" (onClick)="asociarIglesia()"></mg-button>
+</div>

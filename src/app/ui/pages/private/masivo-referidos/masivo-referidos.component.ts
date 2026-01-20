@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
+import { ContainerAlertInformationComponent } from '../../../shared/components/modules/container-alert-information/container-alert-information.component';
 import {
   DESCRIPCION_EXCEL,
   TITULOS_EXCEL,
@@ -11,16 +12,19 @@ import {
 import { ReferidoService } from '../../../shared/services/referido/referido.service';
 import { ReferidoModel } from '../../../../models/referido/referido.model';
 import { BaseModel } from '../../../../models/base/base.model';
+import { PerfilModel } from '../../../../models/perfil/perfil.model';
+import { PerfilService } from '../../../shared/services/perfil/perfil.service';
+import { AuthService } from '../../../shared/services/auth/auth.service';
 
 @Component({
   selector: 'app-masivo-referidos',
   templateUrl: './masivo-referidos.component.html',
   standalone: true,
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule, ButtonComponent, ContainerAlertInformationComponent],
 })
 export class MasivoReferidosComponent {
-  iglesia: any = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
-  usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
+  iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
+  usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
   loading: boolean = false;
   accion: 'Crear' | 'Editar' = 'Crear';
   enableSkeleton: boolean = true;
@@ -30,8 +34,10 @@ export class MasivoReferidosComponent {
 
   constructor(
     private readonly referidoService: ReferidoService,
-    private readonly toast: ToastrService
-  ) {}
+    private readonly toast: ToastrService,
+    private readonly perfilService: PerfilService,
+    private readonly auth: AuthService
+  ) { }
 
   onFileChange(event: any): void {
     const target: DataTransfer = <DataTransfer>event.target;
@@ -59,9 +65,9 @@ export class MasivoReferidosComponent {
   processExcelData(data: any[][]): void {
     const usuarios = data.slice(1).map((row) => ({
       isInterno: row[0] === 'Interno',
-      documento: String(row[1] ?? ''),
-      nombres: String(row[2] ?? ''),
-      apellidos: String(row[3] ?? ''),
+      id: String(row[1] ?? ''),
+      nombres: String(row[2] ?? '').toUpperCase(),
+      apellidos: String(row[3] ?? '').toUpperCase(),
       celular: String(row[4] ?? ''),
       email: String(row[5] ?? ''),
       esEmprendedor: row[6] === 'SI',
@@ -119,10 +125,10 @@ export class MasivoReferidosComponent {
 
   async guardarReferido(referido: ReferidoModel) {
     const ref: BaseModel<ReferidoModel> = {
-      id: referido.documento,
+      id: referido.id,
       data: referido,
       fechaCreacion: new Date().toISOString(),
-      creadoPor: this.usuario.id,
+      creadoPor: this.auth.uidUser() ?? '',
     };
     try {
       await this.referidoService.crearReferidoConIdDocumento(ref, ref.id!)
@@ -131,7 +137,7 @@ export class MasivoReferidosComponent {
       this.toast.success(
         `Referido ${ref.data.nombres} ${ref.data.apellidos} guardado exitosamente`
       );
-            if (this.contador === this.referidos.length) {
+      if (this.contador === this.referidos.length) {
         this.toast.info('Se termino el guardado');
         this.loading = false;
       }

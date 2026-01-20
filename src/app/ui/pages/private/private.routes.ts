@@ -1,11 +1,13 @@
-import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { Routes } from '@angular/router';
+import { emailVerifiedGuard } from '../../shared/guards/email-verified.guard';
 
 export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./private.component').then(m => m.PrivateComponent),
-     ...canActivate(() => redirectUnauthorizedTo(['./public/login'])),
+    canActivate: [AuthGuard, emailVerifiedGuard],
+    data: { authGuardPipe: () => redirectUnauthorizedTo(['./public/login']) },
     children: [
       {
         path: 'home',
@@ -22,6 +24,14 @@ export const routes: Routes = [
       {
         path: 'crear-comuna',
         loadComponent: () => import('./comuna/comuna.component').then(m => m.ComunaComponent),
+      },
+      {
+        path: 'listar-comunas',
+        loadComponent: () => import('./comuna/listar-comunas/listar-comunas.component').then(m => m.ListarComunasComponent),
+      },
+      {
+        path: 'editar-comuna/:id',
+        loadComponent: () => import('./comuna/editar-comuna/editar-comuna.component').then(m => m.EditarComunaComponent),
       },
       {
         path: 'crear-referido',
@@ -48,8 +58,65 @@ export const routes: Routes = [
         loadComponent: () => import('./masivo-referidos/masivo-referidos.component').then(m => m.MasivoReferidosComponent),
       },
       {
-        path: 'testigos',
-        loadComponent: () => import('./testigos/testigos.component').then(m => m.TestigosComponent),
+        path: 'masivo-comunas',
+        loadComponent: () => import('./masivo-comunas/masivo-comunas.component').then(m => m.MasivoComunasComponent),
+      },
+      {
+        path: 'masivo-puestos-votacion',
+        loadComponent: () => import('./masivo-puestos-votacion/masivo-puestos-votacion.component').then(m => m.MasivoPuestosVotacionComponent),
+      },
+
+      {
+        path: 'activar-testigo',
+        loadComponent: () => import('./testigos/activar-testigo/activar-testigo.component').then(m => m.ActivarTestigoComponent),
+      },
+      {
+        path: 'listar-testigos',
+        loadComponent: () => import('./testigos/listar-testigos/listar-testigos.component').then(m => m.ListarTestigosComponent),
+      },
+      {
+        path: 'estadisticas',
+        loadComponent: () => import('./estadisticas/estadisticas.component').then(m => m.EstadisticasComponent),
+      },
+      {
+        path: 'mi-vehiculo',
+        loadComponent: () => import('./mi-vehiculo/mi-vehiculo.component').then(m => m.MiVehiculoComponent),
+      },
+      {
+        path: 'mi-perfil',
+        loadComponent: () => import('./mi-perfil/mi-perfil.component').then(m => m.MiPerfilComponent),
+      },
+      {
+        path: 'listar-vehiculos-aprobados',
+        loadComponent: () => import('./lista-vehiculos-aprobados/lista-vehiculos-aprobados.component').then(m => m.ListaVehiculosAprobadosComponent),
+      },
+      {
+        path: 'mi-casa-de-apoyo',
+        loadComponent: () => import('./mi-casa-de-apoyo/mi-casa-de-apoyo.component').then(m => m.MiCasaDeApoyoComponent),
+      },
+      {
+        path: 'inscribir-casas-apoyo',
+        loadComponent: () => import('./inscribir-casas-apoyo/inscribir-casas-apoyo.component').then(m => m.InscribirCasasApoyoComponent),
+      },
+      {
+        path: 'listar-casas-apoyo',
+        loadComponent: () => import('./listar-casas-apoyo/listar-casas-apoyo.component').then(m => m.ListarCasasApoyoComponent),
+      },
+      {
+        path: 'aprobar-vehiculos',
+        loadComponent: () => import('./aprobar-vehiculos/aprobar-vehiculos.component').then(m => m.AprobarVehiculosComponent),
+      },
+      {
+        path: 'aprobar-casas-apoyo',
+        loadComponent: () => import('./aprobar-casas-apoyo/aprobar-casas-apoyo.component').then(m => m.AprobarCasasApoyoComponent),
+      },
+      {
+        path: 'listar-voluntarios',
+        loadComponent: () => import('./listar-voluntarios/listar-voluntarios.component').then(m => m.ListarVoluntariosComponent),
+      },
+      {
+        path: 'enviar-resultados-votacion',
+        loadComponent: () => import('./enviar-resultados-votacion/enviar-resultados-votacion.component').then(m => m.EnviarResultadosVotacionComponent),
       },
     ]
   },

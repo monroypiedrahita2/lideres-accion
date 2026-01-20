@@ -36,7 +36,7 @@ import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
 })
 export class CrearPastorComponent implements OnInit {
   form!: FormGroup;
-  usuario: any = JSON.parse(localStorage.getItem('usuario') || '{}');
+  usuario: PerfilModel | undefined = JSON.parse(localStorage.getItem('usuario') || '{}');
   iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
   rolesSelectOptions: SelectOptionModel<string>[] = LIST_ROLES;
   usersSelectOptions: SelectOptionModel<string>[] = [];

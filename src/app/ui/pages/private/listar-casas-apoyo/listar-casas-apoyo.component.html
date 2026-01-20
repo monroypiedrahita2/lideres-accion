@@ -1,0 +1,20 @@
+<mg-title title="Casas de Apoyo Inscritas"></mg-title>
+
+<div *ngIf="casas.length > 0; else noCasas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div *ngFor="let casa of casas">
+    <app-card-casa-apoyo [casa]="casa" [showActions]="true" [showAssign]="false"
+      [vehiculosDisponibles]="vehiculosDisponibles" (onDesasignar)="desasignar($event)"
+      (onVehiculoChanged)="onVehiculoChanged($event)">
+    </app-card-casa-apoyo>
+  </div>
+</div>
+
+<ng-template #noCasas>
+  <div class="text-center py-12 bg-white rounded-2xl shadow-sm border border-gray-100">
+    <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
+      <mat-icon class="text-3xl">home</mat-icon>
+    </div>
+    <h3 class="text-lg font-semibold text-gray-800 mb-1">No hay casas de apoyo inscritas</h3>
+    <p class="text-gray-500 max-w-md mx-auto">Tu iglesia aún no tiene casas de apoyo aprobadas.</p>
+  </div>
+</ng-template>

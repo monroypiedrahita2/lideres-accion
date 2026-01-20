@@ -1,0 +1,21 @@
+<span class="mt-4 font-primary font-bold text-center text-[24px] ">Casas de apoyo</span>
+<mat-dialog-content>
+  <p class="text-center font-primary">Seleccione la opcion que desea</p>
+</mat-dialog-content>
+<mat-dialog-actions class="w-full flex flex-col gap-4">
+
+  <mg-button mat-dialog-close size="big" text="Mi casa de apoyo" class="w-full" icon="home"
+    routerLink="/private/mi-casa-de-apoyo"></mg-button>
+
+  @if(this.usuario.rol === 'Pastor' || this.usuario.rol === 'Coordinador de iglesia') {
+  <mg-button mat-dialog-close size="big" text="Aprobar solicitudes" class="w-full" icon="check_circle"
+    routerLink="/private/aprobar-casas-apoyo"></mg-button>
+  }
+
+  @if(this.usuario.rol === 'Pastor' || this.usuario.rol === 'Coordinador de iglesia') {
+  <mg-button mat-dialog-close size="big" text="Casas aprobadas" class="w-full" icon="list"
+    routerLink="/private/listar-casas-apoyo"></mg-button>
+  }
+
+  <button mat-button (click)="onNoClick()">Cerrar</button>
+</mat-dialog-actions>

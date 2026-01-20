@@ -1,0 +1,45 @@
+<lida-confirm-action
+  [showModal]="showModal"
+  [data]="dataModal"
+  (eventConfirm)="eliminar(dataModal.id)"
+></lida-confirm-action>
+
+<div class="p-4">
+  <mg-title title="Listar Comunas"></mg-title>
+
+  <!-- Search Bar -->
+  <div class="mb-4">
+    <div class="flex items-center gap-2">
+      <input
+        type="text"
+        [formControl]="searchControl"
+        placeholder="Buscar por comuna..."
+        class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <button
+        (click)="clearSearch()"
+        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+      >
+        Limpiar
+      </button>
+    </div>
+  </div>
+
+  <div class="flex justify-center p-1 mb-4">
+    <a *ngIf="!isFirstPage" (click)="prevPage()" class="flex items-center justify-center px-3 h-8 me-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
+      <svg class="w-3.5 h-3.5 me-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
+      </svg>
+      Anterior
+    </a>
+    <a *ngIf="!isLastPage" (click)="nextPage()" class="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
+      Siguiente
+      <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+      </svg>
+    </a>
+  </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <app-comuna-card *ngFor="let comuna of comunas" [comuna]="comuna" (eventDelete)="openModal({ name: comuna.data.barrio, id: comuna.id! })" (eventEdit)="editar(comuna.id!)"></app-comuna-card>
+  </div>
+</div>

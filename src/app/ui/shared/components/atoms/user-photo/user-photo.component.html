@@ -1,0 +1,20 @@
+<div class="flex justify-center relative">
+    <div [ngClass]="sizeClass"
+        class="rounded-full bg-gray-100 flex items-center justify-center border-2 border-gray-200 overflow-hidden shadow-sm relative">
+        <img *ngIf="photoUrl; else noFoto" [src]="photoUrl" alt="Foto de perfil" class="w-full h-full object-cover">
+        <ng-template #noFoto>
+            <svg [ngClass]="iconSizeClass" class="text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                    d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+        </ng-template>
+    </div>
+    <button *ngIf="showDeleteAndEditAction && photoUrl" (click)="onDelete()" type="button"
+        class="absolute bottom-0 right-1/2 translate-x-10 bg-red-100 text-red-600 rounded-full p-1 border border-red-200 hover:bg-red-200 transition-colors shadow-sm"
+        title="Eliminar foto">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+    </button>
+</div>

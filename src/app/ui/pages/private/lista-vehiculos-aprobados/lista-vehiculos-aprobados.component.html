@@ -1,0 +1,11 @@
+<mg-title title="Inscribir Vehículos"></mg-title>
+<div class="w-full p-2">
+  <span class="text-sm text-gray-500 dark:text-gray-400">Total vehículos: {{vehiculos.length}}</span>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  @for (vehiculo of vehiculos; track $index) {
+  <app-card-vehiculo [vehiculo]="vehiculo">
+  </app-card-vehiculo>
+  }
+</div>

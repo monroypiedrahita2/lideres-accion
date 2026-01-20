@@ -1,0 +1,38 @@
+<div class="bg-white rounded-lg p-4 sm:p-6 relative">
+  <div class="mb-6 text-center">
+    <mg-title [title]="'Asignar Rol'"></mg-title>
+    <p class="text-gray-500 mt-2 text-sm">
+      Selecciona el rol para <span class="font-bold text-gray-800">{{ data.nombres }} {{ data.apellidos }}</span>
+    </p>
+  </div>
+
+  <div class="space-y-3 mb-8 max-h-[50vh] overflow-y-auto custom-scrollbar">
+    <div *ngFor="let role of roles" (click)="toggleRole(role.value)"
+      class="flex items-center p-3 rounded-lg border cursor-pointer transition-all duration-200 group hover:border-blue-500 hover:bg-blue-50"
+      [ngClass]="{
+        'border-blue-500 bg-blue-50 ring-1 ring-blue-500 shadow-sm': isSelected(role.value),
+        'border-gray-200': !isSelected(role.value)
+      }">
+      <div class="relative flex items-center justify-center w-5 h-5 mr-3">
+        <input type="checkbox" [checked]="isSelected(role.value)"
+          class="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded bg-white checked:bg-blue-500 checked:border-blue-500 cursor-pointer transition-colors"
+          readOnly />
+        <svg class="absolute w-3.5 h-3.5 text-white hidden peer-checked:block pointer-events-none"
+          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+
+      <span class="text-gray-700 font-medium group-hover:text-blue-700"
+        [ngClass]="{'text-blue-700': isSelected(role.value)}">
+        {{ role.label }}
+      </span>
+    </div>
+  </div>
+
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+    <mg-button [text]="'Cancelar'" class="w-full" (onClick)="close()"></mg-button>
+    <mg-button [text]="'Confirmar'" class="w-full" (onClick)="confirm()"></mg-button>
+  </div>
+</div>

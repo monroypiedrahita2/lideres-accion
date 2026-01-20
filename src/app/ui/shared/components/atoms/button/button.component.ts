@@ -1,24 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+
 
 @Component({
   selector: 'mg-button',
   templateUrl: './button.component.html',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule],
 })
 export class ButtonComponent {
   @Input() type: 'submit' | 'reset' = 'submit';
   @Input() text: string = 'text';
   @Input() loading: boolean = false;
-  @Input() disabled: boolean = this.loading == false ? false : true;
+  @Input() disabled: boolean = this.loading;
   @Input() icon!: string;
+  @Input() size: 'small' | 'big' = 'small';
   @Output() onClick = new EventEmitter<void>();
 
-  submit(){
-    if (this.disabled) {
+  submit() {
+    if (this.disabled || this.loading) {
       return;
     }
     this.onClick.emit()

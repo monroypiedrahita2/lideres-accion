@@ -1,0 +1,78 @@
+<div class="container mx-auto p-4 max-w-lg">
+    <mat-card class="p-6">
+        <mat-card-header>
+            <mat-card-title class="text-2xl font-bold mb-4 w-full text-center">
+                Reportar Resultados de Votación
+            </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+            <!-- Paso 1: Loading State -->
+            <div *ngIf="loading && !testigoEncontrado" class="flex flex-col items-center justify-center py-10">
+                <mat-icon class="spinner animate-spin text-blue-500 text-6xl h-16 w-16 mb-4">autorenew</mat-icon>
+                <p class="text-gray-600 font-medium">Verificando asignación de testigo...</p>
+            </div>
+
+            <!-- Paso 2: Confirmar y Enviar Resultados -->
+            <div *ngIf="testigoEncontrado && !envioExitoso">
+                <div class="bg-blue-50 p-4 rounded-lg mb-6 border border-blue-200">
+                    <h3 class="font-bold text-blue-800 mb-2">Información del Testigo</h3>
+                    <!-- Check for null safely with optional chaining in template or relying on *ngIf="testigoEncontrado" which implies existence. 
+                         Ideally testigoEncontrado has the structure { id: string, data: TestigoModel } 
+                    -->
+                    <p><span class="font-semibold">Nombre:</span> {{ testigoEncontrado.data?.nombre }} {{
+                        testigoEncontrado.data?.apellido }}</p>
+                    <p><span class="font-semibold">Puesto:</span> {{ testigoEncontrado.data?.puestodevotacion }}</p>
+
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold">Mesa:</span>
+
+                        <div *ngIf="!editingMesa" class="flex items-center gap-2">
+                            <span>{{ form.get('mesa')?.value || testigoEncontrado.data?.mesadevotacion }}</span>
+                            <mat-icon (click)="toggleEditMesa()" class="text-blue text-xs font-bold">edit_note</mat-icon>
+                        </div>
+
+                        <div *ngIf="editingMesa" class="flex items-center gap-2" [formGroup]="form">
+                            <mat-form-field appearance="outline" class="w-24 -mb-5 density-compact">
+                                <input matInput formControlName="mesa" type="text">
+                            </mat-form-field>
+                            <mat-icon (click)="toggleEditMesa()" class="text-blue text-xs font-bold">check</mat-icon>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="mb-4 font-medium">Ingrese la cantidad de votos obtenidos:</p>
+
+                <form [formGroup]="form" (ngSubmit)="enviarResultados()" class="flex flex-col gap-4">
+                    <mg-input-text label="Votos SENADO" placeholder="0" [formControlName]="'senado'" [required]="true"
+                        [type]="'number'" [min]="0"></mg-input-text>
+
+                    <mg-input-text label="Votos CÁMARA" placeholder="0" [formControlName]="'camara'" [required]="true"
+                        [type]="'number'" [min]="0"></mg-input-text>
+
+                    <div class="flex flex-col gap-3 mt-4">
+                        <mg-button [loading]="loading" class="w-full" text="Enviar Resultados" icon="send"
+                            (click)="enviarResultados()"></mg-button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Paso 3: Confirmación de Éxito -->
+            <div *ngIf="envioExitoso" class="text-center py-6">
+                <mat-icon class="text-green-500 text-6xl h-16 w-16 mb-4">check_circle</mat-icon>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">¡Resultados Enviados!</h3>
+                <p class="text-gray-600 mb-6">
+                    La información ha sido registrada exitosamente en el sistema.
+                </p>
+
+                <mg-button class="w-full" text="Reportar Nuevo Resultado" icon="add_circle"
+                    (click)="resetForm()"></mg-button>
+
+                <button mat-button class="w-full mt-4" (click)="cancelar()">
+                    Volver al Inicio
+                </button>
+            </div>
+
+        </mat-card-content>
+    </mat-card>
+</div>

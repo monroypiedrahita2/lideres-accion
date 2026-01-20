@@ -1,14 +1,12 @@
-<label
-*ngIf="referidos.length == 0"
-  class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
->
+<label *ngIf="referidos.length == 0"
+  class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
   <div class="flex flex-col items-center justify-center pt-5 pb-6">
     <span class="material-symbols-outlined text-gray-400 py-2">
       cloud_upload
     </span>
 
     <p class="mb-2 text-sm text-gray-500">
-      <span class="font-semibold">Haz clic para subir archivo</span> y no me lo reciba, que haga
+      <span class="font-semibold text-center">Haz clic para subir archivo</span>
     </p>
     <p class="text-xs text-gray-500">Debes utilizar la plantilla</p>
   </div>
@@ -16,52 +14,29 @@
 </label>
 
 <div class="p-4 flex justify-center gap-4">
-  <mg-button
-    *ngIf="referidos.length == 0"
-    (onClick)="descargar()"
-    icon="cloud_download"
-    text="Plantilla"
-  ></mg-button>
-  <mg-button
-    *ngIf="referidos.length > 0"
-    [loading]="loading"
-    (onClick)="save()"
-    icon="save"
-    text="Guardar masivo"
-  ></mg-button>
-  <mg-button
-    *ngIf="referidos.length > 0"
-    (onClick)="clear()"
-    icon="clear"
-    text="Borrar recarga"
-    type="reset"
-  ></mg-button>
+  <mg-button *ngIf="referidos.length == 0" (onClick)="descargar()" icon="cloud_download" text="Plantilla"></mg-button>
+  <mg-button *ngIf="referidos.length > 0" [loading]="loading" (onClick)="save()" icon="save"
+    text="Guardar masivo"></mg-button>
+  <mg-button *ngIf="referidos.length > 0" (onClick)="clear()" icon="clear" text="Borrar recarga"
+    type="reset"></mg-button>
 </div>
 
 
 <div class="sm:block lg:hidden">
-  <div class="bg-yellow-100 p-4 rounded-lg mb-4">
-    <p class="text-sm font-semibold text-yellow-900">
-      Atención!
-    </p>
-    <p class="text-xs text-yellow-700">
-      Este funcionalidad es de uso exclusivo para computadores, no recomendamos utilizarla en dispositivos móviles. </p>
-  </div>
+  <app-container-alert-information type="warning" title="Atención!">
+    Este funcionalidad es de uso exclusivo para computadores, no recomendamos utilizarla en dispositivos móviles.
+  </app-container-alert-information>
 </div>
-          <div *ngIf="referidos.length > 0" class="flex gap-4 mb-2">
-            <span>Total registros: {{ referidos.length + " referidos" }}</span>
-          </div>
+<div *ngIf="referidos.length > 0" class="flex gap-4 mb-2">
+  <span>Total registros: {{ referidos.length + " referidos" }}</span>
+</div>
 
 
 <div class="sm:hidden lg:block" *ngIf="referidos.length > 0">
   <div class="relative overflow-x-auto">
     <div>
-      <table
-        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-      >
-        <thead
-          class="text-sm text-white uppercase bg-primary dark:bg-primary dark:text-gray-400 font-primary"
-        >
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-sm text-white uppercase bg-primary dark:bg-primary dark:text-gray-400 font-primary">
           <tr>
             <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
               ¿Es interno?
@@ -114,15 +89,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let referido of referidos"
-            class="bg-white border-b border-gray-200 hover:bg-gray-200"
-          >
+          <tr *ngFor="let referido of referidos" class="bg-white border-b border-gray-200 hover:bg-gray-200">
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
               {{ referido.isInterno ? "SI" : "NO" }}
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-              {{ referido.documento }}
+              {{ referido.id }}
             </td>
             <td class="px-6 py-4 text-center whitespace-nowrap text-black">
               {{ referido.nombres + " " + referido.apellidos }}
@@ -165,9 +137,11 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-black">
               <div class="flex items-center justify-center h-full">
-                <span class="material-icons text-primary cursor-pointer" *ngIf="!referido.guardado" (click)="guardarReferido(referido)" (keyup)="guardarReferido(referido)">save</span>
-                <span class="material-icons text-primary cursor-pointer" *ngIf="referido.guardado == true" >done</span>
-                <span class="material-icons text-primary cursor-pointer" *ngIf="referido.guardado == 'error'" >warning</span>
+                <span class="material-icons text-primary cursor-pointer" *ngIf="!referido.guardado"
+                  (click)="guardarReferido(referido)" (keyup)="guardarReferido(referido)">save</span>
+                <span class="material-icons text-primary cursor-pointer" *ngIf="referido.guardado == true">done</span>
+                <span class="material-icons text-primary cursor-pointer"
+                  *ngIf="referido.guardado == 'error'">warning</span>
               </div>
             </td>
           </tr>

@@ -1,0 +1,48 @@
+<div
+  class="border border-gray-500 shadow-lg mt-2 hover:shadow-2xl sm:p-2 sm:pl-3 lg:p-4 pl-5 rounded-lg bg-white w-full flex items-center cursor-pointer lg:hover:-translate-y-1 relative">
+  <div class="flex justify-between gap-2 w-full">
+    <div class="flex flex-row items-center gap-2 w-full">
+      <mg-user-photo [sizeClass]="'w-12 h-12'" [iconSizeClass]="'w-6 h-6'" [photoUrl]="photoUrl"></mg-user-photo>
+      <div class="justify-between items-center w-full">
+        <dl class="text-black font-primary text-lg font-semibold text-start">
+          {{ title }}
+        </dl>
+        <dl class="flex flex-col justify-between w-full">
+          <div class="text-base text-start text-gray-600 text-sm font-primary w-full">
+            {{ subtitle }}
+          </div>
+          <div class="text-base text-start text-gray-500 text-xs font-primary w-full mt-1">
+            {{ date }}
+          </div>
+        </dl>
+        <dl class="flex flex-row justify-start items-end mt-2">
+          @if (status) {
+          <span [ngClass]="getStatusClasses()" class="text-xs font-medium px-2.5 py-0.5 rounded-full">{{status}}</span>
+          }
+        </dl>
+      </div>
+
+      <div class="flex flex-col items-center justify-center gap-2">
+        <div class="h-10 w-10 flex items-center justify-center relative">
+          <app-spinner [showSpinner]="true" *ngIf="isLoading"
+            class="absolute inset-0 flex items-center justify-center"></app-spinner>
+          <input *ngIf="!isLoading" id="default-checkbox" type="checkbox" [checked]="checked"
+            (change)="onCheckboxChange($event)"
+            class="w-6 h-6 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300">
+        </div>
+        @if (phoneNumber) {
+        <div class="flex gap-2">
+          <a [href]="'https://wa.me/' + phoneNumber" target="_blank"
+            class="h-8 w-8 flex items-center justify-center rounded-full hover:bg-green-200 transition-colors">
+            <img src="assets/whatsApp.svg" alt="WhatsApp" class="w-5 h-5">
+          </a>
+          <a [href]="'tel:' + phoneNumber"
+            class="h-8 w-8 flex items-center justify-center rounded-full hover:bg-blue-200 transition-colors">
+            <mat-icon
+              class="text-blue-600 !text-[20px] !w-[20px] !h-[20px] flex items-center justify-center !leading-none">phone</mat-icon>
+          </a>
+        </div>
+        }
+      </div>
+    </div>
+  </div>

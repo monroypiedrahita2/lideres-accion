@@ -1,15 +1,53 @@
 <mg-skeleton [enableSkeleton]="enableSkeleton" [num]="5"></mg-skeleton>
-  
+<div *ngIf="!enableSkeleton" class="bg-white border border-gray-200 rounded-lg p-6">
+  <mg-title title="Mis datos"></mg-title>
+  <form [formGroup]="form">
 
-@if (!enableSkeleton) {  
-  
-  <app-form-usuario
-  [data]="user"
-  [emailEnabled]="emailEnabled"
-  [accion]="accion"
-  [loading]="loading"
-  [autoCompliteEmail]="true"
-  (onUserEvent)="onSubmit($event)"
-></app-form-usuario>
+    <div class="mb-6">
+      <mg-user-photo [photoUrl]="foto" [showDeleteAndEditAction]="true" (deleteAction)="removePhoto()"></mg-user-photo>
+    </div>
 
-}
+
+    <mg-input-text type="name" formControlName="nombres" label="Nombres" id="nombres"></mg-input-text>
+    <mg-input-text type="lastmane" formControlName="apellidos" label="Apellidos" id="apellidos"></mg-input-text>
+    <mg-input-text type="email" formControlName="email" label="Escriba su correo electrónico"
+      id="email"></mg-input-text>
+    <mg-input-text type="number" formControlName="celular" label="Número de célular" id="celular" [minlength]="10"
+      [maxlength]="10"></mg-input-text>
+
+
+
+    <mg-title title="¿A qué te quieres postular?"></mg-title>
+    <div class="w-full flex flex-col justify-center items-start gap-y-4 ml-9 mt-4 mb-4">
+      <label class="inline-flex items-center cursor-pointer">
+        <input type="checkbox" value="" formControlName="testigo" class="sr-only peer">
+        <div
+          class="relative w-9 h-5 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gray-100 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500">
+        </div>
+        <span class="select-none ms-3 text-sm font-medium text-heading">Testigo</span>
+      </label>
+      <label class="inline-flex items-center cursor-pointer">
+        <input type="checkbox" value="" formControlName="transporte" class="sr-only peer">
+        <div
+          class="relative w-9 h-5 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gray-100 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500">
+        </div>
+        <span class="select-none ms-3 text-sm font-medium text-heading">En transporte</span>
+      </label>
+      <label class="inline-flex items-center cursor-pointer">
+        <input type="checkbox" value="" formControlName="casaApoyo" class="sr-only peer">
+        <div
+          class="relative w-9 h-5 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gray-100 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500">
+        </div>
+        <span class="select-none ms-3 text-sm font-medium text-heading">Casa de apoyo</span>
+      </label>
+    </div>
+
+
+  </form>
+
+  <div class="flex justify-center mt-9 gap-4">
+    <mg-button text="Regresar" [type]="'reset'" (onClick)="back()"></mg-button>
+    <mg-button [text]="accion" type="submit" [loading]="loading" [disabled]="form.invalid"
+      (onClick)="onSubmit()"></mg-button>
+  </div>
+</div>

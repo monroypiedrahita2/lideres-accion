@@ -1,0 +1,81 @@
+<div
+  [class]="(esInterno ? 'shadow-lg mt-2 hover:shadow-2xl sm:p-2 sm:pl-3 lg:p-4 pl-5 rounded-lg bg-white w-full flex items-center cursor-pointer lg:hover:-translate-y-1 relative border border-blue-500' : 'border border-gray-500 shadow-lg mt-2 hover:shadow-2xl sm:p-2 sm:pl-3 lg:p-4 pl-5 rounded-lg bg-white w-full flex items-center cursor-pointer lg:hover:-translate-y-1 relative')">
+  <div class="flex justify-between gap-2 w-full">
+    <div class="justify-between items-center w-full">
+      <dl [class]="(esInterno ? 'text-primary' : 'text-black') + ' font-primary text-lg font-semibold text-start'">
+        {{ title }}
+      </dl>
+      <dl class="flex flex-row justify-between w-full">
+        <div class="text-base text-start text-gray-600 text-sm font-primary w-full">
+          {{ textInfo }}
+        </div>
+        <div (click)="filterReferidos()" (keydown)="filterReferidos()"
+          class="text-base text-end text-sm font-primary w-full hover:cursor-pointer text-blue-400">
+          {{ textInfo2 }}
+        </div>
+      </dl>
+      <dl class="flex flex-col w-full my-1" *ngIf="puestodevotacion || mesadevotacion">
+        <div *ngIf="puestodevotacion" class="text-sm font-medium text-gray-700 truncate w-full flex items-center gap-1">
+          <mat-icon
+            class="text-base h-4 w-4 text-primary leading-none flex items-center justify-center">how_to_vote</mat-icon>
+          <span class="truncate" title="{{puestodevotacion}}">{{ puestodevotacion }}</span>
+        </div>
+        <div *ngIf="mesadevotacion" class="text-sm font-medium text-gray-700 flex items-center gap-1">
+          <mat-icon
+            class="text-base h-4 w-4 text-primary leading-none flex items-center justify-center">table_view</mat-icon>
+          Mesa: {{ mesadevotacion }}
+        </div>
+      </dl>
+      <dl class="flex flex-row justify-between w-full">
+        <div class="text-base text-start text-green-800 text-sm font-primary w-full">
+          {{ textInfo3 }}
+        </div>
+        <div class="text-base text-end text-gray-600 text-sm font-primary w-full">
+          {{ textInfo4 }}
+        </div>
+      </dl>
+      <dl class="flex flex-row justify-start items-end">
+        <span *ngIf="badge"
+          class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">{{textbadge}}</span>
+        <span *ngIf="badge2"
+          class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full">{{textbadge2}}</span>
+        <mat-icon *ngIf="votacion" class="text-green-900 bg-green-200 rounded-full">how_to_vote</mat-icon>
+      </dl>
+    </div>
+
+    <div class="flex flex-col items-center justify-center gap-1">
+      <div *ngIf="showClean"
+        class="h-10 w-10 flex items-center justify-center rounded-lg border-2 bg-yellow-500 cursor-pointer hover:bg-yellow-600 transition-colors">
+        <mat-icon class="text-white flex items-center justify-center" (click)="clean()"
+          (keydown)="clean()">cleaning_services</mat-icon>
+      </div>
+
+      <div *ngIf="showWhatsApp"
+        class="h-10 w-10 flex items-center justify-center rounded-lg border-2 bg-green-500 cursor-pointer hover:bg-green-600 transition-colors">
+        <img src="assets/whatsApp.svg" alt="WhatsApp" class="h-6 w-6" (click)="whatsApp()" (keydown)="whatsApp()">
+      </div>
+
+      <div *ngIf="showCall"
+        class="h-10 w-10 flex items-center justify-center rounded-lg border-2 bg-blue-500 cursor-pointer hover:bg-blue-600 transition-colors">
+        <mat-icon class="text-white flex items-center justify-center" (click)="call()"
+          (keydown)="call()">call</mat-icon>
+      </div>
+
+      <div *ngIf="showEdit"
+        class="h-10 w-10 flex items-center justify-center rounded-lg border-2 bg-primary cursor-pointer hover:bg-blue-700 transition-colors">
+        <span class="material-symbols-outlined text-white font-light flex items-center justify-center" (click)="edit()"
+          (keydown)="edit()">
+          {{ icon }}
+        </span>
+      </div>
+      <div *ngIf="canDelete"
+        [class]="'h-10 w-10 flex items-center justify-center rounded-lg border-2 bg-red-400 cursor-pointer hover:bg-red-500 transition-colors'">
+        <span class="material-symbols-outlined text-white font-light flex items-center justify-center"
+          (click)="eliminar()" (keydown)="eliminar()">
+          {{ icon2 }}
+        </span>
+      </div>
+
+    </div>
+  </div>
+</div>

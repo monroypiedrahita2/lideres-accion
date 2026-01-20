@@ -1,0 +1,8 @@
+<div [ngClass]="containerClasses" class="p-4 rounded-lg mb-4 border-l-4">
+    <p *ngIf="title" [ngClass]="titleClasses" class="text-sm font-semibold">
+        {{ title }}
+    </p>
+    <div [ngClass]="textClasses" class="text-xs">
+        <ng-content></ng-content>
+    </div>
+</div>

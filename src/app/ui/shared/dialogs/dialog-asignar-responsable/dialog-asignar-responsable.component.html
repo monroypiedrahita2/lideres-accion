@@ -1,0 +1,105 @@
+<div class="w-full sm:w-[500px] p-4 sm:p-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+      <mat-icon class="text-blue-600">person_search</mat-icon>
+      Asignar Responsable
+    </h2>
+    <button (click)="cancel()" class="text-gray-400 hover:text-gray-600 transition-colors">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Description -->
+  <p class="text-sm text-gray-600 mb-6">
+    Busque a la persona por número de cédula para asignarla como responsable de esta casa de apoyo.
+  </p>
+
+  <!-- Search Form -->
+  <form [formGroup]="searchForm" (ngSubmit)="searchByCedula()" class="space-y-4">
+    <div class="flex gap-2">
+      <div class="flex-1">
+        <mg-input-text
+          formControlName="cedula"
+          placeholder="Número de cédula"
+          label="Cédula"
+          [required]="true">
+        </mg-input-text>
+      </div>
+      <div class="flex items-end">
+        <mg-button
+          type="submit"
+          text="Buscar"
+          icon="search"
+          size="big"
+          [disabled]="searching">
+        </mg-button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Loading State -->
+  <div *ngIf="searching" class="flex justify-center items-center py-8">
+    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+  </div>
+
+  <!-- Not Found Message -->
+  <div *ngIf="searched && notFound" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+    <div class="flex items-center gap-2 text-red-700">
+      <mat-icon class="!text-[20px]">error_outline</mat-icon>
+      <p class="text-sm font-medium">No se encontró ninguna persona con esa cédula</p>
+    </div>
+  </div>
+
+  <!-- Result Card -->
+  <div *ngIf="searched && referido && !notFound" class="mt-4">
+    <div class="border border-gray-200 rounded-lg bg-white p-4 shadow-sm">
+      <p class="text-xs font-semibold text-gray-500 uppercase mb-3">Persona encontrada</p>
+      
+      <div class="space-y-2">
+        <!-- Nombre -->
+        <div class="flex items-center gap-2">
+          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400">person</mat-icon>
+          <p class="text-sm text-gray-700 font-medium">
+            {{ referido.data.nombres }} {{ referido.data.apellidos }}
+          </p>
+        </div>
+
+        <!-- Documento -->
+        <div class="flex items-center gap-2">
+          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400">badge</mat-icon>
+          <p class="text-sm text-gray-600">{{ referido.id }}</p>
+        </div>
+
+        <!-- Email -->
+        <div *ngIf="referido.data.email" class="flex items-center gap-2">
+          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400">email</mat-icon>
+          <p class="text-sm text-gray-600 truncate">{{ referido.data.email }}</p>
+        </div>
+
+        <!-- Celular -->
+        <div *ngIf="referido.data.celular" class="flex items-center gap-2">
+          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400">phone</mat-icon>
+          <p class="text-sm text-gray-600">{{ referido.data.celular }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex gap-3 mt-6">
+      <mg-button
+        (click)="cancel()"
+        text="Cancelar"
+        size="big"
+        class="flex-1">
+      </mg-button>
+      <mg-button
+        (click)="assignResponsable()"
+        text="Asignar"
+        icon="check"
+        size="big"
+        class="flex-1">
+      </mg-button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="border border-gray-200 shadow-md hover:shadow-lg rounded-lg bg-white w-full p-4 relative transition-shadow duration-300">
+  <div class="flex justify-between items-start gap-3">
+    <!-- Info Section -->
+    <div class="flex-1 min-w-0">
+      <span class="text-md text-gray-800 truncate font-bold">
+       {{ comuna.data.barrio }}
+      </span>
+
+      <div class="mt-2 flex flex-col gap-1">
+        <!-- Comuna -->
+        <p class="text-sm text-gray-600 flex items-center gap-2">
+          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400 flex items-center justify-center leading-none">home</mat-icon>
+          <span class="truncate">Comuna: {{ comuna.data.comuna }}</span>
+        </p>
+        <!-- Municipio -->
+        <p class="text-sm text-gray-600 flex items-center gap-2">
+          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400 flex items-center justify-center leading-none">location_city</mat-icon>
+          <span class="truncate">Municipio: {{ comuna.data.municipio.split(' - ')[1] }}</span>
+        </p>
+
+        <!-- Departamento -->
+        <p class="text-sm text-gray-600 flex items-center gap-2">
+          <mat-icon class="!text-[18px] !w-[18px] !h-[18px] text-gray-400 flex items-center justify-center leading-none">share_location</mat-icon>
+          <span class="truncate">Departamento: {{ comuna.data.departamento.split(' - ')[1] }}</span>
+        </p>
+      </div>
+    </div>
+    <!-- Delete Button -->
+    <div class="flex gap-2">
+      <button
+        (click)="onEdit()"
+        class="text-blue-500 hover:text-blue-700 p-1 rounded-full hover:bg-blue-50 transition-colors"
+        title="Editar comuna">
+        <mat-icon class="!text-[20px] !w-[20px] !h-[20px]">edit</mat-icon>
+      </button>
+      <button
+        (click)="onDelete()"
+        class="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50 transition-colors"
+        title="Eliminar comuna">
+        <mat-icon class="!text-[20px] !w-[20px] !h-[20px]">delete</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

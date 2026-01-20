@@ -1,0 +1,47 @@
+<mg-title title="Inscribir Casas de Apoyo"></mg-title>
+<p class="text-gray-500">Busca por dirección para asignar o eliminar casas de apoyo.</p>
+
+<!-- Search Section -->
+<div class="flex gap-2 items-center justify-end">
+  <div class="flex-1">
+    <mg-input-text
+      [formControl]="searchControl"
+      label="Ingrese la dirección exacta"
+      placeholder="Ej: Cra 45 # 23 - 10"
+      [required]="true"
+      (keydown.enter)="search()"
+    ></mg-input-text>
+  </div>
+  <button 
+    mat-mini-fab 
+    color="primary"
+    (click)="search()"
+    [disabled]="loading || searchControl.invalid"
+    class="shadow-lg shadow-primary/30 mb-[22px]"
+    aria-label="Buscar"
+  >
+    <mat-icon *ngIf="!loading">search</mat-icon>
+    <mat-icon *ngIf="loading" class="animate-spin">sync</mat-icon>
+  </button>
+</div>
+
+<!-- Results Section -->
+<div *ngIf="casas.length > 0; else noResults" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div *ngFor="let casa of casas">
+    <app-card-casa-apoyo 
+      [casa]="casa" 
+      (onAsignar)="asignar($event)" 
+      (onDesasignar)="desasignar($event)">
+    </app-card-casa-apoyo>
+  </div>
+</div>
+
+<ng-template #noResults>
+  <div *ngIf="hasSearched && !loading" class="text-center py-12">
+      <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
+          <mat-icon class="text-3xl">search_off</mat-icon>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-800 mb-1">No se encontraron casas</h3>
+      <p class="text-gray-500 max-w-md mx-auto">No hay registros con la dirección ingresada. Verifica que esté escrita exactamente igual.</p>
+  </div>
+</ng-template>

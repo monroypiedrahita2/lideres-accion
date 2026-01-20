@@ -1,0 +1,38 @@
+:host {
+    display: block;
+    padding: 2rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+    .form-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 640px) {
+    :host {
+        padding: 1rem;
+    }
+
+    .form-container {
+        padding: 1.5rem;
+    }
+}

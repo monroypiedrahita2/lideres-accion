@@ -9,12 +9,13 @@ import { DURATION_ALERTS } from '../../../shared/const/duration-alerts.const';
 import { NAME_LONG_APP } from '../../../shared/const/name-app.const';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.component.html',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, LogoComponent, InputTextComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, LogoComponent, InputTextComponent, MatIconModule],
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
@@ -35,15 +36,15 @@ export class LoginComponent {
     });
   }
 
-  // async loginWithGoogle() {
-  //   try {
-  //     await this.auth.loginWithGoogle();
-  //     this.router.navigate(['./']);
-  //   } catch (error) {
-  //     console.error(error)
-  //     this.toast.error('Inicio de sesión incorrecto')
-  //   }
-  // }
+  async loginWithGoogle() {
+    try {
+      await this.auth.loginWithGoogle();
+      this.router.navigate(['./']);
+    } catch (error) {
+      console.error(error)
+      this.toast.error('Inicio de sesión incorrecto')
+    }
+  }
 
   async login() {
     const email = this.loginForm.value.email;
@@ -51,8 +52,13 @@ export class LoginComponent {
     this.loading = true;
     try {
       await this.auth.login(email, password);
-      this.router.navigate(['./private/home']);
-      this.toast.success('Bienvenido a LIDA')
+      if (this.auth.isEmailVerified(this.auth.getAuth().currentUser)) {
+        this.router.navigate(['./private/home']);
+        this.toast.success('Bienvenido a LIDA')
+      } else {
+        await this.auth.logout();
+        this.toast.warning('Por favor verifica tu correo electrónico para ingresar.');
+      }
       this.loading = false;
     } catch (error) {
       console.error(error)

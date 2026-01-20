@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, Optional, Self, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, Optional, Self, SimpleChanges, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import {
@@ -30,6 +30,14 @@ export interface SelectOption {
   ],
   providers: [],
   templateUrl: './input-select.component.html',
+  styles: [`
+    ::ng-deep .mat-mdc-form-field.mat-form-field-invalid .mdc-text-field {
+      border: 1px solid red !important;
+    }
+    ::ng-deep .mat-mdc-form-field.input-success .mdc-text-field {
+      border: 1px solid green !important;
+    }
+  `]
 })
 export class InputSelectComponent implements ControlValueAccessor, ErrorStateMatcher, OnInit, OnChanges {
 
@@ -42,6 +50,8 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
   @Input() required: boolean = false;
   @Input() disabled: boolean = false;
   @Input() multiple: boolean = false;
+  @Input() asyncSearch: boolean = false;
+  @Output() search = new EventEmitter<string>();
   filteredOptions: Array<SelectOption> = [];
   private errorMessages = new Map<string, () => string>();
   public rifInput: any;
@@ -55,18 +65,25 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
   }
 
   ngOnInit(): void {
-    this.filter();
+    if (!this.asyncSearch) {
+      this.filter();
+    } else {
+      this.filteredOptions = this.items;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['items']) {
-      return;
+    if (changes['items']) {
+      if (this.asyncSearch) {
+        this.filteredOptions = this.items;
+      } else {
+        this.filter();
+      }
     }
-    this.filter();
   }
 
   compareWith(o1: any, o2: any) {
-    return o1?.id && o2?.id ? o1.id == o2.id: o1 == o2;
+    return o1?.id && o2?.id ? o1.id == o2.id : o1 == o2;
   }
 
   public get invalid(): boolean {
@@ -79,6 +96,14 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
     }
     const { dirty, touched } = this.control;
     return this.invalid ? ((dirty ?? false) || (touched ?? false)) : false;
+  }
+
+  public get isSuccess(): boolean {
+    if (!this.control) {
+      return false;
+    }
+    const { dirty, touched } = this.control;
+    return !this.invalid && ((dirty ?? false) || (touched ?? false));
   }
 
   public get errors(): Array<string> {
@@ -115,8 +140,14 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
   }
 
   filter(): void {
-    const filterValue = this.input?.nativeElement.value.toLowerCase() ?? '';
-    this.filteredOptions = this.items.filter(o => o.label.toLowerCase().includes(filterValue));
+    const rawValue = this.input?.nativeElement.value ?? '';
+    const filterValue = rawValue.toLowerCase();
+
+    if (this.asyncSearch) {
+      this.search.emit(rawValue);
+    } else {
+      this.filteredOptions = this.items.filter(o => o.label.toLowerCase().includes(filterValue));
+    }
   }
 
   inputLabel = (value: number) => {

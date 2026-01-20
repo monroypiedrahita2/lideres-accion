@@ -11,7 +11,12 @@ import {
   setDoc,
   updateDoc,
   where,
-  and,
+  orderBy,
+  limit,
+  getDocs,
+  startAfter,
+  getCountFromServer,
+  endBefore,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../enviroments';
@@ -20,8 +25,9 @@ import { ReferidoModel } from '../../../../models/referido/referido.model';
 @Injectable({ providedIn: 'root' })
 export class ReferidoService {
   _collection: string = environment.collections.referidos;
+  lastDoc: any = null; // Para paginación
 
-  constructor(private readonly firestore: Firestore) {}
+  constructor(private readonly firestore: Firestore) { }
 
   crearReferidoConIdDocumento(
     data: BaseModel<ReferidoModel>,
@@ -55,7 +61,7 @@ export class ReferidoService {
     const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
     return response;
   }
-  getReferidoBySearch(criterio: string, value: string  | boolean) {
+  getReferidoBySearch(criterio: string, value: string | boolean) {
     const q = query(
       collection(this.firestore, this._collection),
       where(criterio, '==', value)
@@ -75,7 +81,6 @@ export class ReferidoService {
     });
   }
 
-
   getReferidoByIglesia(
     iglesia: string
   ): Observable<BaseModel<ReferidoModel>[]> {
@@ -85,27 +90,15 @@ export class ReferidoService {
     );
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }
-  getTestigos(iglesia: string): Observable<BaseModel<ReferidoModel>[]> {
+
+  getReferidoByDocumentoAndIglesia(
+    documento: string,
+    iglesia: string
+  ): Observable<BaseModel<ReferidoModel>[]> {
     const q = query(
       collection(this.firestore, this._collection),
       where('data.iglesia', '==', iglesia),
-      where(
-        'data.testigo.quiereApoyar',
-        '==',
-        true
-      )
-    );
-    return collectionData(q, { idField: 'id' }) as Observable<any[]>;
-  }
-  getReferidoByDocumentoAndIlgesia(documento: string, iglesia: string): Observable<BaseModel<ReferidoModel>[]> {
-    const q = query(
-      collection(this.firestore, this._collection),
-      where('data.iglesia', '==', iglesia),
-      where(
-        'id',
-        '==',
-        documento
-      )
+      where('id', '==', documento)
     );
     return collectionData(q, { idField: 'id' }) as Observable<any[]>;
   }
@@ -136,5 +129,201 @@ export class ReferidoService {
   updateReferido(id: string, newData: BaseModel<ReferidoModel>) {
     const document = doc(this.firestore, this._collection, id);
     return updateDoc(document, { ...newData });
+  }
+
+  async getFirstPage(iglesia: string, pageSize: number = 5) {
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      orderBy('data.nombres'),
+      where('data.iglesia', '==', iglesia),
+      limit(pageSize + 1)
+    );
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
+
+    // Guardamos el último doc (el que se mostró) para la siguiente página
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
+  }
+
+  async getNextPage(iglesia: string, pageSize: number = 5) {
+    if (!this.lastDoc) return { items: [], hasMore: false };
+
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      orderBy('data.nombres'),
+      where('data.iglesia', '==', iglesia),
+      startAfter(this.lastDoc), // empieza después del último
+      limit(pageSize + 1)
+    );
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
+
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
+  }
+
+  async getPreviousPage(iglesia: string, pageSize: number = 5) {
+    if (!this.lastDoc) return { items: [], hasMore: false };
+
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      orderBy('data.nombres'),
+      where('data.iglesia', '==', iglesia),
+      endBefore(this.lastDoc), // empieza antes del último
+      limit(pageSize + 1)
+    );
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(Math.max(0, docs.length - pageSize));
+
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
+  }
+
+  async getFirstPageByName(nombre: string, iglesia: string, pageSize: number = 5) {
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      where('data.nombres', '>=', nombre),
+      where('data.nombres', '<=', nombre + '\uf8ff'),
+      where('data.iglesia', '==', iglesia),
+      orderBy('data.nombres'),
+      limit(pageSize + 1)
+    );
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
+
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
+  }
+
+  async getNextPageByName(nombre: string, iglesia: string, pageSize: number = 5) {
+    if (!this.lastDoc) return { items: [], hasMore: false };
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      where('data.nombres', '>=', nombre),
+      where('data.nombres', '<=', nombre + '\uf8ff'),
+      where('data.iglesia', '==', iglesia),
+      orderBy('data.nombres'),
+      startAfter(this.lastDoc),
+      limit(pageSize + 1)
+    );
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
+
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
+  }
+
+  async getPreviousPageByName(nombre: string, iglesia: string, pageSize: number = 5) {
+    if (!this.lastDoc) return { items: [], hasMore: false };
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(
+      colRef,
+      where('data.nombres', '>=', nombre),
+      where('data.nombres', '<=', nombre + '\uf8ff'),
+      where('data.iglesia', '==', iglesia),
+      orderBy('data.nombres'),
+      endBefore(this.lastDoc),
+      limit(pageSize + 1)
+    );
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(Math.max(0, docs.length - pageSize));
+
+    this.lastDoc = returned.at(-1) || null;
+
+    return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
+  }
+
+  // Método genérico para obtener una página, pasando opcionalmente un cursor `startAfterDoc`.
+  async getPage(iglesia: string, pageSize: number = 5, startAfterDoc?: any) {
+    const colRef = collection(this.firestore, this._collection);
+    const constraints: any[] = [orderBy('data.nombres'), where('data.iglesia', '==', iglesia)];
+    if (startAfterDoc) constraints.push(startAfter(startAfterDoc));
+    constraints.push(limit(pageSize + 1));
+    const q = query(colRef, ...constraints);
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
+
+    return {
+      items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })),
+      hasMore,
+      firstDoc: returned[0] || null,
+      lastDoc: returned.at(-1) || null,
+    };
+  }
+
+  // Método genérico para obtener una página por nombre, pasando opcionalmente un cursor `startAfterDoc`.
+  async getPageByName(nombre: string, iglesia: string, pageSize: number = 5, startAfterDoc?: any) {
+    const colRef = collection(this.firestore, this._collection);
+    const constraints: any[] = [
+      where('data.nombres', '>=', nombre),
+      where('data.nombres', '<=', nombre + '\uf8ff'),
+      where('data.iglesia', '==', iglesia),
+      orderBy('data.nombres'),
+    ];
+    if (startAfterDoc) constraints.push(startAfter(startAfterDoc));
+    constraints.push(limit(pageSize + 1));
+    const q = query(colRef, ...constraints);
+    const snapshot = await getDocs(q);
+
+    const docs = snapshot.docs;
+    const hasMore = docs.length > pageSize;
+    const returned = docs.slice(0, pageSize);
+
+    return {
+      items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })),
+      hasMore,
+      firstDoc: returned[0] || null,
+      lastDoc: returned.at(-1) || null,
+    };
+  }
+
+  async countByIglesia(iglesia: string) {
+    const colRef = collection(this.firestore, this._collection);
+    const q = query(colRef, where('data.iglesia', '==', iglesia));
+    const snapshot = await getCountFromServer(q);
+    return snapshot.data().count; // 👈 Aquí tienes el número total
+  }
+
+  async countActiveIf(condicion: string, valor: any): Promise<number> {
+    const colRef = collection(this.firestore, this._collection);
+
+    // Filtro: solo los que tengan estado == "activo"
+    const q = query(colRef, where(condicion, '==', valor));
+
+    const snapshot = await getCountFromServer(q);
+
+    return snapshot.data().count; // 👈 Aquí tienes el número total
   }
 }

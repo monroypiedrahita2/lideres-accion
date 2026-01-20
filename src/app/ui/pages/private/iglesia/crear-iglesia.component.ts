@@ -2,10 +2,12 @@ import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MgPaginatorComponent, PageEvent } from '../../../shared/components/modules/paginator/paginator.component';
 import { ContainerGridComponent } from '../../../shared/components/atoms/container-grid/container-grid.component';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { LugaresService } from '../../../shared/services/lugares/lugares.service';
@@ -21,6 +23,8 @@ import { BaseModel } from '../../../../models/base/base.model';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { SpinnerComponent } from '../../../shared/components/modules/spinner/spinner.component';
 import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/sub-title.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DialogEditarIglesiaComponent } from '../../../shared/dialogs/dialog-editar-iglesia/dialog-editar-iglesia.component';
 
 
 @Component({
@@ -36,12 +40,15 @@ import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/su
     TitleComponent,
     SpinnerComponent,
     SubTitleComponent,
+    MatDialogModule,
+    MgPaginatorComponent
   ],
   providers: [LugaresService, IglesiaService],
   templateUrl: './crear-iglesia.component.html',
 })
 export class CrearIglesiaComponent implements OnInit {
   form!: FormGroup;
+  searchControl = new FormControl('');
   departamentos: SelectOptionModel<string>[] = [];
   municipios: SelectOptionModel<string>[] = [];
   iglesia!: BaseModel<IglesiaModel>;
@@ -49,7 +56,16 @@ export class CrearIglesiaComponent implements OnInit {
   loading: boolean = false;
   spinner: boolean = true;
   iglesias: BaseModel<IglesiaModel>[] = [];
-  data: BaseModel<IglesiaModel>[] = [];
+
+  // Pagination and Search
+  filteredData: BaseModel<IglesiaModel>[] = [];
+  paginatedData: BaseModel<IglesiaModel>[] = [];
+  pageIndex: number = 0;
+  pageSize: number = 5;
+  length: number = 0;
+  pageSizeOptions: number[] = [5, 10, 20, 50];
+
+
   horarios: SelectOptionModel<string>[] = [
     { value: 'Externo', label: 'Externo' },
     { value: '7:00 AM', label: '7:00 AM' },
@@ -61,10 +77,11 @@ export class CrearIglesiaComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly lugarService: LugaresService,
-    private readonly toast: ToastrService,
+    private readonly toastr: ToastrService,
     private readonly location: Location,
     private readonly auth: AuthService,
     private readonly iglesiaService: IglesiaService,
+    private readonly dialog: MatDialog
   ) {
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.pattern(/^[^-]*$/)]],
@@ -77,6 +94,7 @@ export class CrearIglesiaComponent implements OnInit {
   ngOnInit(): void {
     this.getDepartamentos();
     this.getIglesias();
+    this.setupSearch();
     this.form.get('municipio')?.disable();
     this.form.get('departamento')?.valueChanges.subscribe((departamento) => {
       if (departamento) {
@@ -90,14 +108,55 @@ export class CrearIglesiaComponent implements OnInit {
     });
   }
 
+  setupSearch() {
+    this.searchControl.valueChanges.subscribe((value) => {
+      this.filterData(value || '');
+    });
+  }
 
+  filterData(query: string) {
+    if (!query) {
+      this.filteredData = [...this.iglesias];
+    } else {
+      const lowerQuery = query.toLowerCase();
+      this.filteredData = this.iglesias.filter((iglesia) => {
+        const nombre = iglesia.data.nombre.toLowerCase();
+        const departamento = iglesia.data.departamento.split('-')[1]?.toLowerCase() || '';
+        const municipio = iglesia.data.municipio.split('-')[1]?.toLowerCase() || '';
+        return (
+          nombre.includes(lowerQuery) ||
+          departamento.includes(lowerQuery) ||
+          municipio.includes(lowerQuery)
+        );
+      });
+    }
+    this.length = this.filteredData.length;
+    this.pageIndex = 0; // Reset to first page on search
+    this.updatePaginatedData();
+  }
+
+  updatePaginatedData() {
+    const start = this.pageIndex * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedData = this.filteredData.slice(start, end);
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePaginatedData();
+  }
 
   editarIglesia(iglesia: BaseModel<IglesiaModel>) {
-    this.form.patchValue({
-      nombre: iglesia.data.nombre.split(' - ')[0],
-      departamento: iglesia.data.departamento,
-      municipio: iglesia.data.municipio,
-      horario: iglesia.data.nombre.split(' - ')[1],
+    const dialogRef = this.dialog.open(DialogEditarIglesiaComponent, {
+      width: '600px',
+      data: iglesia
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getIglesias();
+      }
     });
   }
 
@@ -111,7 +170,7 @@ export class CrearIglesiaComponent implements OnInit {
         value: item.id + '-' + item.name,
       }));
     } catch {
-      this.toast.error('Error al cargar los departamentos');
+      this.toastr.error('Error al cargar los departamentos');
       this.location.back();
     }
   }
@@ -129,7 +188,7 @@ export class CrearIglesiaComponent implements OnInit {
         value: item.id + '-' + item.name,
       }));
     } catch {
-      this.toast.error('Error al cargar los municipios');
+      this.toastr.error('Error al cargar los municipios');
       this.location.back();
     }
   }
@@ -146,16 +205,17 @@ export class CrearIglesiaComponent implements OnInit {
         fechaCreacion: new Date().toISOString(),
         creadoPor: this.auth.uidUser(),
       };
-      const response =await this.iglesiaService.createIglesia(this.iglesia);
-      this.toast.success('Iglesia creada correctamente');
+      const response = await this.iglesiaService.createIglesia(this.iglesia);
+      this.toastr.success('Iglesia creada correctamente');
       this.loading = false;
+      this.getIglesias(); // Refresh list after creation
       this.form.patchValue({
         nombre: '',
         horario: '',
       });
     } catch (error) {
       console.error(error);
-      this.toast.error('Error al crear la iglesia. Intente nuevamente.');
+      this.toastr.error('Error al crear la iglesia. Intente nuevamente.');
       this.loading = false;
     }
   }
@@ -165,17 +225,20 @@ export class CrearIglesiaComponent implements OnInit {
       next: (iglesias) => {
         this.iglesias = iglesias;
         this.spinner = false;
-        this.data = [...this.iglesias];
+        // Search & Pagination Init
+        this.filteredData = [...this.iglesias];
+        this.length = this.filteredData.length;
+        this.updatePaginatedData();
+        // Re-apply search if it exists
+        if (this.searchControl.value) {
+          this.filterData(this.searchControl.value);
+        }
       },
       error: (error) => {
         console.error(error);
-        this.toast.error('Error al cargar las iglesias');
+        this.toastr.error('Error al cargar las iglesias');
         this.spinner = false;
       },
     });
-  }
-
-  onSearch(data: BaseModel<IglesiaModel>[]) {
-    this.data = data;
   }
 }

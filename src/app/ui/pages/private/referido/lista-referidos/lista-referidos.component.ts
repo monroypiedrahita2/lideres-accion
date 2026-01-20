@@ -1,7 +1,6 @@
 import { ComunaService } from './../../../../shared/services/comuna/comuna.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TitleComponent } from '../../../../shared/components/atoms/title/title.component';
 import { ToastrService } from 'ngx-toastr';
 import { LugaresService } from '../../../../shared/services/lugares/lugares.service';
 import { BaseModel } from '../../../../../models/base/base.model';
@@ -16,20 +15,20 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators,
 } from '@angular/forms';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TITULOS_DESCARGA } from '../../../../shared/const/titulos-excel.const';
 import { PrivateRoutingModule } from '../../private-routing.module';
 import { Router, RouterModule } from '@angular/router';
-import { PersonInfoComponent } from '../../../../shared/components/modules/person-info/person-info.component';
+import { PersonInfoComponent } from '../../../../shared/components/cards/person-info/person-info.component';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { ConfirmActionComponent } from '../../../../shared/components/modules/modal/confirm-action.component';
 import { ComunaModel } from '../../../../../models/comuna/comuna.model';
 import { Subject, takeUntil } from 'rxjs';
+import { MgPaginatorComponent, PageEvent } from '../../../../shared/components/modules/paginator/paginator.component';
 
 @Component({
   selector: 'app-lista-referidos',
@@ -37,7 +36,6 @@ import { Subject, takeUntil } from 'rxjs';
   imports: [
     CommonModule,
     FormsModule,
-    TitleComponent,
     SpinnerComponent,
     InputTextComponent,
     MatPaginatorModule,
@@ -50,12 +48,13 @@ import { Subject, takeUntil } from 'rxjs';
     PersonInfoComponent,
     ConfirmActionComponent,
     ReactiveFormsModule,
+    MgPaginatorComponent
   ],
   providers: [LugaresService],
   templateUrl: './lista-referidos.component.html',
 })
 export class ListaReridosComponent implements OnInit, OnDestroy {
-  private unsubscribe$ = new Subject<void>();
+  private readonly unsubscribe$ = new Subject<void>();
   formRef!: FormGroup;
   iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
   usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -71,6 +70,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
     | 'Internos'
     | 'Externos'
     | 'Testigos'
+    | 'Nombre'
     | '' = 'Cedula';
   barrios: BaseModel<ComunaModel>[] = [];
   value_draft: string = localStorage.getItem('document_search_draft') || '';
@@ -86,6 +86,14 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   pageEvent: PageEvent | undefined = undefined;
 
   private avanceTimeout: any;
+  isFirstPage: boolean = true;
+  nombreBuscado: string = '';
+  isLastPage: boolean = false;
+  // Pila de cursores para navegación: cada entrada es el `lastDoc` de esa página.
+  pageStartAfter: any[] = [];
+  currentPageIndex: number = 0;
+
+  pageSize: number = 5; // Default page size
 
   constructor(
     private readonly referidoService: ReferidoService,
@@ -95,7 +103,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder
   ) {
     this.formRef = this.fb.group({
-      documento: ['', [Validators.pattern('^[0-9]*$')]],
+      documento: [''],
     });
   }
 
@@ -104,39 +112,36 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
       this.getComunas();
     }
     if (this.usuario.rol === 'Líder') {
-      this.misReferidos(this.usuario.documento);
+      this.misReferidos(this.usuario.id || '');
     }
     if (this.value_draft != '') {
       this.selectDocument(this.value_draft);
     }
     this.loadFormFromLocalStorage();
-
-    this.formRef
-      .get('documento')
-      ?.valueChanges.pipe(
-        takeUntil(this.unsubscribe$) // 👈 Agrega el operador aquí
-      )
-      .subscribe((value) => {
-        if (value.length > 0) {
-          this.selectDocument(value);
-        }
-      });
   }
 
   loadFormFromLocalStorage(): void {
     const savedData = localStorage.getItem('document_search_draft');
     if (savedData) {
-      const data = JSON.parse(savedData);
-      const currentValue = this.formRef.get('documento')?.value;
-      if (currentValue !== data) {
-        this.formRef.patchValue({ documento: data });
+      try {
+        const data = JSON.parse(savedData);
+        const currentValue = this.formRef.get('documento')?.value;
+        if (currentValue !== data) {
+          this.formRef.patchValue({ documento: data });
+        }
+      } catch (error) {
+        // Fallback for plain strings (e.g. "JUAN") that are not valid JSON
+        const currentValue = this.formRef.get('documento')?.value;
+        if (currentValue !== savedData) {
+          this.formRef.patchValue({ documento: savedData });
+        }
       }
     }
   }
 
   ngOnDestroy(): void {
-    this.unsubscribe$.next(); // 👈 Emite un valor para que takeUntil detenga las suscripciones
-    this.unsubscribe$.complete(); // 👈 Completa el Subject para liberar recursos
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   getComunas() {
@@ -147,29 +152,28 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Error getting lideres', err);
       },
-      complete: () => {},
+      complete: () => { },
     });
   }
 
   selectDocument(value: string) {
-    if (this.avanceTimeout) {
-      clearTimeout(this.avanceTimeout);
-    }
-    this.avanceTimeout = setTimeout(() => {
+    if (this.optionSelected == 'Cedula') {
       this.getReferidoByDocumentoAndIglesia(value);
       localStorage.setItem('document_search_draft', value);
-    }, 800);
+    } else if (this.optionSelected == 'Nombre') {
+      this.nombreBuscado = value.toUpperCase();
+      // reset pagination state for name search
+      this.pageStartAfter = [undefined];
+      this.currentPageIndex = 0;
+      this.referidoService.getPageByName(value, this.iglesia, this.pageSize).then((res: any) => {
+        this.referidos = res.items;
+        this.isFirstPage = true;
+        this.isLastPage = !res.hasMore;
+        if (res.lastDoc) this.pageStartAfter[1] = res.lastDoc;
+      });
+    }
   }
-  getTestigos() {
-    this.nombreLider = '';
-    this.data = [];
-    this.optionSelected = 'Testigos';
-    this.referidoService.getTestigos(this.usuario.iglesia!).subscribe({
-      next: (res: BaseModel<ReferidoModel>[]) => {
-        this.referidos = res;
-      },
-    });
-  }
+
 
   getBySearch(criterio: string, value: string | boolean) {
     this.spinner = true;
@@ -192,7 +196,7 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   getReferidoByDocumentoAndIglesia(documento: string) {
     this.spinner = true;
     this.referidoService
-      .getReferidoByDocumentoAndIlgesia(documento, this.iglesia)
+      .getReferidoByDocumentoAndIglesia(documento, this.iglesia)
       .subscribe({
         next: (data) => {
           this.referidos = data;
@@ -227,9 +231,11 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   }
 
   buscarIndividual(
-    option: 'Todos' | 'Cedula' | 'Internos' | 'Externos' | 'Testigos' | ''
+    option: 'Todos' | 'Cedula' | 'Internos' | 'Externos' | 'Testigos' | 'Nombre' | ''
   ) {
     this.optionSelected = option;
+    this.formRef.reset();
+
     this.referidos = [];
     this.nombreLider = '';
     this.data = [];
@@ -238,31 +244,83 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
     }
   }
 
-  getReferidos() {
+  async getReferidos() {
     this.spinner = true;
-    this.referidoService.getReferidoByIglesia(this.iglesia).subscribe({
-      next: (data) => {
-        this.data = data;
-        this.referidos = this.data
-          .map((referido: BaseModel<ReferidoModel>) => {
-            return {
-              ...referido,
-              data: {
-                ...referido.data,
-                cantidadReferidos: this.contarReferidos(referido.id!),
-              },
-            };
-          })
-          .sort((a, b) => a.data.nombres.localeCompare(b.data.nombres));
+    try {
+      // reset pagination for "Todos"
+      this.pageStartAfter = [undefined];
+      this.currentPageIndex = 0;
+      const res: any = await this.referidoService.getPage(this.iglesia, this.pageSize)
+      this.spinner = false;
+      this.referidos = res.items;
+      this.isFirstPage = true;
+      this.isLastPage = !res.hasMore;
+      if (res.lastDoc) this.pageStartAfter[1] = res.lastDoc;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-        this.data = this.referidos;
-        this.spinner = false;
-      },
-      error: (error) => {
-        console.error(error);
-        this.spinner = false;
-      },
-    });
+  async nextPage() {
+    try {
+      if (this.optionSelected == 'Todos') {
+        const targetIndex = this.currentPageIndex + 1;
+        const startAfterDoc = this.pageStartAfter[targetIndex];
+        const res: any = await this.referidoService.getPage(this.iglesia, this.pageSize, startAfterDoc);
+        // store cursor for next page
+        if (res.lastDoc) this.pageStartAfter[targetIndex + 1] = res.lastDoc;
+        this.currentPageIndex = targetIndex;
+        this.referidos = res.items;
+        this.isFirstPage = this.currentPageIndex === 0;
+        this.isLastPage = !res.hasMore;
+      } else if (this.optionSelected == 'Nombre') {
+        if (!this.nombreBuscado) return;
+        const targetIndex = this.currentPageIndex + 1;
+        const startAfterDoc = this.pageStartAfter[targetIndex];
+        const res: any = await this.referidoService.getPageByName(this.nombreBuscado, this.iglesia, this.pageSize, startAfterDoc);
+        if (res.lastDoc) this.pageStartAfter[targetIndex + 1] = res.lastDoc;
+        this.currentPageIndex = targetIndex;
+        this.referidos = res.items;
+        this.isFirstPage = this.currentPageIndex === 0;
+        this.isLastPage = !res.hasMore;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async prevPage() {
+    try {
+      if (this.currentPageIndex === 0) return; // ya en primera
+      // baja un índice y carga la página correspondiente usando startAfter almacenado
+      this.currentPageIndex = Math.max(0, this.currentPageIndex - 1);
+      const startAfterDoc = this.pageStartAfter[this.currentPageIndex];
+
+      if (this.optionSelected == 'Todos') {
+        const res: any = await this.referidoService.getPage(this.iglesia, this.pageSize, startAfterDoc);
+        this.referidos = res.items;
+        this.isLastPage = false;
+        this.isFirstPage = this.currentPageIndex === 0;
+      } else if (this.optionSelected == 'Nombre') {
+        if (!this.nombreBuscado) return;
+        const res: any = await this.referidoService.getPageByName(this.nombreBuscado, this.iglesia, this.pageSize, startAfterDoc);
+        this.referidos = res.items;
+        this.isLastPage = false;
+        this.isFirstPage = this.currentPageIndex === 0;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  onPageEvent(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    // Reload current page/search with new page size
+    if (this.optionSelected === 'Todos') {
+      this.getReferidos(); // Restart from page 0 for simplicity or try to stay on current
+    } else if (this.optionSelected === 'Nombre') {
+      this.selectDocument(this.nombreBuscado);
+    }
   }
 
   edit(referido: BaseModel<ReferidoModel>) {
@@ -272,8 +330,8 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
   onSearch(data: string) {
     this.referidos = this.data.filter(
       (referido) =>
-        referido.data.nombres.toLowerCase().includes(data.toLowerCase()) ||
-        referido.data.apellidos.toLowerCase().includes(data.toLowerCase()) ||
+        referido.data.nombres.toUpperCase().includes(data.toUpperCase()) ||
+        referido.data.apellidos.toUpperCase().includes(data.toUpperCase()) ||
         referido.data.celular.toLowerCase().includes(data.toLowerCase()) ||
         referido.id?.toLowerCase().includes(data.toLowerCase() || '')
     );
@@ -284,6 +342,8 @@ export class ListaReridosComponent implements OnInit, OnDestroy {
     this.referidos = this.data;
     this.btnRecargar = false;
   }
+
+
 
   descargar(referidos: BaseModel<ReferidoModel>[]) {
     const datos = this.transformarDatos(referidos);

@@ -4,5 +4,7 @@ export interface CardModel {
     description: string;
     icon: string;
     activePoint?: boolean
-    showIf?: string[]
+    showIf?: string[];
+    action?: string;
+    requiresPostulacion?: string;
 }

@@ -1,0 +1,10 @@
+::ng-deep {
+    .mat-expansion-panel-body {
+        padding: 5px !important;
+    }
+}
+
+mat-icon {
+    display: flex;
+    justify-content: center;
+}
