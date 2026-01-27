@@ -11,6 +11,7 @@ import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { TestigoModel } from '../../../../../models/testigo/testigo.model';
 import { BaseModel } from '../../../../../models/base/base.model';
 import { DialogAsignarPuestoMesaComponent } from './dialog-asignar-puesto-mesa/dialog-asignar-puesto-mesa.component';
+import { DialogGestionTestigosComponent } from './dialog-gestion-testigos/dialog-gestion-testigos.component';
 
 @Component({
     selector: 'app-activar-testigo',
@@ -96,7 +97,7 @@ export class ActivarTestigoComponent implements OnInit {
                             this.dialog.open(DialogNotificationComponent, {
                                 data: {
                                     title: 'Éxito',
-                                    message: 'Testigo activado correctamente',
+                                    message: 'Coordinador activado correctamente',
                                     bottons: 'Aceptar',
                                     type: 'success',
                                 },
@@ -106,7 +107,7 @@ export class ActivarTestigoComponent implements OnInit {
                         this.dialog.open(DialogNotificationComponent, {
                             data: {
                                 title: 'Error',
-                                message: 'Error al activar testigo',
+                                message: 'Error al activar coordinador',
                                 bottons: 'Aceptar',
                                 type: 'error',
                             },
@@ -118,7 +119,7 @@ export class ActivarTestigoComponent implements OnInit {
             const dialogRef = this.dialog.open(DialogNotificationComponent, {
                 data: {
                     title: 'Confirmar',
-                    message: '¿Está seguro que desea desasociar a este usuario del listado de testigos?',
+                    message: '¿Está seguro que desea desasociar a este usuario del listado de coordinadores?',
                     bottons: 'two',
                     type: 'warning',
                 },
@@ -133,7 +134,7 @@ export class ActivarTestigoComponent implements OnInit {
                             this.dialog.open(DialogNotificationComponent, {
                                 data: {
                                     title: 'Éxito',
-                                    message: 'Testigo desasociado correctamente',
+                                    message: 'Coordinador desasociado correctamente',
                                     bottons: 'Aceptar',
                                     type: 'success',
                                 },
@@ -143,7 +144,7 @@ export class ActivarTestigoComponent implements OnInit {
                         this.dialog.open(DialogNotificationComponent, {
                             data: {
                                 title: 'Error',
-                                message: 'Error al desasociar testigo',
+                                message: 'Error al desasociar coordinador',
                                 bottons: 'Aceptar',
                                 type: 'error',
                             },
@@ -156,5 +157,12 @@ export class ActivarTestigoComponent implements OnInit {
 
     isChecked(perfil: PerfilModel): boolean {
         return perfil.id ? this.existingTestigosIds.has(perfil.id) : false;
+    }
+
+    openGestionWitnessDialog(coordinador: PerfilModel) {
+        this.dialog.open(DialogGestionTestigosComponent, {
+            width: '600px',
+            data: { coordinador }
+        });
     }
 }

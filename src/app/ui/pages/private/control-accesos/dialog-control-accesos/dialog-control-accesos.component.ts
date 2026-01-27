@@ -29,7 +29,7 @@ export class DialogControlAccesosComponent implements OnInit {
     // State for each role
     roleStates: { [key: string]: boolean } = {
         'Coordinador de iglesia': false,
-        'Coordinador de testigos': false,
+        'Administrador de testigos': false,
         'Coordinador de transporte': false,
         'Coordinador de casa de apoyo': false,
     };
@@ -54,8 +54,8 @@ export class DialogControlAccesosComponent implements OnInit {
             this.roleStates['Coordinador de iglesia'] = true; // Enforce dependency
         }
 
-        if (this.data.coordinadorTestigos) {
-            this.roleStates['Coordinador de testigos'] = true;
+        if (this.data.administradorTestigos) {
+            this.roleStates['Administrador de testigos'] = true;
             this.roleStates['Coordinador de iglesia'] = true; // Enforce dependency
         }
 
@@ -80,7 +80,7 @@ export class DialogControlAccesosComponent implements OnInit {
         if (roleValue === 'Coordinador de iglesia') {
             if (!newState) {
                 // If unchecking "Coordinador de iglesia", uncheck everything else
-                this.roleStates['Coordinador de testigos'] = false;
+                this.roleStates['Administrador de testigos'] = false;
                 this.roleStates['Coordinador de transporte'] = false;
                 this.roleStates['Coordinador de casa de apoyo'] = false;
             }
@@ -97,7 +97,7 @@ export class DialogControlAccesosComponent implements OnInit {
         const result = {
             rol: this.roleStates['Coordinador de iglesia'] ? 'Coordinador de iglesia' : null,
             coordinadorTransporte: this.roleStates['Coordinador de transporte'],
-            coordinadorTestigos: this.roleStates['Coordinador de testigos'],
+            administradorTestigos: this.roleStates['Administrador de testigos'],
             coordinadorCasaApoyo: this.roleStates['Coordinador de casa de apoyo']
         };
 

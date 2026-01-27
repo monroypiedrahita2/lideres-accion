@@ -23,8 +23,10 @@ export class CardAprobacionComponent {
 
     @Input() checked: boolean = false;
     @Input() showAssignAction: boolean = false;
+    @Input() showAddWitnessAction: boolean = false;
     @Input() isLoading: boolean = false;
     @Output() checkedChange = new EventEmitter<boolean>();
+    @Output() addWitnessAction = new EventEmitter<void>();
 
     onCheckboxChange(event: Event): void {
         const isChecked = (event.target as HTMLInputElement).checked;

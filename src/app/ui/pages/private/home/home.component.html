@@ -25,9 +25,9 @@
       class="text-[10px] sm:text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full border border-indigo-200 shrink-0">
       Coord. Transporte
     </span>
-    <span *ngIf="usuario.coordinadorTestigos"
+    <span *ngIf="usuario.administradorTestigos"
       class="text-[10px] sm:text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full border border-teal-200 shrink-0">
-      Coord. Testigos
+      Admin. Testigos
     </span>
   </div>
   <div class="flex flex-col justify-center md:justify-start">
@@ -155,11 +155,11 @@
         </mat-accordion>
       </div>
 
-      <!-- Testigo Status -->
+      <!-- Coordinador de Testigo Status -->
       <div *ngIf="usuario.postulado.testigo" class="p-4 rounded-lg bg-gray-50 border-l-4"
         [ngClass]="getBorderColor(testigoStatus)">
         <div class="flex justify-between items-center mb-2">
-          <span class="font-semibold text-gray-700">Testigo Electoral</span>
+          <span class="font-semibold text-gray-700">Coordinador puesto de votación</span>
           <mat-icon [class]="getTextColor(testigoStatus)">how_to_vote</mat-icon>
         </div>
         <p class="text-sm font-medium" [class]="getTextColor(testigoStatus)">
@@ -169,6 +169,40 @@
           <p><strong>Puesto:</strong> {{ testigoInfo.puesto }}</p>
           <p><strong>Mesa:</strong> {{ testigoInfo.mesa }}</p>
         </div>
+
+        <!-- Witnesses List -->
+        <mat-accordion *ngIf="misTestigos.length > 0" class="mt-4 block w-full">
+          <mat-expansion-panel class="!shadow-none !bg-transparent border border-gray-200">
+            <mat-expansion-panel-header class="!h-10">
+              <mat-panel-title class="!text-sm text-gray-600">
+                Testigos Asociados ({{misTestigos.length}})
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="flex flex-col gap-2 mt-2">
+              <div *ngFor="let testigo of misTestigos"
+                class="flex flex-col bg-white p-2 rounded border border-gray-100 shadow-sm">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <p class="text-xs font-bold text-gray-700">{{ testigo.data.nombres }} {{ testigo.data.apellidos }}
+                    </p>
+                    <p class="text-xs text-gray-500">Mesa: {{ testigo.data.mesa }}</p>
+                  </div>
+                  <div class="flex gap-2">
+                    <a *ngIf="testigo.data.celular" [href]="'https://wa.me/' + testigo.data.celular" target="_blank"
+                      class="flex items-center justify-center w-7 h-7 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-colors">
+                      <img src="assets/whatsApp.svg" alt="WhatsApp" class="w-5 h-5">
+                    </a>
+                    <a *ngIf="testigo.data.celular" [href]="'tel:' + testigo.data.celular"
+                      class="flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors">
+                      <mat-icon class="text-sm !w-4 !h-4 flex items-center justify-center">call</mat-icon>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
 
         <!-- Actions -->
         <div *ngIf="testigoInfo" class="flex justify-end gap-3 mt-4 pt-2 border-t border-gray-100">

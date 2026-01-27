@@ -10,8 +10,11 @@ export interface CreateCarreraModel {
     puestoVotacion: string;
     observaciones: string;
     postulados?: string[];
-    telefonoInformacion: string;
+    telefono: string;
     tiempoRecogida: string;
+    latitud?: number;
+    longitud?: number;
+
 }
 
 

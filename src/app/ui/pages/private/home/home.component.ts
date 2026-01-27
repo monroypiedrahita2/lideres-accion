@@ -18,6 +18,9 @@ import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo
 import { TestigoService } from '../../../shared/services/testigo/testigo.service';
 import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { TestigoAsociadoService } from '../../../shared/services/testigo-asociado/testigo-asociado.service';
+import { BaseModel } from '../../../../models/base/base.model';
+import { TestigoAsociadoModel } from '../../../../models/testigo-asociado/testigo-asociado.model';
 
 @Component({
   selector: 'app-home',
@@ -28,7 +31,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
     SkeletonComponent,
     MatIconModule,
     MatDialogModule,
-    ContainerAlertInformationComponent,
     ContainerAlertInformationComponent,
     MatExpansionModule,
     ButtonComponent
@@ -70,6 +72,7 @@ export class HomeComponent implements OnInit {
     private readonly vehiculoService: VehiculoService,
     private readonly casaApoyoService: CasaApoyoService,
     private readonly testigoService: TestigoService,
+    private readonly testigoAsociadoService: TestigoAsociadoService,
     private readonly router: Router
   ) { }
 
@@ -125,6 +128,7 @@ export class HomeComponent implements OnInit {
   // Details info
   testigoInfo: { puesto: string, mesa: string } | null = null;
   vehiculoInfo: { casaApoyo: string; direccion?: string; barrio?: string; responsableTelefono?: string } | null = null;
+  misTestigos: BaseModel<TestigoAsociadoModel>[] = [];
 
   loadPostulacionesInfo() {
     const uid = this.auth.uidUser();
@@ -189,6 +193,12 @@ export class HomeComponent implements OnInit {
                 mesa: testigoData.mesadevotacion
               };
             }
+
+            // Fetch associated witnesses for Coordinador
+            this.testigoAsociadoService.getTestigosByCoordinador(uid).subscribe(witnesses => {
+              this.misTestigos = witnesses;
+            });
+
           } else {
             this.testigoStatus = 'No registrado';
           }

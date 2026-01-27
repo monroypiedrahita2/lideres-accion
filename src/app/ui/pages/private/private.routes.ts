@@ -121,8 +121,15 @@ export const routes: Routes = [
     ]
   },
   {
-    path: '**',
-    redirectTo: 'home',
-    pathMatch: 'full'
-  }
+    path: 'mis-testigos',
+    loadComponent: () =>
+      import('./gestion-testigos/gestion-testigos.component').then(
+        (m) => m.GestionTestigosComponent
+      ),
+  },
+  {
+    path: '',
+    redirectTo: 'inicio',
+    pathMatch: 'full',
+  },
 ];

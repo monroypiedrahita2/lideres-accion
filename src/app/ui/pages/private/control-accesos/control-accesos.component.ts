@@ -139,7 +139,7 @@ export class ControlAccesosComponent implements OnInit {
       rol: data.rol,
       iglesia: this.iglesia,
       coordinadorTransporte: data.coordinadorTransporte,
-      coordinadorTestigos: data.coordinadorTestigos,
+      administradorTestigos: data.administradorTestigos,
       coordinadorCasaApoyo: data.coordinadorCasaApoyo,
     };
 
