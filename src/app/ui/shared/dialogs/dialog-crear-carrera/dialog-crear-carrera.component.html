@@ -1,0 +1,47 @@
+<div class="p-2 bg-white rounded-lg max-w-md w-full mx-auto relative">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+            <mat-icon class="text-blue-600">directions_car</mat-icon>
+            Solicitar Carrera
+        </h2>
+        <button mat-icon-button (click)="cancel()" class="text-gray-500 hover:text-gray-700">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <form [formGroup]="form" class="flex flex-col gap-4 max-h-[70vh] overflow-y-auto px-1 py-1">
+
+        <mg-input-text id="telefonoSolicitante" label="Teléfono Solicitante" formControlName="telefonoSolicitante"
+            type="tel" [required]="true" placeholder="Ingrese número de celular"></mg-input-text>
+
+        <mg-input-text id="telefonoVotante" label="Teléfono Votante" formControlName="telefonoVotante" type="tel"
+            [required]="true" placeholder="Ingrese número de celular"></mg-input-text>
+
+        <mg-input-select id="tipoVehiculo" label="Tipo de vehículo" formControlName="tipoVehiculo"
+            [items]="tipoVehiculoOptions" [required]="true"
+            placeholder="Seleccione el tipo de vehículo"></mg-input-select>
+
+        <div class="mb-2">
+            <mat-checkbox [checked]="usarUbicacionActual" (change)="toggleUbicacion($event)" class="text-gray-700">
+                Ubicación actual
+            </mat-checkbox>
+        </div>
+
+        <mg-input-text *ngIf="!usarUbicacionActual" id="lugarRecogida" label="Lugar de recogida"
+            formControlName="lugarRecogida" [required]="true"
+            placeholder="Dirección o punto de referencia"></mg-input-text>
+
+        <mg-input-select id="puestoVotacionIr" label="Puesto de votación (destino)" formControlName="puestoVotacionIr"
+            [items]="puestosVotacionOptions" [required]="true"
+            placeholder="Seleccione el puesto de votación"></mg-input-select>
+
+        <mg-input-text id="observaciones" label="Observaciones" formControlName="observaciones"
+            placeholder="Indicaciones adicionales (opcional)"></mg-input-text>
+
+    </form>
+
+    <div class="flex justify-center gap-3 my-6">
+        <mg-button text="Cancelar" type="reset" size="small" (onClick)="cancel()"></mg-button>
+        <mg-button text="Solicitar" size="small" [loading]="loading" (onClick)="onSave()"></mg-button>
+    </div>
+</div>

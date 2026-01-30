@@ -150,7 +150,7 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
     }
   }
 
-  inputLabel = (value: number) => {
+  inputLabel = (value: any) => {
     return this.items.find((option) => option.value == value)?.label ?? '';
   }
 

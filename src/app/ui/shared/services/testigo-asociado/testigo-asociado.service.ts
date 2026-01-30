@@ -17,7 +17,7 @@ import { TestigoAsociadoModel } from '../../../../models/testigo-asociado/testig
 
 @Injectable({ providedIn: 'root' })
 export class TestigoAsociadoService {
-    _collection: string = environment.collections.testigos_asociados;
+    _collection: string = environment.collections.testigosAsociados;
 
     constructor(private readonly firestore: Firestore) { }
 

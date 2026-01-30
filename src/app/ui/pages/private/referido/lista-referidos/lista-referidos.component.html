@@ -36,10 +36,10 @@
     </button>
   </form>
 </div>
-<div *ngIf="optionSelected == 'Todos' && (usuario.rol === 'Pastor' || usuario.rol === 'Super usuario')"
+<div *ngIf="optionSelected == 'Todos' && usuario.rol === 'Super usuario'"
   class="lg:col-span-4 flex items-center sm:justify-around">
   <mg-button (onClick)="clear()" [text]="btnRecargar ? 'Mostrar todos' : 'Limpiar'" type="reset"></mg-button>
-  <div class="p-4" *ngIf="usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'">
+  <div class="p-4" *ngIf="usuario.rol == 'Super usuario'">
     <mg-button (onClick)="descargar(referidos)" icon="cloud_download" text="Descargar"></mg-button>
   </div>
 </div>

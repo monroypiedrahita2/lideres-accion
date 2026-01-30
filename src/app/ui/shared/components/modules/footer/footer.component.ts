@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogAsociarIglesiaComponent } from '../../../dialogs/dialog-asociar-iglesia/dialog-asociar-iglesia.component';
 import { Subscription } from 'rxjs';
 import { PerfilService } from '../../../services/perfil/perfil.service';
+import { DialogCrearCarreraComponent } from '../../../dialogs/dialog-crear-carrera/dialog-crear-carrera.component';
 
 @Component({
   selector: 'mtt-footer',
@@ -53,4 +54,24 @@ export class FooterComponent implements OnInit, OnDestroy {
     });
   }
 
+  openDialogCrearCarrera() {
+    this.dialog.open(DialogCrearCarreraComponent, {
+      width: '400px',
+      data: { usuario: this.usuario }
+    });
+  }
+
+  get canCreateCarrera(): boolean {
+    const { rol, coordinadorCasaApoyo, coordinadorTransporte } = this.usuario;
+    const allowedRoles = [
+      'Coordinador de iglesia',
+      'Coordinador de transporte',
+      'Coordinador de casa de apoyo',
+      'Pastor'
+    ];
+
+    return allowedRoles.includes(rol || '') ||
+      !!coordinadorCasaApoyo ||
+      !!coordinadorTransporte;
+  }
 }

@@ -24,7 +24,7 @@ import { TestigoModel } from '../../../../models/testigo/testigo.model';
 
 @Injectable({ providedIn: 'root' })
 export class TestigoService {
-    _collection: string = environment.collections.testigos;
+    _collection: string = environment.collections.coordinadorTestigos;
     lastDoc: any = null; // Para paginación
 
     constructor(private readonly firestore: Firestore) { }

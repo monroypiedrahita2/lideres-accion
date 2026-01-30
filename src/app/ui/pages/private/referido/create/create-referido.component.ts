@@ -170,42 +170,50 @@ export class CreateReferidoComponent implements OnInit {
       });
     }, 1000);
   }
-  getReferido(documento: string) {
-    this.referidoService
-      .getReferido(documento)
-      .then((res: BaseModel<ReferidoModel>) => {
-        this.dataReferido = res;
+  async getReferido(documento: string) {
+    try {
+      const res: BaseModel<ReferidoModel> = await this.referidoService.getReferido(documento);
+      this.dataReferido = res;
 
-        if (res.data.barrio) {
-          // Need to fetch or manually set the barrio in the list because it might not be searched yet
-          // Here we might need to fetch the specific barrio by ID or name to show it
-          this.comunasService.getComuna(res.data.barrio).then(comuna => {
-            if (comuna) {
-              this.barrios = [{ label: comuna.data.barrio + ' - ' + comuna.data.municipio, value: res.data.barrio }];
-            }
-          });
+      if (res.data.barrio) {
+        try {
+          const comuna = await this.comunasService.getComuna(res.data.barrio);
+          if (comuna) {
+            this.barrios = [{
+              label: comuna.data.barrio + ' - ' + (comuna.data.municipio || ''),
+              value: res.data.barrio
+            }];
+          }
+        } catch (error) {
+          console.error("Error loading barrio", error);
         }
+      }
 
-        this.form.patchValue({
-          documento: this.id,
-          referidoPor: res.data.referidoPor,
-          isInterno: res.data.isInterno,
-          nombres: res.data.nombres,
-          apellidos: res.data.apellidos,
-          celular: res.data.celular,
-          email: res.data.email,
-          fechaNacimiento: res.data.fechaNacimiento,
-          esEmprendedor: res.data.esEmprendedor,
-          barrio: res.data.barrio,
-          direccion: res.data.direccion,
-          camara: res.data.camara,
-          senado: res.data.senado,
-          iglesia: res.data.iglesia,
-          lugarVotacion: res.data.lugarVotacion,
-          mesaVotacion: res.data.mesaVotacion,
-        });
-        this.form.get('documento')?.disable();
+      this.form.patchValue({
+        documento: this.id,
+        referidoPor: res.data.referidoPor,
+        isInterno: res.data.isInterno,
+        nombres: res.data.nombres,
+        apellidos: res.data.apellidos,
+        celular: res.data.celular,
+        email: res.data.email,
+        fechaNacimiento: res.data.fechaNacimiento,
+        esEmprendedor: res.data.esEmprendedor,
+        barrio: res.data.barrio,
+        direccion: res.data.direccion,
+        camara: res.data.camara,
+        senado: res.data.senado,
+        iglesia: res.data.iglesia,
+        lugarVotacion: res.data.lugarVotacion,
+        mesaVotacion: res.data.mesaVotacion,
       });
+      this.form.get('documento')?.disable();
+      this.enableSkeleton = false; // Ensure skeleton is disabled here if not handled elsewhere
+    } catch (error) {
+      console.error("Error getting referido", error);
+      this.toast.error("Error al cargar la información del referido");
+      this.location.back();
+    }
   }
 
   async goToPage(page: string) {

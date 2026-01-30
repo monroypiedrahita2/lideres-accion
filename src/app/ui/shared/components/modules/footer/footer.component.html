@@ -1,34 +1,21 @@
 <div
-  class="w-full h-16 flex justify-between items-center z-40 fixed bottom-0 bg-primary pt-3"
->
-  <app-button-footer
-    class="w-full flex justify-center"
-    [option]="'Home'"
-    [icon]="'home'"
-    [goTo]="'./home'"
-  ></app-button-footer>
+  class="w-full h-16 flex items-center z-40 fixed bottom-0 bg-primary pt-3 overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide">
+  <app-button-footer class="flex-1 min-w-[80px] flex justify-center" [option]="'Home'" [icon]="'home'"
+    [goTo]="'./home'"></app-button-footer>
   <app-button-footer
     *ngIf="usuario.rol == 'Coordinador de iglesia' || usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'"
-    class="w-full flex justify-center"
-    [option]="'Referidos'"
-    [icon]="'view_list'"
-    [goTo]="'./listar-referidos'"
-  ></app-button-footer>
+    class="flex-1 min-w-[80px] flex justify-center" [option]="'Referidos'" [icon]="'view_list'"
+    [goTo]="'./listar-referidos'"></app-button-footer>
 
   <app-button-footer
     *ngIf="usuario.rol == 'Coordinador de iglesia' || usuario.rol == 'Pastor' || usuario.rol == 'Super usuario'"
-    class="w-full flex justify-center"
-    [option]="'Referido'"
-    [icon]="'person_add'"
-    [goTo]="'./crear-referido'"
-  ></app-button-footer>
+    class="flex-1 min-w-[80px] flex justify-center" [option]="'Referido'" [icon]="'person_add'"
+    [goTo]="'./crear-referido'"></app-button-footer>
 
-  <app-button-footer
-    *ngIf="usuario.rol == 'Coordinador de iglesia' || usuario.rol == 'Pastor'"
-    class="w-full flex justify-center"
-    [option]="'Asociar'"
-    [icon]="'assignment_ind'"
-    [goTo]="$any(null)"
-    (click)="openAsociarIglesia()"
-  ></app-button-footer>
+  <app-button-footer *ngIf="usuario.rol == 'Coordinador de iglesia' || usuario.rol == 'Pastor'"
+    class="flex-1 min-w-[80px] flex justify-center" [option]="'Asociar'" [icon]="'assignment_ind'" [goTo]="$any(null)"
+    (click)="openAsociarIglesia()"></app-button-footer>
+
+  <app-button-footer *ngIf="canCreateCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Carrera'"
+    [icon]="'local_taxi'" [goTo]="$any(null)" (click)="openDialogCrearCarrera()"></app-button-footer>
 </div>

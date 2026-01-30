@@ -21,6 +21,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { TestigoAsociadoService } from '../../../shared/services/testigo-asociado/testigo-asociado.service';
 import { BaseModel } from '../../../../models/base/base.model';
 import { TestigoAsociadoModel } from '../../../../models/testigo-asociado/testigo-asociado.model';
+import { DialogCrearCarreraComponent } from '../../../shared/dialogs/dialog-crear-carrera/dialog-crear-carrera.component';
 
 @Component({
   selector: 'app-home',
@@ -287,5 +288,12 @@ export class HomeComponent implements OnInit {
 
   goToResultados() {
     this.router.navigate(['/private/enviar-resultados-votacion']);
+  }
+
+  openDialogCrearCarrera() {
+    this.dialog.open(DialogCrearCarreraComponent, {
+      width: '400px',
+      data: { usuario: this.usuario }
+    });
   }
 }
