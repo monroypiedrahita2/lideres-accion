@@ -7,7 +7,7 @@ import {
   MatDialogActions,
   MatDialogClose,
 } from '@angular/material/dialog';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../components/atoms/button/button.component';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,8 +32,22 @@ export class DialogCasasApoyoComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogCasasApoyoComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private readonly router: Router
   ) { }
+
+  ngOnInit(): void {
+    const isPrivileged = this.usuario.rol === 'Pastor' ||
+      this.usuario.rol === 'Super Usuario' ||
+      this.usuario.rol === 'Coordinador de iglesia' ||
+      this.usuario.rol === 'Coordinador de casa de apoyo' ||
+      this.usuario.coordinadorCasaApoyo;
+
+    if (!isPrivileged) {
+      this.dialogRef.close();
+      this.router.navigate(['/private/mi-casa-de-apoyo']);
+    }
+  }
 
   onNoClick(): void {
     this.dialogRef.close();

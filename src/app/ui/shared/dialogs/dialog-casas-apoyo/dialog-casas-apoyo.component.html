@@ -7,12 +7,14 @@
   <mg-button mat-dialog-close size="big" text="Mi casa de apoyo" class="w-full" icon="home"
     routerLink="/private/mi-casa-de-apoyo"></mg-button>
 
-  @if(this.usuario.rol === 'Pastor' || this.usuario.rol === 'Coordinador de iglesia') {
+  @if(this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super Usuario' || this.usuario.rol === 'Coordinador de
+  iglesia' || this.usuario.rol === 'Coordinador de casa de apoyo' || this.usuario.coordinadorCasaApoyo) {
   <mg-button mat-dialog-close size="big" text="Aprobar solicitudes" class="w-full" icon="check_circle"
     routerLink="/private/aprobar-casas-apoyo"></mg-button>
   }
 
-  @if(this.usuario.rol === 'Pastor' || this.usuario.rol === 'Coordinador de iglesia') {
+  @if(this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super Usuario' || this.usuario.rol === 'Coordinador de
+  iglesia' || this.usuario.rol === 'Coordinador de casa de apoyo' || this.usuario.coordinadorCasaApoyo) {
   <mg-button mat-dialog-close size="big" text="Casas aprobadas" class="w-full" icon="list"
     routerLink="/private/listar-casas-apoyo"></mg-button>
   }

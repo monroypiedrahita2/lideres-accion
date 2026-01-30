@@ -15,6 +15,7 @@ export interface CreateCarreraModel {
     longitudSeleccionado?: number;
     vehiculoIdAprobado?: string;
     estado?: 'Abierto' | 'Cancelada' | 'En ruta' | 'Finalizada';
+    creadaPor?: string;  // uid del usuario es decir el id de perfil.model.ts
 }
 
 

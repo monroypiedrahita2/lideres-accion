@@ -63,22 +63,34 @@ export class SettingsComponent {
   openDialog(action: string) {
     switch (action) {
       case 'vehiculo':
-        this.dialog.open(DialogOpcionesVehicularComponent, {
-          data: { name: 'mi-carro' },
-          width: '300px',
-        });
+        if (this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super Usuario' || this.usuario.rol === 'Coordinador de iglesia' || this.usuario.coordinadorTransporte) {
+          this.dialog.open(DialogOpcionesVehicularComponent, {
+            data: { name: 'mi-carro' },
+            width: '300px',
+          });
+        } else {
+          this.router.navigate(['/private/mi-vehiculo']);
+        }
         break;
       case 'casa-apoyo':
-        this.dialog.open(DialogCasasApoyoComponent, {
-          data: { name: 'mi-casa-apoyo' },
-          width: '300px',
-        });
+        if (this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super Usuario' || this.usuario.rol === 'Coordinador de iglesia' || this.usuario.rol === 'Coordinador de casa de apoyo' || this.usuario.coordinadorCasaApoyo) {
+          this.dialog.open(DialogCasasApoyoComponent, {
+            data: { name: 'mi-casa-apoyo' },
+            width: '300px',
+          });
+        } else {
+          this.router.navigate(['/private/mi-casa-de-apoyo']);
+        }
         break;
       case 'testigo':
-        this.dialog.open(DialogTestigosComponent, {
-          data: { name: 'mi-testigos' },
-          width: '300px',
-        });
+        if (this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super Usuario' || this.usuario.rol === 'Coordinador de iglesia' || this.usuario.rol === 'Coordinador de testigos' || this.usuario.administradorTestigos) {
+          this.dialog.open(DialogTestigosComponent, {
+            data: { name: 'mi-testigos' },
+            width: '300px',
+          });
+        } else {
+          this.router.navigate(['/private/activar-testigo']);
+        }
         break;
     }
   }

@@ -55,8 +55,8 @@ export class DialogCrearCarreraComponent implements OnInit {
         private dialog: MatDialog
     ) {
         this.form = this.fb.group({
-            telefonoSolicitante: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
-            telefonoVotante: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+            telefonoSolicitante: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
+            telefonoVotante: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
             tipoVehiculo: ['', Validators.required],
             lugarRecogida: ['', Validators.required],
             puestoVotacionIr: ['', Validators.required],

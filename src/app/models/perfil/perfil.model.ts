@@ -6,7 +6,7 @@ export interface PerfilModel {
   celular?: string;
   nameIglesia?: string;
   email: string;
-  rol: string | null; // solo lo puede administrar el Pastor y Super Usuario
+  rol: 'Pastor' | 'Super Usuario' | string | null; // solo lo puede administrar el Pastor y Super Usuario
   postulado?: PostuladoModel; // solo lo puede Crear administrar y eliminar el mismo usuario
   coordinadorCasaApoyo?: boolean | null;  // solo lo puede Crear administrar y eliminar el Pastor
   coordinadorTransporte?: boolean | null; // solo lo puede Crear administrar y eliminar el Pastor
@@ -17,7 +17,7 @@ export interface PerfilModel {
 }
 
 export interface AsigmentRolePerfilModel {
-  rol: string | null;
+  rol: 'Pastor' | 'Super Usuario' | string | null;
   iglesia: string;
 }
 

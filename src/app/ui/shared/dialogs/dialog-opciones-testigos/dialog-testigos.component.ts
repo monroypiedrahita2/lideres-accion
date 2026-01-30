@@ -41,8 +41,20 @@ export class DialogTestigosComponent {
         public dialogRef: MatDialogRef<DialogTestigosComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private readonly router: Router
-
     ) { }
+
+    ngOnInit(): void {
+        const isPrivileged = this.usuario.rol === 'Pastor' ||
+            this.usuario.rol === 'Super Usuario' ||
+            this.usuario.rol === 'Coordinador de iglesia' ||
+            this.usuario.rol === 'Coordinador de testigos' ||
+            this.usuario.administradorTestigos;
+
+        if (!isPrivileged) {
+            this.dialogRef.close();
+            this.router.navigate(['/private/activar-testigo']);
+        }
+    }
 
     onNoClick(): void {
         this.dialogRef.close();
