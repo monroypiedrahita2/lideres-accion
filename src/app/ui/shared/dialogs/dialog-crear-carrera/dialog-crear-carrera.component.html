@@ -23,13 +23,12 @@
 
         <div class="mb-2">
             <mat-checkbox [checked]="usarUbicacionActual" (change)="toggleUbicacion($event)" class="text-gray-700">
-                Ubicación actual
+                Enviar ubicación actual
             </mat-checkbox>
         </div>
 
-        <mg-input-text *ngIf="!usarUbicacionActual" id="lugarRecogida" label="Lugar de recogida"
-            formControlName="lugarRecogida" [required]="true"
-            placeholder="Dirección o punto de referencia"></mg-input-text>
+        <mg-input-text id="lugarRecogida" label="Lugar de recogida" formControlName="lugarRecogida"
+            [required]="!usarUbicacionActual" placeholder="Dirección o punto de referencia"></mg-input-text>
 
         <mg-input-select id="puestoVotacionIr" label="Puesto de votación (destino)" formControlName="puestoVotacionIr"
             [items]="puestosVotacionOptions" [required]="true"

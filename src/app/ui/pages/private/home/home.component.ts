@@ -22,6 +22,7 @@ import { TestigoAsociadoService } from '../../../shared/services/testigo-asociad
 import { BaseModel } from '../../../../models/base/base.model';
 import { TestigoAsociadoModel } from '../../../../models/testigo-asociado/testigo-asociado.model';
 import { DialogCrearCarreraComponent } from '../../../shared/dialogs/dialog-crear-carrera/dialog-crear-carrera.component';
+import { TabCarrerasComponent } from './tab-carreras/tab-carreras.component';
 
 @Component({
   selector: 'app-home',
@@ -34,7 +35,8 @@ import { DialogCrearCarreraComponent } from '../../../shared/dialogs/dialog-crea
     MatDialogModule,
     ContainerAlertInformationComponent,
     MatExpansionModule,
-    ButtonComponent
+    ButtonComponent,
+    TabCarrerasComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']

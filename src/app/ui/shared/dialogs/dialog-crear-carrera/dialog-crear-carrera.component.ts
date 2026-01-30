@@ -12,6 +12,7 @@ import { PuestoVotacionService } from '../../services/puesto-votacion/puesto-vot
 import { SelectOption } from '../../components/atoms/input-select/input-select.component';
 import { CarreraService } from '../../services/carrera/carrera.service';
 import { DialogNotificationComponent } from '../dialog-notification/dialog-nofication.component';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
     selector: 'app-dialog-crear-carrera',
@@ -52,7 +53,8 @@ export class DialogCrearCarreraComponent implements OnInit {
         private ngZone: NgZone,
         private puestoVotacionService: PuestoVotacionService,
         private carreraService: CarreraService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private authService: AuthService
     ) {
         this.form = this.fb.group({
             telefonoSolicitante: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
@@ -94,14 +96,18 @@ export class DialogCrearCarreraComponent implements OnInit {
 
     toggleUbicacion(event: any) {
         this.usarUbicacionActual = event.checked;
+        const lugarRecogidaControl = this.form.get('lugarRecogida');
+
         if (this.usarUbicacionActual) {
+            lugarRecogidaControl?.clearValidators();
+            lugarRecogidaControl?.updateValueAndValidity();
+
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition((position) => {
                     this.ngZone.run(() => {
                         this.form.patchValue({
                             latitudSolicitante: position.coords.latitude,
-                            longitudSolicitante: position.coords.longitude,
-                            lugarRecogida: 'Ubicación actual'
+                            longitudSolicitante: position.coords.longitude
                         });
                     });
                 }, (error) => {
@@ -109,17 +115,23 @@ export class DialogCrearCarreraComponent implements OnInit {
                         console.error("Error getting location", error);
                         this.usarUbicacionActual = false;
                         event.source.checked = false;
+                        lugarRecogidaControl?.setValidators([Validators.required]);
+                        lugarRecogidaControl?.updateValueAndValidity();
                     });
                 });
             } else {
                 console.error("Geolocation is not supported by this browser.");
                 this.usarUbicacionActual = false;
+                lugarRecogidaControl?.setValidators([Validators.required]);
+                lugarRecogidaControl?.updateValueAndValidity();
             }
         } else {
+            lugarRecogidaControl?.setValidators([Validators.required]);
+            lugarRecogidaControl?.updateValueAndValidity();
+
             this.form.patchValue({
                 latitudSolicitante: null,
-                longitudSolicitante: null,
-                lugarRecogida: ''
+                longitudSolicitante: null
             });
         }
     }
@@ -133,13 +145,18 @@ export class DialogCrearCarreraComponent implements OnInit {
         this.loading = true;
         const carreraData = this.form.value;
 
+        if (this.usarUbicacionActual && !carreraData.lugarRecogida) {
+            carreraData.lugarRecogida = 'Ubicación actual';
+        }
+
         // Add additional data if needed, e.g. status
         const newCarrera = {
             ...carreraData,
             estado: 'Abierto',
             // Ensure numbers for coords if they exist
             latitudSolicitante: carreraData.latitudSolicitante ? Number(carreraData.latitudSolicitante) : null,
-            longitudSolicitante: carreraData.longitudSolicitante ? Number(carreraData.longitudSolicitante) : null
+            longitudSolicitante: carreraData.longitudSolicitante ? Number(carreraData.longitudSolicitante) : null,
+            creadaPor: this.authService.uidUser()
         };
 
         this.carreraService.createCarrera(newCarrera).then(() => {
