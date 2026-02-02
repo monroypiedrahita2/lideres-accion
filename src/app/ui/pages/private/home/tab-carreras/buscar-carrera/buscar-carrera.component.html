@@ -6,6 +6,17 @@
         <span>{{ vehiculoMensaje }}</span>
     </div>
 
+    <!-- Filter Section -->
+    <div *ngIf="availableTypes.size > 0" class="flex flex-col gap-2 mb-2">
+        <span class="text-xs text-gray-500 font-medium ml-1">Filtrar por vehículo:</span>
+        <mat-chip-listbox [multiple]="true">
+            <mat-chip-option *ngFor="let type of availableTypes" [selected]="selectedTypes.includes(type)"
+                (click)="toggleType(type)" color="primary">
+                {{ type }}
+            </mat-chip-option>
+        </mat-chip-listbox>
+    </div>
+
     <div *ngIf="loadingBuscar && !vehiculoMensaje" class="text-center text-gray-500 py-4">
         Buscando carreras disponibles...
     </div>

@@ -17,6 +17,8 @@ interface CarreraWithDistance extends CreateCarreraModel {
     tiempoEstimado?: number;
 }
 
+import { MatChipsModule } from '@angular/material/chips';
+
 @Component({
     selector: 'app-buscar-carrera',
     standalone: true,
@@ -24,7 +26,8 @@ interface CarreraWithDistance extends CreateCarreraModel {
         CommonModule,
         MatButtonModule,
         MatIconModule,
-        MatDialogModule
+        MatDialogModule,
+        MatChipsModule
     ],
     templateUrl: './buscar-carrera.component.html',
     styleUrls: ['./buscar-carrera.component.scss']
@@ -67,6 +70,9 @@ export class BuscarCarreraComponent implements OnInit {
         }
     }
 
+    availableTypes: Set<string> = new Set();
+    selectedTypes: string[] = [];
+
     async checkVehiculoAndLoadDisponibles() {
         this.loadingBuscar = true;
         const uid = this.authService.uidUser();
@@ -78,14 +84,30 @@ export class BuscarCarreraComponent implements OnInit {
         }
 
         try {
+            // Get ALL vehicles for the user (not just limit 1, though service returns array)
             const vehiculos = await firstValueFrom(this.vehiculoService.getVehiculoByConductor(uid));
+
             if (vehiculos && vehiculos.length > 0) {
-                const vehiculo = vehiculos[0];
-                if (vehiculo.aprobado && vehiculo.estado === 'Activo') {
-                    this.vehiculoActivo = vehiculo;
-                    this.loadCarrerasDisponibles(vehiculo.tipoVehiculo);
+                // Filter for approved and active vehicles
+                const activeVehiculos = vehiculos.filter(v => v.aprobado && v.estado === 'Activo');
+
+                if (activeVehiculos.length > 0) {
+                    // Set primary vehicle as the first active one for postulation logic (or handle selection later)
+                    this.vehiculoActivo = activeVehiculos[0];
+
+                    // Collect all vehicle types
+                    activeVehiculos.forEach(v => this.availableTypes.add(v.tipoVehiculo));
+
+                    // Business Rule: If user has 'Camioneta', they can also see 'Carro'
+                    if (this.availableTypes.has('Camioneta')) {
+                        this.availableTypes.add('Carro');
+                    }
+
+                    // Select all available types by default
+                    this.selectedTypes = Array.from(this.availableTypes);
+                    this.loadCarrerasDisponibles(this.selectedTypes);
                 } else {
-                    this.vehiculoMensaje = 'Tu vehículo no está aprobado o no está en estado "Activo".';
+                    this.vehiculoMensaje = 'Tus vehículos no están aprobados o no están en estado "Activo".';
                 }
             } else {
                 this.vehiculoMensaje = 'No tienes un vehículo registrado para tomar carreras.';
@@ -98,9 +120,15 @@ export class BuscarCarreraComponent implements OnInit {
         }
     }
 
-    loadCarrerasDisponibles(tipoVehiculo: string) {
+    loadCarrerasDisponibles(tiposVehiculo: string | string[]) {
         const uid = this.authService.uidUser();
-        this.carreraService.getCarrerasDisponibles(tipoVehiculo).subscribe(carreras => {
+        // Check if types array is empty to avoid unnecessary calls or errors
+        if (Array.isArray(tiposVehiculo) && tiposVehiculo.length === 0) {
+            this.carrerasDisponibles = [];
+            return;
+        }
+
+        this.carreraService.getCarrerasDisponibles(tiposVehiculo).subscribe(carreras => {
             // Filter out races created by me
             this.carrerasDisponibles = carreras.filter(c => c.creadaPor !== uid);
 
@@ -108,6 +136,16 @@ export class BuscarCarreraComponent implements OnInit {
                 this.calculateDistances();
             }
         });
+    }
+
+    toggleType(type: string) {
+        if (this.selectedTypes.includes(type)) {
+            // Don't allow deselecting the last one if you want? Or maybe allow empty state.
+            this.selectedTypes = this.selectedTypes.filter(t => t !== type);
+        } else {
+            this.selectedTypes.push(type);
+        }
+        this.loadCarrerasDisponibles(this.selectedTypes);
     }
 
     calculateDistances() {

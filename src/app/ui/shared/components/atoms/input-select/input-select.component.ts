@@ -161,4 +161,10 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
     this.onTouchedFn();
   }
 
+  onFocus(): void {
+    if (!this.asyncSearch) {
+      this.filteredOptions = this.items;
+    }
+  }
+
 }

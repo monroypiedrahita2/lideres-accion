@@ -13,6 +13,7 @@ import { SelectOption } from '../../components/atoms/input-select/input-select.c
 import { CarreraService } from '../../services/carrera/carrera.service';
 import { DialogNotificationComponent } from '../dialog-notification/dialog-nofication.component';
 import { AuthService } from '../../services/auth/auth.service';
+import { TIPOS_VEHICULOS } from '../../const/marcas.const';
 
 @Component({
     selector: 'app-dialog-crear-carrera',
@@ -36,13 +37,7 @@ export class DialogCrearCarreraComponent implements OnInit {
     loading: boolean = false;
     usarUbicacionActual: boolean = false;
 
-    tipoVehiculoOptions = [
-        { label: 'Moto', value: 'Moto' },
-        { label: 'Carro', value: 'Carro' },
-        { label: 'Camioneta', value: 'Camioneta' },
-        { label: 'Van', value: 'Van' },
-        { label: 'Bus', value: 'Bus' }
-    ];
+    tipoVehiculoOptions = TIPOS_VEHICULOS
 
     puestosVotacionOptions: SelectOption[] = [];
 

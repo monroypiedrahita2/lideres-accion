@@ -11,7 +11,7 @@
   } @else {
   <input #input type="text" [placeholder]="placeholder" [disabled]="disabled" matInput [errorStateMatcher]="matcher"
     [(ngModel)]="rifInput" [matAutocomplete]="auto" [ngModelOptions]="{ standalone: true }" (ngModelChange)="onChange()"
-    (input)="filter()" (focus)="filter()">
+    (input)="filter()" (focus)="onFocus()">
   <mat-autocomplete (optionSelected)="onChange()" (closed)="onTouchedFn()" [displayWith]="inputLabel"
     [requireSelection]="true" #auto="matAutocomplete">
     @for(item of filteredOptions; track item){
