@@ -71,11 +71,9 @@
           <span><strong>Barrio:</strong> {{ vehiculoInfo.barrio }}</span>
 
           <div class="flex gap-2 mt-2" *ngIf="vehiculoInfo.responsableTelefono">
-            <div class="flex gap-2 mt-2" *ngIf="vehiculoInfo.responsableTelefono">
-              <mg-icon-whatsapp [phone]="vehiculoInfo.responsableTelefono" size="small"></mg-icon-whatsapp>
-              <mg-icon-button icon="call" [link]="'tel:' + vehiculoInfo.responsableTelefono" variant="bg-white"
-                size="small" class="text-blue-600"></mg-icon-button>
-            </div>
+            <mg-icon-whatsapp [phone]="vehiculoInfo.responsableTelefono" size="small"></mg-icon-whatsapp>
+            <mg-icon-button icon="call" [link]="'tel:' + vehiculoInfo.responsableTelefono" variant="info"
+              size="small"></mg-icon-button>
           </div>
 
           <!-- Status Selector -->
