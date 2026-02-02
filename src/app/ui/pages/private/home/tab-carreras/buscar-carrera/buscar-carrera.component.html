@@ -7,7 +7,7 @@
     </div>
 
     <!-- Filter Section -->
-    <div *ngIf="availableTypes.size > 0" class="flex flex-col gap-2 mb-2">
+    <div *ngIf="showFilter" class="flex flex-col gap-2 mb-2">
         <span class="text-xs text-gray-500 font-medium ml-1">Filtrar por vehículo:</span>
         <mat-chip-listbox [multiple]="true">
             <mat-chip-option *ngFor="let type of availableTypes" [selected]="selectedTypes.includes(type)"
@@ -53,23 +53,18 @@
             <span class="text-xs text-blue-600 font-medium">Contactar:</span>
             <div class="flex gap-2">
                 <!-- WhatsApp Solicitante -->
-                <a [href]="getWhatsAppLink(carrera.telefonoSolicitante)" target="_blank"
-                    class="flex items-center justify-center w-8 h-8 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-colors border border-green-200"
-                    title="WhatsApp Solicitante">
-                    <img src="assets/whatsApp.svg" alt="WhatsApp" class="w-5 h-5">
-                </a>
+                <mg-icon-whatsapp [phone]="carrera.telefonoSolicitante" size="small"></mg-icon-whatsapp>
                 <!-- Call Solicitante -->
-                <a [href]="'tel:' + carrera.telefonoSolicitante"
-                    class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors border border-blue-200"
-                    title="Llamar Solicitante">
-                    <mat-icon class="!text-sm !w-4 !h-4 flex items-center justify-center">call</mat-icon>
-                </a>
+                <mg-icon-button icon="call" [link]="'tel:' + carrera.telefonoSolicitante" variant="info"
+                    size="small"></mg-icon-button>
             </div>
         </div>
         <!-- Postularse Button -->
-        <button mat-flat-button color="primary" class="w-full mt-3 !rounded-full" (click)="postularse(carrera)">
-            <mat-icon class="mr-2">pan_tool</mat-icon>
-            Postularme
+        <!-- Postularse Button -->
+        <button mat-flat-button [color]="isPostulated(carrera) ? 'warn' : 'primary'" class="w-full mt-3 !rounded-full"
+            (click)="togglePostulacion(carrera)">
+            <mat-icon class="mr-2">{{ isPostulated(carrera) ? 'cancel' : 'pan_tool' }}</mat-icon>
+            {{ isPostulated(carrera) ? 'Eliminar Postulación' : 'Postularme' }}
         </button>
     </div>
 </div>

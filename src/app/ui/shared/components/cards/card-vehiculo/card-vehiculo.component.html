@@ -29,15 +29,7 @@
   </div>
 
   <div class="flex gap-3 mt-4" *ngIf="showActions">
-    <button (click)="openWhatsapp()"
-      class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer"
-      matTooltip="WhatsApp">
-      <img src="assets/whatsApp.svg" alt="WhatsApp" class="w-8 h-8">
-    </button>
-    <button (click)="call()"
-      class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors cursor-pointer"
-      matTooltip="Llamar">
-      <mat-icon class="text-blue-600">call</mat-icon>
-    </button>
+    <mg-icon-whatsapp [phone]="vehiculo.celular" size="medium"></mg-icon-whatsapp>
+    <mg-icon-button icon="call" [link]="'tel:' + vehiculo.celular" variant="info" size="medium"></mg-icon-button>
   </div>
 </div>

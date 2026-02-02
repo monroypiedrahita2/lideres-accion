@@ -1,12 +1,14 @@
 
 export interface CreateCarreraModel {
     id?: string; // el id se genera automaticamente
-    tipoVehiculo: string[];
+    tipoVehiculo: string;
     lugarRecogida: string;
     puestoVotacionIr: string;
     observaciones: string;
     postulados: PostuladosIdsModel[];
     seleccionadoId?: string | 'Sin seleccionar';
+    nombreSolicitante?: string;
+    nombreVotante?: string;
     telefonoSolicitante: string;
     telefonoVotante: string;
     latitudSolicitante?: number;

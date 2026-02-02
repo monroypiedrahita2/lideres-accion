@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, doc, setDoc, query, where, collectionData, updateDoc, arrayUnion } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, setDoc, query, where, collectionData, updateDoc, arrayUnion, arrayRemove, deleteDoc } from '@angular/fire/firestore';
 import { CreateCarreraModel } from '../../../../models/carrera/carrera.model';
 import { environment } from '../../../../../enviroments';
 import { Observable } from 'rxjs';
@@ -72,5 +72,27 @@ export class CarreraService {
         }
 
         return updateDoc(docRef, dataToUpdate);
+    }
+
+    async cancelarPostulacion(carreraId: string, postulacion: any) {
+        const docRef = doc(this.firestore, this._collection, carreraId);
+        return updateDoc(docRef, {
+            postulados: arrayRemove(postulacion) // Requires arrayRemove import
+        });
+    }
+
+    async eliminarVehiculoSeleccionado(carreraId: string) {
+        const docRef = doc(this.firestore, this._collection, carreraId);
+        return updateDoc(docRef, {
+            estado: 'Abierto',
+            vehiculoIdAprobado: null,
+            datosConductorAprobado: null,
+            seleccionadoId: 'Sin seleccionar'
+        });
+    }
+
+    async deleteCarrera(carreraId: string) {
+        const docRef = doc(this.firestore, this._collection, carreraId);
+        return deleteDoc(docRef);
     }
 }

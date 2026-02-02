@@ -10,14 +10,18 @@
     <div *ngFor="let carrera of misCarreras" class="border rounded-lg p-3 hover:shadow-md transition-shadow bg-gray-50">
         <div class="flex justify-between items-start mb-2">
             <span class="font-bold text-gray-800">{{ carrera.lugarRecogida }} → {{ carrera.puestoVotacionIr }}</span>
-            <span class="text-xs px-2 py-1 rounded-full border" [ngClass]="{
-                    'bg-yellow-100 text-yellow-800 border-yellow-200': carrera.estado === 'Abierto',
-                    'bg-blue-100 text-blue-800 border-blue-200': carrera.estado === 'En ruta',
-                    'bg-green-100 text-green-800 border-green-200': carrera.estado === 'Finalizada',
-                    'bg-red-100 text-red-800 border-red-200': carrera.estado === 'Cancelada'
-                }">
-                {{ carrera.estado }}
-            </span>
+            <div class="flex items-center gap-2">
+                <span class="text-xs px-2 py-1 rounded-full border" [ngClass]="{
+                        'bg-yellow-100 text-yellow-800 border-yellow-200': carrera.estado === 'Abierto',
+                        'bg-blue-100 text-blue-800 border-blue-200': carrera.estado === 'En ruta',
+                        'bg-green-100 text-green-800 border-green-200': carrera.estado === 'Finalizada',
+                        'bg-red-100 text-red-800 border-red-200': carrera.estado === 'Cancelada'
+                    }">
+                    {{ carrera.estado }}
+                </span>
+                <mg-icon-button icon="delete" variant="danger" size="small" (onClick)="eliminarCarrera(carrera)"
+                    title="Eliminar Carrera"></mg-icon-button>
+            </div>
         </div>
         <p class="text-xs text-gray-600 mb-2">{{ carrera.observaciones || 'Sin observaciones' }}</p>
 
@@ -32,10 +36,16 @@
                         <mat-icon class="!text-sm !w-4 !h-4 align-middle mr-1">directions_car</mat-icon>
                         Cerca a {{ getDistanciaPostulado(postulado, carrera) }}
                     </span>
-                    <button mat-stroked-button color="primary" class="!scale-75 origin-right"
-                        (click)="aprobarConductor(carrera, postulado)">
-                        Aprobar
-                    </button>
+                    <div class="flex gap-2">
+                        <button mat-stroked-button color="warn" class="!scale-75 origin-right"
+                            (click)="eliminarPostulacion(carrera, postulado)">
+                            Eliminar
+                        </button>
+                        <button mat-stroked-button color="primary" class="!scale-75 origin-right"
+                            (click)="aprobarConductor(carrera, postulado)">
+                            Aprobar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,7 +53,11 @@
         <!-- Approved Vehicle Info (For 'En ruta' or 'Finalizada') -->
         <div *ngIf="(carrera.estado === 'En ruta' || carrera.estado === 'Finalizada') && carrera.datosConductorAprobado"
             class="mt-3 border-t border-gray-200 pt-2">
-            <span class="text-xs font-bold text-gray-700 block mb-2">Vehículo Asignado:</span>
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold text-gray-700">Vehículo Asignado:</span>
+                <mg-icon-button *ngIf="carrera.estado === 'En ruta'" icon="delete" variant="danger" size="small"
+                    (onClick)="desasignarVehiculo(carrera)" title="Eliminar Selección"></mg-icon-button>
+            </div>
             <div class="flex items-start gap-3 bg-blue-50 p-2 rounded border border-blue-100">
                 <!-- Vehicle/Driver Photo if available, else icon -->
                 <div
@@ -63,11 +77,8 @@
                 </div>
 
                 <!-- Call Button -->
-                <a [href]="'tel:' + carrera.datosConductorAprobado.telefono"
-                    class="flex items-center justify-center w-8 h-8 rounded-full bg-green-500 text-white shadow-sm hover:bg-green-600 transition-colors"
-                    title="Llamar Conductor">
-                    <mat-icon class="!text-sm !w-4 !h-4 flex items-center justify-center">call</mat-icon>
-                </a>
+                <mg-icon-button icon="call" [link]="'tel:' + carrera.datosConductorAprobado.telefono" variant="success"
+                    size="small" title="Llamar Conductor"></mg-icon-button>
             </div>
         </div>
 

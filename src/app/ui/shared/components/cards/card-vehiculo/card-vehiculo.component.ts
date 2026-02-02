@@ -2,12 +2,15 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+
+import { IconButtonComponent } from '../../atoms/icon-button/icon-button.component';
+import { IconWhatsappComponent } from '../../atoms/icon-whatsapp/icon-whatsapp.component';
 import { VehiculoModel } from '../../../../../models/vehiculo/vehiculo.model';
 
 @Component({
     selector: 'app-card-vehiculo',
     standalone: true,
-    imports: [CommonModule, MatIconModule, MatButtonModule],
+    imports: [CommonModule, MatIconModule, MatButtonModule, IconButtonComponent, IconWhatsappComponent],
     templateUrl: './card-vehiculo.component.html',
     styleUrls: ['./card-vehiculo.component.scss']
 })

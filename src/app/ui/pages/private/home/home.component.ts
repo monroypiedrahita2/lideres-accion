@@ -3,6 +3,8 @@ import { IglesiaModel } from './../../../../models/iglesia/iglesia.model';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
+import { IconButtonComponent } from '../../../shared/components/atoms/icon-button/icon-button.component';
+import { IconWhatsappComponent } from '../../../shared/components/atoms/icon-whatsapp/icon-whatsapp.component';
 import { CommonModule } from '@angular/common';
 import { NAME_LONG_APP } from '../../../shared/const/name-app.const';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
@@ -35,7 +37,10 @@ import { TabCarrerasComponent } from './tab-carreras/tab-carreras.component';
     MatDialogModule,
     ContainerAlertInformationComponent,
     MatExpansionModule,
+    MatExpansionModule,
     ButtonComponent,
+    IconButtonComponent,
+    IconWhatsappComponent,
     TabCarrerasComponent
   ],
   templateUrl: './home.component.html',

@@ -9,6 +9,8 @@ import { VehiculoService } from '../../../../../shared/services/vehiculo/vehicul
 import { firstValueFrom } from 'rxjs';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogNotificationComponent } from '../../../../../shared/dialogs/dialog-notification/dialog-nofication.component';
+import { IconButtonComponent } from '../../../../../shared/components/atoms/icon-button/icon-button.component';
+import { IconWhatsappComponent } from '../../../../../shared/components/atoms/icon-whatsapp/icon-whatsapp.component';
 
 @Component({
     selector: 'app-mis-carreras',
@@ -17,7 +19,9 @@ import { DialogNotificationComponent } from '../../../../../shared/dialogs/dialo
         CommonModule,
         MatButtonModule,
         MatIconModule,
-        MatDialogModule
+        MatDialogModule,
+        IconButtonComponent,
+        IconWhatsappComponent
     ],
     templateUrl: './mis-carreras.component.html',
     styleUrls: ['./mis-carreras.component.scss']
@@ -43,18 +47,6 @@ export class MisCarrerasComponent implements OnInit {
 
         this.carreraService.getCarrerasCreadasPor(uid).subscribe(creadas => {
             this.misCarreras = creadas;
-
-            this.vehiculoService.getVehiculoByConductor(uid).subscribe(vehiculos => {
-                if (vehiculos && vehiculos.length > 0 && vehiculos[0].id) {
-                    const vehiculoId = vehiculos[0].id;
-                    this.carreraService.getCarrerasAsignadasAVehiculo(vehiculoId).subscribe(asignadas => {
-                        const combined = [...this.misCarreras, ...asignadas];
-                        const unique = new Map();
-                        combined.forEach(c => unique.set(c.id, c));
-                        this.misCarreras = Array.from(unique.values());
-                    });
-                }
-            });
             this.loadingMisCarreras = false;
         });
     }
@@ -134,6 +126,107 @@ export class MisCarrerasComponent implements OnInit {
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         var d = R * c; // Distance in km
         return d;
+    }
+
+    async eliminarPostulacion(carrera: CreateCarreraModel, postulacion: PostuladosIdsModel) {
+        if (!carrera.id || !postulacion.id) return;
+
+        try {
+            await this.carreraService.cancelarPostulacion(carrera.id, postulacion);
+            this.dialog.open(DialogNotificationComponent, {
+                width: '400px',
+                data: {
+                    title: 'Postulación Eliminada',
+                    message: 'El conductor ha sido eliminado de los postulados.',
+                    type: 'success',
+                    bottons: 'one'
+                }
+            });
+        } catch (error) {
+            console.error('Error al eliminar postulación', error);
+            this.dialog.open(DialogNotificationComponent, {
+                width: '400px',
+                data: {
+                    title: 'Error',
+                    message: 'Hubo un problema al eliminar la postulación.',
+                    type: 'error',
+                    bottons: 'one'
+                }
+            });
+        }
+    }
+
+    async desasignarVehiculo(carrera: CreateCarreraModel) {
+        if (!carrera.id) return;
+
+        try {
+            await this.carreraService.eliminarVehiculoSeleccionado(carrera.id);
+            this.dialog.open(DialogNotificationComponent, {
+                width: '400px',
+                data: {
+                    title: 'Selección Eliminada',
+                    message: 'El vehículo ha sido desasignado y la carrera está abierta nuevamente.',
+                    type: 'success',
+                    bottons: 'one'
+                }
+            });
+        } catch (error) {
+            console.error('Error al desasignar vehículo', error);
+            this.dialog.open(DialogNotificationComponent, {
+                width: '400px',
+                data: {
+                    title: 'Error',
+                    message: 'Hubo un problema al desasignar el vehículo.',
+                    type: 'error',
+                    bottons: 'one'
+                }
+            });
+        }
+    }
+
+    eliminarCarrera(carrera: CreateCarreraModel) {
+        if (!carrera.id) return;
+
+        const dialogRef = this.dialog.open(DialogNotificationComponent, {
+            width: '400px',
+            data: {
+                title: 'Eliminar Carrera',
+                message: '¿Estás seguro de que deseas eliminar esta carrera? Esta acción no se puede deshacer.',
+                type: 'danger',
+                bottons: 'two'
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(async (result) => {
+            if (result) {
+                try {
+                    await this.carreraService.deleteCarrera(carrera.id!);
+                    this.dialog.open(DialogNotificationComponent, {
+                        width: '400px',
+                        data: {
+                            title: 'Carrera Eliminada',
+                            message: 'La carrera ha sido eliminada exitosamente.',
+                            type: 'success',
+                            bottons: 'one'
+                        }
+                    });
+                    // Ideally, the list is reactive or we reload it. 
+                    // Since it's using an observable that might not auto-refresh if it's not a real-time listener on the exact same query that respects deletions immediately or if the component needs a nudge. 
+                    // However, getCarrerasCreadasPor uses collectionData which is reactive.
+                } catch (error) {
+                    console.error('Error al eliminar carrera', error);
+                    this.dialog.open(DialogNotificationComponent, {
+                        width: '400px',
+                        data: {
+                            title: 'Error',
+                            message: 'Hubo un problema al eliminar la carrera.',
+                            type: 'error',
+                            bottons: 'one'
+                        }
+                    });
+                }
+            }
+        });
     }
 
     deg2rad(deg: number) {

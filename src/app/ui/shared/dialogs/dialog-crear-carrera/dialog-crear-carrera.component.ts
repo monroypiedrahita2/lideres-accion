@@ -54,6 +54,8 @@ export class DialogCrearCarreraComponent implements OnInit {
         this.form = this.fb.group({
             telefonoSolicitante: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
             telefonoVotante: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
+            nombreSolicitante: ['', Validators.required],
+            nombreVotante: ['', Validators.required],
             tipoVehiculo: ['', Validators.required],
             lugarRecogida: ['', Validators.required],
             puestoVotacionIr: ['', Validators.required],
@@ -71,6 +73,9 @@ export class DialogCrearCarreraComponent implements OnInit {
                 const user = JSON.parse(userStr);
                 if (user && user.celular) {
                     this.form.patchValue({ telefonoSolicitante: user.celular });
+                }
+                if (user && user.nombres && user.apellidos) {
+                    this.form.patchValue({ nombreSolicitante: user.nombres + ' ' + user.apellidos });
                 }
             } catch (e) {
                 console.error('Error parsing user from local storage', e);

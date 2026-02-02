@@ -50,7 +50,7 @@
   </div>
 
   <!-- Tab Carreras Section -->
-  <app-tab-carreras class="w-full"></app-tab-carreras>
+  <app-tab-carreras [vehiculoEstado]="currentVehiculo?.estado" class="w-full"></app-tab-carreras>
 
   <!-- Postulaciones Status Card -->
   <div class="p-1" *ngIf="usuario.postulado">
@@ -71,36 +71,33 @@
           <span><strong>Barrio:</strong> {{ vehiculoInfo.barrio }}</span>
 
           <div class="flex gap-2 mt-2" *ngIf="vehiculoInfo.responsableTelefono">
-            <a [href]="'https://wa.me/' + vehiculoInfo.responsableTelefono" target="_blank"
-              class="flex items-center justify-center w-8 h-8 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-colors">
-              <img src="assets/whatsApp.svg" alt="WhatsApp" class="w-5 h-5">
-            </a>
-            <a [href]="'tel:' + vehiculoInfo.responsableTelefono"
-              class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors">
-              <mat-icon class="!text-sm !w-4 !h-4 flex items-center justify-center">call</mat-icon>
-            </a>
+            <div class="flex gap-2 mt-2" *ngIf="vehiculoInfo.responsableTelefono">
+              <mg-icon-whatsapp [phone]="vehiculoInfo.responsableTelefono" size="small"></mg-icon-whatsapp>
+              <mg-icon-button icon="call" [link]="'tel:' + vehiculoInfo.responsableTelefono" variant="bg-white"
+                size="small" class="text-blue-600"></mg-icon-button>
+            </div>
           </div>
-        </div>
 
-        <!-- Status Selector -->
-        <div *ngIf="vehiculoStatus === 'Aprobado' && currentVehiculo" class="mt-4 pt-2 border-t border-gray-100">
-          <p class="text-xs font-semibold text-gray-600 mb-2">Estado del vehículo:</p>
-          <div class="flex flex-wrap gap-2">
-            <button (click)="updateVehiculoStatus('Activo')"
-              [class]="currentVehiculo.estado === 'Activo' ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-              class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
-              Activo
-            </button>
-            <button (click)="updateVehiculoStatus('Inactivo')"
-              [class]="currentVehiculo.estado === 'Inactivo' ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-              class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
-              Inactivo
-            </button>
-            <button (click)="updateVehiculoStatus('En carrera')"
-              [class]="currentVehiculo.estado === 'En carrera' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-              class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
-              En carrera
-            </button>
+          <!-- Status Selector -->
+          <div *ngIf="vehiculoStatus === 'Aprobado' && currentVehiculo" class="mt-4 pt-2 border-t border-gray-100">
+            <p class="text-xs font-semibold text-gray-600 mb-2">Estado del vehículo:</p>
+            <div class="flex flex-wrap gap-2">
+              <button (click)="updateVehiculoStatus('Activo')"
+                [class]="currentVehiculo.estado === 'Activo' ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+                class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
+                Activo
+              </button>
+              <button (click)="updateVehiculoStatus('Inactivo')"
+                [class]="currentVehiculo.estado === 'Inactivo' ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+                class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
+                Inactivo
+              </button>
+              <button (click)="updateVehiculoStatus('En carrera')"
+                [class]="currentVehiculo.estado === 'En carrera' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+                class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
+                En carrera
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -141,19 +138,15 @@
                     </div>
                   </div>
                   <div class="flex gap-2">
-                    <a *ngIf="vehiculo.celular" [href]="'https://wa.me/' + vehiculo.celular" target="_blank"
-                      class="flex items-center justify-center w-7 h-7 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-colors">
-                      <img src="assets/whatsApp.svg" alt="WhatsApp" class="w-5 h-5">
-                    </a>
-                    <a *ngIf="vehiculo.celular" [href]="'tel:' + vehiculo.celular"
-                      class="flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors">
-                      <mat-icon
-                        class="text-sm !w-4 !h-4 flex items-center justify-center flex justify-center">call</mat-icon>
-                    </a>
+                    <mg-icon-whatsapp *ngIf="vehiculo.celular" [phone]="vehiculo.celular"
+                      size="small"></mg-icon-whatsapp>
+                    <mg-icon-button *ngIf="vehiculo.celular" icon="call" [link]="'tel:' + vehiculo.celular"
+                      variant="bg-white" size="small" class="text-blue-600"></mg-icon-button>
                   </div>
                 </div>
               </div>
             </div>
+
           </mat-expansion-panel>
         </mat-accordion>
       </div>
@@ -192,27 +185,21 @@
                     <p class="text-xs text-gray-500">Mesa: {{ testigo.data.mesa }}</p>
                   </div>
                   <div class="flex gap-2">
-                    <a *ngIf="testigo.data.celular" [href]="'https://wa.me/' + testigo.data.celular" target="_blank"
-                      class="flex items-center justify-center w-7 h-7 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-colors">
-                      <img src="assets/whatsApp.svg" alt="WhatsApp" class="w-5 h-5">
-                    </a>
-                    <a *ngIf="testigo.data.celular" [href]="'tel:' + testigo.data.celular"
-                      class="flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors">
-                      <mat-icon class="text-sm !w-4 !h-4 flex items-center justify-center">call</mat-icon>
-                    </a>
+                    <mg-icon-whatsapp *ngIf="testigo.data.celular" [phone]="testigo.data.celular"
+                      size="small"></mg-icon-whatsapp>
+                    <mg-icon-button *ngIf="testigo.data.celular" icon="call" [link]="'tel:' + testigo.data.celular"
+                      variant="bg-white" size="small" class="text-blue-600"></mg-icon-button>
                   </div>
                 </div>
               </div>
             </div>
+
           </mat-expansion-panel>
         </mat-accordion>
 
         <!-- Actions -->
         <div *ngIf="testigoInfo" class="flex justify-end gap-3 mt-4 pt-2 border-t border-gray-100">
-          <a href="https://wa.me/" target="_blank"
-            class="flex items-center justify-center w-8 h-8 rounded-full bg-green-50 hover:bg-green-100 text-green-600 transition-colors">
-            <img src="assets/whatsApp.svg" alt="WhatsApp" class="w-5 h-5">
-          </a>
+          <mg-icon-whatsapp phone="" size="small"></mg-icon-whatsapp>
           <mg-button text="Resultados" size="small" icon="send" (onClick)="goToResultados()"></mg-button>
         </div>
       </div>

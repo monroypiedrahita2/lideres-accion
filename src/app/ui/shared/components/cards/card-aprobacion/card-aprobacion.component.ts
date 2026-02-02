@@ -3,12 +3,15 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { SpinnerComponent } from '../../modules/spinner/spinner.component';
+
 import { UserPhotoComponent } from '../../atoms/user-photo/user-photo.component';
+import { IconButtonComponent } from '../../atoms/icon-button/icon-button.component';
+import { IconWhatsappComponent } from '../../atoms/icon-whatsapp/icon-whatsapp.component';
 
 @Component({
     selector: 'app-card-aprobacion',
     standalone: true,
-    imports: [CommonModule, MatIconModule, MatButtonModule, SpinnerComponent, UserPhotoComponent],
+    imports: [CommonModule, MatIconModule, MatButtonModule, SpinnerComponent, UserPhotoComponent, IconButtonComponent, IconWhatsappComponent],
     templateUrl: './card-aprobacion.component.html',
     styleUrls: ['./card-aprobacion.component.scss']
 })

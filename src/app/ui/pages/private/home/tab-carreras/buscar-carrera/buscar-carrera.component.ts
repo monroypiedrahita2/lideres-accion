@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { IconButtonComponent } from '../../../../../shared/components/atoms/icon-button/icon-button.component';
+import { IconWhatsappComponent } from '../../../../../shared/components/atoms/icon-whatsapp/icon-whatsapp.component';
 import { CreateCarreraModel, PostuladosIdsModel } from '../../../../../../models/carrera/carrera.model';
 import { CarreraService } from '../../../../../shared/services/carrera/carrera.service';
 import { AuthService } from '../../../../../shared/services/auth/auth.service';
@@ -27,7 +29,9 @@ import { MatChipsModule } from '@angular/material/chips';
         MatButtonModule,
         MatIconModule,
         MatDialogModule,
-        MatChipsModule
+        MatChipsModule,
+        IconButtonComponent,
+        IconWhatsappComponent
     ],
     templateUrl: './buscar-carrera.component.html',
     styleUrls: ['./buscar-carrera.component.scss']
@@ -72,6 +76,7 @@ export class BuscarCarreraComponent implements OnInit {
 
     availableTypes: Set<string> = new Set();
     selectedTypes: string[] = [];
+    showFilter: boolean = false;
 
     async checkVehiculoAndLoadDisponibles() {
         this.loadingBuscar = true;
@@ -101,6 +106,9 @@ export class BuscarCarreraComponent implements OnInit {
                     // Business Rule: If user has 'Camioneta', they can also see 'Carro'
                     if (this.availableTypes.has('Camioneta')) {
                         this.availableTypes.add('Carro');
+                        this.showFilter = true; // Only show filter if Camioneta is present
+                    } else {
+                        this.showFilter = false;
                     }
 
                     // Select all available types by default
@@ -175,6 +183,52 @@ export class BuscarCarreraComponent implements OnInit {
             if (a.distancia && b.distancia) return Number(a.distancia) - Number(b.distancia);
             return 0;
         });
+    }
+
+    isPostulated(carrera: CreateCarreraModel): boolean {
+        if (!this.vehiculoActivo || !this.vehiculoActivo.id) return false;
+        return carrera.postulados?.some(p => p.id === this.vehiculoActivo?.id) || false;
+    }
+
+    async togglePostulacion(carrera: CreateCarreraModel) {
+        if (this.isPostulated(carrera)) {
+            await this.cancelarPostulacion(carrera);
+        } else {
+            await this.postularse(carrera);
+        }
+    }
+
+    async cancelarPostulacion(carrera: CreateCarreraModel) {
+        if (!this.vehiculoActivo || !this.vehiculoActivo.id) return;
+
+        // Find the specific postulation object to remove
+        const postulacionToRemove = carrera.postulados?.find(p => p.id === this.vehiculoActivo?.id);
+
+        if (!postulacionToRemove) return;
+
+        try {
+            await this.carreraService.cancelarPostulacion(carrera.id!, postulacionToRemove);
+            this.dialog.open(DialogNotificationComponent, {
+                width: '400px',
+                data: {
+                    title: 'Postulación Cancelada',
+                    message: 'Has eliminado tu postulación correctamente.',
+                    type: 'success',
+                    bottons: 'one'
+                }
+            });
+        } catch (error) {
+            console.error('Error al cancelar postulación', error);
+            this.dialog.open(DialogNotificationComponent, {
+                width: '400px',
+                data: {
+                    title: 'Error',
+                    message: 'Hubo un problema al cancelar la postulación.',
+                    type: 'error',
+                    bottons: 'one'
+                }
+            });
+        }
     }
 
     async postularse(carrera: CreateCarreraModel) {

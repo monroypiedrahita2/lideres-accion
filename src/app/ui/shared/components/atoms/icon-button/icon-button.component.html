@@ -1,0 +1,51 @@
+<ng-container *ngIf="link; else buttonTemplate">
+  <a [href]="link" [target]="target" class="flex items-center justify-center rounded-full transition-all duration-200"
+    [ngClass]="{
+       'w-8 h-8': size === 'small',
+       'w-10 h-10': size === 'medium',
+       'w-12 h-12': size === 'large',
+       'bg-primary text-white hover:bg-primary-dark': variant === 'primary',
+       'bg-secondary text-white hover:bg-secondary-dark': variant === 'secondary',
+       'bg-green-500 text-white hover:bg-green-600 shadow-sm': variant === 'success',
+       'bg-red-500 text-white hover:bg-red-600 shadow-sm': variant === 'danger',
+       'bg-blue-500 text-white hover:bg-blue-600 shadow-sm': variant === 'info',
+       'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300 shadow-sm hover:shadow-md': variant === 'bg-white',
+       'text-gray-600 hover:bg-gray-100 hover:text-gray-900': variant === 'ghost',
+       'opacity-50 cursor-not-allowed pointer-events-none': disabled
+     }">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </a>
+</ng-container>
+
+<ng-template #buttonTemplate>
+  <button (click)="handleClick()" [disabled]="disabled"
+    class="flex items-center justify-center rounded-full transition-all duration-200 focus:outline-none" [ngClass]="{
+             'w-8 h-8': size === 'small',
+             'w-10 h-10': size === 'medium',
+             'w-12 h-12': size === 'large',
+             'bg-primary text-white hover:bg-primary-dark shadow-sm hover:shadow-md': variant === 'primary',
+             'bg-secondary text-white hover:bg-secondary-dark shadow-sm hover:shadow-md': variant === 'secondary',
+             'bg-green-500 text-white hover:bg-green-600 shadow-sm': variant === 'success',
+             'bg-red-500 text-white hover:bg-red-600 shadow-sm': variant === 'danger',
+             'bg-blue-500 text-white hover:bg-blue-600 shadow-sm': variant === 'info',
+             'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300 shadow-sm hover:shadow-md': variant === 'bg-white',
+             'text-gray-600 hover:bg-gray-100 hover:text-gray-900': variant === 'ghost',
+             'opacity-50 cursor-not-allowed': disabled
+          }">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </button>
+</ng-template>
+
+<ng-template #content>
+  <mat-icon *ngIf="!customIcon" [ngClass]="{
+    'text-base': size === 'small',
+    'text-xl': size === 'medium',
+    'text-2xl': size === 'large'
+  }">{{ icon }}</mat-icon>
+
+  <img *ngIf="customIcon" [src]="customIcon" alt="icon" [ngClass]="{
+    'w-4 h-4': size === 'small',
+    'w-6 h-6': size === 'medium',
+    'w-7 h-7': size === 'large'
+  }">
+</ng-template>
