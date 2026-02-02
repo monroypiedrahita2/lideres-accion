@@ -14,6 +14,14 @@ export interface CreateCarreraModel {
     latitudSeleccionado?: number;
     longitudSeleccionado?: number;
     vehiculoIdAprobado?: string;
+    datosConductorAprobado?: {
+        nombre: string;
+        telefono: string;
+        foto?: string;
+        placaVehiculo: string;
+        modeloVehiculo: string;
+        colorVehiculo: string;
+    };
     estado?: 'Abierto' | 'Cancelada' | 'En ruta' | 'Finalizada';
     creadaPor?: string;  // uid del usuario es decir el id de perfil.model.ts
 }

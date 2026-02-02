@@ -12,10 +12,10 @@
     <form [formGroup]="form" class="flex flex-col gap-4 max-h-[70vh] overflow-y-auto px-1 py-1">
 
         <mg-input-text id="telefonoSolicitante" label="Teléfono Solicitante" formControlName="telefonoSolicitante"
-            type="tel" [required]="true" placeholder="Ingrese número de celular"></mg-input-text>
+            type="tel" [required]="true" placeholder="Ingrese número de celular" [minlength]="10" [maxlength]="10"></mg-input-text>
 
         <mg-input-text id="telefonoVotante" label="Teléfono Votante" formControlName="telefonoVotante" type="tel"
-            [required]="true" placeholder="Ingrese número de celular"></mg-input-text>
+            [required]="true" placeholder="Ingrese número de celular" [minlength]="10" [maxlength]="10"></mg-input-text>
 
         <mg-input-select id="tipoVehiculo" label="Tipo de vehículo" formControlName="tipoVehiculo"
             [items]="tipoVehiculoOptions" [required]="true"

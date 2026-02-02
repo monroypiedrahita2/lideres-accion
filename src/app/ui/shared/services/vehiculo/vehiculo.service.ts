@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, doc, getDoc, query, updateDoc, where, setDoc, deleteDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, doc, getDoc, query, updateDoc, where, setDoc, deleteDoc, docData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
 import { environment } from '../../../../../enviroments';
@@ -78,6 +78,11 @@ export class VehiculoService {
         throw new Error('No existe o es nuevo');
       }
     });
+  }
+
+  getVehiculoById(id: string) {
+    const docRef = doc(this.firestore, this._collection, id);
+    return docData(docRef, { idField: 'id' }) as Observable<VehiculoModel>;
   }
 
 

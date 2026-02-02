@@ -49,12 +49,18 @@ export class CarreraService {
         });
     }
 
-    async aprobarConductor(carreraId: string, vehiculoId: string, conductorId: string) { // conductorId might be needed if logic changes, but for now vehiculoId is key
+    async aprobarConductor(carreraId: string, vehiculoId: string, conductorId: string, datosConductor?: any) {
         const docRef = doc(this.firestore, this._collection, carreraId);
-        return updateDoc(docRef, {
+        const dataToUpdate: any = {
             vehiculoIdAprobado: vehiculoId,
-            seleccionadoId: vehiculoId, // or specific driver ID if logic dictates
+            seleccionadoId: vehiculoId,
             estado: 'En ruta'
-        });
+        };
+
+        if (datosConductor) {
+            dataToUpdate.datosConductorAprobado = datosConductor;
+        }
+
+        return updateDoc(docRef, dataToUpdate);
     }
 }
