@@ -1,18 +1,18 @@
-<mg-title title="Configuración de pastores"></mg-title>
+<mg-title title="Configuración de administrador Zona"></mg-title>
 
 <form [formGroup]="form">
 
   <mg-input-select
     class="w-full"
     formControlName="iglesia"
-    [label]="'Seleccione la iglesia'"
+    [label]="'Seleccione la zona'"
     id="iglesia"
     [items]="iglesias"
   ></mg-input-select>
       <mg-input-select
       type="text"
       formControlName="pastor"
-      label="Selecione el pastor encargado"
+      label="Selecione el administrador de la zona"
       id="pastor"
       [items]="perfiles"
     ></mg-input-select>
