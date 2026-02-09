@@ -2,9 +2,7 @@ import { IglesiaService } from '../../../shared/services/iglesia/iglesia.service
 import { IglesiaModel } from './../../../../models/iglesia/iglesia.model';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
-import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
-import { IconButtonComponent } from '../../../shared/components/atoms/icon-button/icon-button.component';
-import { IconWhatsappComponent } from '../../../shared/components/atoms/icon-whatsapp/icon-whatsapp.component';
+
 import { CommonModule } from '@angular/common';
 import { NAME_LONG_APP } from '../../../shared/const/name-app.const';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
@@ -25,6 +23,7 @@ import { BaseModel } from '../../../../models/base/base.model';
 import { TestigoAsociadoModel } from '../../../../models/testigo-asociado/testigo-asociado.model';
 import { DialogCrearCarreraComponent } from '../../../shared/dialogs/dialog-crear-carrera/dialog-crear-carrera.component';
 import { TabCarrerasComponent } from './tab-carreras/tab-carreras.component';
+import { PostulacionCardComponent } from '../../../shared/components/cards/postulacion-card/postulacion-card.component';
 
 @Component({
   selector: 'app-home',
@@ -38,10 +37,8 @@ import { TabCarrerasComponent } from './tab-carreras/tab-carreras.component';
     ContainerAlertInformationComponent,
     MatExpansionModule,
     MatExpansionModule,
-    ButtonComponent,
-    IconButtonComponent,
-    IconWhatsappComponent,
-    TabCarrerasComponent
+    TabCarrerasComponent,
+    PostulacionCardComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']

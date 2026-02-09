@@ -36,14 +36,13 @@ export const CARDS_HOME: CardModel[] = [
     icon: 'location_city',
     showIf: ['Super usuario'],
   },
-
-  {
-    goTo: '/private/masivo-referidos',
-    title: 'Carga masiva referidos',
-    description: 'Carga masiva de referidos a través de un archivo Excel',
-    icon: 'upload_file',
-    showIf: ['Super usuario', 'Pastor'],
-  },
+  // {
+  //   goTo: '/private/masivo-referidos',
+  //   title: 'Carga masiva referidos',
+  //   description: 'Carga masiva de referidos a través de un archivo Excel',
+  //   icon: 'upload_file',
+  //   showIf: ['Super usuario', 'Pastor'],
+  // },
   {
     goTo: '/private/masivo-comunas',
     title: 'Carga masiva comunas',
@@ -66,20 +65,20 @@ export const CARDS_HOME: CardModel[] = [
     icon: 'groups',
     showIf: ['Pastor', 'Super usuario'],
   },
-  {
-    goTo: '/private/estadisticas',
-    title: 'Estadisticas',
-    description: 'Estadisticas por zona',
-    icon: 'data_usage',
-    showIf: ['Pastor']
-  },
-  {
-    goTo: '/private/dashboards',
-    title: 'DashBoard',
-    description: 'Estadisticas generales',
-    icon: 'developer_board',
-    showIf: ['Super usuario']
-  },
+  // {
+  //   goTo: '/private/estadisticas',
+  //   title: 'Estadisticas',
+  //   description: 'Estadisticas por zona',
+  //   icon: 'data_usage',
+  //   showIf: ['Pastor']
+  // },
+  // {
+  //   goTo: '/private/dashboards',
+  //   title: 'DashBoard',
+  //   description: 'Estadisticas generales',
+  //   icon: 'developer_board',
+  //   showIf: ['Super usuario']
+  // },
   {
     goTo: '',
     title: 'Apoyo vehicular',
@@ -98,13 +97,13 @@ export const CARDS_HOME: CardModel[] = [
     action: 'casa-apoyo',
     requiresPostulacion: 'casaApoyo'
   },
-  {
-    goTo: '',
-    title: 'Gestión de testigos',
-    description: 'Realiza tus gestiones como testigo aquí',
-    icon: 'how_to_vote',
-    showIf: ['Todos'],
-    action: 'testigo',
-    requiresPostulacion: 'testigo'
-  }
+  // {
+  //   goTo: '',
+  //   title: 'Gestión de testigos',
+  //   description: 'Realiza tus gestiones como testigo aquí',
+  //   icon: 'how_to_vote',
+  //   showIf: ['Todos'],
+  //   action: 'testigo',
+  //   requiresPostulacion: 'testigo'
+  // }
 ];

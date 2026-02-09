@@ -11,7 +11,7 @@
   </app-container-alert-information>
 
   <!-- Profile Section -->
-  <div
+  <!-- <div
     class="mt-2 flex flex-row gap-1 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
     <span *ngIf="usuario.rol"
       class="text-[10px] sm:text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full border border-blue-200 shrink-0">
@@ -29,7 +29,7 @@
       class="text-[10px] sm:text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full border border-teal-200 shrink-0">
       Admin. Testigos
     </span>
-  </div>
+  </div> -->
   <div class="flex flex-col justify-center md:justify-start">
     <div
       class="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition-shadow border border-gray-200 flex items-center gap-4 min-w-[300px]"
@@ -45,7 +45,7 @@
         <p class="text-sm text-gray-500">Ingresa a tu perfil y actualiza tu información</p>
       </div>
       <mat-icon class="ml-auto text-gray-400">chevron_right</mat-icon>
-    </div>
+    </div>  
 
   </div>
 
@@ -53,156 +53,11 @@
   <app-tab-carreras [vehiculoEstado]="currentVehiculo?.estado" class="w-full"></app-tab-carreras>
 
   <!-- Postulaciones Status Card -->
-  <div class="p-1" *ngIf="usuario.postulado">
-    <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-3">
-      <!-- Vehiculo Status -->
-      <div *ngIf="usuario.postulado.transporte" class="p-4 rounded-lg bg-gray-50 border-l-4"
-        [ngClass]="getBorderColor(vehiculoStatus)">
-        <div class="flex justify-between items-center mb-2">
-          <span class="font-semibold text-gray-700">Apoyo Vehicular</span>
-          <mat-icon [class]="getTextColor(vehiculoStatus)">directions_car</mat-icon>
-        </div>
-        <p class="text-sm font-medium" [class]="getTextColor(vehiculoStatus)">
-          {{ vehiculoStatus || 'Cargando...' }}
-        </p>
-        <div *ngIf="vehiculoInfo" class="mt-2 pt-2 border-t border-gray-200 text-xs text-gray-600 flex flex-col">
-          <span><strong>Asociado a:</strong> {{ vehiculoInfo.casaApoyo }}</span>
-          <span><strong>Dirección:</strong> {{ vehiculoInfo.direccion }}</span>
-          <span><strong>Barrio:</strong> {{ vehiculoInfo.barrio }}</span>
-
-          <div class="flex gap-2 mt-2" *ngIf="vehiculoInfo.responsableTelefono">
-            <mg-icon-whatsapp [phone]="vehiculoInfo.responsableTelefono" size="small"></mg-icon-whatsapp>
-            <mg-icon-button icon="call" [link]="'tel:' + vehiculoInfo.responsableTelefono" variant="info"
-              size="small"></mg-icon-button>
-          </div>
-
-          <!-- Status Selector -->
-          <div *ngIf="vehiculoStatus === 'Aprobado' && currentVehiculo" class="mt-4 pt-2 border-t border-gray-100">
-            <p class="text-xs font-semibold text-gray-600 mb-2">Estado del vehículo:</p>
-            <div class="flex flex-wrap gap-2">
-              <button (click)="updateVehiculoStatus('Activo')"
-                [class]="currentVehiculo.estado === 'Activo' ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-                class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
-                Activo
-              </button>
-              <button (click)="updateVehiculoStatus('Inactivo')"
-                [class]="currentVehiculo.estado === 'Inactivo' ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-                class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
-                Inactivo
-              </button>
-              <button (click)="updateVehiculoStatus('En carrera')"
-                [class]="currentVehiculo.estado === 'En carrera' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-                class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
-                En carrera
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Casa Apoyo Status -->
-      <div *ngIf="usuario.postulado.casaApoyo" class="p-4 rounded-lg bg-gray-50 border-l-4"
-        [ngClass]="getBorderColor(casaApoyoStatus)">
-        <div class="flex justify-between items-center mb-2">
-          <span class="font-semibold text-gray-700">Casa de Apoyo</span>
-          <mat-icon [class]="getTextColor(casaApoyoStatus)">home</mat-icon>
-        </div>
-        <p class="text-sm font-medium" [class]="getTextColor(casaApoyoStatus)">
-          {{ casaApoyoStatus || 'Cargando...' }}
-        </p>
-
-        <!-- Vehicles Accordion -->
-        <mat-accordion *ngIf="casaApoyoStatus === 'Aprobado' && casaApoyoVehiculos.length > 0"
-          class="mt-4 block w-full">
-          <mat-expansion-panel class="!shadow-none !bg-transparent border border-gray-200">
-            <mat-expansion-panel-header class="!h-10">
-              <mat-panel-title class="!text-sm text-gray-600">
-                Vehículos Asociados ({{casaApoyoVehiculos.length}})
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-
-            <div class="flex flex-col gap-2 mt-2">
-              <div *ngFor="let vehiculo of casaApoyoVehiculos"
-                class="flex flex-col bg-white p-2 rounded border border-gray-100 shadow-sm">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <p class="text-xs font-bold text-gray-700">{{ vehiculo.tipoVehiculo }} - {{ vehiculo.placa }}</p>
-                    <p class="text-xs text-gray-500">{{ vehiculo.nombre }} {{ vehiculo.apellidos }}</p>
-                    <div class="mt-1">
-                      <span
-                        [class]="getStatusColor(vehiculo.estado || 'Inactivo') + ' px-2 py-0.5 rounded-full text-[10px] font-medium border border-opacity-20'">
-                        {{ vehiculo.estado || 'Inactivo' }}
-                      </span>
-                    </div>
-                  </div>
-                  <div class="flex gap-2">
-                    <mg-icon-whatsapp *ngIf="vehiculo.celular" [phone]="vehiculo.celular"
-                      size="small"></mg-icon-whatsapp>
-                    <mg-icon-button *ngIf="vehiculo.celular" icon="call" [link]="'tel:' + vehiculo.celular"
-                      variant="bg-white" size="small" class="text-blue-600"></mg-icon-button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </mat-expansion-panel>
-        </mat-accordion>
-      </div>
-
-      <!-- Coordinador de Testigo Status -->
-      <div *ngIf="usuario.postulado.testigo" class="p-4 rounded-lg bg-gray-50 border-l-4"
-        [ngClass]="getBorderColor(testigoStatus)">
-        <div class="flex justify-between items-center mb-2">
-          <span class="font-semibold text-gray-700">Coordinador puesto de votación</span>
-          <mat-icon [class]="getTextColor(testigoStatus)">how_to_vote</mat-icon>
-        </div>
-        <p class="text-sm font-medium" [class]="getTextColor(testigoStatus)">
-          {{ testigoStatus || 'Cargando...' }}
-        </p>
-        <div *ngIf="testigoInfo" class="mt-2 pt-2 border-t border-gray-200 text-xs text-gray-600">
-          <p><strong>Puesto:</strong> {{ testigoInfo.puesto }}</p>
-          <p><strong>Mesa:</strong> {{ testigoInfo.mesa }}</p>
-        </div>
-
-        <!-- Witnesses List -->
-        <mat-accordion *ngIf="misTestigos.length > 0" class="mt-4 block w-full">
-          <mat-expansion-panel class="!shadow-none !bg-transparent border border-gray-200">
-            <mat-expansion-panel-header class="!h-10">
-              <mat-panel-title class="!text-sm text-gray-600">
-                Testigos Asociados ({{misTestigos.length}})
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-
-            <div class="flex flex-col gap-2 mt-2">
-              <div *ngFor="let testigo of misTestigos"
-                class="flex flex-col bg-white p-2 rounded border border-gray-100 shadow-sm">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <p class="text-xs font-bold text-gray-700">{{ testigo.data.nombres }} {{ testigo.data.apellidos }}
-                    </p>
-                    <p class="text-xs text-gray-500">Mesa: {{ testigo.data.mesa }}</p>
-                  </div>
-                  <div class="flex gap-2">
-                    <mg-icon-whatsapp *ngIf="testigo.data.celular" [phone]="testigo.data.celular"
-                      size="small"></mg-icon-whatsapp>
-                    <mg-icon-button *ngIf="testigo.data.celular" icon="call" [link]="'tel:' + testigo.data.celular"
-                      variant="bg-white" size="small" class="text-blue-600"></mg-icon-button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </mat-expansion-panel>
-        </mat-accordion>
-
-        <!-- Actions -->
-        <div *ngIf="testigoInfo" class="flex justify-end gap-3 mt-4 pt-2 border-t border-gray-100">
-          <mg-icon-whatsapp phone="" size="small"></mg-icon-whatsapp>
-          <mg-button text="Resultados" size="small" icon="send" (onClick)="goToResultados()"></mg-button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <app-postulacion-card [usuario]="usuario" [vehiculoStatus]="vehiculoStatus" [vehiculoInfo]="vehiculoInfo"
+    [currentVehiculo]="currentVehiculo" [casaApoyoStatus]="casaApoyoStatus" [casaApoyoVehiculos]="casaApoyoVehiculos"
+    [testigoStatus]="testigoStatus" [testigoInfo]="testigoInfo" [misTestigos]="misTestigos"
+    (statusUpdate)="updateVehiculoStatus($event)" (navigateResults)="goToResultados()">
+  </app-postulacion-card>
 </div>
 
 }
