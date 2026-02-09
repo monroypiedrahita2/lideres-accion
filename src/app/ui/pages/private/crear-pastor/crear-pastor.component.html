@@ -2,49 +2,47 @@
 
 <form [formGroup]="form">
 
-  <mg-input-select
-    class="w-full"
-    formControlName="iglesia"
-    [label]="'Seleccione la zona'"
-    id="iglesia"
-    [items]="iglesias"
-  ></mg-input-select>
-      <mg-input-select
-      type="text"
-      formControlName="pastor"
-      label="Selecione el administrador de la zona"
-      id="pastor"
-      [items]="perfiles"
-    ></mg-input-select>
+  <mg-input-select class="w-full" formControlName="iglesia" [label]="'Seleccione la zona'" id="iglesia"
+    [items]="iglesias"></mg-input-select>
+  <mg-input-text [formControl]="noCuentaSearch" label="Buscar por No. Cuenta"
+    placeholder="Ingrese el No. Cuenta"></mg-input-text>
+
+  <div *ngIf="perfilSeleted"
+    class="flex flex-col gap-2 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 my-4">
+    <span class="text-sm font-semibold text-gray-500 dark:text-gray-400">Usuario Encontrado:</span>
+    <div class="flex items-center gap-3">
+      <span class="text-lg font-bold text-gray-900 dark:text-white">{{ perfilSeleted.nombres }} {{
+        perfilSeleted.apellidos }}</span>
+      <span
+        class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full dark:bg-green-900 dark:text-green-300">
+        {{ perfilSeleted.noCuenta }}
+      </span>
+    </div>
+    <span class="text-sm text-gray-500 dark:text-gray-400">{{ perfilSeleted.email }}</span>
+  </div>
   <div class="flex flex-row-reverse justify-center gap-4 sm:pt-5 lg:pt-8">
-    <mg-button
-      [text]="'Asignar rol'"
-      [loading]="loading"
-      [disabled]="form.invalid"
-      (onClick)="asignarRol()"
-    ></mg-button>
-    <mg-button
-      [text]="'Limpiar'"
-      [type]="'reset'"
-      (onClick)="clear()"
-    ></mg-button>
+    <mg-button [text]="'Asignar rol'" [loading]="loading" [disabled]="form.invalid"
+      (onClick)="asignarRol()"></mg-button>
+    <mg-button [text]="'Limpiar'" [type]="'reset'" (onClick)="clear()"></mg-button>
   </div>
 </form>
 
 <div class="relative overflow-x-auto mt-10">
-  <div>
-    <table
-      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-    >
-      <thead
-        class="text-sm text-white uppercase bg-primary dark:bg-primary dark:text-gray-400 font-primary"
-      >
+  <div class="mb-4">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead class="text-sm text-white uppercase bg-primary dark:bg-primary dark:text-gray-400 font-primary">
         <tr>
           <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
             Nombres
           </th>
           <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            No. Cuenta
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
             Rol
+          </th>
+          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
+            Email
           </th>
           <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
             Acciones
@@ -52,29 +50,31 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let user of usuarios"
-          class="bg-white border-b dark:bg-base dark:border-gray-700 border-gray-200 hover:bg-gray-300"
-        >
+        <tr *ngFor="let user of paginatedUsuarios"
+          class="bg-white border-b dark:bg-base dark:border-gray-700 border-gray-200 hover:bg-gray-300">
           <td class="px-6 py-4 text-center whitespace-nowrap text-black">
             {{ user.nombres + " " + user.apellidos }}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{ user.noCuenta }}
           </td>
           <td class="px-6 py-4 text-center whitespace-nowrap text-black">
             {{ user.rol }}
           </td>
           <td class="px-6 py-4 text-center whitespace-nowrap text-black">
+            {{ user.email }}
+          </td>
+          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
             <div class="flex justify-center gap-4">
-              <span
-                *ngIf="user.rol != 'Sin rol asignado'"
-                class="material-icons text-primary hover:cursor-pointer"
-                (click)="deleteRol(user.id!)"
-                (keydown)="deleteRol(user.id!)"
-                >delete</span
-              >
+              <span *ngIf="user.rol != 'Sin rol asignado'" class="material-icons text-primary hover:cursor-pointer"
+                (click)="deleteRol(user.id!)" (keydown)="deleteRol(user.id!)">delete</span>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
+    <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+      (page)="handlePageEvent($event)" aria-label="Select page">
+    </mat-paginator>
   </div>
 </div>
