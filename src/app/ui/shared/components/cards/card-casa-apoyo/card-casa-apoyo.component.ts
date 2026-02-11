@@ -30,7 +30,8 @@ export class CardCasaApoyoComponent {
     @Output() onVehiculoChanged = new EventEmitter<{ vehiculo: VehiculoModel, action: 'asociar' | 'desasociar' }>();
 
     vehiculos: VehiculoModel[] = [];
-    vehiculosNoAsociados: VehiculoModel[] = [];
+    // vehiculosNoAsociados is now purely an input
+
     isLoadingVehiculos: boolean = false;
     vehiculosLoaded: boolean = false;
 
@@ -51,8 +52,6 @@ export class CardCasaApoyoComponent {
         // Only load vehicles if not already loaded
         if (!this.vehiculosLoaded && this.casa.id) {
             this.loadVehiculos();
-            // Use vehiculosDisponibles from parent instead of loading again
-            this.vehiculosNoAsociados = this.vehiculosDisponibles;
         }
     }
 
@@ -71,17 +70,7 @@ export class CardCasaApoyoComponent {
         });
     }
 
-
-    loadVehiculosNoAsociados() {
-        this.vehiculoService.getVehiculosAprobadosSinCasaByIglesia(this.casa.data.iglesiaId).subscribe({
-            next: (vehiculos) => {
-                this.vehiculosNoAsociados = vehiculos;
-            },
-            error: (error) => {
-                console.error('Error loading vehiculos no asociados:', error);
-            }
-        });
-    }
+    // loadVehiculosNoAsociados removed as it is now handled by parent
 
     asociarVehiculo(vehiculo: VehiculoModel) {
         if (!vehiculo.id) {
@@ -109,7 +98,8 @@ export class CardCasaApoyoComponent {
                 this.vehiculoService.updateVehiculo(vehiculo.id!, updatedVehiculo).then(() => {
                     // Update local lists without making new API calls
                     this.vehiculos.push(vehiculo);
-                    this.vehiculosNoAsociados = this.vehiculosNoAsociados.filter(v => v.id !== vehiculo.id);
+
+                    // vehiculosNoAsociados is updated via input change triggered by parent
 
                     // Notify parent to update its list
                     this.onVehiculoChanged.emit({ vehiculo: vehiculo, action: 'asociar' });
@@ -162,7 +152,8 @@ export class CardCasaApoyoComponent {
                 this.vehiculoService.updateVehiculo(vehiculo.id!, updatedVehiculo).then(() => {
                     // Update local lists without making new API calls
                     this.vehiculos = this.vehiculos.filter(v => v.id !== vehiculo.id);
-                    this.vehiculosNoAsociados.push(vehiculo);
+
+                    // vehiculosNoAsociados is updated via input change triggered by parent
 
                     // Notify parent to update its list
                     this.onVehiculoChanged.emit({ vehiculo: vehiculo, action: 'desasociar' });

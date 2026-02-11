@@ -63,7 +63,7 @@ export class ListarCasasApoyoComponent implements OnInit {
                 this.vehiculosDisponibles = this.vehiculosDisponibles.filter(v => v.id !== event.vehiculo.id);
             } else if (event.action === 'desasociar') {
                 // Add vehicle back to available list when unassigned
-                this.vehiculosDisponibles.push(event.vehiculo);
+                this.vehiculosDisponibles = [...this.vehiculosDisponibles, event.vehiculo];
             }
         } else {
             // Fallback: reload if no event data provided

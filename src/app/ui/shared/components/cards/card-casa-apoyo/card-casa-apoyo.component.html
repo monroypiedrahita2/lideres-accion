@@ -47,7 +47,7 @@
         </div>
 
         <span class="font-primary text-xs font-bold text-center mt-4">Vehículos disponibles</span>
-        <div *ngFor="let vehiculo of vehiculosNoAsociados"
+        <div *ngFor="let vehiculo of vehiculosDisponibles"
           class="bg-white flex flex-row p-2 justify-between items-center rounded-md border border-gray-200 hover:bg-gray-50 transition-colors">
           <span class="font-primary text-xs font-bold">{{ vehiculo.tipoVehiculo || 'N/A' }}</span>
           <span class="font-primary text-xs font-bold">{{ vehiculo.nombre.split(' ')[0] }} {{ vehiculo.apellidos.split('
