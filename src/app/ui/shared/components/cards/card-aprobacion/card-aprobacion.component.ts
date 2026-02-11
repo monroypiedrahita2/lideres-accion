@@ -22,7 +22,7 @@ export class CardAprobacionComponent {
     @Input() status: string = '';
     @Input() phoneNumber: string = '';
     @Input() photoUrl: string | null | undefined;
-
+    @Input() showfoto: boolean = true;
 
     @Input() checked: boolean = false;
     @Input() showAssignAction: boolean = false;

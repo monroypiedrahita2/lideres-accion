@@ -11,6 +11,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CardAprobacionComponent } from '../../../shared/components/cards/card-aprobacion/card-aprobacion.component';
 import { MgPaginatorComponent, PageEvent } from '../../../shared/components/modules/paginator/paginator.component';
 import { DialogAsignarVehiculoComponent } from '../../../shared/dialogs/dialog-asignar-vehiculo/dialog-asignar-vehiculo.component';
+import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
+import { take } from 'rxjs';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 
 @Component({
@@ -59,6 +61,8 @@ export class AprobarCasasApoyoComponent implements OnInit {
         this.updatePaginatedList();
     }
 
+    private readonly vehiculoService = inject(VehiculoService);
+
     loadingItems = new Set<string>();
 
     aprobar(casa: BaseModel<CasaApoyoModel>, estado: boolean) {
@@ -98,23 +102,36 @@ export class AprobarCasasApoyoComponent implements OnInit {
         };
 
         if (!estado) {
-            const dialogRef = this.dialog.open(DialogNotificationComponent, {
-                data: {
-                    title: 'Confirmación',
-                    message: `¿Estás seguro de desaprobar esta Casa de Apoyo?`,
-                    type: 'warning',
-                    bottons: 'two',
-                    actionText: 'Desaprobar'
-                }
-            });
-
-            dialogRef.afterClosed().subscribe(result => {
-                if (result) {
-                    executeUpdate();
+            // Validar si tiene vehículos asociados antes de desaprobar
+            this.vehiculoService.getVehiculosByCasaApoyo(casa.id!).pipe(take(1)).subscribe(vehiculos => {
+                if (vehiculos && vehiculos.length > 0) {
+                    this.dialog.open(DialogNotificationComponent, {
+                        data: {
+                            title: 'No se puede desaprobar',
+                            message: 'No se puede desaprobar la Casa de Apoyo hasta que quite los vehículos asociados.',
+                            type: 'error'
+                        }
+                    }).afterClosed().subscribe(() => {
+                        this.loadCasas(); // Revertir el check en la UI
+                    });
                 } else {
-                    // Reload to revert UI state if needed, or if data is bound via observable it might auto-revert if we didn't touch model locally.
-                    // But let's trigger a load just in case or trust the next emission.
-                    this.loadCasas();
+                    const dialogRef = this.dialog.open(DialogNotificationComponent, {
+                        data: {
+                            title: 'Confirmación',
+                            message: `¿Estás seguro de desaprobar esta Casa de Apoyo?`,
+                            type: 'warning',
+                            bottons: 'two',
+                            actionText: 'Desaprobar'
+                        }
+                    });
+
+                    dialogRef.afterClosed().subscribe(result => {
+                        if (result) {
+                            executeUpdate();
+                        } else {
+                            this.loadCasas();
+                        }
+                    });
                 }
             });
         } else {

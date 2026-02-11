@@ -2,7 +2,9 @@
   class="border border-gray-500 shadow-lg mt-2 hover:shadow-2xl sm:p-2 sm:pl-3 lg:p-4 pl-5 rounded-lg bg-white w-full flex items-center cursor-pointer lg:hover:-translate-y-1 relative">
   <div class="flex justify-between gap-2 w-full">
     <div class="flex flex-row items-center gap-2 w-full">
-      <mg-user-photo [sizeClass]="'w-12 h-12'" [iconSizeClass]="'w-6 h-6'" [photoUrl]="photoUrl"></mg-user-photo>
+      @if (showfoto) {
+        <mg-user-photo [sizeClass]="'w-12 h-12'" [iconSizeClass]="'w-6 h-6'" [photoUrl]="photoUrl"></mg-user-photo>
+      }
       <div class="justify-between items-center w-full">
         <dl class="text-black font-primary text-lg font-semibold text-start">
           {{ title }}

@@ -154,7 +154,7 @@ export class HomeComponent implements OnInit {
             this.casaApoyoService.getCasaApoyo(vehiculo.casaApoyoId).then(casa => {
               if (casa && casa.data) {
                 this.vehiculoInfo = {
-                  casaApoyo: casa.data.nombreHabitante || 'Casa asignada',
+                  casaApoyo: casa.data.responsableNombre + ' ' + casa.data.responsableApellido || 'Casa asignada',
                   direccion: casa.data.direccion,
                   barrio: casa.data.barrio,
                   responsableTelefono: casa.data.responsableTelefono

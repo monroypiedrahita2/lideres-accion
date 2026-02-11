@@ -28,11 +28,14 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-xs text-gray-500 uppercase font-semibold">Solicitante</p>
-                    <p class="font-medium text-gray-800">{{ carrera.nombreSolicitante || 'Usuario'}} ({{
-                        carrera.creadaPor?.slice(0, 5) }}...)</p>
+                    <p class="font-medium text-gray-800">{{ carrera.nombreSolicitante || 'Usuario'}}</p>
                 </div>
-                <mg-icon-button *ngIf="carrera.telefonoSolicitante" icon="call"
-                    [link]="'tel:' + carrera.telefonoSolicitante" variant="info" size="medium"></mg-icon-button>
+                <div class="flex items-center gap-2">
+                    <mg-icon-whatsapp *ngIf="carrera.telefonoSolicitante" [phone]="carrera.telefonoSolicitante"
+                        size="medium"></mg-icon-whatsapp>
+                    <mg-icon-button *ngIf="carrera.telefonoSolicitante" icon="call"
+                        [link]="'tel:' + carrera.telefonoSolicitante" variant="info" size="medium"></mg-icon-button>
+                </div>
             </div>
 
             <!-- Votante Info -->
@@ -42,8 +45,12 @@
                     <p class="text-xs text-gray-500 uppercase font-semibold">Votante</p>
                     <p class="font-medium text-gray-800">{{ carrera.nombreVotante || 'Votante' }}</p>
                 </div>
-                <mg-icon-button *ngIf="carrera.telefonoVotante" icon="call" [link]="'tel:' + carrera.telefonoVotante"
-                    variant="info" size="medium"></mg-icon-button>
+                <div class="flex items-center gap-2">
+                    <mg-icon-whatsapp *ngIf="carrera.telefonoVotante" [phone]="carrera.telefonoVotante"
+                        size="medium"></mg-icon-whatsapp>
+                    <mg-icon-button *ngIf="carrera.telefonoVotante" icon="call"
+                        [link]="'tel:' + carrera.telefonoVotante" variant="info" size="medium"></mg-icon-button>
+                </div>
             </div>
 
             <!-- Locations -->

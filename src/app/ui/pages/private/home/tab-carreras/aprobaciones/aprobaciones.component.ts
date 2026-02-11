@@ -60,13 +60,16 @@ export class AprobacionesComponent implements OnInit {
 
     @Output() hasActiveRace = new EventEmitter<boolean>();
 
+    private lastNotifiedRaceId: string | undefined;
+
     checkNewApprovals() {
         const activeRace = this.aprobaciones.find(c => c.estado === 'En ruta');
         const hasActive = !!activeRace;
 
         this.hasActiveRace.emit(hasActive);
 
-        if (activeRace) {
+        if (activeRace && activeRace.id !== this.lastNotifiedRaceId) {
+            this.lastNotifiedRaceId = activeRace.id;
             this.dialog.open(DialogNotificationComponent, {
                 width: '400px',
                 data: {
@@ -76,6 +79,8 @@ export class AprobacionesComponent implements OnInit {
                     bottons: 'one'
                 }
             });
+        } else if (!activeRace) {
+            this.lastNotifiedRaceId = undefined;
         }
     }
 
