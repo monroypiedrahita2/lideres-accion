@@ -18,7 +18,10 @@ export interface PerfilModel {
 
 export interface AsigmentRolePerfilModel {
   rol: 'Pastor' | 'Super Usuario' | string | null;
-  iglesia: string;
+  iglesia?: string;
+  coordinadorTransporte?: boolean | null;
+  administradorTestigos?: boolean | null;
+  coordinadorCasaApoyo?: boolean | null;
 }
 
 export interface PostuladoModel {

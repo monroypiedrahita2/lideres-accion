@@ -1,6 +1,6 @@
 
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { InputSelectComponent, SelectOption } from '../../../shared/components/atoms/input-select/input-select.component';
@@ -14,6 +14,8 @@ import { CasaApoyoModel } from '../../../../models/casa-apoyo/casa-apoyo.model';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { Router } from '@angular/router';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
+import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
+import { ContainerAlertInformationComponent } from '../../../shared/components/modules/container-alert-information/container-alert-information.component';
 
 @Component({
     selector: 'app-mi-casa-de-apoyo',
@@ -24,7 +26,8 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
         InputTextComponent,
         InputSelectComponent,
         ButtonComponent,
-        TitleComponent
+        TitleComponent,
+        ContainerAlertInformationComponent
     ],
     templateUrl: './mi-casa-de-apoyo.component.html',
     styleUrls: ['./mi-casa-de-apoyo.component.scss']
@@ -36,6 +39,8 @@ export class MiCasaDeApoyoComponent implements OnInit {
     accion: 'Crear' | 'Editar' = 'Crear';
     usuario: PerfilModel = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario') || '') : {} as PerfilModel;
     existingCasaData: CasaApoyoModel | null = null;
+    iglesiaData: IglesiaModel = JSON.parse(localStorage.getItem('iglesiaData') || '{}');
+
     municipios: SelectOption[] = [
         { label: 'Pereira', value: 'Pereira' },
         { label: 'Dosquebradas', value: 'Dosquebradas' },
@@ -49,7 +54,8 @@ export class MiCasaDeApoyoComponent implements OnInit {
         private casaApoyoService: CasaApoyoService,
         private authService: AuthService,
         private dialog: MatDialog,
-        private router: Router
+        private router: Router,
+        private location: Location
     ) {
         this.form = this.fb.group({
             municipio: ['', [Validators.required]],
@@ -64,7 +70,9 @@ export class MiCasaDeApoyoComponent implements OnInit {
         this.loadExistingCasa();
     }
 
-
+    cancel() {
+        this.location.back();
+    }
 
     loadExistingCasa() {
         const uid = this.authService.uidUser();

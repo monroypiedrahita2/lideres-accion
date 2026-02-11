@@ -85,7 +85,7 @@ export class ListarVoluntariosComponent implements AfterViewInit {
                     this.applyFilter(this.searchControl.value);
                 }
             });
-        } else if (this.usuario.iglesia) {
+        } else if (this.usuario.iglesia && this.usuario.rol === 'Pastor') {
             this.perfilService.getPerfilesByIglesia(this.usuario.iglesia).subscribe(data => {
                 this.dataSource.data = data.filter(perfil => perfil.rol !== 'Pastor');
                 // Initialize paginated list after data load
@@ -101,7 +101,7 @@ export class ListarVoluntariosComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         // Removed MatPaginator logic
-    }
+    }   
 
     applyFilter(filterValue: string) {
         this.dataSource.filterPredicate = (data: PerfilModel, filter: string) => {

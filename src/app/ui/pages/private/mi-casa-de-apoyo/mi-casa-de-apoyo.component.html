@@ -3,6 +3,11 @@
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
 
+    <app-container-alert-information *ngIf="!iglesiaData.nombre" [type]="'warning'" [title]="'Atención'">
+      No puedes guardar aun tu casa de apoyo hasta que un coordinador te socie a una ZONA, habla con el coordinador de
+      zona
+    </app-container-alert-information>
+
     <mg-input-select label="Municipio" [items]="municipios" formControlName="municipio"
       placeholder="Seleccione un municipio" [required]="true">
     </mg-input-select>
@@ -18,13 +23,13 @@
     </mg-input-text>
 
     <mg-input-text label="Teléfono del habitante" formControlName="telefonoHabitante" placeholder="Número de contacto"
-      type="text" [required]="true">
+      [maxlength]="10" [minlength]="10" type="text" [required]="true">
     </mg-input-text>
 
-    Aquí iria el mensaje 
-
-    <div class="actions">
-      <mg-button text="Guardar" type="submit" [disabled]="form.invalid">
+    <div class="actions flex justify-between gap-3">
+      <mg-button text="Cancelar" type="reset" (click)="cancel()">
+      </mg-button>
+      <mg-button text="Guardar" type="submit" [disabled]="form.invalid || !iglesiaData.nombre">
       </mg-button>
     </div>
 

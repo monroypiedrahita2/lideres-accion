@@ -180,7 +180,7 @@ export class ControlAccesosComponent implements OnInit {
     dialogRef.afterClosed().subscribe(async (result: boolean) => {
       if (result) {
         try {
-          await this.perfilService.updatePerfil(uid, { rol: '', iglesia: '' });
+          await this.perfilService.updatePerfil(uid, { rol: null, coordinadorTransporte: null, administradorTestigos: null, coordinadorCasaApoyo: null });
           this.toast.success('Rol removido correctamente', 'Exito');
           this.getPerfiles();
         } catch {
