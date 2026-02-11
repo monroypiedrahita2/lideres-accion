@@ -7,30 +7,30 @@ import { AprobacionesComponent } from './aprobaciones/aprobaciones.component';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 
 @Component({
-    selector: 'app-tab-carreras',
-    standalone: true,
-    imports: [
-        CommonModule,
-        MatTabsModule,
-        MisCarrerasComponent,
-        BuscarCarreraComponent,
-        AprobacionesComponent
-    ],
-    templateUrl: './tab-carreras.component.html',
-    styleUrls: ['./tab-carreras.component.scss']
+  selector: 'app-tab-carreras',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatTabsModule,
+    MisCarrerasComponent,
+    BuscarCarreraComponent,
+    AprobacionesComponent
+  ],
+  templateUrl: './tab-carreras.component.html',
+  styleUrls: ['./tab-carreras.component.scss']
 })
 export class TabCarrerasComponent {
-    @Input() vehiculoEstado: string | undefined;
-    hasActiveApproval: boolean = false;
-    usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
+  @Input() vehiculoEstado: string | undefined;
+  hasActiveApproval: boolean = false;
+  usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
 
-    constructor() { }
+  constructor() { }
 
-    onActiveRaceChange(isActive: boolean) {
-        this.hasActiveApproval = isActive;
-    }
+  onActiveRaceChange(isActive: boolean) {
+    this.hasActiveApproval = isActive;
+  }
 
-    get canCreateCarrera(): boolean {
+  get canCreateCarrera(): boolean {
     const { rol, coordinadorCasaApoyo, coordinadorTransporte } = this.usuario;
     const allowedRoles = [
       'Coordinador de iglesia',

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CreateCarreraModel, PostuladosIdsModel } from '../../../../../../models/carrera/carrera.model';
+import { VehiculoModel } from '../../../../../../models/vehiculo/vehiculo.model';
 import { CarreraService } from '../../../../../shared/services/carrera/carrera.service';
 import { AuthService } from '../../../../../shared/services/auth/auth.service';
 import { VehiculoService } from '../../../../../shared/services/vehiculo/vehiculo.service';
@@ -28,6 +29,7 @@ import { IconWhatsappComponent } from '../../../../../shared/components/atoms/ic
 })
 export class MisCarrerasComponent implements OnInit {
     misCarreras: CreateCarreraModel[] = [];
+    postulantesData: Map<string, VehiculoModel> = new Map();
     loadingMisCarreras: boolean = false;
 
     constructor(
@@ -47,7 +49,24 @@ export class MisCarrerasComponent implements OnInit {
 
         this.carreraService.getCarrerasCreadasPor(uid).subscribe(creadas => {
             this.misCarreras = creadas;
+            this.loadPostulantesData();
             this.loadingMisCarreras = false;
+        });
+    }
+
+    loadPostulantesData() {
+        this.misCarreras.forEach(carrera => {
+            if (carrera.estado === 'Abierto' && carrera.postulados) {
+                carrera.postulados.forEach(postulado => {
+                    if (postulado.id && !this.postulantesData.has(postulado.id)) {
+                        this.vehiculoService.getVehiculoById(postulado.id).subscribe(vehiculo => {
+                            if (vehiculo) {
+                                this.postulantesData.set(postulado.id!, vehiculo);
+                            }
+                        });
+                    }
+                });
+            }
         });
     }
 
@@ -80,6 +99,9 @@ export class MisCarrerasComponent implements OnInit {
 
             await this.carreraService.aprobarConductor(carrera.id!, postulacion.id, '', datosConductor);
 
+            // Actualizar estado del vehiculo a 'En carrera'
+            await this.actualizarEstadoVehiculo(postulacion.id, 'En carrera');
+
             this.dialog.open(DialogNotificationComponent, {
                 width: '400px',
                 data: {
@@ -101,6 +123,16 @@ export class MisCarrerasComponent implements OnInit {
                     bottons: 'one'
                 }
             });
+        }
+    }
+
+    private async actualizarEstadoVehiculo(vehiculoId: string, estado: 'Activo' | 'En carrera') {
+        try {
+            // Se asume que updateVehiculo actualiza parcialmente si le pasamos un objeto (aunque la firma pida VehiculoModel completo, firestore updateDoc maneja parciales)
+            // Casteamos a any para evitar error de tipado estricto si updateVehiculo pide VehiculoModel completo
+            await this.vehiculoService.updateVehiculo(vehiculoId, { estado } as any);
+        } catch (error) {
+            console.error(`Error actualizando estado del vehiculo ${vehiculoId} a ${estado}`, error);
         }
     }
 
@@ -160,7 +192,13 @@ export class MisCarrerasComponent implements OnInit {
         if (!carrera.id) return;
 
         try {
+            const vehiculoId = carrera.vehiculoIdAprobado;
             await this.carreraService.eliminarVehiculoSeleccionado(carrera.id);
+
+            // Si habia un vehiculo aprobado, revertir su estado a 'Activo'
+            if (vehiculoId) {
+                await this.actualizarEstadoVehiculo(vehiculoId, 'Activo');
+            }
             this.dialog.open(DialogNotificationComponent, {
                 width: '400px',
                 data: {
@@ -200,7 +238,14 @@ export class MisCarrerasComponent implements OnInit {
         dialogRef.afterClosed().subscribe(async (result) => {
             if (result) {
                 try {
+                    const vehiculoId = carrera.vehiculoIdAprobado;
+
                     await this.carreraService.deleteCarrera(carrera.id!);
+
+                    // Si habia vehiculo aprobado, liberarlo
+                    if (vehiculoId) {
+                        await this.actualizarEstadoVehiculo(vehiculoId, 'Activo');
+                    }
                     this.dialog.open(DialogNotificationComponent, {
                         width: '400px',
                         data: {

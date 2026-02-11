@@ -32,10 +32,16 @@
             <div class="flex flex-col gap-2">
                 <div *ngFor="let postulado of carrera.postulados"
                     class="flex items-center justify-between bg-white p-2 rounded border border-gray-100">
-                    <span class="text-xs text-gray-600">
-                        <mat-icon class="!text-sm !w-4 !h-4 align-middle mr-1">directions_car</mat-icon>
-                        Cerca a {{ getDistanciaPostulado(postulado, carrera) }}
-                    </span>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-bold text-gray-800">
+                            {{ postulantesData.get(postulado.id || '')?.nombre }} {{ postulantesData.get(postulado.id ||
+                            '')?.apellidos }}
+                        </span>
+                        <span class="text-xs text-gray-600">
+                            <mat-icon class="!text-sm !w-4 !h-4 align-middle mr-1">directions_car</mat-icon>
+                            Cerca a {{ getDistanciaPostulado(postulado, carrera) }}
+                        </span>
+                    </div>
                     <div class="flex gap-2">
                         <button mat-stroked-button color="warn" class="!scale-75 origin-right"
                             (click)="eliminarPostulacion(carrera, postulado)">
