@@ -25,8 +25,21 @@ import { TestigoAsociadoModel } from '../../../../../models/testigo-asociado/tes
     styleUrls: []
 })
 export class PostulacionCardComponent {
-    @Input() usuario!: PerfilModel;
+    @Input() usuario: PerfilModel | null = null;
     @Input() vehiculoStatus: string | null = null;
+
+    ngOnInit() {
+        if (!this.usuario || !this.usuario.postulado) {
+            const storedUser = localStorage.getItem('usuario');
+            if (storedUser) {
+                try {
+                    this.usuario = JSON.parse(storedUser);
+                } catch (e) {
+                    console.error('Error parsing stored user', e);
+                }
+            }
+        }
+    }
     @Input() vehiculoInfo: { casaApoyo: string; direccion?: string; barrio?: string; responsableTelefono?: string } | null = null;
     @Input() currentVehiculo: VehiculoModel | null = null;
 

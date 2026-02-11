@@ -2,14 +2,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ComunaService } from '../../../shared/services/comuna/comuna.service';
-import { InputSelectComponent, SelectOption } from '../../../shared/components/atoms/input-select/input-select.component';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
+import { InputSelectComponent, SelectOption } from '../../../shared/components/atoms/input-select/input-select.component';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
 import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
-import { map } from 'rxjs/operators';
 import { BaseModel } from '../../../../models/base/base.model';
-import { ComunaModel } from '../../../../models/comuna/comuna.model';
 import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -24,8 +21,8 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
     imports: [
         CommonModule,
         ReactiveFormsModule,
-        InputSelectComponent,
         InputTextComponent,
+        InputSelectComponent,
         ButtonComponent,
         TitleComponent
     ],
@@ -35,52 +32,39 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
 export class MiCasaDeApoyoComponent implements OnInit {
 
     form: FormGroup;
-    barrioOptions: SelectOption[] = [];
     existingCasaId: string | null = null;
     accion: 'Crear' | 'Editar' = 'Crear';
     usuario: PerfilModel = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario') || '') : {} as PerfilModel;
     existingCasaData: CasaApoyoModel | null = null;
+    municipios: SelectOption[] = [
+        { label: 'Pereira', value: 'Pereira' },
+        { label: 'Dosquebradas', value: 'Dosquebradas' },
+        { label: 'Santa Rosa', value: 'Santa Rosa' },
+        { label: 'Cuba', value: 'Cuba' },
+        { label: 'Virginia', value: 'Virginia' }
+    ];
 
     constructor(
         private fb: FormBuilder,
-        private comunaService: ComunaService,
         private casaApoyoService: CasaApoyoService,
         private authService: AuthService,
         private dialog: MatDialog,
         private router: Router
     ) {
         this.form = this.fb.group({
-            barrioId: ['', [Validators.required]],
+            municipio: ['', [Validators.required]],
+            barrio: ['', [Validators.required]],
             direccion: ['', [Validators.required]],
             nombreHabitante: ['', [Validators.required]],
-            telefonoHabitante: ['', [Validators.required, Validators.pattern('^[0-9]*$')]]
+            telefonoHabitante: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.maxLength(10), Validators.minLength(10)]]
         });
     }
 
     ngOnInit(): void {
-        this.loadBarrios();
         this.loadExistingCasa();
     }
 
-    loadBarrios() {
-        this.comunaService.getComunas().pipe(
-            map((comunas: BaseModel<ComunaModel>[]) => {
-                return comunas.map(c => {
-                    const barrio = c.data.barrio ? (c.data.barrio.includes('-') ? c.data.barrio.split('-')[1] : c.data.barrio) : 'Sin Barrio';
-                    const municipio = c.data.municipio ? (c.data.municipio.includes('-') ? c.data.municipio.split('-')[1] : c.data.municipio) : 'Sin Municipio';
-                    return {
-                        label: `${barrio} - ${municipio}`,
-                        value: c.id,
-                        // Store extra data in a way we can retrieve if needed, 
-                        // but InputSelect only handles label/value. 
-                        // We will look up by ID later.
-                    } as SelectOption;
-                });
-            })
-        ).subscribe(options => {
-            this.barrioOptions = options;
-        });
-    }
+
 
     loadExistingCasa() {
         const uid = this.authService.uidUser();
@@ -96,7 +80,8 @@ export class MiCasaDeApoyoComponent implements OnInit {
 
                 // Patch form
                 this.form.patchValue({
-                    barrioId: casa.data.barrioId,
+                    municipio: casa.data.municipio,
+                    barrio: casa.data.barrio,
                     direccion: casa.data.direccion,
                     nombreHabitante: casa.data.nombreHabitante,
                     telefonoHabitante: casa.data.telefonoHabitante
@@ -117,30 +102,9 @@ export class MiCasaDeApoyoComponent implements OnInit {
             return;
         }
 
-        const barrioId = this.form.value.barrioId;
-        // Need to find barrio name and municipio from options or service? 
-        // options only has label/value. 
-        // I need to find the option label to extract names, or fetch the comuna.
-        // Option label is "Barrio - Municipio".
-
-        const selectedOption = this.barrioOptions.find(o => o.value === barrioId);
-        let barrioName = '';
-        let municipioName = '';
-
-        if (selectedOption) {
-            const parts = selectedOption.label.split(' - ');
-            if (parts.length >= 2) {
-                barrioName = parts[0];
-                municipioName = parts[1];
-            } else {
-                barrioName = selectedOption.label;
-            }
-        }
-
         const casaData: CasaApoyoModel = {
-            barrioId: barrioId,
-            barrio: barrioName,
-            municipio: municipioName,
+            barrio: this.form.value.barrio,
+            municipio: this.form.value.municipio,
             direccion: this.form.value.direccion,
             nombreHabitante: this.form.value.nombreHabitante,
             telefonoHabitante: this.form.value.telefonoHabitante,

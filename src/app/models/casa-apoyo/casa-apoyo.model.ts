@@ -1,7 +1,6 @@
 export interface CasaApoyoModel {
-    barrioId: string;
     barrio: string;  //nombre segun el barrioId
-    municipio: string; //nombre segun el barrioId
+    municipio: string;
     direccion: string;
     nombreHabitante: string;
     telefonoHabitante: string;

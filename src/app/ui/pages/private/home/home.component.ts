@@ -225,7 +225,7 @@ export class HomeComponent implements OnInit {
     this.dialog.open(DialogNotificationComponent, {
       data: {
         title: 'Atención',
-        message: 'Debes comunicarte con algún coordinador de iglesia para que te asocie a la iglesia a la que perteneces y que vas a apoyar',
+        message: 'Debes comunicarte con algún coordinador de la zona para que te asocie a la zona a la que perteneces y que vas a apoyar',
         bottons: 'one',
         type: 'info'
       },
