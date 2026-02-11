@@ -59,7 +59,7 @@
             {{ user.noCuenta }}
           </td>
           <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-            {{ user.rol }}
+            {{ user.rol === 'Pastor' ? 'Administrador' : 'Sin rol asignado' }}
           </td>
           <td class="px-6 py-4 text-center whitespace-nowrap text-black">
             {{ user.email }}
