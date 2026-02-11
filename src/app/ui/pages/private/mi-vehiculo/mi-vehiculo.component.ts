@@ -16,11 +16,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { UserPhotoComponent } from '../../../shared/components/atoms/user-photo/user-photo.component';
+import { ContainerAlertInformationComponent } from "../../../shared/components/modules/container-alert-information/container-alert-information.component";
+import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
 
 @Component({
   selector: 'app-mi-vehiculo',
   standalone: true,
-  imports: [SubTitleComponent, InputTextComponent, InputSelectComponent, FormsModule, ReactiveFormsModule, ButtonComponent, SkeletonComponent, UserPhotoComponent],
+  imports: [SubTitleComponent, InputTextComponent, InputSelectComponent, FormsModule, ReactiveFormsModule, ButtonComponent, SkeletonComponent, UserPhotoComponent, ContainerAlertInformationComponent],
   templateUrl: './mi-vehiculo.component.html',
 })
 export class MiVehiculoComponent implements OnInit {
@@ -30,6 +32,8 @@ export class MiVehiculoComponent implements OnInit {
   vehiculoId: string = '';
   currentVehiculo: VehiculoModel | null = null;
   usuario: PerfilModel = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario') || '') : {} as PerfilModel;
+  iglesiaData: IglesiaModel = JSON.parse(localStorage.getItem('iglesiaData') || '{}');
+  showMsm: boolean = false;
 
 
   skeleton: boolean = true;
@@ -100,7 +104,7 @@ export class MiVehiculoComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.form.invalid) {
+    if (this.form.invalid || !this.iglesiaData.nombre) {
       this.form.markAllAsTouched();
       return;
     }

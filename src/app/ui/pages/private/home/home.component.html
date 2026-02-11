@@ -1,7 +1,7 @@
 <mg-skeleton [enableSkeleton]="skeleton" [num]="5"></mg-skeleton>
 
 @if (!skeleton) {
-<div class="flex flex-col gap-4 mt-4">
+<div class="flex flex-col gap-4 mt-4 relative">
   <app-container-alert-information type="info" title="Información" *ngIf="isProfileIncomplete">
     Debes completar tus datos de perfil para poder continuar.
   </app-container-alert-information>

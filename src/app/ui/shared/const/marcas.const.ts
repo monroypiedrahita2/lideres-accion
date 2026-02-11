@@ -23,6 +23,16 @@ export const MARCAS_VEHICULOS: SelectOptionsModel[] = [
     { value: 'Lexus', label: 'Lexus' },
     { value: 'Mini', label: 'Mini' },
     { value: 'Volvo', label: 'Volvo' },
+    { value: 'Auteco', label: 'Auteco' },
+    { value: 'Bajaj', label: 'Bajaj' },
+    { value: 'KTM', label: 'KTM' },
+    { value: 'AKT', label: 'AKT' },
+    { value: 'Kawasaki', label: 'Kawasaki' },
+    { value: 'Ducati', label: 'Ducati' },
+    { value: 'Triumph', label: 'Triumph' },
+    { value: 'Hero', label: 'Hero' },
+    { value: 'TVS', label: 'TVS' },
+    { value: 'Royal Enfield', label: 'Royal Enfield' },
     { value: 'Otro', label: 'Otro' },
   ];
 

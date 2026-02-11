@@ -70,10 +70,6 @@ export class MiCasaDeApoyoComponent implements OnInit {
         this.loadExistingCasa();
     }
 
-    cancel() {
-        this.location.back();
-    }
-
     loadExistingCasa() {
         const uid = this.authService.uidUser();
         // If user is not logged in properly, might check here.

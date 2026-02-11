@@ -1,7 +1,7 @@
 <mg-sub-title title="Mi vehiculo"></mg-sub-title>
 <div class="flex justify-center items-center gap-4 mb-4">
   <mg-user-photo [photoUrl]="usuario.foto"></mg-user-photo>
-   <div class="flex justify-center items-center">
+  <div class="flex justify-center items-center">
     <span
       class="font-primary font-semibold text-center text-lg bg-yellow-500 border-2 rounded-lg px-1 mb-1 border-black">{{
       (form.get('placaLetras')?.value || '').toUpperCase() }} - {{ form.get('placaNumeros')?.value }}</span>
@@ -10,9 +10,17 @@
 
 <mg-skeleton [enableSkeleton]="skeleton" [num]="5"></mg-skeleton>
 
+  @if (!iglesiaData.nombre) {
+<app-container-alert-information [type]="'warning'" [title]="'Atención'">
+  No puedes guardar aun tu vehiculo hasta que un coordinador te socie a una ZONA, habla con el coordinador de
+  zona
+</app-container-alert-information>
+}
+
 @if (!skeleton) {
 <form [formGroup]="form" class="w-full">
- 
+
+
 
   <mg-input-text class="w-full" type="text" formControlName="placaLetras" id="placaLetras" label="Letras de la placa"
     [textError]="form.get('placaLetras')?.hasError('pattern') ? 'Solo puedes digitar letras mayúsculas (A-Z), máximo 3' : form.get('placaLetras')?.hasError('maxlength') ? 'Máximo 3 letras' : ''"></mg-input-text>
@@ -45,8 +53,8 @@
 
   <div class="flex gap-3 justify-center mt-6">
     <mg-button size="small" text="Cancelar" type="reset" (onClick)="back()"></mg-button>
-    <mg-button [disabled]="form.invalid" size="small" text="Guardar" type="submit" [loading]="loading"
-      (onClick)="onSubmit()"></mg-button>
+    <mg-button [disabled]="form.invalid || !iglesiaData.nombre" size="small" text="Guardar" type="submit"
+      [loading]="loading" (onClick)="onSubmit()"></mg-button>
   </div>
 
 </form>

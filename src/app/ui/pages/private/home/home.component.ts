@@ -11,7 +11,9 @@ import { AuthService } from '../../../shared/services/auth/auth.service';
 import { SkeletonComponent } from '../../../shared/components/organism/skeleton/skeleton.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
+import { IconButtonComponent } from '../../../shared/components/atoms/icon-button/icon-button.component';
 import { ContainerAlertInformationComponent } from '../../../shared/components/modules/container-alert-information/container-alert-information.component';
 import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
 import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
@@ -34,11 +36,14 @@ import { PostulacionCardComponent } from '../../../shared/components/cards/postu
     SkeletonComponent,
     MatIconModule,
     MatDialogModule,
+    MatTooltipModule,
     ContainerAlertInformationComponent,
     MatExpansionModule,
     MatExpansionModule,
     TabCarrerasComponent,
-    PostulacionCardComponent
+    TabCarrerasComponent,
+    PostulacionCardComponent,
+    IconButtonComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
@@ -300,4 +305,5 @@ export class HomeComponent implements OnInit {
       data: { usuario: this.usuario }
     });
   }
+
 }

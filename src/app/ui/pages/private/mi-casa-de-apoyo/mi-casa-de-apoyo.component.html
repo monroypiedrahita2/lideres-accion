@@ -27,8 +27,6 @@
     </mg-input-text>
 
     <div class="actions flex justify-between gap-3">
-      <mg-button text="Cancelar" type="reset" (click)="cancel()">
-      </mg-button>
       <mg-button text="Guardar" type="submit" [disabled]="form.invalid || !iglesiaData.nombre">
       </mg-button>
     </div>
