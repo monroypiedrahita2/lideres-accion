@@ -95,4 +95,10 @@ export class CarreraService {
         const docRef = doc(this.firestore, this._collection, carreraId);
         return deleteDoc(docRef);
     }
+    async finalizarCarrera(carreraId: string) {
+        const docRef = doc(this.firestore, this._collection, carreraId);
+        return updateDoc(docRef, {
+            estado: 'Finalizada'
+        });
+    }
 }

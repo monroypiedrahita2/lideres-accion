@@ -2,7 +2,7 @@
     <mat-tab-group mat-stretch-tabs="true" animationDuration="0ms">
 
         <!-- Tab 1: Solicitudes -->
-        <mat-tab label="Solicitudes">
+        <mat-tab label="Mis solicitudes" *ngIf="canCreateCarrera">
             <app-mis-carreras></app-mis-carreras>
         </mat-tab>
 

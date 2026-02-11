@@ -109,4 +109,43 @@ export class AprobacionesComponent implements OnInit {
     isActive(carrera: CreateCarreraModel): boolean {
         return carrera.estado === 'En ruta';
     }
+
+    finalizarCarrera(carrera: CreateCarreraModel) {
+        if (!carrera.id) return;
+
+        this.dialog.open(DialogNotificationComponent, {
+            width: '400px',
+            data: {
+                title: 'Finalizar Carrera',
+                message: '¿Estás seguro que deseas finalizar esta carrera?',
+                type: 'info',
+                bottons: 'two'
+            }
+        }).afterClosed().subscribe(res => {
+            if (res) {
+                this.carreraService.finalizarCarrera(carrera.id!).then(() => {
+                    this.dialog.open(DialogNotificationComponent, {
+                        width: '400px',
+                        data: {
+                            title: 'Carrera Finalizada',
+                            message: 'La carrera ha sido finalizada exitosamente.',
+                            type: 'success',
+                            bottons: 'one'
+                        }
+                    });
+                }).catch(err => {
+                    console.error('Error finalizando carrera', err);
+                    this.dialog.open(DialogNotificationComponent, {
+                        width: '400px',
+                        data: {
+                            title: 'Error',
+                            message: 'Hubo un error al finalizar la carrera.',
+                            type: 'danger',
+                            bottons: 'one'
+                        }
+                    });
+                });
+            }
+        });
+    }
 }
