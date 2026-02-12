@@ -3,11 +3,20 @@
   <app-button-footer class="flex-1 min-w-[80px] flex justify-center" [option]="'Home'" [icon]="'home'"
     [goTo]="'./home'"></app-button-footer>
 
-
   <app-button-footer *ngIf="usuario.rol == 'Coordinador de iglesia' || usuario.rol == 'Pastor'"
     class="flex-1 min-w-[80px] flex justify-center" [option]="'Asociar'" [icon]="'assignment_ind'" [goTo]="$any(null)"
     (click)="openAsociarIglesia()"></app-button-footer>
 
+  <app-button-footer *ngIf="canCreateCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Solicitudes'"
+    [icon]="'list'" [goTo]="$any(null)" (click)="openMisCarreras()"></app-button-footer>
+
+  <app-button-footer class="flex-1 min-w-[80px] flex justify-center" [option]="'Aprobaciones'" [icon]="'check'"
+    [goTo]="$any(null)" (click)="openAprobaciones()"></app-button-footer>
+
+  <app-button-footer *ngIf="showBuscarCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Buscar'"
+    [icon]="'search'" [goTo]="$any(null)" (click)="openBuscarCarrera()"></app-button-footer>
+
   <app-button-footer *ngIf="canCreateCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Carrera'"
     [icon]="'local_taxi'" [goTo]="$any(null)" (click)="openDialogCrearCarrera()"></app-button-footer>
+
 </div>

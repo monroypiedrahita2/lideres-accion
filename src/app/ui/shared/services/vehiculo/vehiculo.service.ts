@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, getDoc, query, updateDoc, where, setDoc, deleteDoc, docData } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
 import { environment } from '../../../../../enviroments';
 import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
@@ -95,6 +95,13 @@ export class VehiculoService {
   async deleteVehiculo(id: string) {
     const docRef = doc(this.firestore, `${this._collection}/${id}`);
     await deleteDoc(docRef);
+  }
+
+  private currentVehiculoSubject = new BehaviorSubject<VehiculoModel | null>(null);
+  currentVehiculo$ = this.currentVehiculoSubject.asObservable();
+
+  setCurrentVehiculo(vehiculo: VehiculoModel | null) {
+    this.currentVehiculoSubject.next(vehiculo);
   }
 
 }

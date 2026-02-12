@@ -3,15 +3,15 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { IconButtonComponent } from '../../../../../shared/components/atoms/icon-button/icon-button.component';
-import { IconWhatsappComponent } from '../../../../../shared/components/atoms/icon-whatsapp/icon-whatsapp.component';
-import { CreateCarreraModel, PostuladosIdsModel } from '../../../../../../models/carrera/carrera.model';
-import { CarreraService } from '../../../../../shared/services/carrera/carrera.service';
-import { AuthService } from '../../../../../shared/services/auth/auth.service';
-import { VehiculoService } from '../../../../../shared/services/vehiculo/vehiculo.service';
-import { VehiculoModel } from '../../../../../../models/vehiculo/vehiculo.model';
+import { IconButtonComponent } from '../../atoms/icon-button/icon-button.component';
+import { IconWhatsappComponent } from '../../atoms/icon-whatsapp/icon-whatsapp.component';
+import { CreateCarreraModel, PostuladosIdsModel } from '../../../../../models/carrera/carrera.model';
+import { CarreraService } from '../../../services/carrera/carrera.service';
+import { AuthService } from '../../../services/auth/auth.service';
+import { VehiculoService } from '../../../services/vehiculo/vehiculo.service';
+import { VehiculoModel } from '../../../../../models/vehiculo/vehiculo.model';
 import { firstValueFrom } from 'rxjs';
-import { DialogNotificationComponent } from '../../../../../shared/dialogs/dialog-notification/dialog-nofication.component';
+import { DialogNotificationComponent } from '../../../dialogs/dialog-notification/dialog-nofication.component';
 
 // Local interface to extend model with display properties without modifying global model
 interface CarreraWithDistance extends CreateCarreraModel {

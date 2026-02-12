@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CreateCarreraModel, PostuladosIdsModel } from '../../../../../../models/carrera/carrera.model';
-import { VehiculoModel } from '../../../../../../models/vehiculo/vehiculo.model';
-import { CarreraService } from '../../../../../shared/services/carrera/carrera.service';
-import { AuthService } from '../../../../../shared/services/auth/auth.service';
-import { VehiculoService } from '../../../../../shared/services/vehiculo/vehiculo.service';
+import { CreateCarreraModel, PostuladosIdsModel } from '../../../../../models/carrera/carrera.model';
+import { VehiculoModel } from '../../../../../models/vehiculo/vehiculo.model';
+import { CarreraService } from '../../../services/carrera/carrera.service';
+import { AuthService } from '../../../services/auth/auth.service';
+import { VehiculoService } from '../../../services/vehiculo/vehiculo.service';
 import { firstValueFrom } from 'rxjs';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { DialogNotificationComponent } from '../../../../../shared/dialogs/dialog-notification/dialog-nofication.component';
-import { IconButtonComponent } from '../../../../../shared/components/atoms/icon-button/icon-button.component';
-import { IconWhatsappComponent } from '../../../../../shared/components/atoms/icon-whatsapp/icon-whatsapp.component';
+import { DialogNotificationComponent } from '../../../dialogs/dialog-notification/dialog-nofication.component';
+import { IconButtonComponent } from '../../atoms/icon-button/icon-button.component';
+import { IconWhatsappComponent } from '../../atoms/icon-whatsapp/icon-whatsapp.component';
 
 @Component({
     selector: 'app-mis-carreras',

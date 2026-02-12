@@ -1,5 +1,5 @@
 <mat-form-field class="w-full" [class.input-success]="isSuccess">
-  <mat-label class="font-primary">{{label}}</mat-label>
+  <mat-label class="text-black">{{label}}</mat-label>
   @if (multiple) {
   <mat-select [compareWith]="compareWith" [multiple]="multiple" [errorStateMatcher]="matcher" [disabled]="disabled"
     [required]="required" [placeholder]="placeholder" [(ngModel)]="rifInput" [ngModelOptions]="{ standalone: true }"

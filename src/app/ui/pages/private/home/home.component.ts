@@ -24,7 +24,6 @@ import { TestigoAsociadoService } from '../../../shared/services/testigo-asociad
 import { BaseModel } from '../../../../models/base/base.model';
 import { TestigoAsociadoModel } from '../../../../models/testigo-asociado/testigo-asociado.model';
 import { DialogCrearCarreraComponent } from '../../../shared/dialogs/dialog-crear-carrera/dialog-crear-carrera.component';
-import { TabCarrerasComponent } from './tab-carreras/tab-carreras.component';
 import { PostulacionCardComponent } from '../../../shared/components/cards/postulacion-card/postulacion-card.component';
 
 @Component({
@@ -40,8 +39,7 @@ import { PostulacionCardComponent } from '../../../shared/components/cards/postu
     ContainerAlertInformationComponent,
     MatExpansionModule,
     MatExpansionModule,
-    TabCarrerasComponent,
-    TabCarrerasComponent,
+    MatExpansionModule,
     PostulacionCardComponent,
     IconButtonComponent
   ],
@@ -148,6 +146,7 @@ export class HomeComponent implements OnInit {
         if (vehiculos && vehiculos.length > 0) {
           const vehiculo = vehiculos[0];
           this.currentVehiculo = vehiculo;
+          this.vehiculoService.setCurrentVehiculo(vehiculo);
           this.vehiculoStatus = vehiculo.aprobado ? 'Aprobado' : 'Pendiente';
 
           if (vehiculo.casaApoyoId) {
@@ -164,6 +163,7 @@ export class HomeComponent implements OnInit {
           }
         } else {
           this.vehiculoStatus = 'No registrado';
+          this.vehiculoService.setCurrentVehiculo(null);
         }
       });
     }
