@@ -199,7 +199,7 @@ export class MiPerfilComponent implements OnInit {
         transporte: rawValue.transporte,
         testigo: rawValue.testigo,
       },
-      noCuenta: this.generateNoCuenta(),
+      noCuenta: rawValue.noCuenta || this.generateNoCuenta(),
       apruebaUsodeDatos: this.usuario.apruebaUsodeDatos || false,
     };
 

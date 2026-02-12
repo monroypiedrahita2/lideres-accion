@@ -113,7 +113,7 @@ export const CARDS_HOME: CardModel[] = [
   },
   {
     goTo: '',
-    title: 'Gestión de testigos',
+    title: 'Coordinación detestigos',
     description: 'Realiza tus gestiones como testigo aquí',
     icon: 'how_to_vote',
     showIf: ['Todos'],

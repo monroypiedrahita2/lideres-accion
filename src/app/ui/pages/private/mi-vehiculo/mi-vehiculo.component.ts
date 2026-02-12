@@ -18,11 +18,12 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { UserPhotoComponent } from '../../../shared/components/atoms/user-photo/user-photo.component';
 import { ContainerAlertInformationComponent } from "../../../shared/components/modules/container-alert-information/container-alert-information.component";
 import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
+import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
 
 @Component({
   selector: 'app-mi-vehiculo',
   standalone: true,
-  imports: [SubTitleComponent, InputTextComponent, InputSelectComponent, FormsModule, ReactiveFormsModule, ButtonComponent, SkeletonComponent, UserPhotoComponent, ContainerAlertInformationComponent],
+  imports: [TitleComponent, InputTextComponent, InputSelectComponent, FormsModule, ReactiveFormsModule, ButtonComponent, SkeletonComponent, UserPhotoComponent, ContainerAlertInformationComponent],
   templateUrl: './mi-vehiculo.component.html',
 })
 export class MiVehiculoComponent implements OnInit {
