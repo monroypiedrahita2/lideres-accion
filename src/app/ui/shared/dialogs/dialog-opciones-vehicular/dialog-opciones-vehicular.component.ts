@@ -45,7 +45,7 @@ export class DialogOpcionesVehicularComponent {
   ) { }
 
   ngOnInit(): void {
-    if (this.usuario.rol !== 'Pastor' && this.usuario.rol !== 'Super Usuario' && this.usuario.rol !== 'Coordinador de iglesia' && !this.usuario.coordinadorTransporte) {
+    if (this.usuario.rol !== 'Pastor' && this.usuario.rol !== 'Super usuario' && this.usuario.rol !== 'Coordinador de iglesia' && !this.usuario.coordinadorTransporte) {
       this.router.navigate(['/private/mi-vehiculo']);
       this.dialogRef.close();
     }

@@ -54,7 +54,7 @@ export class LoginComponent {
       await this.auth.login(email, password);
       if (this.auth.isEmailVerified(this.auth.getAuth().currentUser)) {
         this.router.navigate(['./private/home']);
-        this.toast.success('Bienvenido a LIDA')
+        this.toast.success('Gracias por tu ayuda, bienvenido')
       } else {
         await this.auth.logout();
         this.toast.warning('Por favor verifica tu correo electrónico para ingresar.');

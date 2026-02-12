@@ -4,3 +4,6 @@ export const LIST_ROLES: {label: string, value: string, nivel: number}[] = [
   { label: 'Coordinador de transporte', value: 'Coordinador de transporte', nivel: 50 },
   { label: 'Coordinador de casa de apoyo', value: 'Coordinador de casa de apoyo', nivel: 50 },
 ]
+
+
+// Super usuario

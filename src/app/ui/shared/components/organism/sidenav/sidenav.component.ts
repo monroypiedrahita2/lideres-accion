@@ -57,7 +57,7 @@ export class SidenavComponent {
     openDialog(action: string) {
         switch (action) {
             case 'vehiculo':
-                if (this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super Usuario' || this.usuario.rol === 'Coordinador de iglesia' || this.usuario.coordinadorTransporte) {
+                if (this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super usuario' || this.usuario.rol === 'Coordinador de iglesia' || this.usuario.coordinadorTransporte) {
                     this.dialog.open(DialogOpcionesVehicularComponent, {
                         data: { name: 'mi-carro' },
                         width: '300px',
@@ -67,7 +67,7 @@ export class SidenavComponent {
                 }
                 break;
             case 'casa-apoyo':
-                if (this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super Usuario' || this.usuario.rol === 'Coordinador de iglesia' || this.usuario.rol === 'Coordinador de casa de apoyo' || this.usuario.coordinadorCasaApoyo) {
+                if (this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super usuario' || this.usuario.rol === 'Coordinador de iglesia'  || this.usuario.coordinadorCasaApoyo) {
                     this.dialog.open(DialogCasasApoyoComponent, {
                         data: { name: 'mi-casa-apoyo' },
                         width: '300px',
@@ -77,7 +77,7 @@ export class SidenavComponent {
                 }
                 break;
             case 'testigo':
-                if (this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super Usuario' || this.usuario.rol === 'Coordinador de iglesia' || this.usuario.rol === 'Coordinador de testigos' || this.usuario.administradorTestigos) {
+                if (this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super usuario' || this.usuario.rol === 'Coordinador de iglesia'  || this.usuario.administradorTestigos) {
                     this.dialog.open(DialogTestigosComponent, {
                         data: { name: 'mi-testigos' },
                         width: '300px',

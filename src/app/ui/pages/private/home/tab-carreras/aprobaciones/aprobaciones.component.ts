@@ -48,7 +48,17 @@ export class AprobacionesComponent implements OnInit {
             if (vehiculos && vehiculos.length > 0 && vehiculos[0].id) {
                 const vehiculoId = vehiculos[0].id;
                 this.carreraService.getCarrerasAsignadasAVehiculo(vehiculoId).subscribe(asignadas => {
-                    this.aprobaciones = asignadas;
+                    this.aprobaciones = asignadas.sort((a, b) => {
+                        const priority: { [key: string]: number } = {
+                            'En ruta': 1,
+                            'Finalizada': 2
+                        };
+
+                        const priorityA = priority[a.estado as string] || 99;
+                        const priorityB = priority[b.estado as string] || 99;
+
+                        return priorityA - priorityB;
+                    });
                     this.checkNewApprovals();
                     this.loading = false;
                 });

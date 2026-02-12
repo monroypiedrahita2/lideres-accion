@@ -119,9 +119,9 @@ export class HomeComponent implements OnInit {
         'usuario',
         JSON.stringify({ ...this.usuario, id: id })
       );
-      this.perfilService.setCurrentUser(this.usuario); // Notify subscribers
+      this.perfilService.setCurrentUser(this.usuario); // Es un control de estados global
       if (this.usuario.iglesia) {
-        this.getMyIglesia(this.usuario.iglesia!);
+        this.getMyIglesia(this.usuario.iglesia!);  // Esta linea se puede eliminar o borrar .... mas adelante se borrara y se tomara solo el id de la iglesia desde el usuario de local storage
       } else {
         this.openDialogMissingChurch();
       }

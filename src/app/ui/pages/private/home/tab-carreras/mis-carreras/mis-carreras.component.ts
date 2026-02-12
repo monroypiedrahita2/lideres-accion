@@ -48,7 +48,19 @@ export class MisCarrerasComponent implements OnInit {
         const uid = this.authService.uidUser();
 
         this.carreraService.getCarrerasCreadasPor(uid).subscribe(creadas => {
-            this.misCarreras = creadas;
+            this.misCarreras = creadas.sort((a, b) => {
+                const priority: { [key: string]: number } = {
+                    'Abierto': 1,
+                    'En ruta': 2,
+                    'Finalizada': 3,
+                    'Cancelada': 4
+                };
+
+                const priorityA = priority[a.estado as string] || 99;
+                const priorityB = priority[b.estado as string] || 99;
+
+                return priorityA - priorityB;
+            });
             this.loadPostulantesData();
             this.loadingMisCarreras = false;
         });

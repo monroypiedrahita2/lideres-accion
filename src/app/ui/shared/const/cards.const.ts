@@ -9,6 +9,20 @@ export const CARDS_HOME: CardModel[] = [
     showIf: ['Pastor', 'Super usuario'],
   },
   {
+    goTo: '/private/listar-referidos',
+    title: 'Referidos',
+    description: 'Listar y gestionar referidos',
+    icon: 'view_list',
+    showIf: ['Coordinador de iglesia', 'Pastor', 'Super usuario'],
+  },
+  {
+    goTo: '/private/crear-referido',
+    title: 'Crear Referido',
+    description: 'Crear un nuevo referido',
+    icon: 'person_add',
+    showIf: ['Coordinador de iglesia', 'Pastor', 'Super usuario'],
+  },
+  {
     goTo: '/private/crear-pastor',
     title: 'Crear pastor',
     description: 'Asignar un pastor a zona',

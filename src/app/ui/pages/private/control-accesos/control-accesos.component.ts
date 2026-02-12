@@ -94,7 +94,13 @@ export class ControlAccesosComponent implements OnInit {
   getAllPerfiles() {
     this.perfilService.getPerfiles().subscribe({
       next: (response: PerfilModel[]) => {
-        this.usuarios = response;
+        this.usuarios = response.filter(
+          (user) =>
+            user.rol ||
+            user.coordinadorCasaApoyo ||
+            user.administradorTestigos ||
+            user.coordinadorTransporte
+        );
       },
     });
   }
@@ -102,7 +108,13 @@ export class ControlAccesosComponent implements OnInit {
   getPerfilesByIglesia() {
     this.perfilService.getPerfilesByIglesia(this.iglesia).subscribe({
       next: (response: PerfilModel[]) => {
-        this.usuarios = response;
+        this.usuarios = response.filter(
+          (user) =>
+            user.rol ||
+            user.coordinadorCasaApoyo ||
+            user.administradorTestigos ||
+            user.coordinadorTransporte
+        );
       },
     });
   }

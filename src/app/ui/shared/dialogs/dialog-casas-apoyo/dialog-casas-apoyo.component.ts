@@ -38,9 +38,8 @@ export class DialogCasasApoyoComponent {
 
   ngOnInit(): void {
     const isPrivileged = this.usuario.rol === 'Pastor' ||
-      this.usuario.rol === 'Super Usuario' ||
+      this.usuario.rol === 'Super usuario' ||
       this.usuario.rol === 'Coordinador de iglesia' ||
-      this.usuario.rol === 'Coordinador de casa de apoyo' ||
       this.usuario.coordinadorCasaApoyo;
 
     if (!isPrivileged) {

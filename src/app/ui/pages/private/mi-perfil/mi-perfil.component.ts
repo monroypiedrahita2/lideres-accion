@@ -185,7 +185,7 @@ export class MiPerfilComponent implements OnInit {
   async onSubmit() {
     const rawValue = this.form.getRawValue();
     const user: PerfilModel = {
-      foto: this.foto || undefined,
+      foto: this.foto || null,
       nombres: rawValue.nombres,
       apellidos: rawValue.apellidos,
       celular: rawValue.celular,
@@ -199,7 +199,7 @@ export class MiPerfilComponent implements OnInit {
         transporte: rawValue.transporte,
         testigo: rawValue.testigo,
       },
-      noCuenta: this.usuario.noCuenta || this.generateNoCuenta(),
+      noCuenta: this.generateNoCuenta(),
       apruebaUsodeDatos: this.usuario.apruebaUsodeDatos || false,
     };
 
