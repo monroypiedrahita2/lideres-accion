@@ -22,6 +22,7 @@ export class LoginComponent {
   loginForm!: FormGroup;
   nameApp = NAME_LONG_APP;
   loading = false
+  showPasswordLogin = false;
 
   constructor(
     private readonly formBuilder: FormBuilder,
