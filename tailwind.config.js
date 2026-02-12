@@ -59,7 +59,7 @@ module.exports = {
     screens: screens,
     extend: {
       colors: {
-        'primary': '#0c82c7',
+        'primary': '#064b73',
         'secundary': '#1ca6e6',
         'tertiary': '#ffce00',
         'base': "white",

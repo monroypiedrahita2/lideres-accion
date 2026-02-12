@@ -1,72 +1,46 @@
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-  <div class="sm:mx-auto sm:w-full sm:max-w-sm flex justify-center">
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col gap-2 justify-center">
     <!-- <mg-logo></mg-logo> -->
-     <span class="w-full font-bold text-xl text-center text-primary">SISTEMA</span>
+    <span class="w-full font-bold text-4xl text-center text-primary text-shadow tracking-widest">Sistema</span>
+    <span class="w-full font-bold text-2xl text-center text-black">¡Hola, gracias por tu apoyo!</span>
   </div>
 
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-    <form
-      [formGroup]="loginForm"
-      class="space-y-6"
-      action="#"
-      method="POST"
-      class="flex flex-col gap-5"
-    >
-      <mg-input-text
-        id="emailInput"
-        type="email"
-        formControlName="email"
-        label="Correo electrónico"
-      ></mg-input-text>
-      <mg-input-text
-        id="passwordInput"
-        type="password"
-        formControlName="password"
-        label="Contraseña"
-      ></mg-input-text>
+    <form [formGroup]="loginForm" class="space-y-6" action="#" method="POST" class="flex flex-col gap-5">
+      <mg-input-text id="emailInput" type="email" formControlName="email" label="Correo electrónico"></mg-input-text>
+      <mg-input-text id="passwordInput" type="password" formControlName="password" label="Contraseña"></mg-input-text>
 
       <div class="btns flex flex-col gap-2 mt-0">
-        <button
-          type="submit"
+        <button type="submit"
           class="flex w-full justify-center rounded-md bg-primary px-3 py-1.5 text-sm/6 text-white shadow-sm hover:bg-hoverazulmira focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-          (click)="login()"
-        >
-          <span class="text-white font-medium font-primary text-lg" *ngIf="!loading"
-            >Iniciar sesión</span
-          >
+          (click)="login()">
+          <span class="text-white font-medium font-primary text-lg" *ngIf="!loading">Iniciar sesión</span>
           <span *ngIf="loading" class="material-symbols-outlined animate-spin">
             progress_activity
           </span>
         </button>
-        <button
-          type="google"
+        <button type="google"
           class="flex w-full justify-center items-center rounded-md bg-gray border border-gray-300 px-3 py-1.5 text-sm/6 text-white shadow-sm hover:bg-hoverazulmira focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-          (click)="loginWithGoogle()"
-        >
+          (click)="loginWithGoogle()">
 
 
-          <span class="text-black font-medium font-primary text-lg flex justify-center items-center gap-3" *ngIf="!loading"
-            >
-            <span  class="material-symbols-outlined text-sm">mail</span> Iniciar con google</span
-          >
+          <span class="text-black font-medium font-primary text-lg flex justify-center items-center gap-3"
+            *ngIf="!loading">
+            Iniciar con google</span>
           <span *ngIf="loading" class="material-symbols-outlined animate-spin">
             progress_activity
           </span>
         </button>
-        <p
-          class="text-secundary text-center hover:text-hoverprimary hover:cursor-pointer font-medium font-primary text-xl"
-          [routerLink]="['../recuperar-contrasena']"
-        >
+        <p class="text-primary text-center hover:text-hoverprimary hover:cursor-pointer font-medium font-primary text-xl"
+          [routerLink]="['../recuperar-contrasena']">
           ¿Olvidaste la contraseña?
         </p>
       </div>
     </form>
-          <p
-          class="text-secundary text-center hover:text-hoverprimary hover:cursor-pointer font-medium font-primary text-xl"
-          [routerLink]="['../nueva-cuenta']"
-        >
-          Crear cuenta nueva
-        </p>
+    <p class="text-primary text-center hover:text-hoverprimary hover:cursor-pointer font-medium font-primary text-xl"
+      [routerLink]="['../nueva-cuenta']">
+      Crear cuenta nueva
+    </p>
 
   </div>
 </div>

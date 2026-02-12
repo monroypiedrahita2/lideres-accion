@@ -67,7 +67,7 @@
                             (onClick)="openMapCoordinates(carrera.latitudSolicitante, carrera.longitudSolicitante)"
                             icon="location_on" variant="danger" size="small"></mg-icon-button>
                     </div>
-                    <p class="text-xs text-gray-600 pl-7">{{ carrera.lugarRecogida || 'Ubicación GPS' }}</p>
+                    <p class="text-md font-semibold text-black pl-7">{{ carrera.lugarRecogida || 'Ubicación GPS' }}</p>
                 </div>
 
                 <!-- Destination -->
@@ -80,7 +80,7 @@
                         <mg-icon-button (onClick)="openMapQuery(carrera.puestoVotacionIr)" icon="location_on"
                             variant="danger" size="small"></mg-icon-button>
                     </div>
-                    <p class="text-xs font-semibold text-gray-800 pl-7">{{ carrera.puestoVotacionIr }}</p>
+                    <p class="text-md font-semibold text-black pl-7">{{ carrera.puestoVotacionIr }}</p>
                 </div>
 
             </div>
