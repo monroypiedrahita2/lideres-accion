@@ -52,7 +52,7 @@ export class ListarVoluntariosComponent implements AfterViewInit {
     pageSize: number = 5;
     pageSizeOptions: number[] = [5, 10, 25, 100];
 
-    displayedColumns: string[] = ['nombres', 'apellidos', 'email', 'rol', 'celular', 'acciones'];
+    displayedColumns: string[] = ['nombres', 'apellidos', 'email', 'rol', 'celular', 'noCuenta', 'acciones'];
 
     // Modal state
     showModal: boolean = false;
@@ -101,7 +101,7 @@ export class ListarVoluntariosComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         // Removed MatPaginator logic
-    }   
+    }
 
     applyFilter(filterValue: string) {
         this.dataSource.filterPredicate = (data: PerfilModel, filter: string) => {
