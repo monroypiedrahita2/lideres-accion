@@ -3,7 +3,7 @@
   <mg-title title="Mis datos"></mg-title>
   <form [formGroup]="form">
 
-    <div class="mb-6 flex flex-row items-center gap-4">
+    <div class="mb-6 flex flex-row justify-between items-center gap-4">
       <mg-user-photo [photoUrl]="foto" [showDeleteAndEditAction]="true" (deleteAction)="removePhoto()"></mg-user-photo>
       <div class="flex flex-col gap-1" *ngIf="usuario">
         <span *ngIf="usuario.rol" class="font-bold text-lg text-heading">{{ usuario.rol === 'Pastor' ? 'Admin zona' : usuario.rol }}</span>

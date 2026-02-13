@@ -3,7 +3,7 @@
   <div class="flex justify-between gap-2 w-full">
     <div class="flex flex-row items-center gap-2 w-full">
       @if (showfoto) {
-        <mg-user-photo [sizeClass]="'w-12 h-12'" [iconSizeClass]="'w-6 h-6'" [photoUrl]="photoUrl"></mg-user-photo>
+      <mg-user-photo [sizeClass]="'w-12 h-12'" [iconSizeClass]="'w-6 h-6'" [photoUrl]="photoUrl"></mg-user-photo>
       }
       <div class="justify-between items-center w-full">
         <dl class="text-black font-primary text-lg font-semibold text-start">
@@ -26,8 +26,6 @@
 
       <div class="flex flex-col items-center justify-center gap-2">
         <div class="h-10 w-10 flex items-center justify-center relative">
-          <app-spinner [showSpinner]="true" *ngIf="isLoading"
-            class="absolute inset-0 flex items-center justify-center"></app-spinner>
           <input *ngIf="!isLoading" id="default-checkbox" type="checkbox" [checked]="checked"
             (change)="onCheckboxChange($event)"
             class="w-6 h-6 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300">
@@ -50,3 +48,6 @@
       </div>
     </div>
   </div>
+
+  <app-spinner [showSpinner]="true" *ngIf="isLoading"
+    class="absolute inset-0 flex items-center justify-center"></app-spinner>

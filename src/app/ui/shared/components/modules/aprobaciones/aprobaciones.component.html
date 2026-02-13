@@ -64,6 +64,7 @@
                             <span class="text-sm font-semibold text-gray-700">Recogida</span>
                         </div>
                         <mg-icon-button
+                            *ngIf="carrera.latitudSolicitante && carrera.longitudSolicitante"
                             (onClick)="openMapCoordinates(carrera.latitudSolicitante, carrera.longitudSolicitante)"
                             customIcon="assets/google.maps.png" variant="bg-white" size="large"></mg-icon-button>
                     </div>

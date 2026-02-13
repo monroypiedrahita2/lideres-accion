@@ -117,7 +117,7 @@ export class CrearPastorComponent implements OnInit {
     this.iglesiasService.getIglesias().subscribe({
       next: (response) => {
         const iglesias = response.map((item: BaseModel<IglesiaModel>) => {
-          return { label: item.data.nombre.split('-')[0], value: item.id };
+          return { label: item.data.nombre, value: item.id };
         });
 
         this.iglesias = iglesias;

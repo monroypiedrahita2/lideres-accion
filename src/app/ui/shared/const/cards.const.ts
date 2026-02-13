@@ -24,8 +24,8 @@ export const CARDS_HOME: CardModel[] = [
   // },
   {
     goTo: '/private/crear-pastor',
-    title: 'Crear pastor',
-    description: 'Asignar un pastor a zona',
+    title: 'Crear administrador de zona',
+    description: 'Asignar un administrador de zona',
     icon: 'record_voice_over',
     showIf: ['Super usuario'],
   },
