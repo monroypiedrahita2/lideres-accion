@@ -28,7 +28,7 @@ import { DialogNotificationModel } from '../../../../models/base/dialog-notifica
     MatDialogClose,
     ButtonComponent,
     MatIconModule
-],
+  ],
   templateUrl: './dialog-nofication.component.html',
   styleUrls: ['./dialog-nofication.component.scss']
 })
@@ -39,12 +39,14 @@ import { DialogNotificationModel } from '../../../../models/base/dialog-notifica
 export class DialogNotificationComponent {
 
 
-    constructor(
+  constructor(
     public dialogRef: MatDialogRef<DialogNotificationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogNotificationModel,
     private readonly router: Router
 
-  ) {}
+  ) {
+    this.dialogRef.disableClose = true;
+  }
 
   onNoClick(): void {
     this.dialogRef.close(false);

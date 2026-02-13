@@ -67,7 +67,7 @@
         <!-- Postularse Button -->
         <!-- Postularse Button -->
         <button mat-flat-button [color]="isPostulated(carrera) ? 'warn' : 'primary'" class="w-full mt-3 !rounded-full"
-            (click)="togglePostulacion(carrera)">
+            [disabled]="!isPostulated(carrera) && hasActivePostulation" (click)="togglePostulacion(carrera)">
             <mat-icon class="mr-2">{{ isPostulated(carrera) ? 'cancel' : 'pan_tool' }}</mat-icon>
             {{ isPostulated(carrera) ? 'Eliminar Postulación' : 'Postularme' }}
         </button>

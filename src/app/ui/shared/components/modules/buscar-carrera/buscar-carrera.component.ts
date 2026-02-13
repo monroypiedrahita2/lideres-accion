@@ -231,8 +231,26 @@ export class BuscarCarreraComponent implements OnInit {
         }
     }
 
+    get hasActivePostulation(): boolean {
+        return this.carrerasDisponibles.some(c => this.isPostulated(c));
+    }
+
     async postularse(carrera: CreateCarreraModel) {
         if (!this.vehiculoActivo || !this.vehiculoActivo.id) return;
+
+        if (this.hasActivePostulation) {
+            this.dialog.open(DialogNotificationComponent, {
+                width: '400px',
+                data: {
+                    title: 'Ya tienes una postulación',
+                    message: 'Solo puedes postularte a una carrera a la vez. Cancela tu postulación actual para aplicar a otra.',
+                    type: 'error',
+                    bottons: 'one'
+                }
+            });
+            return;
+        }
+
         if (!this.userLocation) {
             alert('Necesitamos tu ubicación para postularte.');
             return;
