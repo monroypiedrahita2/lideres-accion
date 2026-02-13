@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,6 +10,7 @@ import { NAME_LONG_APP } from '../../../shared/const/name-app.const';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatIconModule } from '@angular/material/icon';
+import { PwaService } from '../../../../shared/services/pwa/pwa.service';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +30,8 @@ export class LoginComponent {
     private readonly auth: AuthService,
     private readonly router: Router,
     private readonly _snackBar: MatSnackBar,
-    private readonly toast: ToastrService
+    private readonly toast: ToastrService,
+    private readonly pwaService: PwaService
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -66,6 +68,14 @@ export class LoginComponent {
       this.toast.error('Inicio de sesión incorrecto')
       this.loading = false;
     }
+  }
+
+  async installPwa() {
+    await this.pwaService.installPwa();
+  }
+
+  get showInstallButton() {
+    return this.pwaService.showInstallButton;
   }
 
   openSnackBar(text: string) {

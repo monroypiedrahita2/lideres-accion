@@ -1,0 +1,53 @@
+<div class="p-6 max-w-md mx-auto bg-white rounded-xl">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <mat-icon class="text-primary">install_mobile</mat-icon>
+            Instalar Aplicación
+        </h2>
+        <button (click)="dialogRef.close()" class="text-gray-500 hover:text-gray-700">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <div class="content space-y-4">
+        <p class="text-gray-600">
+            Sigue estos pasos para instalar la aplicación en tu dispositivo y acceder más rápido.
+        </p>
+
+        <!-- IOS Instructions -->
+        <div *ngIf="data.platform === 'IOS'" class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+            <h3 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                <mat-icon class="text-gray-600 scale-75">ios_share</mat-icon>
+                iPhone / iPad
+            </h3>
+            <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                <li>Abre esta página en <strong>Safari</strong>.</li>
+                <li>Toca el botón <strong>Compartir</strong> <mat-icon
+                        class="align-middle scale-75 inline-block">ios_share</mat-icon> en la barra inferior.</li>
+                <li>Desliza y selecciona <strong>"Agregar al inicio"</strong> (Add to Home Screen).</li>
+                <li>Confirma tocando <strong>"Agregar"</strong>.</li>
+            </ol>
+        </div>
+
+        <!-- Android/Other Instructions -->
+        <div *ngIf="data.platform !== 'IOS'" class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+            <h3 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                <mat-icon class="text-gray-600 scale-75">android</mat-icon>
+                Android / Chrome
+            </h3>
+            <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                <li>Abre el menú del navegador (tres puntos ⋮).</li>
+                <li>Selecciona <strong>"Instalar aplicación"</strong> o <strong>"Agregar a la pantalla
+                        principal"</strong>.</li>
+                <li>Confirma la instalación.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="mt-6 flex justify-end">
+        <button (click)="dialogRef.close()"
+            class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-hoverprimary transition-colors font-medium">
+            Entendido
+        </button>
+    </div>
+</div>

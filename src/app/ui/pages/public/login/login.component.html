@@ -2,11 +2,19 @@
   <div class="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col gap-2 justify-center">
     <!-- <mg-logo></mg-logo> -->
     <span class="w-full font-bold text-[3rem] text-center text-primary text-shadow tracking-widest">Sistema</span>
-    <span class="w-full font-bold text-2xl text-center text-black">¡Hola, gracias por tu apoyo!</span>
+    <span class="w-full font-bold text-2xl text-center text-black mt-2">¡Hola, gracias por tu apoyo!</span>
   </div>
 
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
     <div class="flex flex-col gap-5 mt-5 px-5 mb-5">
+      <button type="button" *ngIf="showInstallButton"
+        class="flex w-full justify-center items-center rounded-md bg-white border border-secondary px-4 py-3 text-secondary shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        (click)="installPwa()">
+        <span class="font-medium font-primary text-xl flex justify-center items-center gap-3">
+          <mat-icon>download</mat-icon>
+          Instalar App como PWA
+        </span>
+      </button>
       <button type="google"
         class="flex w-full justify-center items-center rounded-md bg-gray border border-gray-300 px-4 py-3 text-white shadow-sm hover:bg-hoverazulmira focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         (click)="loginWithGoogle()">

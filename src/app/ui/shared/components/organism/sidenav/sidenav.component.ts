@@ -11,6 +11,7 @@ import { DialogOpcionesVehicularComponent } from '../../../dialogs/dialog-opcion
 import { DialogCasasApoyoComponent } from '../../../dialogs/dialog-casas-apoyo/dialog-casas-apoyo.component';
 import { DialogTestigosComponent } from '../../../dialogs/dialog-opciones-testigos/dialog-testigos.component';
 import { DialogNotificationComponent } from '../../../dialogs/dialog-notification/dialog-nofication.component';
+import { PwaService } from '../../../../../shared/services/pwa/pwa.service';
 
 @Component({
     selector: 'mg-sidenav',
@@ -28,7 +29,8 @@ export class SidenavComponent {
     constructor(
         private readonly auth: AuthService,
         private readonly router: Router,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private readonly pwaService: PwaService
     ) { }
 
     get userRol(): string {
@@ -67,7 +69,7 @@ export class SidenavComponent {
                 }
                 break;
             case 'casa-apoyo':
-                if (this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super usuario' || this.usuario.rol === 'Coordinador de iglesia'  || this.usuario.coordinadorCasaApoyo) {
+                if (this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super usuario' || this.usuario.rol === 'Coordinador de iglesia' || this.usuario.coordinadorCasaApoyo) {
                     this.dialog.open(DialogCasasApoyoComponent, {
                         data: { name: 'mi-casa-apoyo' },
                         width: '300px',
@@ -77,7 +79,7 @@ export class SidenavComponent {
                 }
                 break;
             case 'testigo':
-                if (this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super usuario' || this.usuario.rol === 'Coordinador de iglesia'  || this.usuario.administradorTestigos) {
+                if (this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super usuario' || this.usuario.rol === 'Coordinador de iglesia' || this.usuario.administradorTestigos) {
                     this.dialog.open(DialogTestigosComponent, {
                         data: { name: 'mi-testigos' },
                         width: '300px',
@@ -102,5 +104,14 @@ export class SidenavComponent {
                 this.close.emit();
             }
         });
+    }
+
+    get showInstallButton() {
+        return this.pwaService.showInstallButton;
+    }
+
+    async installPwa() {
+        await this.pwaService.installPwa();
+        this.close.emit();
     }
 }
