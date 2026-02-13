@@ -44,6 +44,15 @@ export class SidenavComponent {
         const roleAllowed = rol.includes(this.userRol) || rol.includes('Todos');
         if (!roleAllowed) return false;
         if (requiresPostulacion) {
+            // Admin roles that override postulado requirement
+            const adminRoles = ['Pastor', 'Super usuario'];
+            if (adminRoles.includes(this.userRol)) return true;
+
+            // Specific coordinator roles that override postulado requirement
+            if (requiresPostulacion === 'transporte' && this.usuario.coordinadorTransporte) return true;
+            if (requiresPostulacion === 'casaApoyo' && this.usuario.coordinadorCasaApoyo) return true;
+            if (requiresPostulacion === 'testigo' && this.usuario.administradorTestigos) return true;
+
             if (!this.usuario.postulado) return false;
             return (this.usuario.postulado as any)[requiresPostulacion] === true;
         }
