@@ -35,7 +35,7 @@ export interface SelectOption {
       border: 1px solid red !important;
     }
     ::ng-deep .mat-mdc-form-field.input-success .mdc-text-field {
-      border: 1px solid green !important;
+      border: 2px solid green !important;
     }
   `]
 })

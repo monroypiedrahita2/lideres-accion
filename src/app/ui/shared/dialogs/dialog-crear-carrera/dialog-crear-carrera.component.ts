@@ -75,7 +75,6 @@ export class DialogCrearCarreraComponent implements OnInit {
         this.form.patchValue({
             municipio: this.casaApoyo.municipio,
             lugarRecogida: this.casaApoyo.barrio,
-            
         });
         this.loadPuestosVotacion();
         const userStr = localStorage.getItem('usuario');
