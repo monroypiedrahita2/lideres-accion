@@ -14,7 +14,7 @@ export class ButtonComponent {
   @Input() loading: boolean = false;
   @Input() disabled: boolean = this.loading;
   @Input() icon!: string;
-  @Input() size: 'small' | 'big' = 'small';
+  @Input() size: 'small' | 'big' = 'big';
   @Output() onClick = new EventEmitter<void>();
 
   submit() {

@@ -168,7 +168,6 @@ export class DialogCrearCarreraComponent implements OnInit {
             longitudSolicitante: carreraData.longitudSolicitante ? Number(carreraData.longitudSolicitante) : null,
             creadaPor: this.authService.uidUser(),
             horaCreacion: new Date().toISOString(),
-            municipio: this.casaApoyo.municipio,
         };
 
         this.carreraService.createCarrera(newCarrera).then(() => {
