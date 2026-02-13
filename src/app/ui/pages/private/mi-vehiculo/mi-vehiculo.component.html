@@ -10,7 +10,7 @@
 
 <mg-skeleton [enableSkeleton]="skeleton" [num]="5"></mg-skeleton>
 
-  @if (!iglesiaData.nombre) {
+@if (!usuario.iglesia) {
 <app-container-alert-information [type]="'warning'" [title]="'Atención'">
   No puedes guardar aun tu vehiculo hasta que un coordinador te socie a una ZONA, habla con el coordinador de
   zona
@@ -53,7 +53,7 @@
 
   <div class="flex gap-3 justify-center mt-6">
     <mg-button size="small" text="Cancelar" type="reset" (onClick)="back()"></mg-button>
-    <mg-button [disabled]="form.invalid || !iglesiaData.nombre" size="small" text="Guardar" type="submit"
+    <mg-button [disabled]="form.invalid || !usuario.iglesia" size="small" text="Guardar" type="submit"
       [loading]="loading" (onClick)="onSubmit()"></mg-button>
   </div>
 

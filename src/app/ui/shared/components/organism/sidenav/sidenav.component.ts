@@ -93,6 +93,7 @@ export class SidenavComponent {
     }
 
     logout() {
+
         const dialogRef = this.dialog.open(DialogNotificationComponent, {
             data: { title: 'Cerrar sesión', message: '¿Estás seguro que deseas cerrar sesión?', type: 'warning', bottons: 'two' },
             width: '400px',
@@ -100,6 +101,7 @@ export class SidenavComponent {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result === true) {
+                localStorage.clear();
                 this.auth.logout();
                 this.router.navigate(['./public/login']);
                 this.close.emit();

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/sub-title.component';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { InputSelectComponent } from '../../../shared/components/atoms/input-select/input-select.component';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -33,7 +32,6 @@ export class MiVehiculoComponent implements OnInit {
   vehiculoId: string = '';
   currentVehiculo: VehiculoModel | null = null;
   usuario: PerfilModel = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario') || '') : {} as PerfilModel;
-  iglesiaData: IglesiaModel = JSON.parse(localStorage.getItem('iglesiaData') || '{}');
   showMsm: boolean = false;
 
 
@@ -105,7 +103,7 @@ export class MiVehiculoComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.form.invalid || !this.iglesiaData.nombre) {
+    if (this.form.invalid || !this.usuario.iglesia) {
       this.form.markAllAsTouched();
       return;
     }

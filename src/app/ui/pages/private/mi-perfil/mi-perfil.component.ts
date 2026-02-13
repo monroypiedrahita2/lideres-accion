@@ -110,7 +110,6 @@ export class MiPerfilComponent implements OnInit {
 
   actualizarForm(user: PerfilModel) {
     this.form.patchValue({
-
       nombres: user.nombres,
       apellidos: user.apellidos,
       email: user.email,
