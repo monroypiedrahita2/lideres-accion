@@ -92,14 +92,43 @@ export class HomeComponent implements OnInit {
     if (usuarioData) {
       this.usuario = JSON.parse(usuarioData);
       this.perfilService.setCurrentUser(this.usuario); // Notify subscribers
-      if (!this.iglesiaData && this.usuario.iglesia) {
-        this.getMyIglesia(this.usuario.iglesia!);
-      }
+
+      // Background update (Silent refresh)
+      this.updateUserDataInBackground();
+
       this.loadPostulacionesInfo();
       this.userPhotoUrl = this.auth.getPhotoUrl();
       this.skeleton = false;
     } else {
       this.getusuario(this.auth.uidUser());
+    }
+  }
+
+  async updateUserDataInBackground() {
+    try {
+      const uid = this.auth.uidUser();
+      if (!uid) return;
+
+      const latestUser = await this.perfilService.getMiPerfil(uid);
+      if (latestUser) {
+        // Update local state
+        this.usuario = latestUser;
+        // Update storage
+        localStorage.setItem(
+          'usuario',
+          JSON.stringify({ ...this.usuario, id: uid })
+        );
+        // Notify app
+        this.perfilService.setCurrentUser(this.usuario);
+
+        // Update photo if changed
+        if (this.usuario.foto) {
+          this.userPhotoUrl = this.usuario.foto;
+        }
+      }
+    } catch (error) {
+      console.warn('Background update failed silently', error);
+      // We don't show error to user because they are using cached version happily
     }
   }
 
