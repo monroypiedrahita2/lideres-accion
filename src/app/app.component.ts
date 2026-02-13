@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate, VersionEvent } from '@angular/service-worker';
 import { ToastrService } from 'ngx-toastr';
+import { NotificationService } from './ui/shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,11 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(private readonly swUpdate: SwUpdate, private readonly toastr: ToastrService) { }
+  constructor(
+    private readonly swUpdate: SwUpdate,
+    private readonly toastr: ToastrService,
+    private readonly notificationService: NotificationService
+  ) { }
 
   ngOnInit(): void {
     // 1. Verificar que el Service Worker esté habilitado

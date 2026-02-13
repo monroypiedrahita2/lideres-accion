@@ -10,6 +10,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogNotificationComponent } from '../../../dialogs/dialog-notification/dialog-nofication.component';
 import { IconButtonComponent } from '../../atoms/icon-button/icon-button.component';
 import { IconWhatsappComponent } from '../../atoms/icon-whatsapp/icon-whatsapp.component';
+import { NotificationService } from '../../../services/notification/notification.service';
 
 @Component({
     selector: 'app-aprobaciones',
@@ -31,68 +32,34 @@ export class AprobacionesComponent implements OnInit {
 
     constructor(
         private carreraService: CarreraService,
-        private authService: AuthService,
-        private vehiculoService: VehiculoService,
-        private dialog: MatDialog
+        private authService: AuthService, // functionality moved to NotificationService but keeping for now if needed, though likely unused in this new flow? actually authService is used in loadAprobaciones but we are removing that.
+        // private vehiculoService: VehiculoService, // Removing as it is not used in the new flow
+        private dialog: MatDialog,
+        private notificationService: NotificationService
     ) { }
 
     ngOnInit(): void {
-        this.loadAprobaciones();
-    }
-
-    async loadAprobaciones() {
         this.loading = true;
-        const uid = this.authService.uidUser();
-
-        this.vehiculoService.getVehiculoByConductor(uid).subscribe(vehiculos => {
-            if (vehiculos && vehiculos.length > 0 && vehiculos[0].id) {
-                const vehiculoId = vehiculos[0].id;
-                this.carreraService.getCarrerasAsignadasAVehiculo(vehiculoId).subscribe(asignadas => {
-                    this.aprobaciones = asignadas.sort((a, b) => {
-                        const priority: { [key: string]: number } = {
-                            'En ruta': 1,
-                            'Finalizada': 2
-                        };
-
-                        const priorityA = priority[a.estado as string] || 99;
-                        const priorityB = priority[b.estado as string] || 99;
-
-                        return priorityA - priorityB;
-                    });
-                    this.checkNewApprovals();
-                    this.loading = false;
-                });
-            } else {
-                this.loading = false;
-            }
+        this.notificationService.aprobaciones$.subscribe(aprobaciones => {
+            this.aprobaciones = aprobaciones;
+            this.checkActiveRace();
+            this.loading = false;
         });
     }
 
+    // loadAprobaciones is no longer needed as the service handles it
+
     @Output() hasActiveRace = new EventEmitter<boolean>();
 
-    private lastNotifiedRaceId: string | undefined;
-
-    checkNewApprovals() {
+    checkActiveRace() {
         const activeRace = this.aprobaciones.find(c => c.estado === 'En ruta');
         const hasActive = !!activeRace;
-
         this.hasActiveRace.emit(hasActive);
-
-        if (activeRace && activeRace.id !== this.lastNotifiedRaceId) {
-            this.lastNotifiedRaceId = activeRace.id;
-            this.dialog.open(DialogNotificationComponent, {
-                width: '400px',
-                data: {
-                    title: '¡Nueva Carrera Aprobada!',
-                    message: `Tienes una carrera activa hacia ${activeRace.puestoVotacionIr || 'el puesto de votación'}.`,
-                    type: 'success',
-                    bottons: 'one'
-                }
-            });
-        } else if (!activeRace) {
-            this.lastNotifiedRaceId = undefined;
-        }
     }
+
+
+
+
 
     openMapCoordinates(lat: number | undefined, lng: number | undefined) {
         if (!lat || !lng) return;
@@ -138,7 +105,7 @@ export class AprobacionesComponent implements OnInit {
                         width: '400px',
                         data: {
                             title: 'Carrera Finalizada',
-                            message: 'La carrera ha sido finalizada exitosamente.',
+                            message: 'La carrera ha sido finalizada exitosamente. Vuelva a su estado Activo para iniciar una nueva carrera.',
                             type: 'success',
                             bottons: 'one'
                         }

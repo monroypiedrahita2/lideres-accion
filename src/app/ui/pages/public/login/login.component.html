@@ -1,18 +1,18 @@
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col gap-2 justify-center">
     <!-- <mg-logo></mg-logo> -->
-    <span class="w-full font-bold text-4xl text-center text-primary text-shadow tracking-widest">Sistema</span>
+    <span class="w-full font-bold text-[3rem] text-center text-primary text-shadow tracking-widest">Sistema</span>
     <span class="w-full font-bold text-2xl text-center text-black">¡Hola, gracias por tu apoyo!</span>
   </div>
 
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
     <div class="flex flex-col gap-5 mt-5 px-5 mb-5">
       <button type="google"
-        class="flex w-full justify-center items-center rounded-md bg-gray border border-gray-300 px-3 py-1.5 text-sm/6 text-white shadow-sm hover:bg-hoverazulmira focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        class="flex w-full justify-center items-center rounded-md bg-gray border border-gray-300 px-4 py-3 text-white shadow-sm hover:bg-hoverazulmira focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         (click)="loginWithGoogle()">
-        <span class="text-black font-medium font-primary text-lg flex justify-center items-center gap-3"
+        <span class="text-black font-medium font-primary text-xl flex justify-center items-center gap-3"
           *ngIf="!loading">
-          <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48">
+          <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
             <path fill="#FFC107"
               d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z">
             </path>
@@ -33,9 +33,9 @@
       </button>
 
       <button type="button" *ngIf="!showPasswordLogin"
-        class="flex w-full justify-center rounded-md bg-white border border-primary px-3 py-1.5 text-sm/6 text-primary shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        class="flex w-full justify-center rounded-md bg-white border border-primary px-4 py-3 text-primary shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         (click)="showPasswordLogin = true">
-        <span class="font-medium font-primary text-lg">Iniciar sesión con contraseña</span>
+        <span class="font-medium font-primary text-xl">Iniciar sesión con contraseña</span>
       </button>
     </div>
 
@@ -46,9 +46,9 @@
 
       <div class="btns flex flex-col gap-2 mt-0">
         <button type="submit"
-          class="flex w-full justify-center rounded-md bg-primary px-3 py-1.5 text-sm/6 text-white shadow-sm hover:bg-hoverazulmira focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          class="flex w-full justify-center rounded-md bg-primary px-4 py-3 text-white shadow-sm hover:bg-hoverazulmira focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
           (click)="login()">
-          <span class="text-white font-medium font-primary text-lg" *ngIf="!loading">Iniciar sesión</span>
+          <span class="text-white font-medium font-primary text-xl" *ngIf="!loading">Iniciar sesión</span>
           <span *ngIf="loading" class="material-symbols-outlined animate-spin">
             progress_activity
           </span>
