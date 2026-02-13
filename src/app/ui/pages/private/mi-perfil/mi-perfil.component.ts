@@ -232,6 +232,10 @@ export class MiPerfilComponent implements OnInit {
     }
     try {
       await this.perfilService.crearPerfilConUId(user, this.auth.uidUser());
+      localStorage.setItem(
+        'usuario',
+        JSON.stringify({ ...user, id: this.auth.uidUser() })
+      );
       this.toast.success('Perfil de la app creado ');
       this.location.back();
     } catch (error) {
@@ -255,9 +259,12 @@ export class MiPerfilComponent implements OnInit {
   async updateUser(data: any) {
     try {
       await this.perfilService.updatePerfil(this.auth.uidUser(), data);
+      localStorage.setItem(
+        'usuario',
+        JSON.stringify({ ...this.usuario, ...data })
+      );
       this.toast.success('Usuario actualizado');
       this.location.back();
-      localStorage.setItem('usuario', JSON.stringify({ ...this.usuario, ...data }));
 
     } catch (error) {
       console.error(error);
