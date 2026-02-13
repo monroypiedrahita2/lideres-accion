@@ -65,7 +65,7 @@
                         </div>
                         <mg-icon-button
                             (onClick)="openMapCoordinates(carrera.latitudSolicitante, carrera.longitudSolicitante)"
-                            icon="location_on" variant="danger" size="small"></mg-icon-button>
+                            customIcon="assets/google.maps.png" variant="bg-white" size="large"></mg-icon-button>
                     </div>
                     <p class="text-xl font-semibold text-black pl-7">{{ carrera.lugarRecogida || 'Ubicación GPS' }}</p>
                 </div>
@@ -77,8 +77,8 @@
                             <mat-icon class="text-red-600 !w-5 !h-5 !text-lg">how_to_vote</mat-icon>
                             <span class="text-sm font-semibold text-gray-700">Destino (Votación)</span>
                         </div>
-                        <mg-icon-button (onClick)="openMapQuery(carrera.puestoVotacionIr)" icon="location_on"
-                            variant="danger" size="small"></mg-icon-button>
+                        <mg-icon-button (onClick)="openMapQuery(carrera.puestoVotacionIr)"
+                            customIcon="assets/google.maps.png" variant="bg-white" size="large"></mg-icon-button>
                     </div>
                     <p class="text-xl font-semibold text-black pl-7">{{ carrera.puestoVotacionIr }}</p>
                 </div>
