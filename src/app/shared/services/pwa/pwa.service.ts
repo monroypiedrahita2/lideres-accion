@@ -6,9 +6,29 @@ import { Injectable } from '@angular/core';
 export class PwaService {
     private deferredPrompt: any;
     showInstallButton = false;
+    private platform = 'WEB';
 
     constructor() {
         this.initPwaPrompt();
+        this.checkPlatform();
+    }
+
+    get currentPlatform() {
+        return this.platform;
+    }
+
+    private checkPlatform() {
+        if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
+            const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+            if (/iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream) {
+                this.platform = 'IOS';
+                // Check if already installed (standalone mode)
+                const isStandalone = ('standalone' in window.navigator) && (window.navigator as any).standalone;
+                if (!isStandalone) {
+                    this.showInstallButton = true; // Show button for iOS manual install
+                }
+            }
+        }
     }
 
     private initPwaPrompt() {
@@ -20,6 +40,7 @@ export class PwaService {
                 this.deferredPrompt = e;
                 // Update UI notify the user they can install the PWA
                 this.showInstallButton = true;
+                this.platform = 'ANDROID';
             });
 
             // Optionally listen for appinstalled event
@@ -31,7 +52,10 @@ export class PwaService {
         }
     }
 
-    async installPwa() {
+    /**
+     * Triggers the install prompt or returns true if manual guide is needed
+     */
+    async installPwa(): Promise<boolean> {
         if (this.deferredPrompt) {
             this.deferredPrompt.prompt();
             const { outcome } = await this.deferredPrompt.userChoice;
@@ -39,6 +63,9 @@ export class PwaService {
                 this.deferredPrompt = null;
                 this.showInstallButton = false;
             }
+            return false; // Handled automatically
         }
+        // If no deferred prompt (e.g. iOS or manual case), return true to show guide
+        return true;
     }
 }

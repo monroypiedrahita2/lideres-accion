@@ -11,12 +11,14 @@ import { AuthService } from '../../../shared/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatIconModule } from '@angular/material/icon';
 import { PwaService } from '../../../../shared/services/pwa/pwa.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DialogInstallGuideComponent } from '../../../../ui/shared/dialogs/dialog-install-guide/dialog-install-guide.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.component.html',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, LogoComponent, InputTextComponent, MatIconModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, LogoComponent, InputTextComponent, MatIconModule, MatDialogModule],
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
@@ -31,7 +33,8 @@ export class LoginComponent {
     private readonly router: Router,
     private readonly _snackBar: MatSnackBar,
     private readonly toast: ToastrService,
-    private readonly pwaService: PwaService
+    private readonly pwaService: PwaService,
+    private readonly dialog: MatDialog
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -71,7 +74,13 @@ export class LoginComponent {
   }
 
   async installPwa() {
-    await this.pwaService.installPwa();
+    const manualInstall = await this.pwaService.installPwa();
+    if (manualInstall) {
+      this.dialog.open(DialogInstallGuideComponent, {
+        data: { platform: this.pwaService.currentPlatform },
+        width: '400px'
+      });
+    }
   }
 
   get showInstallButton() {

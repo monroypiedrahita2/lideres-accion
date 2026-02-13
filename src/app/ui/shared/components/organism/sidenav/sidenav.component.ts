@@ -12,6 +12,7 @@ import { DialogCasasApoyoComponent } from '../../../dialogs/dialog-casas-apoyo/d
 import { DialogTestigosComponent } from '../../../dialogs/dialog-opciones-testigos/dialog-testigos.component';
 import { DialogNotificationComponent } from '../../../dialogs/dialog-notification/dialog-nofication.component';
 import { PwaService } from '../../../../../shared/services/pwa/pwa.service';
+import { DialogInstallGuideComponent } from '../../../dialogs/dialog-install-guide/dialog-install-guide.component';
 
 @Component({
     selector: 'mg-sidenav',
@@ -111,7 +112,13 @@ export class SidenavComponent {
     }
 
     async installPwa() {
-        await this.pwaService.installPwa();
+        const manualInstall = await this.pwaService.installPwa();
+        if (manualInstall) {
+            this.dialog.open(DialogInstallGuideComponent, {
+                data: { platform: this.pwaService.currentPlatform },
+                width: '400px'
+            });
+        }
         this.close.emit();
     }
 }
