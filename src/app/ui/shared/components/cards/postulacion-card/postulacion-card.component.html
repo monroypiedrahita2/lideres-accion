@@ -4,18 +4,18 @@
         <div *ngIf="usuario?.postulado?.transporte" class="p-4 rounded-lg bg-gray-50 border-l-4"
             [ngClass]="getBorderColor(vehiculoStatus)">
             <div class="flex justify-between items-center mb-2">
-                <span class="font-semibold text-gray-700">Apoyo vehícular</span>
+                <span class="font-semibold text-lg text-black">Apoyo vehícular</span>
                 <mat-icon [class]="getTextColor(vehiculoStatus)">directions_car</mat-icon>
             </div>
-            <p class="text-sm font-medium" [class]="getTextColor(vehiculoStatus)">
+            <p class="text-lg font-semibold" [class]="getTextColor(vehiculoStatus)">
                 {{ vehiculoStatus || 'Cargando...' }}
             </p>
             <div *ngIf="vehiculoInfo" class="mt-2 pt-2 border-t border-gray-200 text-xs text-gray-600 flex flex-col">
-                <span><strong>Asociado a:</strong> {{ vehiculoInfo.casaApoyo }}</span>
-                <span><strong>Dirección:</strong> {{ vehiculoInfo.direccion }}</span>
-                <span><strong>Barrio:</strong> {{ vehiculoInfo.barrio }}</span>
+                <span class="text-lg text-black"><strong>Asociado a:</strong> {{ vehiculoInfo.casaApoyo }}</span>
+                <span class="text-lg text-black"><strong>Dirección:</strong> {{ vehiculoInfo.direccion }}</span>
+                <span class="text-lg text-black"><strong>Barrio:</strong> {{ vehiculoInfo.barrio }}</span>
 
-                <div class="flex gap-2 mt-2" *ngIf="vehiculoInfo.responsableTelefono">
+                <div class="flex gap-2 mt-2 w-full justify-between" *ngIf="vehiculoInfo.responsableTelefono">
                     <mg-icon-whatsapp [phone]="vehiculoInfo.responsableTelefono" size="small"></mg-icon-whatsapp>
                     <mg-icon-button icon="call" [link]="'tel:' + vehiculoInfo.responsableTelefono" variant="info"
                         size="small"></mg-icon-button>
@@ -24,21 +24,21 @@
                 <!-- Status Selector -->
                 <div *ngIf="vehiculoStatus === 'Aprobado' && currentVehiculo"
                     class="mt-4 pt-2 border-t border-gray-100">
-                    <p class="text-xs font-semibold text-gray-600 mb-2">Estado del vehículo:</p>
-                    <div class="flex flex-wrap gap-2">
+                    <p class="text-lg font-semibold text-black mb-2">Estado del vehículo:</p>
+                    <div class="flex flex-wrap justify-between gap-2">
                         <button (click)="updateVehiculoStatus('Activo')"
                             [class]="currentVehiculo.estado === 'Activo' ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-                            class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
+                            class="px-3 py-1 rounded-full text-lg font-medium transition-colors">
                             Activo
                         </button>
                         <button (click)="updateVehiculoStatus('Inactivo')"
                             [class]="currentVehiculo.estado === 'Inactivo' ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-                            class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
+                            class="px-3 py-1 rounded-full text-lg font-medium transition-colors">
                             Inactivo
                         </button>
                         <button (click)="updateVehiculoStatus('En carrera')"
                             [class]="currentVehiculo.estado === 'En carrera' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-                            class="px-3 py-1 rounded-full text-xs font-medium transition-colors">
+                            class="px-3 py-1 rounded-full text-lg font-medium transition-colors">
                             En carrera
                         </button>
                     </div>
@@ -50,10 +50,10 @@
         <div *ngIf="usuario?.postulado?.casaApoyo" class="p-4 rounded-lg bg-gray-50 border-l-4"
             [ngClass]="getBorderColor(casaApoyoStatus)">
             <div class="flex justify-between items-center mb-2">
-                <span class="font-semibold text-gray-700">Casa de Apoyo</span>
+                <span class="font-semibold text-lg text-black">Casa de Apoyo</span>
                 <mat-icon [class]="getTextColor(casaApoyoStatus)">home</mat-icon>
             </div>
-            <p class="text-sm font-medium" [class]="getTextColor(casaApoyoStatus)">
+            <p class="text-lg font-semibold" [class]="getTextColor(casaApoyoStatus)">
                 {{ casaApoyoStatus || 'Cargando...' }}
             </p>
 
@@ -72,22 +72,22 @@
                             class="flex flex-col bg-white p-2 rounded border border-gray-100 shadow-sm">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-xs font-bold text-gray-700">{{ vehiculo.tipoVehiculo }} - {{
+                                    <p class="text-md font-bold text-black">{{ vehiculo.tipoVehiculo }} - {{
                                         vehiculo.placa }}</p>
-                                    <p class="text-xs text-gray-500">{{ vehiculo.nombre }} {{ vehiculo.apellidos }}</p>
+                                    <p class="text-lg text-black">{{ vehiculo.nombre }} {{ vehiculo.apellidos }}</p>
                                     <div class="mt-1">
                                         <span
-                                            [class]="getStatusColor(vehiculo.estado || 'Inactivo') + ' px-2 py-0.5 rounded-full text-[10px] font-medium border border-opacity-20'">
+                                            [class]="getStatusColor(vehiculo.estado || 'Inactivo') + ' px-2 py-0.5 rounded-full text-lg font-medium border border-opacity-20'">
                                             {{ vehiculo.estado || 'Inactivo' }}
                                         </span>
                                     </div>
                                 </div>
-                                <div class="flex gap-2">
+                                <div class="flex flex-col gap-2">
                                     <mg-icon-whatsapp *ngIf="vehiculo.celular" [phone]="vehiculo.celular"
                                         size="small"></mg-icon-whatsapp>
                                     <mg-icon-button *ngIf="vehiculo.celular" icon="call"
-                                        [link]="'tel:' + vehiculo.celular" variant="bg-white" size="small"
-                                        class="text-blue-600"></mg-icon-button>
+                                        [link]="'tel:' + vehiculo.celular" variant="primary" size="small"
+                                        ></mg-icon-button>
                                 </div>
                             </div>
                         </div>
@@ -101,15 +101,15 @@
         <div *ngIf="usuario?.postulado?.testigo" class="p-4 rounded-lg bg-gray-50 border-l-4"
             [ngClass]="getBorderColor(testigoStatus)">
             <div class="flex justify-between items-center mb-2">
-                <span class="font-semibold text-gray-700">Coordinador puesto de votación</span>
+                <span class="font-semibold text-lg text-black">Coordinador puesto de votación</span>
                 <mat-icon [class]="getTextColor(testigoStatus)">how_to_vote</mat-icon>
             </div>
-            <p class="text-sm font-medium" [class]="getTextColor(testigoStatus)">
+            <p class="text-lg font-semibold" [class]="getTextColor(testigoStatus)">
                 {{ testigoStatus || 'Cargando...' }}
             </p>
-            <div *ngIf="testigoInfo" class="mt-2 pt-2 border-t border-gray-200 text-xs text-gray-600">
-                <p><strong>Puesto:</strong> {{ testigoInfo.puesto }}</p>
-                <p><strong>Mesa:</strong> {{ testigoInfo.mesa }}</p>
+            <div *ngIf="testigoInfo" class="mt-2 pt-2 border-t border-gray-200 text-xs text-gray-600 flex flex-col">
+                <span class="text-lg text-black"><strong>Puesto:</strong> {{ testigoInfo.puesto }}</span>
+                <span class="text-lg text-black"><strong>Mesa:</strong> {{ testigoInfo.mesa }}</span>
             </div>
 
             <!-- Witnesses List -->
@@ -131,12 +131,11 @@
                                     </p>
                                     <p class="text-xs text-gray-500">Mesa: {{ testigo.data.mesa }}</p>
                                 </div>
-                                <div class="flex gap-2">
+                                <div class="flex flex-col gap-2">
                                     <mg-icon-whatsapp *ngIf="testigo.data.celular" [phone]="testigo.data.celular"
                                         size="small"></mg-icon-whatsapp>
                                     <mg-icon-button *ngIf="testigo.data.celular" icon="call"
-                                        [link]="'tel:' + testigo.data.celular" variant="bg-white" size="small"
-                                        class="text-blue-600"></mg-icon-button>
+                                        [link]="'tel:' + testigo.data.celular" variant="primary" size="small" ></mg-icon-button>
                                 </div>
                             </div>
                         </div>

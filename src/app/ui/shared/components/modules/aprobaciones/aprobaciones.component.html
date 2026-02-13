@@ -27,8 +27,8 @@
             <!-- Solicitante Info -->
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-xs text-gray-500 uppercase font-semibold">Solicitante</p>
-                    <p class="font-medium text-gray-800">{{ carrera.nombreSolicitante || 'Usuario'}}</p>
+                    <p class="text-md text-gray-500 font-semibold">Solicitante</p>
+                    <p class="font-medium text-black text-lg">{{ carrera.nombreSolicitante || 'Usuario'}}</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <mg-icon-whatsapp *ngIf="carrera.telefonoSolicitante" [phone]="carrera.telefonoSolicitante"
@@ -42,8 +42,8 @@
             <div *ngIf="carrera.telefonoVotante && (carrera.telefonoVotante !== carrera.telefonoSolicitante)"
                 class="flex justify-between items-start border-t border-gray-100 pt-3">
                 <div>
-                    <p class="text-xs text-gray-500 uppercase font-semibold">Votante</p>
-                    <p class="font-medium text-gray-800">{{ carrera.nombreVotante || 'Votante' }}</p>
+                    <p class="text-md text-gray-500 font-semibold">Votante</p>
+                    <p class="font-medium text-black text-lg">{{ carrera.nombreVotante || 'Votante' }}</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <mg-icon-whatsapp *ngIf="carrera.telefonoVotante" [phone]="carrera.telefonoVotante"
@@ -67,7 +67,7 @@
                             (onClick)="openMapCoordinates(carrera.latitudSolicitante, carrera.longitudSolicitante)"
                             icon="location_on" variant="danger" size="small"></mg-icon-button>
                     </div>
-                    <p class="text-md font-semibold text-black pl-7">{{ carrera.lugarRecogida || 'Ubicación GPS' }}</p>
+                    <p class="text-xl font-semibold text-black pl-7">{{ carrera.lugarRecogida || 'Ubicación GPS' }}</p>
                 </div>
 
                 <!-- Destination -->
@@ -80,7 +80,7 @@
                         <mg-icon-button (onClick)="openMapQuery(carrera.puestoVotacionIr)" icon="location_on"
                             variant="danger" size="small"></mg-icon-button>
                     </div>
-                    <p class="text-md font-semibold text-black pl-7">{{ carrera.puestoVotacionIr }}</p>
+                    <p class="text-xl font-semibold text-black pl-7">{{ carrera.puestoVotacionIr }}</p>
                 </div>
 
             </div>

@@ -148,15 +148,31 @@ export class MisCarrerasComponent implements OnInit {
         }
     }
 
-    getDistanciaPostulado(postulado: PostuladosIdsModel, carrera: CreateCarreraModel): string {
+    getTiempoAproximado(postulado: PostuladosIdsModel, carrera: CreateCarreraModel): string {
         if (!postulado.latitud || !postulado.longitud || !carrera.latitudSolicitante || !carrera.longitudSolicitante) return '';
         const dist = this.getDistanceFromLatLonInKm(
             postulado.latitud,
             postulado.longitud,
             carrera.latitudSolicitante,
             carrera.longitudSolicitante
-        );
-        return `${dist.toFixed(1)} km`;
+        ) * 4;
+
+        const timeHours = dist / 30;
+        const timeMinutes = Math.round(timeHours * 60 * 2);
+
+        return `${timeMinutes} min`;
+    }
+
+    getDistanciaAproximado(postulado: PostuladosIdsModel, carrera: CreateCarreraModel): string {
+        if (!postulado.latitud || !postulado.longitud || !carrera.latitudSolicitante || !carrera.longitudSolicitante) return '';
+        const dist = this.getDistanceFromLatLonInKm(
+            postulado.latitud,
+            postulado.longitud,
+            carrera.latitudSolicitante,
+            carrera.longitudSolicitante
+        ) * 3.5;
+
+        return `${dist.toFixed(2)} km`;
     }
 
     getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {

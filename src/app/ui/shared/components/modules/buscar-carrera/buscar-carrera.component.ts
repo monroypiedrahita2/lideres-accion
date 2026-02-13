@@ -166,9 +166,9 @@ export class BuscarCarreraComponent implements OnInit {
                     this.userLocation!.lng,
                     carrera.latitudSolicitante,
                     carrera.longitudSolicitante
-                );
+                ) * 3.5;
                 const timeHours = dist / 30;
-                const timeMinutes = Math.round(timeHours * 60);
+                const timeMinutes = Math.round(timeHours * 60 * 2.5);
 
                 return {
                     ...carrera,

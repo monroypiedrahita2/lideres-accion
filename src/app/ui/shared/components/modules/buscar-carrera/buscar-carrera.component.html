@@ -22,31 +22,36 @@
     </div>
 
     <div *ngIf="!loadingBuscar && !vehiculoMensaje && carrerasDisponibles.length === 0"
-        class="text-center text-gray-500 py-8">
+        class="text-center text-gray-800 text-lg py-8">
         No hay carreras disponibles para tu tipo de vehículo en este momento.
     </div>
 
     <div *ngFor="let carrera of carrerasDisponibles"
         class="border rounded-lg p-3 hover:shadow-md transition-shadow bg-white">
-        <div class="flex justify-between items-start mb-2">
-            <div class="flex flex-col">
-                <span class="font-bold text-gray-800 text-sm">Recoger en: {{ carrera.lugarRecogida }}</span>
-                <span class="text-xs text-gray-500">Destino: {{ carrera.puestoVotacionIr }}</span>
+        <div class="flex justify-between mb-2 w-full">
+            <div class="flex flex-col justify-center items-center w-full">
+                <span class="font-bold text-gray-800 text-lg text-center">{{ carrera.lugarRecogida }}</span>
+                <span class="text-xl text-gray-500 text-center">{{ carrera.puestoVotacionIr }}</span>
 
                 <!-- Local type CarreraWithDistance used here -->
-                <div *ngIf="carrera.distancia"
-                    class="flex items-center mt-1 gap-1 text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full w-fit">
-                    <mat-icon class="!text-sm !w-4 !h-4">near_me</mat-icon>
-                    <span class="font-bold">{{ carrera.distancia }} km (~{{ carrera.tiempoEstimado }}
-                        min)</span>
+                <div class="flex justify-between w-full items-center">
+                    <div *ngIf="carrera.distancia"
+                        class="flex items-center justify-between mt-1 gap-1 text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full w-fit">
+                        <mat-icon class="!text-sm !w-4 !h-4">near_me</mat-icon>
+                        <span class="font-bold text-xl">{{ carrera.distancia }} km (~{{ carrera.tiempoEstimado }}
+                            min)</span>
+                    </div>
+                    <span class="text-lg px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-100">
+                        {{ carrera.tipoVehiculo }}
+                    </span>
+
                 </div>
             </div>
-            <span class="text-xs px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-100">
-                {{ carrera.tipoVehiculo }}
-            </span>
+
         </div>
 
-        <p class="text-xs text-gray-600 mb-3 bg-gray-50 p-2 rounded">{{ carrera.observaciones || 'Sin observaciones' }}
+        <p class="text-lg text-red-700 font-medium mb-3 bg-red-50 p-2 rounded text-center border border-red-100">{{
+            carrera.observaciones || 'Sin observaciones' }}
         </p>
 
         <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">

@@ -38,8 +38,9 @@
                             '')?.apellidos }}
                         </span>
                         <span class="text-xs text-gray-600">
-                            <mat-icon class="!text-sm !w-4 !h-4 align-middle mr-1">directions_car</mat-icon>
-                            Cerca a {{ getDistanciaPostulado(postulado, carrera) }}
+                            <mat-icon class="!text-sm !w-4 !h-4 align-middle mr-1">access_time</mat-icon>
+                            Aprox {{ getTiempoAproximado(postulado, carrera) }} - {{ getDistanciaAproximado(postulado,
+                            carrera) }} km
                         </span>
                     </div>
                     <div class="flex gap-2">

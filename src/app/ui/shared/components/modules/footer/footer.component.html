@@ -13,10 +13,10 @@
   <app-button-footer class="flex-1 min-w-[80px] flex justify-center" [option]="'Aprobaciones'" [icon]="'check'"
     [goTo]="$any(null)" (click)="openAprobaciones()"></app-button-footer>
 
-  <app-button-footer *ngIf="showBuscarCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Buscar'"
-    [icon]="'search'" [goTo]="$any(null)" (click)="openBuscarCarrera()"></app-button-footer>
+  <app-button-footer *ngIf="showBuscarCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Carreras'"
+    [icon]="'local_taxi'" [goTo]="$any(null)" (click)="openBuscarCarrera()"></app-button-footer>
 
-  <app-button-footer *ngIf="canCreateCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Carrera'"
-    [icon]="'local_taxi'" [goTo]="$any(null)" (click)="openDialogCrearCarrera()"></app-button-footer>
+  <app-button-footer *ngIf="canCreateCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Traslados'"
+    [icon]="'swap_horiz'" [goTo]="$any(null)" (click)="openDialogCrearCarrera()"></app-button-footer>
 
 </div>
