@@ -5,18 +5,18 @@
   <div class="bg-blue-100 rounded-full p-5 mb-4 flex items-center justify-center">
     <mat-icon class="text-blue-600 !w-12 !h-12 !text-[48px] flex items-center justify-center">assignment_ind</mat-icon>
   </div>
-  <span class="text-blue-600 font-bold text-center text-2xl uppercase tracking-wide">Asociar a Zona</span>
+  <span class="text-blue-600 font-bold text-center text-2xl tracking-wide">Asociar a Zona</span>
 </div>
 
 <mat-dialog-content class="w-full">
   <div class="flex flex-col gap-4 mt-4 w-full">
-    <p class="text-center font-primary text-gray-600 text-lg leading-relaxed">
+    <p class="text-center font-primary text-black text-2xl leading-relaxed">
       Ingresa el número de cuenta del perfil que deseas asociar a tu zona.
     </p>
 
     <div class="flex gap-2 items-center w-full">
-      <mg-input-text class="w-full" label="Número de Cuenta" [formControl]="emailControl" placeholder="Digite el código"
-        type="text">
+      <mg-input-text class="w-full" label="Número de Cuenta" id="numeroCuenta" [formControl]="emailControl" placeholder="Digite el código"
+        type="text" (keyup.enter)="buscarPerfil()">
       </mg-input-text>
       <div class="mb-4">
         <button *ngIf="!perfilEncontrado" mat-mini-fab color="primary" (click)="buscarPerfil()"

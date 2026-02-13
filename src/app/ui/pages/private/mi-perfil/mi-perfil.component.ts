@@ -86,11 +86,16 @@ export class MiPerfilComponent implements OnInit {
           this.usuario = this.user;
           this.actualizarForm(this.user);
           this.form.get('email')?.disable();
+          localStorage.setItem(
+            'usuario',
+            JSON.stringify({ ...this.user, id: this.auth.uidUser() })
+          );
 
           this.accion = 'Editar';
         }
         this.enableSkeleton = false;
       } catch (error) {
+        localStorage.removeItem('usuario');
         this.form.get('email')?.enable();
         this.accion = 'Crear';
         this.form.patchValue({
@@ -199,7 +204,7 @@ export class MiPerfilComponent implements OnInit {
         transporte: rawValue.transporte,
         testigo: rawValue.testigo,
       },
-      noCuenta: rawValue.noCuenta || this.generateNoCuenta(),
+      noCuenta: this.generateNoCuenta(),
       apruebaUsodeDatos: this.usuario.apruebaUsodeDatos || false,
     };
 
@@ -250,7 +255,7 @@ export class MiPerfilComponent implements OnInit {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
     const charactersLength = characters.length;
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 4; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;

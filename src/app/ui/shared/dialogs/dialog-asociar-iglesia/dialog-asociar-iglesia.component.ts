@@ -47,7 +47,7 @@ export class DialogAsociarIglesiaComponent {
         this.perfilService.getPerfilByNoCuenta(noCuenta).subscribe((perfiles) => {
             if (perfiles && perfiles.length > 0) {
                 this.perfilEncontrado = perfiles[0];
-                this.emailControl.disable();
+                // this.emailControl.disable();
             } else {
                 this.perfilEncontrado = null;
                 this.toastr.warning('Perfil no encontrado');

@@ -10,12 +10,12 @@
   </div>
 
   <!-- Mobile View: Cards -->
-  <div class="block md:hidden flex flex-col gap-4">
+  <div class="md:hidden flex flex-col gap-4">
     <div class="relative" *ngFor="let voluntarios of paginatedVoluntarios">
       <mtt-card-info [title]="voluntarios.nombres + ' ' + voluntarios.apellidos"
-        [textInfo]="(voluntarios.rol ? voluntarios.rol : '')" icon="person" [activePoint]="false"></mtt-card-info>
-      <button *ngIf="usuario.rol === 'Super usuario'" (click)="abrirModalEliminar(voluntarios)"
-        class="absolute top-4 right-4 text-red-500 bg-white rounded-full p-1 shadow hover:bg-red-50 transition-colors">
+        [textInfo]="(voluntarios.rol ? voluntarios.rol : voluntarios.noCuenta)" icon="person" [activePoint]="false"></mtt-card-info>
+      <button *ngIf="usuario.rol === 'Super usuario' || usuario.rol === 'Pastor'"
+        (click)="abrirModalEliminar(voluntarios)" class="absolute bottom-0 right-0 text-red-500 rounded-full p-1">
         <mat-icon>delete</mat-icon>
       </button>
     </div>
@@ -51,6 +51,21 @@
       <ng-container matColumnDef="rol">
         <th mat-header-cell *matHeaderCellDef class="px-4 py-2 bg-gray-100 font-bold text-gray-700"> Rol </th>
         <td mat-cell *matCellDef="let element" class="px-4 py-2 border-b"> {{element.rol}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="coordinadorCasaApoyo">
+        <th mat-header-cell *matHeaderCellDef class="px-4 py-2 bg-gray-100 font-bold text-gray-700"> Coordinador Casa de Apoyo</th>
+        <td mat-cell *matCellDef="let element" class="px-4 py-2 border-b"> {{element.coordinadorCasaApoyo ? 'Si' : 'No'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="coordinadorTransporte">
+        <th mat-header-cell *matHeaderCellDef class="px-4 py-2 bg-gray-100 font-bold text-gray-700"> Coordinador Transporte</th>
+        <td mat-cell *matCellDef="let element" class="px-4 py-2 border-b"> {{element.coordinadorTransporte ? 'Si' : 'No'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="administradorTestigos">
+        <th mat-header-cell *matHeaderCellDef class="px-4 py-2 bg-gray-100 font-bold text-gray-700"> Administrador Testigos</th>
+        <td mat-cell *matCellDef="let element" class="px-4 py-2 border-b"> {{element.administradorTestigos ? 'Si' : 'No'}} </td>
       </ng-container>
 
       <!-- Celular Column -->

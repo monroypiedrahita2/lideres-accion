@@ -11,17 +11,17 @@
 
     <form [formGroup]="form" class="flex flex-col gap-4 max-h-[70vh] overflow-y-auto px-1 py-1">
 
-        <mg-input-text id="nombreSolicitante" label="Nombre Solicitante" formControlName="nombreSolicitante"
+        <!-- <mg-input-text id="nombreSolicitante" label="Nombre Solicitante" formControlName="nombreSolicitante"
             [required]="true" placeholder="Ingrese el nombre completo"></mg-input-text>
 
         <mg-input-text id="telefonoSolicitante" label="Teléfono Solicitante" formControlName="telefonoSolicitante"
             type="tel" [required]="true" placeholder="Ingrese número de celular" [minlength]="10"
-            [maxlength]="10"></mg-input-text>
+            [maxlength]="10"></mg-input-text> -->
 
-        <mg-input-text id="nombreVotante" label="Nombre Votante" formControlName="nombreVotante" [required]="true"
+        <mg-input-text id="nombreVotante" label="Nombre votante" formControlName="nombreVotante" [required]="true"
             placeholder="Ingrese el nombre completo"></mg-input-text>
 
-        <mg-input-text id="telefonoVotante" label="Teléfono Votante" formControlName="telefonoVotante" type="tel"
+        <mg-input-text id="telefonoVotante" label="Teléfono votante" formControlName="telefonoVotante" type="tel"
             [required]="true" placeholder="Ingrese número de celular" [minlength]="10" [maxlength]="10"></mg-input-text>
 
         <mg-input-select id="tipoVehiculo" label="Tipo de vehículo" formControlName="tipoVehiculo"
@@ -33,6 +33,9 @@
                 Enviar ubicación actual
             </mat-checkbox>
         </div>
+
+        <mg-input-select id="municipio" label="Municipio" formControlName="municipio"
+            [items]="municipiosOptions" [required]="!usarUbicacionActual" placeholder="Municipio"></mg-input-select>
 
         <mg-input-text id="lugarRecogida" label="Lugar de recogida" formControlName="lugarRecogida"
             [required]="!usarUbicacionActual" placeholder="Dirección o punto de referencia"></mg-input-text>

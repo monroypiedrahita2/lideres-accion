@@ -10,12 +10,13 @@
         <span *ngIf="usuario.administradorTestigos" class="text-md bg-blue-100 text-blue-800 px-2 py-1 rounded w-fit">Administrador Testigos</span>
         <span *ngIf="usuario.coordinadorTransporte" class="text-md bg-green-100 text-green-800 px-2 py-1 rounded w-fit">Coordinador Transporte</span>
         <span *ngIf="usuario.coordinadorCasaApoyo" class="text-md bg-yellow-100 text-yellow-800 px-2 py-1 rounded w-fit">Coordinador Casa Apoyo</span>
+        <span *ngIf="usuario.iglesia" class="text-md bg-red-100 text-red-800 px-2 py-1 rounded w-fit">Asociada a zona</span>
       </div>
     </div>
 
 
-    <mg-input-text type="name" formControlName="nombres" label="Nombres" id="nombres"></mg-input-text>
-    <mg-input-text type="lastmane" formControlName="apellidos" label="Apellidos" id="apellidos"></mg-input-text>
+    <mg-input-text type="name" formControlName="nombres" label="Escriba un nombre" id="nombres"></mg-input-text>
+    <mg-input-text type="lastmane" formControlName="apellidos" label="Escriba un apellido" id="apellidos"></mg-input-text>
     <mg-input-text type="text" formControlName="celular" label="Número de célular" id="celular" [minlength]="10"
       [maxlength]="10"></mg-input-text>
 
@@ -28,7 +29,7 @@
         <div
           class="relative w-9 h-5 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gray-100 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500">
         </div>
-        <span class="select-none ms-3 text-sm font-medium text-heading">Coordinador puesto de votación</span>
+        <span class="select-none ms-3 text-sm font-medium text-heading">Líder puesto de votación</span>
       </label>
       <label class="inline-flex items-center cursor-pointer">
         <input type="checkbox" value="" formControlName="transporte" class="sr-only peer">

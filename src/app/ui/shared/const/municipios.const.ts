@@ -1,21 +1,9 @@
-import { MunicipioModel } from "../../../models/municipios/municipio.model";
+import { SelectOption } from "../components/atoms/input-select/input-select.component";
 
-const MUNICIPIO_CONST: MunicipioModel[] = [
-  {
-    Risaralda: [
-      'Pereira',
-      'Dosquebradas',
-      'La Virginia',
-      'Marsella',
-      'Santa Rosa de Cabal',
-      'Quinchía',
-      'Apía',
-      'Balboa',
-      'Belén de Umbría',
-      'Guática',
-      'Mistrató',
-      'Pueblo Rico',
-      'Santuario',
-    ],
-  },
-];
+export const MUNICIPIOS: SelectOption[] = [
+        { label: 'Pereira', value: 'Pereira' },
+        { label: 'Dosquebradas', value: 'Dosquebradas' },
+        { label: 'Santa Rosa', value: 'Santa Rosa' },
+        { label: 'Cuba', value: 'Cuba' },
+        { label: 'Virginia', value: 'Virginia' }
+    ];

@@ -10,8 +10,8 @@
   <app-button-footer *ngIf="canCreateCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Solicitudes'"
     [icon]="'list'" [goTo]="$any(null)" (click)="openMisCarreras()"></app-button-footer>
 
-  <app-button-footer class="flex-1 min-w-[80px] flex justify-center" [option]="'Aprobaciones'" [icon]="'check'"
-    [goTo]="$any(null)" (click)="openAprobaciones()"></app-button-footer>
+  <app-button-footer *ngIf="showAprobaciones" class="flex-1 min-w-[80px] flex justify-center" [option]="'Aprobaciones'"
+    [icon]="'check'" [goTo]="$any(null)" (click)="openAprobaciones()"></app-button-footer>
 
   <app-button-footer *ngIf="showBuscarCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Carreras'"
     [icon]="'local_taxi'" [goTo]="$any(null)" (click)="openBuscarCarrera()"></app-button-footer>

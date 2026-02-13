@@ -14,6 +14,8 @@ import { CarreraService } from '../../services/carrera/carrera.service';
 import { DialogNotificationComponent } from '../dialog-notification/dialog-nofication.component';
 import { AuthService } from '../../services/auth/auth.service';
 import { TIPOS_VEHICULOS } from '../../const/marcas.const';
+import { CasaApoyoModel } from '../../../../models/casa-apoyo/casa-apoyo.model';
+import { MUNICIPIOS } from '../../const/municipios.const';
 
 @Component({
     selector: 'app-dialog-crear-carrera',
@@ -27,7 +29,8 @@ import { TIPOS_VEHICULOS } from '../../const/marcas.const';
         ButtonComponent,
         MatButtonModule,
         InputSelectComponent,
-        MatCheckboxModule
+        MatCheckboxModule,
+        InputSelectComponent
     ],
     templateUrl: './dialog-crear-carrera.component.html',
     styleUrls: ['./dialog-crear-carrera.component.scss']
@@ -36,6 +39,8 @@ export class DialogCrearCarreraComponent implements OnInit {
     form: FormGroup;
     loading: boolean = false;
     usarUbicacionActual: boolean = false;
+    casaApoyo: CasaApoyoModel = JSON.parse(localStorage.getItem('casaApoyo') || '{}');
+    municipiosOptions: SelectOption[] = MUNICIPIOS;
 
     tipoVehiculoOptions = TIPOS_VEHICULOS
 
@@ -60,12 +65,18 @@ export class DialogCrearCarreraComponent implements OnInit {
             lugarRecogida: ['', Validators.required],
             puestoVotacionIr: ['', Validators.required],
             observaciones: [''],
+            municipio: ['', Validators.required],
             latitudSolicitante: [null],
             longitudSolicitante: [null]
         });
     }
 
     ngOnInit(): void {
+        this.form.patchValue({
+            municipio: this.casaApoyo.municipio,
+            lugarRecogida: this.casaApoyo.barrio,
+            
+        });
         this.loadPuestosVotacion();
         const userStr = localStorage.getItem('usuario');
         if (userStr) {
@@ -156,7 +167,9 @@ export class DialogCrearCarreraComponent implements OnInit {
             // Ensure numbers for coords if they exist
             latitudSolicitante: carreraData.latitudSolicitante ? Number(carreraData.latitudSolicitante) : null,
             longitudSolicitante: carreraData.longitudSolicitante ? Number(carreraData.longitudSolicitante) : null,
-            creadaPor: this.authService.uidUser()
+            creadaPor: this.authService.uidUser(),
+            horaCreacion: new Date().toISOString(),
+            municipio: this.casaApoyo.municipio,
         };
 
         this.carreraService.createCarrera(newCarrera).then(() => {

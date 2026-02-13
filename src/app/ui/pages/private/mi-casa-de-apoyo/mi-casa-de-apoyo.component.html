@@ -3,7 +3,7 @@
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
 
-    <app-container-alert-information *ngIf="!iglesiaData.nombre" [type]="'warning'" [title]="'Atención'">
+    <app-container-alert-information *ngIf="!usuario.iglesia" [type]="'warning'" [title]="'Atención'">
       No puedes guardar aun tu casa de apoyo hasta que un coordinador te socie a una ZONA, habla con el coordinador de
       zona
     </app-container-alert-information>
@@ -18,16 +18,16 @@
     <mg-input-text label="Dirección" formControlName="direccion" placeholder="Ej: Cra 45 # 23 - 10" [required]="true">
     </mg-input-text>
 
-    <mg-input-text label="Nombre del habitante" formControlName="nombreHabitante" placeholder="Nombre completo"
+    <mg-input-text label="Nombre del dueño" formControlName="nombreHabitante" placeholder="Nombre completo"
       [required]="true">
     </mg-input-text>
 
-    <mg-input-text label="Teléfono del habitante" formControlName="telefonoHabitante" placeholder="Número de contacto"
+    <mg-input-text label="Teléfono del dueño" formControlName="telefonoHabitante" placeholder="Número de contacto"
       [maxlength]="10" [minlength]="10" type="text" [required]="true">
     </mg-input-text>
 
     <div class="actions flex justify-between gap-3">
-      <mg-button text="Guardar" type="submit" [disabled]="form.invalid || !iglesiaData.nombre">
+      <mg-button text="Guardar" type="submit" [disabled]="form.invalid || !usuario.iglesia">
       </mg-button>
     </div>
 

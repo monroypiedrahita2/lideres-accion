@@ -95,7 +95,7 @@ export class DialogControlAccesosComponent implements OnInit {
     confirm() {
         // Prepare the result object
         const result = {
-            rol: this.roleStates['Coordinador de iglesia'] ? 'Coordinador de iglesia' : null,
+            rol: this.roleStates['Coordinador de iglesia'] ? 'Coordinador de iglesia' : 'Coordinador de iglesia',
             coordinadorTransporte: this.roleStates['Coordinador de transporte'],
             administradorTestigos: this.roleStates['Administrador de testigos'],
             coordinadorCasaApoyo: this.roleStates['Coordinador de casa de apoyo']

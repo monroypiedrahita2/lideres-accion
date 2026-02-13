@@ -8,20 +8,20 @@ export const CARDS_HOME: CardModel[] = [
     icon: 'lock',
     showIf: ['Pastor', 'Super usuario'],
   },
-  {
-    goTo: '/private/listar-referidos',
-    title: 'Referidos',
-    description: 'Listar y gestionar referidos',
-    icon: 'view_list',
-    showIf: ['Coordinador de iglesia', 'Pastor', 'Super usuario'],
-  },
-  {
-    goTo: '/private/crear-referido',
-    title: 'Crear Referido',
-    description: 'Crear un nuevo referido',
-    icon: 'person_add',
-    showIf: ['Coordinador de iglesia', 'Pastor', 'Super usuario'],
-  },
+  // {
+  //   goTo: '/private/listar-referidos',
+  //   title: 'Referidos',
+  //   description: 'Listar y gestionar referidos',
+  //   icon: 'view_list',
+  //   showIf: ['Coordinador de iglesia', 'Pastor', 'Super usuario'],
+  // },
+  // {
+  //   goTo: '/private/crear-referido',
+  //   title: 'Crear Referido',
+  //   description: 'Crear un nuevo referido',
+  //   icon: 'person_add',
+  //   showIf: ['Coordinador de iglesia', 'Pastor', 'Super usuario'],
+  // },
   {
     goTo: '/private/crear-pastor',
     title: 'Crear pastor',
@@ -50,13 +50,13 @@ export const CARDS_HOME: CardModel[] = [
     icon: 'location_city',
     showIf: ['Super usuario'],
   },
-  {
-    goTo: '/private/masivo-referidos',
-    title: 'Carga masiva referidos',
-    description: 'Carga masiva de referidos a través de un archivo Excel',
-    icon: 'upload_file',
-    showIf: ['Super usuario', 'Pastor'],
-  },
+  // {
+  //   goTo: '/private/masivo-referidos',
+  //   title: 'Carga masiva referidos',
+  //   description: 'Carga masiva de referidos a través de un archivo Excel',
+  //   icon: 'upload_file',
+  //   showIf: ['Super usuario', 'Pastor'],
+  // },
   {
     goTo: '/private/masivo-comunas',
     title: 'Carga masiva comunas',
@@ -111,13 +111,13 @@ export const CARDS_HOME: CardModel[] = [
     action: 'casa-apoyo',
     requiresPostulacion: 'casaApoyo'
   },
-  {
-    goTo: '',
-    title: 'Coordinación detestigos',
-    description: 'Realiza tus gestiones como testigo aquí',
-    icon: 'how_to_vote',
-    showIf: ['Todos'],
-    action: 'testigo',
-    requiresPostulacion: 'testigo'
-  }
+  // {
+  //   goTo: '',
+  //   title: 'Coordinación de testigos',
+  //   description: 'Realiza tus gestiones como testigo aquí',
+  //   icon: 'how_to_vote',
+  //   showIf: ['Todos'],
+  //   action: 'testigo',
+  //   requiresPostulacion: 'testigo'
+  // }
 ];

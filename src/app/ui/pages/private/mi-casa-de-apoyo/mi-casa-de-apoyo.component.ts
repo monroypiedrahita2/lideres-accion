@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
 import { ContainerAlertInformationComponent } from '../../../shared/components/modules/container-alert-information/container-alert-information.component';
+import { MUNICIPIOS } from '../../../shared/const/municipios.const';
 
 @Component({
     selector: 'app-mi-casa-de-apoyo',
@@ -39,15 +40,8 @@ export class MiCasaDeApoyoComponent implements OnInit {
     accion: 'Crear' | 'Editar' = 'Crear';
     usuario: PerfilModel = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario') || '') : {} as PerfilModel;
     existingCasaData: CasaApoyoModel | null = null;
-    iglesiaData: IglesiaModel = JSON.parse(localStorage.getItem('iglesiaData') || '{}');
 
-    municipios: SelectOption[] = [
-        { label: 'Pereira', value: 'Pereira' },
-        { label: 'Dosquebradas', value: 'Dosquebradas' },
-        { label: 'Santa Rosa', value: 'Santa Rosa' },
-        { label: 'Cuba', value: 'Cuba' },
-        { label: 'Virginia', value: 'Virginia' }
-    ];
+    municipios: SelectOption[] = MUNICIPIOS
 
     constructor(
         private fb: FormBuilder,

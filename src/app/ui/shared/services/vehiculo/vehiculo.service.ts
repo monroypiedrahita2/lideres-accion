@@ -104,5 +104,18 @@ export class VehiculoService {
     this.currentVehiculoSubject.next(vehiculo);
   }
 
+  loadVehiculo(uid: string) {
+    this.getVehiculoByConductor(uid).subscribe(vehiculos => {
+      if (vehiculos && vehiculos.length > 0) {
+        this.setCurrentVehiculo(vehiculos[0]);
+      } else {
+        this.setCurrentVehiculo(null);
+      }
+    });
+  }
+
+  get currentVehiculoValue(): VehiculoModel | null {
+    return this.currentVehiculoSubject.value;
+  }
 }
 

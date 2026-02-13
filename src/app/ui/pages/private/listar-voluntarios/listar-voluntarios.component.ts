@@ -52,7 +52,7 @@ export class ListarVoluntariosComponent implements AfterViewInit {
     pageSize: number = 5;
     pageSizeOptions: number[] = [5, 10, 25, 100];
 
-    displayedColumns: string[] = ['nombres', 'apellidos', 'email', 'rol', 'celular', 'noCuenta', 'acciones'];
+    displayedColumns: string[] = ['nombres', 'apellidos', 'email', 'rol', 'coordinadorCasaApoyo', 'coordinadorTransporte', 'administradorTestigos', 'celular', 'noCuenta', 'acciones'];
 
     // Modal state
     showModal: boolean = false;

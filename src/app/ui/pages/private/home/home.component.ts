@@ -13,7 +13,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
-import { IconButtonComponent } from '../../../shared/components/atoms/icon-button/icon-button.component';
 import { ContainerAlertInformationComponent } from '../../../shared/components/modules/container-alert-information/container-alert-information.component';
 import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
 import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
@@ -41,7 +40,6 @@ import { PostulacionCardComponent } from '../../../shared/components/cards/postu
     MatExpansionModule,
     MatExpansionModule,
     PostulacionCardComponent,
-    IconButtonComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
@@ -171,11 +169,12 @@ export class HomeComponent implements OnInit {
     const uid = this.auth.uidUser();
 
     if (this.usuario.postulado?.transporte && uid) {
-      this.vehiculoService.getVehiculoByConductor(uid).subscribe(vehiculos => {
-        if (vehiculos && vehiculos.length > 0) {
-          const vehiculo = vehiculos[0];
+      this.vehiculoService.loadVehiculo(uid);
+
+      // Subscribe to the state (which is now updated by loadVehiculo)
+      this.vehiculoService.currentVehiculo$.subscribe(vehiculo => {
+        if (vehiculo) {
           this.currentVehiculo = vehiculo;
-          this.vehiculoService.setCurrentVehiculo(vehiculo);
           this.vehiculoStatus = vehiculo.aprobado ? 'Aprobado' : 'Pendiente';
 
           if (vehiculo.casaApoyoId) {
@@ -191,8 +190,8 @@ export class HomeComponent implements OnInit {
             });
           }
         } else {
+          this.currentVehiculo = null;
           this.vehiculoStatus = 'No registrado';
-          this.vehiculoService.setCurrentVehiculo(null);
         }
       });
     }
@@ -204,6 +203,7 @@ export class HomeComponent implements OnInit {
           const casa = casas[0].data;
           const casaId = casas[0].id; // We need the ID to fetch vehicles
           this.casaApoyoStatus = casa.aprobado ? 'Aprobado' : 'Pendiente';
+          localStorage.setItem('casaApoyo', JSON.stringify(casa));
 
           if (casa.aprobado && casaId) {
             this.vehiculoService.getVehiculosByCasaApoyo(casaId).subscribe(vehiculos => {

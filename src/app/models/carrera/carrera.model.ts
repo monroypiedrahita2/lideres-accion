@@ -26,6 +26,7 @@ export interface CreateCarreraModel {
     };
     estado?: 'Abierto' | 'Cancelada' | 'En ruta' | 'Finalizada';
     creadaPor?: string;  // uid del usuario es decir el id de perfil.model.ts
+    horaCreacion: string;
 }
 
 

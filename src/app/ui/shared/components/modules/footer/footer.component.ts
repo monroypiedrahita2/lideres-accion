@@ -105,8 +105,12 @@ export class FooterComponent implements OnInit, OnDestroy {
       !!coordinadorTransporte;
   }
 
+  get showAprobaciones(): boolean {
+    return !!this.currentVehiculo?.aprobado;
+  }
+
   get showBuscarCarrera(): boolean {
     const estado = this.currentVehiculo?.estado;
-    return estado !== 'En carrera' && estado !== 'Inactivo';
+    return (estado !== 'En carrera' && estado !== 'Inactivo') && !!this.currentVehiculo?.aprobado;
   }
 }

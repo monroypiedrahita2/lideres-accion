@@ -1,7 +1,7 @@
 <mg-title title="Casas de Apoyo Inscritas"></mg-title>
 
-<div *ngIf="casas.length > 0; else noCasas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  <div *ngFor="let casa of casas">
+<div *ngIf="casas.length > 0; else noCasas" class="flex gap-6 flex-wrap justify-center min-w-[100%] mx-auto">
+  <div *ngFor="let casa of casas" class="w-full">
     <app-card-casa-apoyo [casa]="casa" [showActions]="true" [showAssign]="false"
       [vehiculosDisponibles]="vehiculosDisponibles" (onDesasignar)="desasignar($event)"
       (onVehiculoChanged)="onVehiculoChanged($event)">

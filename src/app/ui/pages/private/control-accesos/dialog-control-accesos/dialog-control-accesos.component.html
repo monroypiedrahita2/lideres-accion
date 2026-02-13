@@ -2,7 +2,7 @@
   <div class="mb-6 text-center">
     <mg-title [title]="'Asignar Rol'"></mg-title>
     <p class="text-gray-500 mt-2 text-sm">
-      Selecciona el rol para <span class="font-bold text-gray-800">{{ data.nombres }} {{ data.apellidos }}</span>
+      <span class="font-bold text-gray-800 text-lg">{{ data.nombres }} {{ data.apellidos }}</span>
     </p>
   </div>
 
@@ -33,6 +33,6 @@
 
   <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
     <mg-button [text]="'Cancelar'" class="w-full" (onClick)="close()"></mg-button>
-    <mg-button [text]="'Confirmar'" class="w-full" (onClick)="confirm()"></mg-button>
+    <mg-button [disabled]="!roleStates['Coordinador de iglesia']" [text]="'Confirmar'" class="w-full" (onClick)="confirm()"></mg-button>
   </div>
 </div>
