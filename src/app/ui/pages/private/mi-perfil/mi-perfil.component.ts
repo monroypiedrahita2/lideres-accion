@@ -96,6 +96,7 @@ export class MiPerfilComponent implements OnInit {
         this.enableSkeleton = false;
       } catch (error) {
         localStorage.removeItem('usuario');
+        this.usuario = {} as PerfilModel; // Reset local user state
         this.form.get('email')?.enable();
         this.accion = 'Crear';
         this.form.patchValue({
@@ -190,10 +191,12 @@ export class MiPerfilComponent implements OnInit {
     if (this.loading) {
       return;
     }
+    console.log(1);
 
     this.loading = true;
 
     const rawValue = this.form.getRawValue();
+
     const user: PerfilModel = {
       foto: this.foto || null,
       nombres: rawValue.nombres,
@@ -209,7 +212,7 @@ export class MiPerfilComponent implements OnInit {
         transporte: rawValue.transporte,
         testigo: rawValue.testigo,
       },
-      noCuenta: this.usuario.noCuenta || this.generateNoCuenta(),
+      noCuenta: this.generateNoCuenta(),
       apruebaUsodeDatos: this.usuario.apruebaUsodeDatos || false,
     };
 
