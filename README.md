@@ -96,4 +96,35 @@ For deployments from branches other than `main` the workflow expects development
 
 The CI will validate these secrets before attempting the build/deploy for non-main branches.
 
+## Local environment variables (NG_APP_...)
+
+For local development the project reads Firebase keys from `process.env` or a local `.env` file and generates `src/environments/environment.ts` with `npm run generate:env:local`.
+
+Add a `.env` file at the project root with the following variables (names must match):
+
+```env
+NG_APP_FIREBASE_API_KEY=your_api_key_here
+NG_APP_FIREBASE_AUTH_DOMAIN=your-auth-domain.firebaseapp.com
+NG_APP_FIREBASE_PROJECT_ID=your_project_id
+NG_APP_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+NG_APP_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+NG_APP_FIREBASE_APP_ID=your_app_id
+NG_APP_FIREBASE_MEASUREMENT_ID=your_measurement_id
+```
+
+Then run:
+
+```bash
+npm run generate:env:local
+```
+
+This will create or overwrite `src/environments/environment.ts` with the values from your `.env` or environment variables. Keep `.env` out of version control (it's listed in `.gitignore`).
+
+If you want to test production generation locally (for example before pushing), set the variables in your environment or `.env` and run:
+
+```bash
+npm run generate:env:prod
+```
+
+
 
