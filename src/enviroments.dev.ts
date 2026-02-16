@@ -1,13 +1,13 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'AIzaSyClvFEPxZZf_q28kiipbROeHzsPbAAdlhk',
-    authDomain: 'lida-dev-f9291.firebaseapp.com',
-    projectId: 'lida-dev-f9291',
-    storageBucket: 'lida-dev-f9291.firebasestorage.app',
-    messagingSenderId: '78286679625',
-    appId: '1:78286679625:web:5621c2157c26df010f1998',
-    measurementId: 'G-JXG93QVL1M',
+    apiKey: process.env['FIREBASE_API_KEY_DEV'],
+    authDomain: process.env['FIREBASE_AUTH_DOMAIN_DEV'],
+    projectId: process.env['FIREBASE_PROJECT_ID_DEV'],
+    storageBucket: process.env['FIREBASE_STORAGE_BUCKET_DEV'],
+    messagingSenderId: process.env['FIREBASE_MESSAGING_SENDER_ID_DEV'],
+    appId: process.env['FIREBASE_APP_ID_DEV'],
+    measurementId: process.env['FIREBASE_MEASUREMENT_ID_DEV'],
   },
   collections: {
     comunas: 'Comunas',

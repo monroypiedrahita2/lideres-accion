@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideToastr(environment.alerts),
     provideClientHydration(),
-    provideFirebaseApp(() => initializeApp(environment.production ? environment.firebasePDN : environment.firebaseDev)),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideAnimationsAsync(),
