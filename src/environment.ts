@@ -1,6 +1,6 @@
 export const environment = {
-  production: true,
-  firebaseDev: {
+  production: false,
+  firebase: {
     apiKey: 'AIzaSyClvFEPxZZf_q28kiipbROeHzsPbAAdlhk',
     authDomain: 'lida-dev-f9291.firebaseapp.com',
     projectId: 'lida-dev-f9291',
@@ -8,15 +8,6 @@ export const environment = {
     messagingSenderId: '78286679625',
     appId: '1:78286679625:web:5621c2157c26df010f1998',
     measurementId: 'G-JXG93QVL1M',
-  },
-  firebasePDN: {
-    apiKey: 'AIzaSyAIdIAaoUZgpHsBqbl2FIcLVRYGnDYSe0w',
-    authDomain: 'lida-f59df.firebaseapp.com',
-    projectId: 'lida-f59df',
-    storageBucket: 'lida-f59df.firebasestorage.app',
-    messagingSenderId: '410795238641',
-    appId: '1:410795238641:web:d7c476ab836ea7becfb550',
-    measurementId: 'G-QMPFXEBJFG',
   },
   collections: {
     comunas: 'Comunas',

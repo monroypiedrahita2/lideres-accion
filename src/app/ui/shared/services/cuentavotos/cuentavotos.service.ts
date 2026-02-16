@@ -17,7 +17,7 @@ import {
     addDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environment';
 import { CuentavotosModel } from '../../../../models/cuentavotos/cuentavotos.model';
 
 @Injectable({ providedIn: 'root' })

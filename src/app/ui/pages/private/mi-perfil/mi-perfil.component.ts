@@ -96,6 +96,7 @@ export class MiPerfilComponent implements OnInit {
         this.enableSkeleton = false;
       } catch (error) {
         localStorage.removeItem('usuario');
+        this.usuario = {} as PerfilModel; // Reset local user state
         this.form.get('email')?.enable();
         this.accion = 'Crear';
         this.form.patchValue({
@@ -110,7 +111,6 @@ export class MiPerfilComponent implements OnInit {
 
   actualizarForm(user: PerfilModel) {
     this.form.patchValue({
-
       nombres: user.nombres,
       apellidos: user.apellidos,
       email: user.email,
@@ -188,7 +188,15 @@ export class MiPerfilComponent implements OnInit {
   }
 
   async onSubmit() {
+    if (this.loading) {
+      return;
+    }
+    console.log(1);
+
+    this.loading = true;
+
     const rawValue = this.form.getRawValue();
+
     const user: PerfilModel = {
       foto: this.foto || null,
       nombres: rawValue.nombres,
@@ -223,18 +231,25 @@ export class MiPerfilComponent implements OnInit {
       const result = await firstValueFrom(dialogRef.afterClosed());
       if (!result) {
         this.toast.info('No se guardo la información, se canceló.');
+        this.loading = false;
         return;
       }
       user.apruebaUsodeDatos = true;
     }
 
-    this.loading = true;
-
     if (this.accion == 'Editar') {
-      await this.checkAndRemoveRoles(); // Check removal before or during update
-      await this.updateUser(user);
+      try {
+        await this.checkAndRemoveRoles(); // Check removal before or during update
+        await this.updateUser(user);
+      } catch (error) {
+        console.error(error);
+        this.toast.error('Error al actualizar el usuario. Intente nuevamente.');
+      } finally {
+        this.loading = false;
+      }
       return;
     }
+
     try {
       await this.perfilService.crearPerfilConUId(user, this.auth.uidUser());
       localStorage.setItem(
@@ -270,11 +285,8 @@ export class MiPerfilComponent implements OnInit {
       );
       this.toast.success('Usuario actualizado');
       this.location.back();
-
     } catch (error) {
-      console.error(error);
-      this.toast.error('Error al actualizar el usuario. Intente nuevamente.');
-      this.loading = false;
+      throw error;
     }
   }
 

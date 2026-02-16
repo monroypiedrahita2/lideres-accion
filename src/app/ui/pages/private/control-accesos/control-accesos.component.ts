@@ -148,7 +148,7 @@ export class ControlAccesosComponent implements OnInit {
     // The dialog returns the "permissions" state.
 
     const updateData: any = {
-      rol: data.rol,
+      // rol: data.rol,
       iglesia: this.iglesia,
       coordinadorTransporte: data.coordinadorTransporte,
       administradorTestigos: data.administradorTestigos,

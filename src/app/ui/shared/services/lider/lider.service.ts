@@ -14,13 +14,13 @@ import {
 } from '@angular/fire/firestore';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environment';
 
 @Injectable({ providedIn: 'root' })
 export class LiderService {
   _collection: string = environment.collections.lideres
 
-  constructor(private readonly firestore: Firestore, private readonly toast: ToastrService) {}
+  constructor(private readonly firestore: Firestore, private readonly toast: ToastrService) { }
 
   crearLiderConIdDocumento(data: BaseModel<any>, id: string): Promise<void> {
     const dataRef = doc(this.firestore, this._collection, id);

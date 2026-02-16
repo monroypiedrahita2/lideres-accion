@@ -11,7 +11,7 @@ import {
     where,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environment';
 import { BaseModel } from '../../../../models/base/base.model';
 import { TestigoAsociadoModel } from '../../../../models/testigo-asociado/testigo-asociado.model';
 

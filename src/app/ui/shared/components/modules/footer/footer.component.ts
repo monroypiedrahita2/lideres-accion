@@ -94,10 +94,9 @@ export class FooterComponent implements OnInit, OnDestroy {
   get canCreateCarrera(): boolean {
     const { rol, coordinadorCasaApoyo, coordinadorTransporte } = this.usuario;
     const allowedRoles = [
-      'Coordinador de iglesia',
       'Coordinador de transporte',
       'Coordinador de casa de apoyo',
-      'Pastor'
+      'Pastor'//Administrador
     ];
 
     return allowedRoles.includes(rol || '') ||

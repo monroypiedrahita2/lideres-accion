@@ -11,7 +11,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environment';
 import { RolesModel } from '../../../../models/roles/roles.model';
 
 @Injectable({
@@ -20,7 +20,7 @@ import { RolesModel } from '../../../../models/roles/roles.model';
 export class RolesService {
   _collection: string = environment.collections.roles;
 
-  constructor(private readonly firestore: Firestore) {}
+  constructor(private readonly firestore: Firestore) { }
 
   createRole(data: any, id: string): Promise<void> {
     const dataRef = doc(this.firestore, this._collection, id);
@@ -34,10 +34,10 @@ export class RolesService {
     >;
   }
 
-    async deleteRole(id: string) {
-      const docRef = doc(this.firestore, `${this._collection}/${id}`);
-        await deleteDoc(docRef);
-    }
+  async deleteRole(id: string) {
+    const docRef = doc(this.firestore, `${this._collection}/${id}`);
+    await deleteDoc(docRef);
+  }
 
 
 

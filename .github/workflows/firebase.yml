@@ -1,0 +1,107 @@
+name: Deploy Angular to Firebase
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate prod environment from secrets (when main)
+        if: github.ref_name == 'main'
+        run: |
+          cat > src/environment.prod.ts <<EOF
+          export const environment = {
+            production: true,
+            firebase: {
+              apiKey: "${{ secrets.FIREBASE_API_KEY_PROD }}",
+              authDomain: "${{ secrets.FIREBASE_AUTH_DOMAIN_PROD }}",
+              projectId: "${{ secrets.FIREBASE_PROJECT_ID_PROD }}",
+              storageBucket: "${{ secrets.FIREBASE_STORAGE_BUCKET_PROD }}",
+              messagingSenderId: "${{ secrets.FIREBASE_MESSAGING_SENDER_ID_PROD }}",
+              appId: "${{ secrets.FIREBASE_APP_ID_PROD }}",
+              measurementId: "${{ secrets.FIREBASE_MEASUREMENT_ID_PROD }}",
+            },
+            collections: {
+              comunas: 'Comunas',
+              referidos: 'Referidos',
+              iglesias: 'Iglesias',
+              roles: 'Roles',
+              lideres: 'Lideres',
+              barrios: 'Barrios',
+              perfil: 'Perfiles',
+              vehiculos: 'Vehiculos',
+              casasApoyo: 'Casas',
+              coordinadorTestigos: 'CoordinadorTestigos',
+              testigosAsociados: 'TestigosAsociados',
+              puestosVotacion: 'PuestosVotacion',
+              cuentavotos: 'Cuentavotos',
+              carreras: 'Carreras',
+            },
+            alerts: { timeOut: 3000, preventDuplicates: true },
+          };
+          EOF
+
+      - name: Generate dev environment from secrets (when develop)
+        if: github.ref_name == 'develop'
+        run: |
+          cat > src/environment.dev.ts <<EOF
+          export const environment = {
+            production: false,
+            firebase: {
+              apiKey: "${{ secrets.FIREBASE_API_KEY_DEV }}",
+              authDomain: "${{ secrets.FIREBASE_AUTH_DOMAIN_DEV }}",
+              projectId: "${{ secrets.FIREBASE_PROJECT_ID_DEV }}",
+              storageBucket: "${{ secrets.FIREBASE_STORAGE_BUCKET_DEV }}",
+              messagingSenderId: "${{ secrets.FIREBASE_MESSAGING_SENDER_ID_DEV }}",
+              appId: "${{ secrets.FIREBASE_APP_ID_DEV }}",
+              measurementId: "${{ secrets.FIREBASE_MEASUREMENT_ID_DEV }}",
+            },
+            collections: {
+              comunas: 'Comunas',
+              referidos: 'Referidos',
+              iglesias: 'Iglesias',
+              roles: 'Roles',
+              lideres: 'Lideres',
+              barrios: 'Barrios',
+              perfil: 'Perfiles',
+              vehiculos: 'Vehiculos',
+              casasApoyo: 'Casas',
+              coordinadorTestigos: 'CoordinadorTestigos',
+              testigosAsociados: 'TestigosAsociados',
+              puestosVotacion: 'PuestosVotacion',
+              cuentavotos: 'Cuentavotos',
+              carreras: 'Carreras',
+            },
+            alerts: { timeOut: 3000, preventDuplicates: true },
+          };
+          EOF
+
+      - name: Build Angular
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            npm run build -- --configuration=production
+          else
+            npm run build -- --configuration=development
+          fi
+
+      - name: Deploy to Firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          projectId: ${{ github.ref_name == 'main' && 'lida-f59df' || 'lida-dev-f9291' }}
+          firebaseServiceAccount: ${{ github.ref_name == 'main' && secrets.FIREBASE_SERVICE_ACCOUNT_PROD || secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
+          channelId: live
