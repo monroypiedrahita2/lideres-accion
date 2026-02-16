@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { NAME_APP, NAME_LONG_APP } from '../../../const/name-app.const';
@@ -15,7 +15,7 @@ import { SidenavComponent } from '../sidenav/sidenav.component';
 @Component({
   selector: 'mg-nav',
   templateUrl: './nav.component.html',
-
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     CommonModule,

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastrService } from 'ngx-toastr';
 import * as XLSX from 'xlsx';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
@@ -25,9 +26,11 @@ import { DialogNotificationModel } from '../../../../models/base/dialog-notifica
     selector: 'app-masivo-puestos-votacion',
     templateUrl: './masivo-puestos-votacion.component.html',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule, ButtonComponent, ContainerAlertInformationComponent, InputSelectComponent, ReactiveFormsModule, MgPaginatorComponent],
 })
 export class MasivoPuestosVotacionComponent implements OnInit {
+    private destroyRef = inject(DestroyRef);
     loading: boolean = false;
     puestos: any[] = [];
     contador: number = 0;
@@ -51,7 +54,9 @@ export class MasivoPuestosVotacionComponent implements OnInit {
             iglesia: ['', Validators.required]
         });
 
-        this.form.get('iglesia')?.valueChanges.subscribe((iglesiaId) => {
+        this.form.get('iglesia')?.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((iglesiaId) => {
             if (iglesiaId) {
                 this.pageIndex = 0;
                 this.puestoService.countByIglesia(iglesiaId).then((count) => {

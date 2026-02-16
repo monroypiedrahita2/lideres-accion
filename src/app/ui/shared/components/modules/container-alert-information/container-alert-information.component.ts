@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'app-container-alert-information',
     templateUrl: './container-alert-information.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule],
     standalone: true
 })

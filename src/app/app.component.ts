@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate, VersionEvent } from '@angular/service-worker';
 import { ToastrService } from 'ngx-toastr';
@@ -8,6 +8,7 @@ import { NotificationService } from './ui/shared/services/notification/notificat
 @Component({
   selector: 'app-root',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterOutlet, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

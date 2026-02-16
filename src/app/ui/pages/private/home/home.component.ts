@@ -1,8 +1,8 @@
 import { IglesiaService } from '../../../shared/services/iglesia/iglesia.service';
 import { IglesiaModel } from './../../../../models/iglesia/iglesia.model';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject, DestroyRef } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
-
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { NAME_LONG_APP } from '../../../shared/const/name-app.const';
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
@@ -28,6 +28,7 @@ import { PostulacionCardComponent } from '../../../shared/components/cards/postu
 @Component({
   selector: 'app-home',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RouterModule,
     CommonModule,
@@ -45,6 +46,7 @@ import { PostulacionCardComponent } from '../../../shared/components/cards/postu
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
   skeleton: boolean = true;
   nameLong: string = NAME_LONG_APP;
   usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -172,49 +174,55 @@ export class HomeComponent implements OnInit {
       this.vehiculoService.loadVehiculo(uid);
 
       // Subscribe to the state (which is now updated by loadVehiculo)
-      this.vehiculoService.currentVehiculo$.subscribe(vehiculo => {
-        if (vehiculo) {
-          this.currentVehiculo = vehiculo;
-          this.vehiculoStatus = vehiculo.aprobado ? 'Aprobado' : 'Pendiente';
+      this.vehiculoService.currentVehiculo$
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(vehiculo => {
+          if (vehiculo) {
+            this.currentVehiculo = vehiculo;
+            this.vehiculoStatus = vehiculo.aprobado ? 'Aprobado' : 'Pendiente';
 
-          if (vehiculo.casaApoyoId) {
-            this.casaApoyoService.getCasaApoyo(vehiculo.casaApoyoId).then(casa => {
-              if (casa && casa.data) {
-                this.vehiculoInfo = {
-                  casaApoyo: casa.data.responsableNombre + ' ' + casa.data.responsableApellido || 'Casa asignada',
-                  direccion: casa.data.direccion,
-                  barrio: casa.data.barrio,
-                  responsableTelefono: casa.data.responsableTelefono
-                };
-              }
-            });
+            if (vehiculo.casaApoyoId) {
+              this.casaApoyoService.getCasaApoyo(vehiculo.casaApoyoId).then(casa => {
+                if (casa && casa.data) {
+                  this.vehiculoInfo = {
+                    casaApoyo: casa.data.responsableNombre + ' ' + casa.data.responsableApellido || 'Casa asignada',
+                    direccion: casa.data.direccion,
+                    barrio: casa.data.barrio,
+                    responsableTelefono: casa.data.responsableTelefono
+                  };
+                }
+              });
+            }
+          } else {
+            this.currentVehiculo = null;
+            this.vehiculoStatus = 'No registrado';
           }
-        } else {
-          this.currentVehiculo = null;
-          this.vehiculoStatus = 'No registrado';
-        }
-      });
+        });
     }
 
     if (this.usuario.postulado?.casaApoyo && uid) {
-      this.casaApoyoService.getCasasApoyoByResponsable(uid).subscribe(casas => {
-        if (casas && casas.length > 0) {
-          // Accessing data property since it returns BaseModel
-          const casa = casas[0].data;
-          const casaId = casas[0].id; // We need the ID to fetch vehicles
-          this.casaApoyoStatus = casa.aprobado ? 'Aprobado' : 'Pendiente';
-          localStorage.setItem('casaApoyo', JSON.stringify(casa));
+      this.casaApoyoService.getCasasApoyoByResponsable(uid)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(casas => {
+          if (casas && casas.length > 0) {
+            // Accessing data property since it returns BaseModel
+            const casa = casas[0].data;
+            const casaId = casas[0].id; // We need the ID to fetch vehicles
+            this.casaApoyoStatus = casa.aprobado ? 'Aprobado' : 'Pendiente';
+            localStorage.setItem('casaApoyo', JSON.stringify(casa));
 
-          if (casa.aprobado && casaId) {
-            this.vehiculoService.getVehiculosByCasaApoyo(casaId).subscribe(vehiculos => {
-              this.casaApoyoVehiculos = vehiculos;
-            });
+            if (casa.aprobado && casaId) {
+              this.vehiculoService.getVehiculosByCasaApoyo(casaId)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(vehiculos => {
+                  this.casaApoyoVehiculos = vehiculos;
+                });
+            }
+
+          } else {
+            this.casaApoyoStatus = 'No registrado';
           }
-
-        } else {
-          this.casaApoyoStatus = 'No registrado';
-        }
-      });
+        });
     }
 
     if (this.usuario.postulado?.testigo && uid) {
@@ -234,9 +242,11 @@ export class HomeComponent implements OnInit {
             }
 
             // Fetch associated witnesses for Coordinador
-            this.testigoAsociadoService.getTestigosByCoordinador(uid).subscribe(witnesses => {
-              this.misTestigos = witnesses;
-            });
+            this.testigoAsociadoService.getTestigosByCoordinador(uid)
+              .pipe(takeUntilDestroyed(this.destroyRef))
+              .subscribe(witnesses => {
+                this.misTestigos = witnesses;
+              });
 
           } else {
             this.testigoStatus = 'No registrado';

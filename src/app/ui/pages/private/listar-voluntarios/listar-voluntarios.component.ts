@@ -1,5 +1,6 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ChangeDetectionStrategy, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MgPaginatorComponent, PageEvent } from '../../../shared/components/modules/paginator/paginator.component';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -23,6 +24,7 @@ import { SpinnerComponent } from '../../../shared/components/modules/spinner/spi
 @Component({
     selector: 'app-listar-voluntarios',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
         CommonModule,
@@ -42,6 +44,7 @@ import { SpinnerComponent } from '../../../shared/components/modules/spinner/spi
     styleUrls: ['./listar-voluntarios.component.scss']
 })
 export class ListarVoluntariosComponent implements AfterViewInit {
+    private destroyRef = inject(DestroyRef);
     dataSource = new MatTableDataSource<PerfilModel>([]);
     paginatedVoluntarios: PerfilModel[] = []; // Array to hold the current page's data
     usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -70,7 +73,8 @@ export class ListarVoluntariosComponent implements AfterViewInit {
         this.cargarVoluntarios();
         this.searchControl.valueChanges.pipe(
             debounceTime(300),
-            distinctUntilChanged()
+            distinctUntilChanged(),
+            takeUntilDestroyed(this.destroyRef)
         ).subscribe(value => {
             this.applyFilter(value || '');
         });
@@ -78,7 +82,9 @@ export class ListarVoluntariosComponent implements AfterViewInit {
 
     cargarVoluntarios() {
         if (this.usuario.rol === 'Super usuario') {
-            this.perfilService.getPerfiles().subscribe(data => {
+            this.perfilService.getPerfiles()
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(data => {
                 this.dataSource.data = data.filter(perfil => perfil.rol !== 'Pastor');
                 this.updatePaginatedList();
                 if (this.searchControl.value) {
@@ -86,7 +92,9 @@ export class ListarVoluntariosComponent implements AfterViewInit {
                 }
             });
         } else if (this.usuario.iglesia && this.usuario.rol === 'Pastor') {
-            this.perfilService.getPerfilesByIglesia(this.usuario.iglesia).subscribe(data => {
+            this.perfilService.getPerfilesByIglesia(this.usuario.iglesia)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(data => {
                 this.dataSource.data = data.filter(perfil => perfil.rol !== 'Pastor');
                 // Initialize paginated list after data load
                 this.updatePaginatedList();

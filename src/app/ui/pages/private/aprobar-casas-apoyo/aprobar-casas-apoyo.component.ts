@@ -1,5 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
 import { CasaApoyoModel } from '../../../../models/casa-apoyo/casa-apoyo.model';
 import { BaseModel } from '../../../../models/base/base.model';
@@ -18,6 +19,7 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
 @Component({
     selector: 'app-aprobar-casas-apoyo',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule, MatIconModule, TitleComponent, MgPaginatorComponent, CardAprobacionComponent],
     templateUrl: './aprobar-casas-apoyo.component.html',
     styleUrls: ['./aprobar-casas-apoyo.component.scss']
@@ -25,6 +27,7 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
 export class AprobarCasasApoyoComponent implements OnInit {
     private readonly casaApoyoService = inject(CasaApoyoService);
     private readonly dialog = inject(MatDialog);
+    private destroyRef = inject(DestroyRef);
 
     dataSource = new MatTableDataSource<BaseModel<CasaApoyoModel>>([]);
     paginatedCasas: BaseModel<CasaApoyoModel>[] = [];
@@ -39,7 +42,9 @@ export class AprobarCasasApoyoComponent implements OnInit {
 
     loadCasas() {
         if (this.usuario.iglesia) {
-            this.casaApoyoService.getCasasApoyoByIglesia(this.usuario.iglesia).subscribe({
+            this.casaApoyoService.getCasasApoyoByIglesia(this.usuario.iglesia)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe({
                 next: (data) => {
                     this.dataSource.data = data;
                     this.updatePaginatedList();

@@ -1,5 +1,6 @@
-import { Component, inject, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, AfterViewInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
 
 import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
@@ -16,6 +17,7 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
 @Component({
     selector: 'app-aprobar-vehiculos',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule, MatIconModule, TitleComponent, MgPaginatorComponent, CardAprobacionComponent],
     templateUrl: './aprobar-vehiculos.component.html',
     styleUrls: ['./aprobar-vehiculos.component.scss']
@@ -74,7 +76,9 @@ export class AprobarVehiculosComponent implements OnInit, AfterViewInit {
             }
         });
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(result => {
             if (result) {
                 this.vehiculoService.updateVehiculo(vehiculo.id!, { ...vehiculo, iglesiaId: null }).then(() => {
                     this.dialog.open(DialogNotificationComponent, {
@@ -147,7 +151,9 @@ export class AprobarVehiculosComponent implements OnInit, AfterViewInit {
                 }
             });
 
-            dialogRef.afterClosed().subscribe(result => {
+            dialogRef.afterClosed()
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(result => {
                 if (result) {
                     executeUpdate();
                 } else {

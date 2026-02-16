@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,7 @@ import { IconWhatsappComponent } from '../../atoms/icon-whatsapp/icon-whatsapp.c
 @Component({
     selector: 'app-card-aprobacion',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule, MatIconModule, MatButtonModule, SpinnerComponent, UserPhotoComponent, IconButtonComponent, IconWhatsappComponent],
     templateUrl: './card-aprobacion.component.html',
     styleUrls: ['./card-aprobacion.component.scss']

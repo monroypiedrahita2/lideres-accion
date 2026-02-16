@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     FormBuilder,
     FormGroup,
@@ -23,6 +24,7 @@ import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 @Component({
     selector: 'app-gestion-testigos',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
         ReactiveFormsModule,
@@ -35,6 +37,7 @@ import { PerfilService } from '../../../shared/services/perfil/perfil.service';
     templateUrl: './gestion-testigos.component.html',
 })
 export class GestionTestigosComponent implements OnInit {
+    private destroyRef = inject(DestroyRef);
     form!: FormGroup;
     testigos$: Observable<BaseModel<TestigoAsociadoModel>[]>;
     loading: boolean = false;
@@ -83,12 +86,14 @@ export class GestionTestigosComponent implements OnInit {
     }
 
     cargarPuestosVotacion() {
-        this.puestoVotacionService.getPuestosByIglesia(this.iglesiaId).subscribe(puestos => {
-            this.puestosVotacion = puestos.map(p => ({
-                value: p.id,
-                label: p.data.nombre // Using correct property based on standard model usage
-            }));
-        });
+        this.puestoVotacionService.getPuestosByIglesia(this.iglesiaId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(puestos => {
+                this.puestosVotacion = puestos.map(p => ({
+                    value: p.id,
+                    label: p.data.nombre // Using correct property based on standard model usage
+                }));
+            });
     }
 
 

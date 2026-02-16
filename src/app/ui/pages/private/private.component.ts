@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { NavComponent } from '../../shared/components/organism/nav/nav.component';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { FooterComponent } from '../../shared/components/modules/footer/footer.component';
@@ -7,6 +7,7 @@ import { FooterComponent } from '../../shared/components/modules/footer/footer.c
   selector: 'app-private',
   templateUrl: './private.component.html',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterModule, NavComponent, RouterOutlet, FooterComponent],
   styleUrl: './private.component.css',
 })

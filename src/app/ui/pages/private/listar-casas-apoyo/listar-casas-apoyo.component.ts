@@ -1,5 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
 import { CardCasaApoyoComponent } from '../../../shared/components/cards/card-casa-apoyo/card-casa-apoyo.component';
 import { CasaApoyoModel } from '../../../../models/casa-apoyo/casa-apoyo.model';
@@ -14,6 +15,7 @@ import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
 @Component({
     selector: 'app-listar-casas-apoyo',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule, CardCasaApoyoComponent, MatIconModule, TitleComponent],
     templateUrl: './listar-casas-apoyo.component.html',
     styleUrls: ['./listar-casas-apoyo.component.scss']
@@ -22,6 +24,7 @@ export class ListarCasasApoyoComponent implements OnInit {
     private readonly casaApoyoService = inject(CasaApoyoService);
     private readonly vehiculoService = inject(VehiculoService);
     private readonly dialog = inject(MatDialog);
+    private destroyRef = inject(DestroyRef);
     casas: BaseModel<CasaApoyoModel>[] = [];
     vehiculosDisponibles: VehiculoModel[] = [];
     usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -34,7 +37,9 @@ export class ListarCasasApoyoComponent implements OnInit {
     loadCasas() {
         // Fetch approved houses for the user's church
         if (this.usuario.iglesia) {
-            this.casaApoyoService.getCasasApoyoAprobadasByIglesia(this.usuario.iglesia).subscribe({
+            this.casaApoyoService.getCasasApoyoAprobadasByIglesia(this.usuario.iglesia)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe({
                 next: (data) => {
                     this.casas = data;
                 },
@@ -46,7 +51,9 @@ export class ListarCasasApoyoComponent implements OnInit {
     loadVehiculosDisponibles() {
         // Load available vehicles (approved and without casa de apoyo) once
         if (this.usuario.iglesia) {
-            this.vehiculoService.getVehiculosAprobadosSinCasaByIglesia(this.usuario.iglesia).subscribe({
+            this.vehiculoService.getVehiculosAprobadosSinCasaByIglesia(this.usuario.iglesia)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe({
                 next: (data) => {
                     this.vehiculosDisponibles = data;
                 },
