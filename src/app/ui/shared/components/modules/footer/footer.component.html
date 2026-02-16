@@ -7,13 +7,13 @@
     class="flex-1 min-w-[80px] flex justify-center" [option]="'Asociar'" [icon]="'assignment_ind'" [goTo]="$any(null)"
     (click)="openAsociarIglesia()"></app-button-footer>
 
-  <app-button-footer *ngIf="canCreateCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Solicitudes'"
-    [icon]="'list'" [goTo]="$any(null)" (click)="openMisCarreras()"></app-button-footer>
+  <app-button-footer *ngIf="canCreateCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Rutas'"
+    [icon]="'follow_the_signs'" [goTo]="$any(null)" (click)="openMisCarreras()"></app-button-footer>
 
-  <app-button-footer *ngIf="showAprobaciones" class="flex-1 min-w-[80px] flex justify-center" [option]="'Aprobaciones'"
-    [icon]="'check'" [goTo]="$any(null)" (click)="openAprobaciones()"></app-button-footer>
+  <app-button-footer *ngIf="showAprobaciones" class="flex-1 min-w-[80px] flex justify-center" [option]="'Mis Rutas'"
+    [icon]="'route'" [goTo]="$any(null)" (click)="openAprobaciones()"></app-button-footer>
 
-  <app-button-footer *ngIf="showBuscarCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Carreras'"
+  <app-button-footer *ngIf="showBuscarCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Postúlate'"
     [icon]="'local_taxi'" [goTo]="$any(null)" (click)="openBuscarCarrera()"></app-button-footer>
 
   <app-button-footer *ngIf="canCreateCarrera" class="flex-1 min-w-[80px] flex justify-center" [option]="'Traslados'"

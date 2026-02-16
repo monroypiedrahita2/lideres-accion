@@ -50,9 +50,6 @@ export class HomeComponent implements OnInit {
   skeleton: boolean = true;
   nameLong: string = NAME_LONG_APP;
   usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
-  iglesiaData: IglesiaModel = JSON.parse(
-    localStorage.getItem('iglesiaData') || '{}'
-  );
   showInfoPerfil: boolean = true;
   userPhotoUrl: string | null = null;
 
@@ -132,13 +129,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  async getMyIglesia(i: string) {
-    const iglesia = await this.IglesiaService.getMyIglesia(i);
-    this.iglesiaData = iglesia.data;
-    localStorage.setItem('iglesiaData', JSON.stringify(this.iglesiaData));
-    this.skeleton = false;
-  }
-
   async getusuario(id: string) {
     try {
       this.usuario = await this.perfilService.getMiPerfil(id);
@@ -148,7 +138,7 @@ export class HomeComponent implements OnInit {
       );
       this.perfilService.setCurrentUser(this.usuario); // Es un control de estados global
       if (this.usuario.iglesia) {
-        this.getMyIglesia(this.usuario.iglesia!);  // Esta linea se puede eliminar o borrar .... mas adelante se borrara y se tomara solo el id de la iglesia desde el usuario de local storage
+        // Esta linea se puede eliminar o borrar .... mas adelante se borrara y se tomara solo el id de la iglesia desde el usuario de local storage
       } else {
         this.openDialogMissingChurch();
       }

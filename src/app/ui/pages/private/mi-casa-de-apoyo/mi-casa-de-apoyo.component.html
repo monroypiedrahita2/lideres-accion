@@ -8,6 +8,7 @@
       zona
     </app-container-alert-information>
 
+    @if (usuario.iglesia != undefined && usuario.iglesia.length > 0) {
     <mg-input-select label="Municipio" [items]="municipios" formControlName="municipio"
       placeholder="Seleccione un municipio" [required]="true">
     </mg-input-select>
@@ -30,6 +31,10 @@
       <mg-button text="Guardar" type="submit" [disabled]="form.invalid || !usuario.iglesia">
       </mg-button>
     </div>
+
+    }
+
+
 
   </form>
 </div>
