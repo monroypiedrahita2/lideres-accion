@@ -3,7 +3,7 @@ import { Firestore, addDoc, collection, collectionData, doc, getDoc, query, wher
 import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environment';
 
 @Injectable({
   providedIn: 'root'

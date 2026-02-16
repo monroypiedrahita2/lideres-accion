@@ -3,7 +3,7 @@ import { Firestore, addDoc, collection, collectionData, query, where, orderBy, l
 import { Observable } from 'rxjs';
 import { PuestoVotacionModel } from '../../../../models/puesto-votacion/puesto-votacion.model';
 import { BaseModel } from '../../../../models/base/base.model';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environment';
 
 @Injectable({
     providedIn: 'root'

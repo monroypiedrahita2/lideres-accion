@@ -24,7 +24,7 @@ jobs:
       - name: Generate prod environment from secrets (when main)
         if: github.ref_name == 'main'
         run: |
-          cat > src/environment.prod.ts
+          cat > src/environment.prod.ts <<EOF
           export const environment = {
             production: true,
             firebase: {
@@ -54,11 +54,12 @@ jobs:
             },
             alerts: { timeOut: 3000, preventDuplicates: true },
           };
+          EOF
 
       - name: Generate dev environment from secrets (when develop)
         if: github.ref_name == 'develop'
         run: |
-          cat > src/environment.dev.ts
+          cat > src/environment.dev.ts <<EOF
           export const environment = {
             production: false,
             firebase: {
@@ -88,6 +89,7 @@ jobs:
             },
             alerts: { timeOut: 3000, preventDuplicates: true },
           };
+          EOF
 
       - name: Build Angular
         run: |
