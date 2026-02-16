@@ -3,7 +3,7 @@ import { Firestore, addDoc, collection, collectionData, deleteDoc, doc, updateDo
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
 import { CasaApoyoModel } from '../../../../models/casa-apoyo/casa-apoyo.model';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environments';
 
 @Injectable({
     providedIn: 'root'

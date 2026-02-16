@@ -11,7 +11,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environments';
 import { RolesModel } from '../../../../models/roles/roles.model';
 
 @Injectable({

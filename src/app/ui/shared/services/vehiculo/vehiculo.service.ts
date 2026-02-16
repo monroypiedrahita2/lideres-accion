@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, doc, getDoc, query, updateDoc, where, setDoc, deleteDoc, docData } from '@angular/fire/firestore';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environments';
 import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
 
 @Injectable({
