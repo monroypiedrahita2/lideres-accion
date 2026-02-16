@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, doc, setDoc, query, where, collectionData, updateDoc, arrayUnion, arrayRemove, deleteDoc } from '@angular/fire/firestore';
 import { CreateCarreraModel } from '../../../../models/carrera/carrera.model';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environments';
 import { Observable } from 'rxjs';
 
 @Injectable({

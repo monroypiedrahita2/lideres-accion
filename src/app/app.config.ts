@@ -8,7 +8,7 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideToastr } from 'ngx-toastr';
-import { environment } from '../enviroments';
+import { environment } from '../environments';
 import { provideServiceWorker } from '@angular/service-worker';
 
 
@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideToastr(environment.alerts),
     provideClientHydration(),
-    provideFirebaseApp(() => initializeApp(environment.production ? environment.firebasePDN : environment.firebaseDev)),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideAnimationsAsync(),

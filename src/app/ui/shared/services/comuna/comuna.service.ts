@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, query, where, orderBy, limit, getDocs, startAfter, endBefore, getCountFromServer, deleteDoc, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environments';
 import { ComunaModel } from '../../../../models/comuna/comuna.model';
 
 @Injectable({
