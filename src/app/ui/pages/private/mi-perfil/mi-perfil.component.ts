@@ -191,8 +191,6 @@ export class MiPerfilComponent implements OnInit {
     if (this.loading) {
       return;
     }
-    console.log(1);
-
     this.loading = true;
 
     const rawValue = this.form.getRawValue();
