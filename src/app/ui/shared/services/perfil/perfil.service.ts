@@ -14,7 +14,7 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environments';
 import { AsigmentRolePerfilModel, PerfilModel } from '../../../../models/perfil/perfil.model';
 
 @Injectable({ providedIn: 'root' })

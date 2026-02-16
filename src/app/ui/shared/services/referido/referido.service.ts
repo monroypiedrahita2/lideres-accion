@@ -19,7 +19,7 @@ import {
   endBefore,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environments';
 import { ReferidoModel } from '../../../../models/referido/referido.model';
 
 @Injectable({ providedIn: 'root' })

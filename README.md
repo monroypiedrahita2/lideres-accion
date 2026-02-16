@@ -51,4 +51,49 @@ Comando para hacer el PWA
 
 ng add @angular/pwa
 
+## Environment variables and deployment
+
+Local development uses a `.env` file to provide Firebase keys. Create a `.env` at the project root (do NOT commit it). An example is provided in `.env.example`.
+
+To generate `src/environments/environment.ts` from your local `.env` run:
+
+```bash
+npm run generate:env:local
+```
+
+For CI / GitHub Actions deployment, add the following repository secrets (example names used in workflow):
+
+- `FIREBASE_API_KEY_PROD`
+- `FIREBASE_AUTH_DOMAIN_PROD`
+- `FIREBASE_PROJECT_ID_PROD`
+- `FIREBASE_STORAGE_BUCKET_PROD`
+- `FIREBASE_MESSAGING_SENDER_ID_PROD`
+- `FIREBASE_APP_ID_PROD`
+- `FIREBASE_MEASUREMENT_ID_PROD`
+
+The workflow will generate `src/environments/environment.prod.ts` from these secrets before building.
+
+If you need to test the same generation logic locally, you can run:
+
+```bash
+npm run generate:env:prod
+```
+
+Make sure `.env` is listed in `.gitignore` to avoid accidentally committing secrets.
+
+### Development (non-main) CI secrets
+
+For deployments from branches other than `main` the workflow expects development secrets with these names (set them in the repository Secrets):
+
+- `FIREBASE_API_KEY_DEV`
+- `FIREBASE_AUTH_DOMAIN_DEV`
+- `FIREBASE_PROJECT_ID_DEV`
+- `FIREBASE_STORAGE_BUCKET_DEV`
+- `FIREBASE_MESSAGING_SENDER_ID_DEV`
+- `FIREBASE_APP_ID_DEV`
+- `FIREBASE_MEASUREMENT_ID_DEV`
+- `FIREBASE_SERVICE_ACCOUNT_DEV` (service account JSON)
+
+The CI will validate these secrets before attempting the build/deploy for non-main branches.
+
 

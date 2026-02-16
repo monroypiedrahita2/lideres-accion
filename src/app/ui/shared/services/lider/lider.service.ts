@@ -14,7 +14,7 @@ import {
 } from '@angular/fire/firestore';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../../enviroments';
+import { environment } from '../../../../../environments';
 
 @Injectable({ providedIn: 'root' })
 export class LiderService {
