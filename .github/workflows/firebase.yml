@@ -21,6 +21,74 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate prod environment from secrets (when main)
+        if: github.ref_name == 'main'
+        run: |
+          cat > src/environments/environment.prod.ts
+          export const environment = {
+            production: true,
+            firebase: {
+              apiKey: "${{ secrets.FIREBASE_API_KEY_PROD }}",
+              authDomain: "${{ secrets.FIREBASE_AUTH_DOMAIN_PROD }}",
+              projectId: "${{ secrets.FIREBASE_PROJECT_ID_PROD }}",
+              storageBucket: "${{ secrets.FIREBASE_STORAGE_BUCKET_PROD }}",
+              messagingSenderId: "${{ secrets.FIREBASE_MESSAGING_SENDER_ID_PROD }}",
+              appId: "${{ secrets.FIREBASE_APP_ID_PROD }}",
+              measurementId: "${{ secrets.FIREBASE_MEASUREMENT_ID_PROD }}",
+            },
+            collections: {
+              comunas: 'Comunas',
+              referidos: 'Referidos',
+              iglesias: 'Iglesias',
+              roles: 'Roles',
+              lideres: 'Lideres',
+              barrios: 'Barrios',
+              perfil: 'Perfiles',
+              vehiculos: 'Vehiculos',
+              casasApoyo: 'Casas',
+              coordinadorTestigos: 'CoordinadorTestigos',
+              testigosAsociados: 'TestigosAsociados',
+              puestosVotacion: 'PuestosVotacion',
+              cuentavotos: 'Cuentavotos',
+              carreras: 'Carreras',
+            },
+            alerts: { timeOut: 3000, preventDuplicates: true },
+          };
+
+      - name: Generate dev environment from secrets (when develop)
+        if: github.ref_name == 'develop'
+        run: |
+          cat > src/environments/environment.dev.ts <<EOF
+          export const environment = {
+            production: false,
+            firebase: {
+              apiKey: "${{ secrets.FIREBASE_API_KEY_DEV }}",
+              authDomain: "${{ secrets.FIREBASE_AUTH_DOMAIN_DEV }}",
+              projectId: "${{ secrets.FIREBASE_PROJECT_ID_DEV }}",
+              storageBucket: "${{ secrets.FIREBASE_STORAGE_BUCKET_DEV }}",
+              messagingSenderId: "${{ secrets.FIREBASE_MESSAGING_SENDER_ID_DEV }}",
+              appId: "${{ secrets.FIREBASE_APP_ID_DEV }}",
+              measurementId: "${{ secrets.FIREBASE_MEASUREMENT_ID_DEV }}",
+            },
+            collections: {
+              comunas: 'Comunas',
+              referidos: 'Referidos',
+              iglesias: 'Iglesias',
+              roles: 'Roles',
+              lideres: 'Lideres',
+              barrios: 'Barrios',
+              perfil: 'Perfiles',
+              vehiculos: 'Vehiculos',
+              casasApoyo: 'Casas',
+              coordinadorTestigos: 'CoordinadorTestigos',
+              testigosAsociados: 'TestigosAsociados',
+              puestosVotacion: 'PuestosVotacion',
+              cuentavotos: 'Cuentavotos',
+              carreras: 'Carreras',
+            },
+            alerts: { timeOut: 3000, preventDuplicates: true },
+          };
+
       - name: Build Angular
         run: |
           if [ "${GITHUB_REF_NAME}" = "main" ]; then
