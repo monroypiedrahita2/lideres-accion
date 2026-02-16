@@ -17,7 +17,7 @@
 </app-container-alert-information>
 }
 
-@if (!skeleton) {
+@if (!skeleton && usuario.iglesia != undefined && usuario.iglesia.length > 0) {
 <form [formGroup]="form" class="w-full">
 
 
