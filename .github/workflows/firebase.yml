@@ -58,7 +58,7 @@ jobs:
       - name: Generate dev environment from secrets (when develop)
         if: github.ref_name == 'develop'
         run: |
-          cat > src/environments/environment.dev.ts <<EOF
+          cat > src/environments/environment.dev.ts
           export const environment = {
             production: false,
             firebase: {
