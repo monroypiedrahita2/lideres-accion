@@ -55,7 +55,6 @@ export class ListarCasasApoyoComponent implements OnInit {
         if (this.usuario.iglesia) {
             this.vehiculoService.getVehiculosAprobadosSinCasaByIglesia(this.usuario.iglesia.id).subscribe({
                 next: (data) => {
-                    console.log(data);
                     this.vehiculosDisponibles = data;
                 },
                 error: (err) => console.error('Error loading available vehicles:', err)
