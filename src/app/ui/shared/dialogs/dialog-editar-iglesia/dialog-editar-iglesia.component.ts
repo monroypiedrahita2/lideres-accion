@@ -48,6 +48,7 @@ export class DialogEditarIglesiaComponent implements OnInit {
     ) {
         this.form = this.fb.group({
             nombre: ['', [Validators.required]],
+            municipio: ['', [Validators.required]],
         });
     }
 
@@ -64,6 +65,7 @@ export class DialogEditarIglesiaComponent implements OnInit {
             this.form.patchValue({
                 nombre: nombreReal,
                 horario: horarioReal,
+                municipio: this.data.data.municipio
             });
         }
     }

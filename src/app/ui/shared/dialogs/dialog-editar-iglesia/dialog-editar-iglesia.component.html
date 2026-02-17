@@ -13,6 +13,9 @@
 
         <mg-input-text type="text" formControlName="nombre" label="Nombre de la iglesia" id="nombre"></mg-input-text>
 
+        <mg-input-select label="Municipio" [items]="municipios" formControlName="municipio"
+            [required]="true"></mg-input-select>
+
     </form>
 </mat-dialog-content>
 

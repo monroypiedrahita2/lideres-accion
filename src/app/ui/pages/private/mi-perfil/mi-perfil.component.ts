@@ -247,7 +247,7 @@ export class MiPerfilComponent implements OnInit {
     }
 
     try {
-      await this.perfilService.crearPerfilConUId(user, this.auth.uidUser());
+      await this.perfilService.crearPerfilConUId({ ...user, rol: null }, this.auth.uidUser());
       localStorage.setItem(
         'usuario',
         JSON.stringify({ ...user, id: this.auth.uidUser() })
