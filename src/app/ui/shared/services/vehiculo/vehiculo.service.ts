@@ -41,7 +41,7 @@ export class VehiculoService {
   }
 
   getVehiculosByIglesia(iglesiaId: string) {
-    const q = query(collection(this.firestore, this._collection), where('iglesiaId', '==', iglesiaId));
+    const q = query(collection(this.firestore, this._collection), where('iglesia.id', '==', iglesiaId));
     return collectionData(q, { idField: 'id' }) as Observable<VehiculoModel[]>;
   }
 
@@ -53,7 +53,7 @@ export class VehiculoService {
   getVehiculosAprobadosSinCasaByIglesia(iglesiaId: string) {
     const q = query(
       collection(this.firestore, this._collection),
-      where('iglesiaId', '==', iglesiaId),
+      where('iglesia.id', '==', iglesiaId),
       where('aprobado', '==', true),
       where('casaApoyoId', '==', null)
     );
@@ -63,7 +63,7 @@ export class VehiculoService {
   getVehiculosAprobadosByIglesia(iglesiaId: string) {
     const q = query(
       collection(this.firestore, this._collection),
-      where('iglesiaId', '==', iglesiaId),
+      where('iglesia.id', '==', iglesiaId),
       where('aprobado', '==', true)
     );
     return collectionData(q, { idField: 'id' }) as Observable<VehiculoModel[]>;

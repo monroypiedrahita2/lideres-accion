@@ -12,13 +12,15 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { CardInfoComponent } from '../../../shared/components/cards/card-info/card-info.component';
 import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
-import { ConfirmActionComponent } from '../../../shared/components/modules/modal/confirm-action.component';
 import { ToastrService } from 'ngx-toastr';
 import { TestigoService } from '../../../shared/services/testigo/testigo.service';
 import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
 import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
 import { firstValueFrom } from 'rxjs';
 import { SpinnerComponent } from '../../../shared/components/modules/spinner/spinner.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
+import { DialogNotificationModel } from '../../../../models/base/dialog-notification.model';
 
 @Component({
     selector: 'app-listar-voluntarios',
@@ -35,8 +37,8 @@ import { SpinnerComponent } from '../../../shared/components/modules/spinner/spi
         ReactiveFormsModule,
         CardInfoComponent,
         TitleComponent,
-        ConfirmActionComponent,
-        SpinnerComponent
+        SpinnerComponent,
+        MatDialogModule
     ],
     templateUrl: './listar-voluntarios.component.html',
     styleUrls: ['./listar-voluntarios.component.scss']
@@ -55,8 +57,6 @@ export class ListarVoluntariosComponent implements AfterViewInit {
     displayedColumns: string[] = ['nombres', 'apellidos', 'email', 'rol', 'coordinadorCasaApoyo', 'coordinadorTransporte', 'administradorTestigos', 'celular', 'noCuenta', 'acciones'];
 
     // Modal state
-    showModal: boolean = false;
-    dataModal: { name: string; id: string } = { name: '', id: '' };
     showSpinner: boolean = false;
 
 
@@ -65,7 +65,8 @@ export class ListarVoluntariosComponent implements AfterViewInit {
         private toast: ToastrService,
         private testigoService: TestigoService,
         private vehiculoService: VehiculoService,
-        private casaApoyoService: CasaApoyoService
+        private casaApoyoService: CasaApoyoService,
+        private dialog: MatDialog
     ) {
         this.cargarVoluntarios();
         this.searchControl.valueChanges.pipe(
@@ -79,7 +80,7 @@ export class ListarVoluntariosComponent implements AfterViewInit {
     cargarVoluntarios() {
         if (this.usuario.rol === 'Super usuario') {
             this.perfilService.getPerfiles().subscribe(data => {
-                this.dataSource.data = data.filter(perfil => perfil.rol !== 'Pastor');
+                this.dataSource.data = data;
                 this.updatePaginatedList();
                 if (this.searchControl.value) {
                     this.applyFilter(this.searchControl.value);
@@ -130,8 +131,24 @@ export class ListarVoluntariosComponent implements AfterViewInit {
     }
 
     abrirModalEliminar(perfil: PerfilModel) {
-        this.dataModal = { name: `${perfil.nombres} ${perfil.apellidos}`, id: perfil.id || '' };
-        this.showModal = true;
+        const dialogRef = this.dialog.open(DialogNotificationComponent, {
+            width: '400px',
+            data: {
+                title: 'Eliminar Voluntario',
+                message: `¿Está seguro que desea eliminar a ${perfil.nombres} ${perfil.apellidos}? Esta acción no se puede deshacer.`,
+                type: 'warning',
+                bottons: 'two',
+                actionText: 'Eliminar'
+            } as DialogNotificationModel
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                if (perfil.id) {
+                    this.confirmarEliminacion(perfil.id);
+                }
+            }
+        });
     }
 
     async confirmarEliminacion(id: string) {
@@ -139,6 +156,7 @@ export class ListarVoluntariosComponent implements AfterViewInit {
         try {
             // 1. Delete associated Vehicles
             const vehiculos = await firstValueFrom(this.vehiculoService.getVehiculoByConductor(id));
+            console.log(vehiculos);
             if (vehiculos && vehiculos.length > 0) {
                 for (const vehiculo of vehiculos) {
                     if (vehiculo.id) {
@@ -173,7 +191,6 @@ export class ListarVoluntariosComponent implements AfterViewInit {
 
             // Refresh list
             this.cargarVoluntarios();
-            this.showModal = false;
         } catch (error) {
             console.error(error);
             this.toast.error('Error al eliminar usuario y sus datos asociados.');

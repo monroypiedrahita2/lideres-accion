@@ -9,13 +9,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { InputSelectComponent } from '../../components/atoms/input-select/input-select.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { PuestoVotacionService } from '../../services/puesto-votacion/puesto-votacion.service';
-import { SelectOption } from '../../components/atoms/input-select/input-select.component';
 import { CarreraService } from '../../services/carrera/carrera.service';
 import { DialogNotificationComponent } from '../dialog-notification/dialog-nofication.component';
 import { AuthService } from '../../services/auth/auth.service';
 import { TIPOS_VEHICULOS } from '../../const/marcas.const';
 import { CasaApoyoModel } from '../../../../models/casa-apoyo/casa-apoyo.model';
 import { MUNICIPIOS } from '../../const/municipios.const';
+import { PerfilModel } from '../../../../models/perfil/perfil.model';
+import { SelectOptionModel } from '../../../../models/base/select-options.model';
 
 @Component({
     selector: 'app-dialog-crear-carrera',
@@ -40,11 +41,12 @@ export class DialogCrearCarreraComponent implements OnInit {
     loading: boolean = false;
     usarUbicacionActual: boolean = false;
     casaApoyo: CasaApoyoModel = JSON.parse(localStorage.getItem('casaApoyo') || '{}');
-    municipiosOptions: SelectOption[] = MUNICIPIOS;
+    municipiosOptions: SelectOptionModel<any>[] = MUNICIPIOS;
+    usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
 
     tipoVehiculoOptions = TIPOS_VEHICULOS
 
-    puestosVotacionOptions: SelectOption[] = [];
+    puestosVotacionOptions: SelectOptionModel<any>[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -65,7 +67,6 @@ export class DialogCrearCarreraComponent implements OnInit {
             lugarRecogida: ['', Validators.required],
             puestoVotacionIr: ['', Validators.required],
             observaciones: [''],
-            municipio: ['', Validators.required],
             latitudSolicitante: [null],
             longitudSolicitante: [null]
         });
@@ -73,7 +74,7 @@ export class DialogCrearCarreraComponent implements OnInit {
 
     ngOnInit(): void {
         this.form.patchValue({
-            municipio: this.casaApoyo.municipio,
+            municipio: this.casaApoyo.iglesia?.municipio,
             lugarRecogida: this.casaApoyo.barrio,
         });
         this.loadPuestosVotacion();
@@ -94,13 +95,18 @@ export class DialogCrearCarreraComponent implements OnInit {
     }
 
     loadPuestosVotacion() {
-        this.puestoVotacionService.getPuestosVotacion().subscribe(puestos => {
-            this.puestosVotacionOptions = puestos
+        const terminales = [
+            { label: 'Terminal Dosquebradas', value: { nombre: 'Terminal Dosquebradas', ubicacion: 'Terminal Dosquebradas' } },
+            { label: 'Terminal Pereira', value: { nombre: 'Terminal Pereira', ubicacion: 'Terminal Pereira' } }
+        ];
+        if (!this.usuario.iglesia?.municipio) return;
+        this.puestoVotacionService.getPuestosByMunicipio(this.usuario.iglesia?.municipio).subscribe(puestos => {
+            this.puestosVotacionOptions = terminales.concat(puestos
                 .map(p => ({
                     label: p.data.nombre,
-                    value: p.data.nombre
+                    value: { nombre: p.data.nombre, ubicacion: p.data.ubicacion }
                 }))
-                .sort((a, b) => a.label.localeCompare(b.label));
+                .sort((a, b) => a.label.localeCompare(b.label)));
         });
     }
 
@@ -168,6 +174,7 @@ export class DialogCrearCarreraComponent implements OnInit {
             longitudSolicitante: carreraData.longitudSolicitante ? Number(carreraData.longitudSolicitante) : null,
             creadaPor: this.authService.uidUser(),
             horaCreacion: new Date().toISOString(),
+            municipio: this.casaApoyo.iglesia?.municipio,
         };
 
         this.carreraService.createCarrera(newCarrera).then(() => {

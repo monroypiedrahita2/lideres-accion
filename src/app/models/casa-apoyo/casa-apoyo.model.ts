@@ -2,7 +2,6 @@ import { IglesiaModel } from "../iglesia/iglesia.model";
 
 export interface CasaApoyoModel {
     barrio: string;  //nombre segun el barrioId
-    municipio: string;
     direccion: string;
     nombreHabitante: string;
     telefonoHabitante: string;

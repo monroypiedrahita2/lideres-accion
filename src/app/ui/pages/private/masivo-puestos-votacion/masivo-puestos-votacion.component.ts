@@ -178,7 +178,9 @@ export class MasivoPuestosVotacionComponent implements OnInit {
         const registros = data.slice(1).map((row) => ({
             nombre: String(row[0] ?? ''),
             mesastotales: Number(row[1] ?? 0),
-            iglesiaId: this.form.value.iglesia,
+            municipio: String(row[2] ?? ''),
+            ubicacion: String(row[3] ?? ''),
+            iglesia: this.form.value.iglesia,
             guardado: false
         }));
         this.puestos = registros;
@@ -227,12 +229,10 @@ export class MasivoPuestosVotacionComponent implements OnInit {
             data: {
                 nombre: puestoItem.nombre,
                 mesastotales: puestoItem.mesastotales,
-                iglesiaId: puestoItem.iglesiaId,
-                id: '' // Firestore generates ID, but model might require it. Check if needed or if BaseModel handles optional.
-                // Assuming BaseModel<T> is { id?: string, data: T ... } or similar.
-                // Checking Referidos logic: passed `ref.id` separately, but here addDoc generates it.
-                // Let's pass empty string for now, will be updated by firestore naturally or not used in addDoc param.
-            } as PuestoVotacionModel, // Cast to avoid strict type issues if interface differs slightly
+                iglesia: puestoItem.iglesia,
+                municipio: puestoItem.municipio,
+                ubicacion: puestoItem.ubicacion,
+            } as PuestoVotacionModel,
             fechaCreacion: new Date().toISOString(),
             creadoPor: this.auth.uidUser() ?? '',
         };

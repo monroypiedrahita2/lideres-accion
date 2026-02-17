@@ -67,9 +67,9 @@ export class AprobacionesComponent implements OnInit {
         window.open(url, '_blank');
     }
 
-    openMapQuery(query: string) {
-        if (!query) return;
-        const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+    openMapQuery(query: { nombre: string, ubicacion: string }) {
+        if (!query.ubicacion) return;
+        const url = `${query.ubicacion}`;
         window.open(url, '_blank');
     }
 

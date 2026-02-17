@@ -118,7 +118,7 @@ export class MiVehiculoComponent implements OnInit {
       apellidos: this.form.value.apellidos,
       celular: this.form.value.celular,
       placa: `${this.form.value.placaLetras.toUpperCase()}-${this.form.value.placaNumeros.toString().toUpperCase()}`,
-      iglesia: this.usuario.iglesia || null,
+      iglesia: this.usuario.iglesia,
       aprobado: this.accion === 'Crear' ? false : this.currentVehiculo?.aprobado || false,
       aprobadoPor: this.accion === 'Crear' ? null : this.currentVehiculo?.aprobadoPor || null
     }

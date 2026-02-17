@@ -9,27 +9,6 @@
     Debes comunicarte con algún coordinador de zona para que te asocie a una zona. Y recuerda reiniciar sesión después
     de la asociación.
   </app-container-alert-information>
-
-  <!-- Profile Section -->
-  <!-- <div
-    class="mt-2 flex flex-row gap-1 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-    <span *ngIf="usuario.rol"
-      class="text-[10px] sm:text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full border border-blue-200 shrink-0">
-      {{ usuario.rol === 'Pastor' ? 'Usuario de zona' : usuario.rol }}
-    </span>
-    <span *ngIf="usuario.coordinadorCasaApoyo"
-      class="text-[10px] sm:text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full border border-purple-200 shrink-0">
-      Coord. Casa Apoyo
-    </span>
-    <span *ngIf="usuario.coordinadorTransporte"
-      class="text-[10px] sm:text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full border border-indigo-200 shrink-0">
-      Coord. Transporte
-    </span>
-    <span *ngIf="usuario.administradorTestigos"
-      class="text-[10px] sm:text-xs bg-teal-100 text-teal-800 px-2 py-1 rounded-full border border-teal-200 shrink-0">
-      Admin. Testigos
-    </span>
-  </div> -->
   <div class="flex flex-col justify-center md:justify-start">
     <div
       class="bg-white rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition-shadow border border-gray-200 flex items-center gap-4 min-w-[300px]"
@@ -40,8 +19,9 @@
       </div>
       <img *ngIf="userPhotoUrl" [src]="userPhotoUrl" (error)="userPhotoUrl = null" alt="Foto de perfil"
         class="w-12 h-12 rounded-full object-cover">
-      <div>
+      <div class="flex flex-col">
         <span class="text-2xl font-primary text-primary font-bold">Mis datos</span>
+        <span class="text-lg font-primary text-black">{{ usuario?.rol == 'Pastor' ? 'Administrador de zona' : usuario?.rol }} {{ usuario?.rol ? ' / ' : '' }} {{ usuario?.iglesia ? usuario?.iglesia?.nombre : 'Solicita ser asignado a una zona' }}</span>
         <!-- <p class="text-lg text-black">Ingresa a tu perfil y actualiza</p> -->
       </div>
       <mat-icon class="ml-auto text-gray-400">chevron_right</mat-icon>

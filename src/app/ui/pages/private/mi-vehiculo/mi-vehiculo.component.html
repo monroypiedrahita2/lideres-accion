@@ -48,7 +48,6 @@
     <mg-input-text class="w-full" type="text" formControlName="celular" id="celular" label="Celular del conductor"
       [textError]="form.get('celular')?.hasError('pattern') ? 'Solo puedes digitar números' : form.get('celular')?.hasError('minlength') ? 'Mínimo 10 números' : form.get('celular')?.hasError('maxlength') ? 'Máximo 10 números' : form.get('celular')?.hasError('required') ? 'Este campo es obligatorio' : ''"
       hidden></mg-input-text>
-
   </div>
 
   <div class="flex gap-3 justify-center mt-6">

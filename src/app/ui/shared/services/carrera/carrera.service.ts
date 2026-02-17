@@ -33,18 +33,20 @@ export class CarreraService {
         return collectionData(q, { idField: 'id' }) as Observable<CreateCarreraModel[]>;
     }
 
-    getCarrerasDisponibles(tipoVehiculo: string | string[]) {
+    getCarrerasDisponibles(tipoVehiculo: string | string[], municipio: string) {
         let q;
         if (Array.isArray(tipoVehiculo)) {
             q = query(
                 collection(this.firestore, this._collection),
                 where('estado', '==', 'Abierto'),
+                where('municipio', '==', municipio),
                 where('tipoVehiculo', 'in', tipoVehiculo) // Use 'in' for arrays
             );
         } else {
             q = query(
                 collection(this.firestore, this._collection),
                 where('estado', '==', 'Abierto'),
+                where('municipio', '==', municipio),
                 where('tipoVehiculo', '==', tipoVehiculo)
             );
         }

@@ -1,6 +1,11 @@
 <div class="form-container">
   <mg-title title="Mi casa de apoyo"></mg-title>
 
+  <div class="flex items-center justify-center">
+    <span *ngIf="usuario.iglesia" class="w-full text-center text-lg text-black font-primary">Tu seras el responsable de
+      la casa de apoyo</span>
+  </div>
+
   <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
 
     <app-container-alert-information *ngIf="!usuario.iglesia" [type]="'warning'" [title]="'Atención'">
@@ -8,15 +13,16 @@
       zona
     </app-container-alert-information>
 
-    <mg-input-select label="Municipio" [items]="municipios" formControlName="municipio"
-      placeholder="Seleccione un municipio" [required]="true">
-    </mg-input-select>
-
     <mg-input-text label="Barrio" formControlName="barrio" placeholder="Nombre del barrio" [required]="true">
     </mg-input-text>
 
     <mg-input-text label="Dirección" formControlName="direccion" placeholder="Ej: Cra 45 # 23 - 10" [required]="true">
     </mg-input-text>
+
+    <div class="flex items-center justify-center">
+      <span class="w-full text-center text-lg text-black font-primary">Sí eres el dueño, deja tus datos, sino el dueño o
+        habitante de la casa</span>
+    </div>
 
     <mg-input-text label="Nombre del dueño" formControlName="nombreHabitante" placeholder="Nombre completo"
       [required]="true">
