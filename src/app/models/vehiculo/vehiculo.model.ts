@@ -18,5 +18,12 @@ export interface VehiculoModel {
   estado?: 'Activo' | 'Inactivo' | 'En carrera';
   aprobadoPor: string | null; //email de quien aprobo con authService
   foto?: string | null; // foto se toma de authService de foto       
+  ubicacionActual?: ubicacionModel | null;
 
 }
+
+export interface ubicacionModel {
+    lat: number;
+    lng: number;
+}
+

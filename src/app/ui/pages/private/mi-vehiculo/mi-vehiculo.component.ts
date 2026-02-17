@@ -120,7 +120,8 @@ export class MiVehiculoComponent implements OnInit {
       placa: `${this.form.value.placaLetras.toUpperCase()}-${this.form.value.placaNumeros.toString().toUpperCase()}`,
       iglesia: this.usuario.iglesia,
       aprobado: this.accion === 'Crear' ? false : this.currentVehiculo?.aprobado || false,
-      aprobadoPor: this.accion === 'Crear' ? null : this.currentVehiculo?.aprobadoPor || null
+      aprobadoPor: this.accion === 'Crear' ? null : this.currentVehiculo?.aprobadoPor || null,
+      estado: 'Activo'
     }
     if (this.accion === 'Crear') {
       this.createVehiculo(vehiculo);

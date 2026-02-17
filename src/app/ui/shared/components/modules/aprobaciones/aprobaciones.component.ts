@@ -100,7 +100,7 @@ export class AprobacionesComponent implements OnInit {
             }
         }).afterClosed().subscribe(res => {
             if (res) {
-                this.carreraService.finalizarCarrera(carrera.id!).then(() => {
+                this.carreraService.finalizarCarrera(carrera.id!, carrera.vehiculoIdAprobado).then(() => {
                     this.dialog.open(DialogNotificationComponent, {
                         width: '400px',
                         data: {
