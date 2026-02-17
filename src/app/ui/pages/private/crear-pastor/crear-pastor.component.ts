@@ -43,13 +43,13 @@ import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
 export class CrearPastorComponent implements OnInit {
   form!: FormGroup;
   usuario: PerfilModel | undefined = JSON.parse(localStorage.getItem('usuario') || '{}');
-  iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
+  iglesia: IglesiaModel = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia;
   rolesSelectOptions: SelectOptionModel<string>[] = LIST_ROLES;
   usersSelectOptions: SelectOptionModel<string>[] = [];
   perfiles: SelectOptionModel<string>[] = [];
   usuarios: PerfilModel[] = [];
   paginatedUsuarios: PerfilModel[] = [];
-  iglesias: SelectOptionModel<any>[] = [];
+  iglesias: SelectOptionModel<IglesiaModel>[] = [];
   loading: boolean = false;
   rol: any = '';
   perfilSeleted: PerfilModel | undefined = undefined;
@@ -117,7 +117,7 @@ export class CrearPastorComponent implements OnInit {
     this.iglesiasService.getIglesias().subscribe({
       next: (response) => {
         const iglesias = response.map((item: BaseModel<IglesiaModel>) => {
-          return { label: item.data.nombre, value: item.id };
+          return { label: item.data.nombre, value: {id: item.id, nombre: item.data.nombre, municipio: item.data.municipio} };
         });
 
         this.iglesias = iglesias;

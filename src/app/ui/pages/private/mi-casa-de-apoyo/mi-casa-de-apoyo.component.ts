@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
-import { InputSelectComponent, SelectOption } from '../../../shared/components/atoms/input-select/input-select.component';
+import { InputSelectComponent } from '../../../shared/components/atoms/input-select/input-select.component';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
 import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
 import { BaseModel } from '../../../../models/base/base.model';
@@ -17,6 +17,7 @@ import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
 import { ContainerAlertInformationComponent } from '../../../shared/components/modules/container-alert-information/container-alert-information.component';
 import { MUNICIPIOS } from '../../../shared/const/municipios.const';
+import { SelectOptionModel } from '../../../../models/base/select-options.model';
 
 @Component({
     selector: 'app-mi-casa-de-apoyo',
@@ -41,7 +42,7 @@ export class MiCasaDeApoyoComponent implements OnInit {
     usuario: PerfilModel = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario') || '') : {} as PerfilModel;
     existingCasaData: CasaApoyoModel | null = null;
 
-    municipios: SelectOption[] = MUNICIPIOS
+    municipios: SelectOptionModel<any>[] = MUNICIPIOS
 
     constructor(
         private fb: FormBuilder,
@@ -52,7 +53,6 @@ export class MiCasaDeApoyoComponent implements OnInit {
         private location: Location
     ) {
         this.form = this.fb.group({
-            municipio: ['', [Validators.required]],
             barrio: ['', [Validators.required]],
             direccion: ['', [Validators.required]],
             nombreHabitante: ['', [Validators.required]],
@@ -78,7 +78,6 @@ export class MiCasaDeApoyoComponent implements OnInit {
 
                 // Patch form
                 this.form.patchValue({
-                    municipio: casa.data.municipio,
                     barrio: casa.data.barrio,
                     direccion: casa.data.direccion,
                     nombreHabitante: casa.data.nombreHabitante,
@@ -102,7 +101,6 @@ export class MiCasaDeApoyoComponent implements OnInit {
 
         const casaData: CasaApoyoModel = {
             barrio: this.form.value.barrio,
-            municipio: this.form.value.municipio,
             direccion: this.form.value.direccion,
             nombreHabitante: this.form.value.nombreHabitante,
             telefonoHabitante: this.form.value.telefonoHabitante,
@@ -110,7 +108,7 @@ export class MiCasaDeApoyoComponent implements OnInit {
             responsableNombre: this.usuario.nombres,
             responsableApellido: this.usuario.apellidos,
             responsableTelefono: this.usuario.celular || '',
-            iglesiaId: this.usuario.iglesia || null,
+            iglesia: this.usuario.iglesia || null,
             aprobado: (this.accion === 'Editar' && this.existingCasaData) ? this.existingCasaData.aprobado : null,
             aprobadoPor: (this.accion === 'Editar' && this.existingCasaData) ? this.existingCasaData.aprobadoPor : null
         };

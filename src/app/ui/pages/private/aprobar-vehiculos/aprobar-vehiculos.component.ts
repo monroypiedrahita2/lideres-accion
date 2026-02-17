@@ -40,8 +40,8 @@ export class AprobarVehiculosComponent implements OnInit, AfterViewInit {
     }
 
     loadVehiculos() {
-        if (this.usuario.iglesia) {
-            this.vehiculoService.getVehiculosByIglesia(this.usuario.iglesia).subscribe({
+        if (this.usuario.iglesia?.id) {
+            this.vehiculoService.getVehiculosByIglesia(this.usuario.iglesia.id).subscribe({
                 next: (data) => {
                     this.dataSource.data = data;
                     this.updatePaginatedList();
@@ -76,7 +76,7 @@ export class AprobarVehiculosComponent implements OnInit, AfterViewInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.vehiculoService.updateVehiculo(vehiculo.id!, { ...vehiculo, iglesiaId: null }).then(() => {
+                this.vehiculoService.updateVehiculo(vehiculo.id!, { ...vehiculo, iglesia: null }).then(() => {
                     this.dialog.open(DialogNotificationComponent, {
                         data: {
                             title: 'Desasignado',

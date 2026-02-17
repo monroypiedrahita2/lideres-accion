@@ -16,6 +16,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../../../environment';
 import { AsigmentRolePerfilModel, PerfilModel } from '../../../../models/perfil/perfil.model';
+import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
@@ -73,7 +74,7 @@ export class PerfilService {
     return collectionData(q, { idField: 'id' }) as Observable<PerfilModel[]>;
   }
   getPerfilesByIglesia(value: string) {
-    const q = query(collection(this.firestore, this._collection), where('iglesia', '==', value));
+    const q = query(collection(this.firestore, this._collection), where('iglesia.id', '==', value));
     const response = collectionData(q, { idField: 'id' }) as Observable<PerfilModel[]>;
     return response;
 
@@ -82,7 +83,7 @@ export class PerfilService {
   getPostuladosCasasApoyoByIglesia(iglesiaId: string) {
     const q = query(
       collection(this.firestore, this._collection),
-      where('iglesia', '==', iglesiaId),
+      where('iglesia.id', '==', iglesiaId),
       where('postulado.casaApoyo', '==', true)
     );
     const response = collectionData(q, { idField: 'id' }) as Observable<PerfilModel[]>;
@@ -120,8 +121,8 @@ export class PerfilService {
     return updateDoc(document, { ...newData });
   }
 
-  updateIglesia(id: string, iglesiaId: string) {
+  updateIglesia(id: string, iglesia: IglesiaModel) {
     const document = doc(this.firestore, this._collection, id);
-    return updateDoc(document, { iglesia: iglesiaId });
+    return updateDoc(document, { iglesia: iglesia });
   }
 }

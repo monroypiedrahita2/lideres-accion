@@ -10,11 +10,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-
-export interface SelectOption {
-  label: string;
-  value: any;
-}
+import { SelectOptionModel } from '../../../../../models/base/select-options.model';
 
 @Component({
   selector: 'mg-input-select',
@@ -44,7 +40,7 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
   @ViewChild('input', { static: false }) input?: ElementRef<HTMLInputElement>;
   @Input() id: string = 'id';
   @Input() label: string = 'label';
-  @Input() items: Array<SelectOption> = [];
+  @Input() items: Array<SelectOptionModel<any>> = [];
   @Input() showAlert: boolean = false
   @Input() placeholder: string = ''
   @Input() required: boolean = false;
@@ -52,7 +48,7 @@ export class InputSelectComponent implements ControlValueAccessor, ErrorStateMat
   @Input() multiple: boolean = false;
   @Input() asyncSearch: boolean = false;
   @Output() search = new EventEmitter<string>();
-  filteredOptions: Array<SelectOption> = [];
+  filteredOptions: Array<SelectOptionModel<any>> = [];
   private errorMessages = new Map<string, () => string>();
   public rifInput: any;
   public onChangeFn!: (value: any) => void;

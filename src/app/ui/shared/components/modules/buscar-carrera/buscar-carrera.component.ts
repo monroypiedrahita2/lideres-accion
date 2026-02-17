@@ -20,6 +20,7 @@ interface CarreraWithDistance extends CreateCarreraModel {
 }
 
 import { MatChipsModule } from '@angular/material/chips';
+import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 
 @Component({
     selector: 'app-buscar-carrera',
@@ -42,6 +43,8 @@ export class BuscarCarreraComponent implements OnInit {
     vehiculoActivo: VehiculoModel | null = null;
     vehiculoMensaje: string = '';
     userLocation: { lat: number, lng: number } | null = null;
+    usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
+
 
     constructor(
         private carreraService: CarreraService,
@@ -136,7 +139,7 @@ export class BuscarCarreraComponent implements OnInit {
             return;
         }
 
-        this.carreraService.getCarrerasDisponibles(tiposVehiculo).subscribe(carreras => {
+        this.carreraService.getCarrerasDisponibles(tiposVehiculo, this.usuario.iglesia?.municipio || '').subscribe(carreras => {
             // Filter out races created by me
             this.carrerasDisponibles = carreras.filter(c => c.creadaPor !== uid);
 

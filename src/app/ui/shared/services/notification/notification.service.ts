@@ -73,7 +73,7 @@ export class NotificationService {
                 width: '400px',
                 data: {
                     title: '¡Nueva Carrera Aprobada!',
-                    message: `Tienes una carrera activa hacia ${activeRace.puestoVotacionIr || 'el puesto de votación'}.`,
+                    message: `Tienes una carrera activa hacia ${activeRace.puestoVotacionIr.nombre || 'el puesto de votación'}.`,
                     type: 'success',
                     bottons: 'one'
                 }

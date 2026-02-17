@@ -1,7 +1,9 @@
+import { IglesiaModel } from "../iglesia/iglesia.model";
+
 export interface TestigoModel {
     nombre: string;
     apellido: string;
-    iglesiaId: string;
+    iglesia: IglesiaModel | null;
     celular: string;
     puestoId: string;
     puestodevotacion: string;

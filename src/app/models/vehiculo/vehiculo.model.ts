@@ -1,3 +1,5 @@
+import { IglesiaModel } from "../iglesia/iglesia.model";
+
 export interface VehiculoModel {
   id?: string;
   tipoVehiculo: string;
@@ -10,11 +12,18 @@ export interface VehiculoModel {
   nombre: string;
   apellidos: string;
   celular: string;
-  iglesiaId: string | null;
+  iglesia: IglesiaModel | null;
   aprobado: boolean | null;
   casaApoyoId?: string | null;
   estado?: 'Activo' | 'Inactivo' | 'En carrera';
   aprobadoPor: string | null; //email de quien aprobo con authService
   foto?: string | null; // foto se toma de authService de foto       
+  ubicacionActual?: ubicacionModel | null;
 
 }
+
+export interface ubicacionModel {
+    lat: number;
+    lng: number;
+}
+

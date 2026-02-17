@@ -1,5 +1,7 @@
 <mg-title title="Casas de Apoyo Inscritas"></mg-title>
 
+<app-spinner [showSpinner]="showSpinner"></app-spinner>
+
 <div *ngIf="casas.length > 0; else noCasas" class="flex gap-6 flex-wrap justify-center min-w-[100%] mx-auto">
   <div *ngFor="let casa of casas" class="w-full">
     <app-card-casa-apoyo [casa]="casa" [showActions]="true" [showAssign]="false"

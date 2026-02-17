@@ -6,7 +6,8 @@ import { InputTextComponent } from '../../../../../shared/components/atoms/input
 import { ButtonComponent } from '../../../../../shared/components/atoms/button/button.component';
 import { TitleComponent } from '../../../../../shared/components/atoms/title/title.component';
 import { PuestoVotacionService } from '../../../../../shared/services/puesto-votacion/puesto-votacion.service';
-import { InputSelectComponent, SelectOption } from '../../../../../shared/components/atoms/input-select/input-select.component';
+import { InputSelectComponent } from '../../../../../shared/components/atoms/input-select/input-select.component';
+import { SelectOptionModel } from '../../../../../../models/base/select-options.model';
 
 @Component({
     selector: 'app-dialog-asignar-puesto-mesa',
@@ -25,7 +26,7 @@ import { InputSelectComponent, SelectOption } from '../../../../../shared/compon
 })
 export class DialogAsignarPuestoMesaComponent {
     form: FormGroup;
-    puestosOptions: SelectOption[] = [];
+    puestosOptions: SelectOptionModel<any>[] = [];
 
     maxMesas: number = 100;
 

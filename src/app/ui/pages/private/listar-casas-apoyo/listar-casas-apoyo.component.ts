@@ -10,11 +10,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { TitleComponent } from '../../../shared/components/atoms/title/title.component';
 import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
 import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
+import { SpinnerComponent } from "../../../shared/components/modules/spinner/spinner.component";
 
 @Component({
     selector: 'app-listar-casas-apoyo',
     standalone: true,
-    imports: [CommonModule, CardCasaApoyoComponent, MatIconModule, TitleComponent],
+    imports: [CommonModule, CardCasaApoyoComponent, MatIconModule, TitleComponent, SpinnerComponent],
     templateUrl: './listar-casas-apoyo.component.html',
     styleUrls: ['./listar-casas-apoyo.component.scss']
 })
@@ -25,6 +26,7 @@ export class ListarCasasApoyoComponent implements OnInit {
     casas: BaseModel<CasaApoyoModel>[] = [];
     vehiculosDisponibles: VehiculoModel[] = [];
     usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+    showSpinner = false;
 
     ngOnInit() {
         this.loadCasas();
@@ -34,11 +36,16 @@ export class ListarCasasApoyoComponent implements OnInit {
     loadCasas() {
         // Fetch approved houses for the user's church
         if (this.usuario.iglesia) {
-            this.casaApoyoService.getCasasApoyoAprobadasByIglesia(this.usuario.iglesia).subscribe({
+            this.showSpinner = true;
+            this.casaApoyoService.getCasasApoyoAprobadasByIglesia(this.usuario.iglesia.id).subscribe({
                 next: (data) => {
                     this.casas = data;
+                    this.showSpinner = false;
                 },
-                error: (err) => console.error(err)
+                error: (err) => {
+                    console.error(err);
+                    this.showSpinner = false;
+                }
             });
         }
     }
@@ -46,8 +53,9 @@ export class ListarCasasApoyoComponent implements OnInit {
     loadVehiculosDisponibles() {
         // Load available vehicles (approved and without casa de apoyo) once
         if (this.usuario.iglesia) {
-            this.vehiculoService.getVehiculosAprobadosSinCasaByIglesia(this.usuario.iglesia).subscribe({
+            this.vehiculoService.getVehiculosAprobadosSinCasaByIglesia(this.usuario.iglesia.id).subscribe({
                 next: (data) => {
+                    console.log(data);
                     this.vehiculosDisponibles = data;
                 },
                 error: (err) => console.error('Error loading available vehicles:', err)
