@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, collectionData, deleteDoc, doc, updateDoc, query, where, arrayUnion, arrayRemove, getDoc } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 import { BaseModel } from '../../../../models/base/base.model';
 import { CasaApoyoModel } from '../../../../models/casa-apoyo/casa-apoyo.model';
 import { environment } from '../../../../../environment';
@@ -10,6 +11,8 @@ import { environment } from '../../../../../environment';
 })
 export class CasaApoyoService {
     private _collection: string = environment.collections.casasApoyo;
+    private casaApoyoCache$: Observable<BaseModel<CasaApoyoModel>[]> | null = null;
+    private currentUid: string | null = null;
 
     constructor(private readonly firestore: Firestore) { }
 
@@ -71,8 +74,14 @@ export class CasaApoyoService {
 
     // Better method name for clarity if we are passing user ID
     getCasasApoyoByResponsable(uid: string) {
-        const q = query(collection(this.firestore, this._collection), where('data.responsableId', '==', uid));
-        return collectionData(q, { idField: 'id' }) as Observable<BaseModel<CasaApoyoModel>[]>;
+        if (!this.casaApoyoCache$ || this.currentUid !== uid) {
+            this.currentUid = uid;
+            const q = query(collection(this.firestore, this._collection), where('data.responsableId', '==', uid));
+            this.casaApoyoCache$ = (collectionData(q, { idField: 'id' }) as Observable<BaseModel<CasaApoyoModel>[]>).pipe(
+                shareReplay(1)
+            );
+        }
+        return this.casaApoyoCache$;
     }
 
     addVehiculoToCasa(casaId: string, vehiculo: any): Promise<void> {
