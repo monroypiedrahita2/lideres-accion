@@ -50,6 +50,8 @@ export class PostulacionCardComponent {
     @Input() testigoInfo: { puesto: string, mesa: string } | null = null;
     @Input() misTestigos: BaseModel<TestigoAsociadoModel>[] = [];
 
+    @Input() userLocation: { lat: number, lng: number } | null = null;
+
     @Output() statusUpdate = new EventEmitter<'Activo' | 'Inactivo' | 'En carrera'>();
     @Output() navigateResults = new EventEmitter<void>();
 
@@ -59,6 +61,28 @@ export class PostulacionCardComponent {
 
     onNavigateResults() {
         this.navigateResults.emit();
+    }
+
+    calculateDistance(vehiculo: VehiculoModel): string | null {
+        if (!this.userLocation || !vehiculo.ubicacionActual) {
+            return null;
+        }
+
+        const R = 6371; // Radius of the earth in km
+        const dLat = this.deg2rad(vehiculo.ubicacionActual.lat - this.userLocation.lat);
+        const dLon = this.deg2rad(vehiculo.ubicacionActual.lng - this.userLocation.lng);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(this.deg2rad(this.userLocation.lat)) * Math.cos(this.deg2rad(vehiculo.ubicacionActual.lat)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const d = R * c; // Distance in km
+
+        return d.toFixed(1) + ' km';
+    }
+
+    deg2rad(deg: number): number {
+        return deg * (Math.PI / 180);
     }
 
     getBorderColor(status: string | null): string {

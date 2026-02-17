@@ -21,7 +21,9 @@
         class="w-12 h-12 rounded-full object-cover">
       <div class="flex flex-col">
         <span class="text-2xl font-primary text-primary font-bold">Mis datos</span>
-        <span class="text-lg font-primary text-black">{{ usuario.rol == 'Pastor' ? 'Administrador de zona' : usuario.rol }} {{ usuario.rol ? ' / ' : '' }} {{ usuario.iglesia ? usuario.iglesia.nombre : 'Solicita ser asignado a una zona' }}</span>
+        <span class="text-lg font-primary text-black">{{ usuario.rol == 'Pastor' ? 'Administrador de zona' : usuario.rol
+          }} {{ usuario.rol ? ' / ' : '' }} {{ usuario.iglesia ? usuario.iglesia.nombre : 'Solicita ser asignado a una
+          zona' }}</span>
         <!-- <p class="text-lg text-black">Ingresa a tu perfil y actualiza</p> -->
       </div>
       <mat-icon class="ml-auto text-gray-400">chevron_right</mat-icon>
@@ -36,7 +38,7 @@
   <app-postulacion-card [usuario]="usuario" [vehiculoStatus]="vehiculoStatus" [vehiculoInfo]="vehiculoInfo"
     [currentVehiculo]="currentVehiculo" [casaApoyoStatus]="casaApoyoStatus" [casaApoyoVehiculos]="casaApoyoVehiculos"
     [testigoStatus]="testigoStatus" [testigoInfo]="testigoInfo" [misTestigos]="misTestigos"
-    (statusUpdate)="updateVehiculoStatus($event)" (navigateResults)="goToResultados()">
+    [userLocation]="userLocation" (statusUpdate)="updateVehiculoStatus($event)" (navigateResults)="goToResultados()">
   </app-postulacion-card>
 </div>
 

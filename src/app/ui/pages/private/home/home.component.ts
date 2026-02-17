@@ -58,6 +58,7 @@ export class HomeComponent implements OnInit {
 
   // Data
   casaApoyoVehiculos: VehiculoModel[] = [];
+  userLocation: { lat: number, lng: number } | null = null;
 
   get isProfileIncomplete(): boolean {
     return !this.usuario.nombres || !this.usuario.apellidos;
@@ -83,6 +84,7 @@ export class HomeComponent implements OnInit {
     setTimeout(() => {
       this.showInfoPerfil = false;
     }, 5000);
+    this.getUserLocation();
     const usuarioData = localStorage.getItem('usuario');
     if (usuarioData) {
       this.usuario = JSON.parse(usuarioData);
@@ -166,6 +168,7 @@ export class HomeComponent implements OnInit {
         if (vehiculo) {
           this.currentVehiculo = vehiculo;
           this.vehiculoStatus = vehiculo.aprobado ? 'Aprobado' : 'Pendiente';
+          this.startLocationTracking();
 
           if (vehiculo.casaApoyoId) {
             this.casaApoyoService.getCasaApoyo(vehiculo.casaApoyoId).then(casa => {
@@ -293,13 +296,84 @@ export class HomeComponent implements OnInit {
 
   // Vehicle status management
   currentVehiculo: VehiculoModel | null = null;
+  userLocationWatchId: number | null = null;
+  locationInterval: any = null;
+
+  ngOnDestroy(): void {
+    if (this.locationInterval) {
+      clearInterval(this.locationInterval);
+    }
+    if (this.userLocationWatchId !== null) {
+      navigator.geolocation.clearWatch(this.userLocationWatchId);
+    }
+  }
 
   updateVehiculoStatus(estado: 'Activo' | 'Inactivo' | 'En carrera') {
     if (this.currentVehiculo && this.currentVehiculo.id) {
       this.vehiculoService.updateVehiculo(this.currentVehiculo.id, { ...this.currentVehiculo, estado: estado }).then(() => {
         if (this.currentVehiculo) {
           this.currentVehiculo.estado = estado;
+          this.startLocationTracking();
         }
+      });
+    }
+  }
+
+  startLocationTracking() {
+    // Clear any existing interval
+    if (this.locationInterval) {
+      clearInterval(this.locationInterval);
+      this.locationInterval = null;
+    }
+
+    if (!this.currentVehiculo || !this.currentVehiculo.id) return;
+
+    const updateLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          if (this.currentVehiculo && this.currentVehiculo.id) {
+            const ubicacion = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            this.vehiculoService.updateVehiculo(this.currentVehiculo.id, {
+              ...this.currentVehiculo,
+              ubicacionActual: ubicacion
+            });
+          }
+        }, (error) => {
+          console.error('Error getting location', error);
+        }, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        });
+      }
+    };
+
+    if (this.currentVehiculo.estado === 'Activo') {
+      // Update once when Activo
+      updateLocation();
+    } else if (this.currentVehiculo.estado === 'En carrera') {
+      // Update immediately then every 5 minutes when En carrera
+      updateLocation();
+      this.locationInterval = setInterval(updateLocation, 5 * 60 * 1000);
+    }
+  }
+
+  getUserLocation() {
+    if (navigator.geolocation) {
+      this.userLocationWatchId = navigator.geolocation.watchPosition((position) => {
+        this.userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+      }, (error) => {
+        console.error('Error getting user location', error);
+      }, {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
       });
     }
   }
