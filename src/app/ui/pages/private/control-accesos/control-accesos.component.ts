@@ -39,7 +39,6 @@ import { DialogNotificationModel } from '../../../../models/base/dialog-notifica
 export class ControlAccesosComponent implements OnInit {
   form!: FormGroup;
   usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
-  iglesia: string = JSON.parse(localStorage.getItem('usuario') || '{}').iglesia?.id || '';
   usuarios: PerfilModel[] = [];
   loading: boolean = false;
   perfilSeleted: PerfilModel | undefined = undefined;
@@ -106,7 +105,7 @@ export class ControlAccesosComponent implements OnInit {
   }
 
   getPerfilesByIglesia() {
-    this.perfilService.getPerfilesByIglesia(this.iglesia).subscribe({
+    this.perfilService.getPerfilesByIglesia(this.usuario.iglesia?.id || '').subscribe({
       next: (response: PerfilModel[]) => {
         this.usuarios = response.filter(
           (user) =>
@@ -137,36 +136,20 @@ export class ControlAccesosComponent implements OnInit {
   }
 
   async asignarRol(data: any, uid: string) {
-    // data comes from dialog as:
-    // { rol: string | null, coordinadorTransporte: boolean, coordinadorTestigos: boolean, coordinadorCasaApoyo: string | null }
-
-    // We need to merge this with: iglesia: this.iglesia
-
-    // If coordinadorCasaApoyo is 'PENDING', we might need to preserve the old value if we didn't fetch it, 
-    // but here we are in full control. The dialog should ideally return the final state or we merge carefully.
-    // However, the prompt says "si escoge alguno de los demas tambien si o si debe seleccionar coordindor de iglesia"
-    // The dialog returns the "permissions" state.
 
     const updateData: any = {
-      // rol: data.rol,
-      iglesia: this.iglesia,
+      iglesia: this.usuario.iglesia,
       coordinadorTransporte: data.coordinadorTransporte,
       administradorTestigos: data.administradorTestigos,
-      coordinadorCasaApoyo: data.coordinadorCasaApoyo,
+      coordinadorCasaApoyo: data.coordinadorCasaApoyo,  
     };
-
-    // Clean up undefined/nulls if necessary, but updatePerfil likely handles partials if we want.
-    // But here we are setting the roles, so we want to overwrite.
 
     try {
       await this.perfilService.updatePerfil(uid, updateData);
       this.toast.success('Roles actualizados correctamente', 'Exito');
       this.getPerfiles(); // Refresh list
 
-      // If we were editing the selected user in the search box, refresh it too or clear
       if (this.perfilSeleted && this.perfilSeleted.id === uid) {
-        // Verify if we should keep it selected with new data or clear
-        // For now, let's clear to avoid stale data display
         this.clear();
       }
 
