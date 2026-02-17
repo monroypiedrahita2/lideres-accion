@@ -16,6 +16,8 @@ import { MisCarrerasComponent } from '../mis-carreras/mis-carreras.component';
 import { AprobacionesComponent } from '../aprobaciones/aprobaciones.component';
 import { BuscarCarreraComponent } from '../buscar-carrera/buscar-carrera.component';
 import { DialogCrearCarreraComponent } from '../../../dialogs/dialog-crear-carrera/dialog-crear-carrera.component';
+import { CasaApoyoService } from '../../../services/casa-apoyo/casa-apoyo.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'mtt-footer',
@@ -36,24 +38,53 @@ export class FooterComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription | undefined;
   private vehiculoSubscription: Subscription | undefined;
   currentVehiculo: VehiculoModel | null = null;
+  isCasaApoyoApproved: boolean = false;
 
   constructor(
     private readonly dialog: MatDialog,
     private readonly perfilService: PerfilService,
     private readonly _bottomSheet: MatBottomSheet,
-    private readonly vehiculoService: VehiculoService
+    private readonly vehiculoService: VehiculoService,
+    private readonly casaApoyoService: CasaApoyoService,
+    private readonly authService: AuthService
   ) { }
 
   ngOnInit(): void {
     this.userSubscription = this.perfilService.currentUser$.subscribe(user => {
       if (user) {
         this.usuario = user;
+        this.checkCasaApoyoStatus();
       }
     });
 
     this.vehiculoSubscription = this.vehiculoService.currentVehiculo$.subscribe(vehiculo => {
       this.currentVehiculo = vehiculo;
     });
+
+    // Initial check in case user is already loaded from localStorage
+    if (this.usuario) {
+      this.checkCasaApoyoStatus();
+    }
+  }
+
+  checkCasaApoyoStatus() {
+    if (this.usuario.postulado?.casaApoyo) {
+      const uid = this.authService.uidUser();
+      if (uid) {
+        this.casaApoyoService.getCasasApoyoByResponsable(uid).subscribe(casas => {
+          if (casas && casas.length > 0) {
+            const casa = casas[0].data;
+            if (casa.aprobado) {
+              this.isCasaApoyoApproved = true;
+              localStorage.setItem('casaApoyo', JSON.stringify(casa));
+            } else {
+              this.isCasaApoyoApproved = false;
+              localStorage.removeItem('casaApoyo');
+            }
+          }
+        });
+      }
+    }
   }
 
   ngOnDestroy(): void {
@@ -101,7 +132,8 @@ export class FooterComponent implements OnInit, OnDestroy {
 
     return allowedRoles.includes(rol || '') ||
       !!coordinadorCasaApoyo ||
-      !!coordinadorTransporte;
+      !!coordinadorTransporte ||
+      this.isCasaApoyoApproved;
   }
 
   get showAprobaciones(): boolean {
