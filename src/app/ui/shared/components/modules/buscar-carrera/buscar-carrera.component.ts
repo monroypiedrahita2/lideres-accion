@@ -72,8 +72,41 @@ export class BuscarCarreraComponent implements OnInit {
                 },
                 (error) => {
                     console.error('Error getting location', error);
+                    let message = 'No se pudo obtener tu ubicación.';
+                    if (error.code === 1) {
+                        message = 'Permiso denegado. Por favor habilita la ubicación en tu navegador.';
+                    } else if (error.code === 2) {
+                        message = 'Tu ubicación no está disponible actualmente.';
+                    } else if (error.code === 3) {
+                        message = 'Se agotó el tiempo para obtener tu ubicación.';
+                    }
+
+                    this.dialog.open(DialogNotificationComponent, {
+                        width: '400px',
+                        data: {
+                            title: 'Error de Ubicación',
+                            message: message,
+                            type: 'error',
+                            bottons: 'one'
+                        }
+                    });
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
                 }
             );
+        } else {
+            this.dialog.open(DialogNotificationComponent, {
+                width: '400px',
+                data: {
+                    title: 'Error',
+                    message: 'La geolocalización no es soportada por este navegador.',
+                    type: 'error',
+                    bottons: 'one'
+                }
+            });
         }
     }
 
