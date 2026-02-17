@@ -85,13 +85,10 @@ export class ListarVoluntariosComponent implements AfterViewInit {
                     this.applyFilter(this.searchControl.value);
                 }
             });
-        } else if (this.usuario.iglesia && this.usuario.rol === 'Pastor') {
-            this.perfilService.getPerfilesByIglesia(this.usuario.iglesia).subscribe(data => {
+        } else if (this.usuario.iglesia && this.usuario.rol === 'Pastor' && this.usuario.iglesia.id) {
+            this.perfilService.getPerfilesByIglesia(this.usuario.iglesia.id).subscribe(data => {
                 this.dataSource.data = data.filter(perfil => perfil.rol !== 'Pastor');
-                // Initialize paginated list after data load
                 this.updatePaginatedList();
-
-                // Re-apply filter if exists
                 if (this.searchControl.value) {
                     this.applyFilter(this.searchControl.value);
                 }

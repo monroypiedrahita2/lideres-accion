@@ -38,8 +38,8 @@ export class AprobarCasasApoyoComponent implements OnInit {
     }
 
     loadCasas() {
-        if (this.usuario.iglesia) {
-            this.casaApoyoService.getCasasApoyoByIglesia(this.usuario.iglesia).subscribe({
+        if (this.usuario.iglesia?.id) {
+            this.casaApoyoService.getCasasApoyoByIglesia(this.usuario.iglesia.id).subscribe({
                 next: (data) => {
                     this.dataSource.data = data;
                     this.updatePaginatedList();

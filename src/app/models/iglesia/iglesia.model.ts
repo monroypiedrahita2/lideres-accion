@@ -1,6 +1,6 @@
 
 export interface IglesiaModel {
+    id?: string;
     nombre: string;
-    departamento: string;
     municipio: string;
 }

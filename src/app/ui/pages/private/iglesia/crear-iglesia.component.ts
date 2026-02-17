@@ -25,6 +25,7 @@ import { SpinnerComponent } from '../../../shared/components/modules/spinner/spi
 import { SubTitleComponent } from '../../../shared/components/atoms/sub-title/sub-title.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogEditarIglesiaComponent } from '../../../shared/dialogs/dialog-editar-iglesia/dialog-editar-iglesia.component';
+import { MUNICIPIOS } from '../../../shared/const/municipios.const';
 
 
 @Component({
@@ -49,8 +50,7 @@ import { DialogEditarIglesiaComponent } from '../../../shared/dialogs/dialog-edi
 export class CrearIglesiaComponent implements OnInit {
   form!: FormGroup;
   searchControl = new FormControl('');
-  departamentos: SelectOptionModel<string>[] = [];
-  municipios: SelectOptionModel<string>[] = [];
+  municipios: SelectOptionModel<string>[] = MUNICIPIOS;
   iglesia!: BaseModel<IglesiaModel>;
   perfiles: SelectOptionModel<string>[] = [];
   loading: boolean = false;
@@ -66,14 +66,6 @@ export class CrearIglesiaComponent implements OnInit {
   pageSizeOptions: number[] = [5, 10, 20, 50];
 
 
-  horarios: SelectOptionModel<string>[] = [
-    { value: 'Externo', label: 'Externo' },
-    { value: '7:00 AM', label: '7:00 AM' },
-    { value: '5:00 PM', label: '5:00 PM' },
-    { value: '6:30 PM', label: '6:30 PM' },
-    { value: '7:00 PM', label: '7:00 PM' },
-  ];
-
   constructor(
     private readonly fb: FormBuilder,
     private readonly lugarService: LugaresService,
@@ -85,27 +77,13 @@ export class CrearIglesiaComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.pattern(/^[^-]*$/)]],
-      departamento: ['', Validators.required],
       municipio: ['', Validators.required],
-      horario: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
-    this.getDepartamentos();
     this.getIglesias();
     this.setupSearch();
-    this.form.get('municipio')?.disable();
-    this.form.get('departamento')?.valueChanges.subscribe((departamento) => {
-      if (departamento) {
-        this.form.get('municipio')?.enable();
-        this.getMunicipios(departamento.split('-')[0]);
-      } else {
-        this.form.get('municipio')?.disable();
-        this.municipios = [];
-        this.form.patchValue({ municipio: '' });
-      }
-    });
   }
 
   setupSearch() {
@@ -121,11 +99,9 @@ export class CrearIglesiaComponent implements OnInit {
       const lowerQuery = query.toLowerCase();
       this.filteredData = this.iglesias.filter((iglesia) => {
         const nombre = iglesia.data.nombre.toLowerCase();
-        const departamento = iglesia.data.departamento.split('-')[1]?.toLowerCase() || '';
         const municipio = iglesia.data.municipio.split('-')[1]?.toLowerCase() || '';
         return (
           nombre.includes(lowerQuery) ||
-          departamento.includes(lowerQuery) ||
           municipio.includes(lowerQuery)
         );
       });
@@ -160,21 +136,6 @@ export class CrearIglesiaComponent implements OnInit {
     });
   }
 
-  async getDepartamentos() {
-    try {
-      const response = await lastValueFrom(
-        this.lugarService.getDepartamentos()
-      );
-      this.departamentos = response.map((item: any) => ({
-        label: item.name,
-        value: item.id + '-' + item.name,
-      }));
-    } catch {
-      this.toastr.error('Error al cargar los departamentos');
-      this.location.back();
-    }
-  }
-
   async getMunicipios(departamento_id: string) {
     try {
       const response = await lastValueFrom(
@@ -198,8 +159,7 @@ export class CrearIglesiaComponent implements OnInit {
     try {
       this.iglesia = {
         data: {
-          nombre: this.form.value.nombre + ' - ' + this.form.value.horario,
-          departamento: this.form.value.departamento,
+          nombre: this.form.value.nombre,
           municipio: this.form.value.municipio,
         },
         fechaCreacion: new Date().toISOString(),

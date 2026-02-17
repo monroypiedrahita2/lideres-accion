@@ -212,6 +212,7 @@ export class MiPerfilComponent implements OnInit {
       },
       noCuenta: this.generateNoCuenta(),
       apruebaUsodeDatos: this.usuario.apruebaUsodeDatos || false,
+      iglesia: this.usuario.iglesia || null,
     };
 
 

@@ -110,7 +110,7 @@ export class MiCasaDeApoyoComponent implements OnInit {
             responsableNombre: this.usuario.nombres,
             responsableApellido: this.usuario.apellidos,
             responsableTelefono: this.usuario.celular || '',
-            iglesiaId: this.usuario.iglesia || null,
+            iglesia: this.usuario.iglesia || null,
             aprobado: (this.accion === 'Editar' && this.existingCasaData) ? this.existingCasaData.aprobado : null,
             aprobadoPor: (this.accion === 'Editar' && this.existingCasaData) ? this.existingCasaData.aprobadoPor : null
         };

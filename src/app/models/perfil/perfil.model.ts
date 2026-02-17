@@ -1,10 +1,11 @@
+import { IglesiaModel } from "../iglesia/iglesia.model";
+
 export interface PerfilModel {
   id?: string;
   nombres: string;
   apellidos: string;
-  iglesia?: string; // solo lo puede administrar el Pastor y Super Usuario y coordinador de iglesia
-  celular?: string;
-  nameIglesia?: string;
+  iglesia: IglesiaModel | null; // solo lo puede administrar el Pastor y Super Usuario y coordinador de iglesia
+  celular: string;
   email: string;
   rol: 'Pastor' | 'Super usuario' | 'Coordinador de iglesia' | 'Líder' | null; // solo lo puede administrar el Pastor y Super Usuario
   postulado?: PostuladoModel; // solo lo puede Crear administrar y eliminar el mismo usuario
@@ -29,4 +30,6 @@ export interface PostuladoModel {
   transporte: boolean;
   testigo: boolean;
 }
+
+
 

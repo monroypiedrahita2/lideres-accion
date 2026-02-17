@@ -15,22 +15,22 @@
 
 
         <!-- Header -->
-        <div class="p-4 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
+        <div class="p-2 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
             <span [class]="'px-3 py-1 rounded-full text-lg font-semibold border ' + getStatusColor(carrera.estado)">
                 {{ carrera.estado }}
             </span>
             <!-- removed date as it's not in the model -->
         </div>
 
-        <div class="p-4 flex flex-col gap-4">
+        <div class="p-2 flex flex-col gap-2">
 
             <!-- Solicitante Info -->
-            <div class="flex justify-between items-start">
+            <div class="flex justify-between items-start p-2">
                 <div>
                     <p class="text-md text-gray-500 font-semibold">Solicitante</p>
                     <p class="font-medium text-black text-lg">{{ carrera.nombreSolicitante || 'Usuario'}}</p>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex flex-col items-center justify-center gap-2">
                     <mg-icon-whatsapp *ngIf="carrera.telefonoSolicitante" [phone]="carrera.telefonoSolicitante"
                         size="medium"></mg-icon-whatsapp>
                     <mg-icon-button *ngIf="carrera.telefonoSolicitante" icon="call"
@@ -40,12 +40,12 @@
 
             <!-- Votante Info -->
             <div *ngIf="carrera.telefonoVotante && (carrera.telefonoVotante !== carrera.telefonoSolicitante)"
-                class="flex justify-between items-start border-t border-gray-100 pt-3">
+                class="flex justify-between items-start border-t border-gray-100 p-2">
                 <div>
                     <p class="text-md text-gray-500 font-semibold">Votante</p>
                     <p class="font-medium text-black text-lg">{{ carrera.nombreVotante || 'Votante' }}</p>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex flex-col justify-center items-center gap-2">
                     <mg-icon-whatsapp *ngIf="carrera.telefonoVotante" [phone]="carrera.telefonoVotante"
                         size="medium"></mg-icon-whatsapp>
                     <mg-icon-button *ngIf="carrera.telefonoVotante" icon="call"
@@ -57,31 +57,31 @@
             <div class="flex flex-col gap-3 mt-2">
 
                 <!-- Pickup -->
-                <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <div class="flex justify-between items-start mb-2">
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-300">
+                    <div class="flex justify-between items-start">
                         <div class="flex items-center gap-2">
-                            <mat-icon class="text-green-600 !w-5 !h-5 !text-lg">my_location</mat-icon>
-                            <span class="text-sm font-semibold text-gray-700">Recogida</span>
+                            <mat-icon class="text-green-600 !text-lg text-center">my_location</mat-icon>
+                            <span class="text-md font-semibold text-black">Recogida</span>
                         </div>
                         <mg-icon-button
                             *ngIf="carrera.latitudSolicitante && carrera.longitudSolicitante"
                             (onClick)="openMapCoordinates(carrera.latitudSolicitante, carrera.longitudSolicitante)"
                             customIcon="assets/google.maps.png" variant="bg-white" size="large"></mg-icon-button>
                     </div>
-                    <p class="text-xl font-semibold text-black pl-7">{{ carrera.lugarRecogida || 'Ubicación GPS' }}</p>
+                    <span class="text-xl font-semibold text-black pl-7">{{ carrera.lugarRecogida || 'Ubicación GPS' }}</span>
                 </div>
 
                 <!-- Destination -->
-                <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <div class="flex justify-between items-start mb-2">
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-300">
+                    <div class="flex justify-between items-start">
                         <div class="flex items-center gap-2">
-                            <mat-icon class="text-red-600 !w-5 !h-5 !text-lg">how_to_vote</mat-icon>
+                            <mat-icon class="text-red-600 !text-lg text-center">how_to_vote</mat-icon>
                             <span class="text-sm font-semibold text-gray-700">Destino (Votación)</span>
                         </div>
                         <mg-icon-button (onClick)="openMapQuery(carrera.puestoVotacionIr)"
                             customIcon="assets/google.maps.png" variant="bg-white" size="large"></mg-icon-button>
                     </div>
-                    <p class="text-xl font-semibold text-black pl-7">{{ carrera.puestoVotacionIr }}</p>
+                    <span class="text-xl font-semibold text-black pl-7">{{ carrera.puestoVotacionIr }}</span>
                 </div>
 
             </div>
