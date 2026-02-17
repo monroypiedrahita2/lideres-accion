@@ -97,6 +97,11 @@ export class VehiculoService {
     await deleteDoc(docRef);
   }
 
+  updateStatus(id: string, estado: 'Activo' | 'Inactivo' | 'En carrera') {
+    const document = doc(this.firestore, this._collection, id);
+    return updateDoc(document, { estado });
+  }
+
   private currentVehiculoSubject = new BehaviorSubject<VehiculoModel | null>(null);
   currentVehiculo$ = this.currentVehiculoSubject.asObservable();
 
