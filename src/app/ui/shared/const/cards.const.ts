@@ -1,4 +1,7 @@
+import { PerfilModel } from '../../../models/perfil/perfil.model';
 import { CardModel } from '../../../models/utils/card.model';
+
+const usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
 
 export const CARDS_HOME: CardModel[] = [
   {
@@ -95,8 +98,8 @@ export const CARDS_HOME: CardModel[] = [
   // },
   {
     goTo: '',
-    title: 'Apoyo vehicular',
-    description: 'Administrar datos de apoyo vehicular',
+    title: usuario.rol || usuario.coordinadorCasaApoyo || usuario.coordinadorTransporte ? 'Opciones de transporte' : 'Mi vehículo',
+    description: 'Administrar datos de transporte',
     icon: 'directions_car',
     showIf: ['Todos'],
     action: 'vehiculo',
@@ -104,7 +107,7 @@ export const CARDS_HOME: CardModel[] = [
   },
   {
     goTo: '',
-    title: 'Casas de apoyo',
+    title: usuario.rol || usuario.coordinadorCasaApoyo || usuario.coordinadorTransporte ? 'Opciones de casas de apoyo' : 'Mi casa de apoyo',
     description: 'Puntos centrales de apoyo',
     icon: 'my_location',
     showIf: ['Todos'],

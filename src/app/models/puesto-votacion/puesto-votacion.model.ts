@@ -1,6 +1,8 @@
 export interface PuestoVotacionModel {
-    id: string;
+    id?: string;
     nombre: string;
-    iglesiaId: string;
+    iglesia: string;
     mesastotales: number;
+    municipio: string;
+    ubicacion: string;
 }

@@ -1,5 +1,5 @@
-<mat-accordion class="w-full">
-  <mat-expansion-panel (opened)="onPanelOpened()">
+<mat-accordion>
+  <mat-expansion-panel (opened)="onPanelOpened()" class="max-w-[800px]">
     <mat-expansion-panel-header>
       <mat-panel-title class="flex flex-col">
         <span class="font-primary font-bold text-xl">{{casa.data.barrio }} </span>
@@ -38,10 +38,10 @@
 
         <div *ngFor="let vehiculo of vehiculos"
           class="bg-white flex flex-row p-2 justify-between items-center rounded-md border border-gray-200 hover:bg-gray-50 transition-colors">
-          <span class="font-primary text-md font-bold">{{ vehiculo.tipoVehiculo || 'N/A' }}</span>
-          <span class="font-primary text-md font-bold">{{ vehiculo.nombre.split(' ')[0] }} {{ vehiculo.apellidos.split('
+          <span class="font-primary text-lg font-bold">{{ vehiculo.tipoVehiculo + ' ' + vehiculo.modelo || 'N/A' }}</span>
+          <span class="font-primary text-lg font-bold">{{ vehiculo.nombre.split(' ')[0] }} {{ vehiculo.apellidos.split('
             ')[0] }}</span>
-          <span class="font-primary text-md font-bold">{{ vehiculo.placa || 'N/A' }}</span>
+          <span class="font-primary text-lg font-bold">{{ vehiculo.placa || 'N/A' }}</span>
           <mat-icon (click)="desasociarVehiculo(vehiculo)"
             class="text-xs cursor-pointer pt-[5px] text-red-500">block</mat-icon>
         </div>
@@ -49,10 +49,10 @@
         <span class="font-primary text-lg font-bold text-center mt-4">Vehículos disponibles</span>
         <div *ngFor="let vehiculo of vehiculosDisponibles"
           class="bg-white flex flex-row p-2 justify-between items-center rounded-md border border-gray-200 hover:bg-gray-50 transition-colors">
-          <span class="font-primary text-md font-bold">{{ vehiculo.tipoVehiculo || 'N/A' }}</span>
-          <span class="font-primary text-md font-bold">{{ vehiculo.nombre.split(' ')[0] }} {{ vehiculo.apellidos.split('
+          <span class="font-primary text-lg font-bold">{{ vehiculo.tipoVehiculo + ' ' + vehiculo.modelo || 'N/A' }}</span>
+          <span class="font-primary text-lg font-bold">{{ vehiculo.nombre.split(' ')[0] }} {{ vehiculo.apellidos.split('
             ')[0] }}</span>
-          <span class="font-primary text-md font-bold">{{ vehiculo.placa || 'N/A' }}</span>
+          <span class="font-primary text-lg font-bold">{{ vehiculo.placa || 'N/A' }}</span>
           <mat-icon (click)="asociarVehiculo(vehiculo)"
             class="text-xs cursor-pointer pt-[5px] text-green-500">add</mat-icon>
         </div>

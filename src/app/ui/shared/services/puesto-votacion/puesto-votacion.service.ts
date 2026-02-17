@@ -27,7 +27,15 @@ export class PuestoVotacionService {
     getPuestosByIglesia(iglesiaId: string) {
         const q = query(
             collection(this.firestore, this._collection),
-            where('data.iglesiaId', '==', iglesiaId),
+            where('data.iglesia', '==', iglesiaId),
+            orderBy('data.nombre')
+        );
+        return collectionData(q, { idField: 'id' }) as Observable<BaseModel<PuestoVotacionModel>[]>;
+    }
+    getPuestosByMunicipio(municipio: string) {
+        const q = query(
+            collection(this.firestore, this._collection),
+            where('data.municipio', '==', municipio),
             orderBy('data.nombre')
         );
         return collectionData(q, { idField: 'id' }) as Observable<BaseModel<PuestoVotacionModel>[]>;
@@ -111,7 +119,7 @@ export class PuestoVotacionService {
         const q = query(
             colRef,
             orderBy('data.nombre'),
-            where('data.iglesiaId', '==', iglesiaId),
+            where('data.iglesia', '==', iglesiaId),
             limit(pageSize + 1)
         );
         const snapshot = await getDocs(q);
@@ -132,7 +140,7 @@ export class PuestoVotacionService {
         const q = query(
             colRef,
             orderBy('data.nombre'),
-            where('data.iglesiaId', '==', iglesiaId),
+            where('data.iglesia', '==', iglesiaId),
             startAfter(this.lastDoc),
             limit(pageSize + 1)
         );
@@ -154,7 +162,7 @@ export class PuestoVotacionService {
         const q = query(
             colRef,
             orderBy('data.nombre'),
-            where('data.iglesiaId', '==', iglesiaId),
+            where('data.iglesia', '==', iglesiaId),
             endBefore(this.lastDoc),
             limit(pageSize + 1)
         );
@@ -178,7 +186,7 @@ export class PuestoVotacionService {
 
     async countByIglesia(iglesiaId: string) {
         const colRef = collection(this.firestore, this._collection);
-        const q = query(colRef, where('data.iglesiaId', '==', iglesiaId));
+        const q = query(colRef, where('data.iglesia', '==', iglesiaId));
         const snapshot = await getCountFromServer(q);
         return snapshot.data().count;
     }

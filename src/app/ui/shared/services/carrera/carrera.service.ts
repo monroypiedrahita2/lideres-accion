@@ -3,6 +3,7 @@ import { Firestore, addDoc, collection, doc, setDoc, query, where, collectionDat
 import { CreateCarreraModel } from '../../../../models/carrera/carrera.model';
 import { environment } from '../../../../../environment';
 import { Observable } from 'rxjs';
+import { VehiculoService } from '../vehiculo/vehiculo.service';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +11,10 @@ import { Observable } from 'rxjs';
 export class CarreraService {
     _collection: string = environment.collections.carreras;
 
-    constructor(private readonly firestore: Firestore) { }
+    constructor(
+        private readonly firestore: Firestore,
+        private readonly vehiculoService: VehiculoService
+    ) { }
 
     createCarrera(carrera: CreateCarreraModel) {
         const collectionRef = collection(this.firestore, this._collection);
@@ -33,18 +37,20 @@ export class CarreraService {
         return collectionData(q, { idField: 'id' }) as Observable<CreateCarreraModel[]>;
     }
 
-    getCarrerasDisponibles(tipoVehiculo: string | string[]) {
+    getCarrerasDisponibles(tipoVehiculo: string | string[], municipio: string) {
         let q;
         if (Array.isArray(tipoVehiculo)) {
             q = query(
                 collection(this.firestore, this._collection),
                 where('estado', '==', 'Abierto'),
+                where('municipio', '==', municipio),
                 where('tipoVehiculo', 'in', tipoVehiculo) // Use 'in' for arrays
             );
         } else {
             q = query(
                 collection(this.firestore, this._collection),
                 where('estado', '==', 'Abierto'),
+                where('municipio', '==', municipio),
                 where('tipoVehiculo', '==', tipoVehiculo)
             );
         }
@@ -95,10 +101,15 @@ export class CarreraService {
         const docRef = doc(this.firestore, this._collection, carreraId);
         return deleteDoc(docRef);
     }
-    async finalizarCarrera(carreraId: string) {
+    async finalizarCarrera(carreraId: string, vehiculoId?: string) {
         const docRef = doc(this.firestore, this._collection, carreraId);
-        return updateDoc(docRef, {
+        await updateDoc(docRef, {
             estado: 'Finalizada'
         });
+
+        if (vehiculoId) {
+            return this.vehiculoService.updateStatus(vehiculoId, 'Activo');
+        }
+        return;
     }
 }

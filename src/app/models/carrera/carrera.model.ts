@@ -3,7 +3,7 @@ export interface CreateCarreraModel {
     id?: string; // el id se genera automaticamente
     tipoVehiculo: string;
     lugarRecogida: string;
-    puestoVotacionIr: string;
+    puestoVotacionIr: { nombre: string, ubicacion: string };
     observaciones: string;
     postulados: PostuladosIdsModel[];
     seleccionadoId?: string | 'Sin seleccionar';
@@ -27,6 +27,7 @@ export interface CreateCarreraModel {
     estado?: 'Abierto' | 'Cancelada' | 'En ruta' | 'Finalizada';
     creadaPor?: string;  // uid del usuario es decir el id de perfil.model.ts
     horaCreacion: string;
+    municipio: string;
 }
 
 

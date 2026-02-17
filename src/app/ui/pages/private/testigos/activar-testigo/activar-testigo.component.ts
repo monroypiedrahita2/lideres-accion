@@ -77,7 +77,7 @@ export class ActivarTestigoComponent implements OnInit {
                     const testigoData: TestigoModel = {
                         nombre: perfil.nombres,
                         apellido: perfil.apellidos,
-                        iglesiaId: perfil.iglesia || '',
+                        iglesia: perfil.iglesia || null,
                         celular: perfil.celular || '',
                         puestodevotacion: result.puestodevotacion,
                         mesadevotacion: result.mesadevotacion,

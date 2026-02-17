@@ -80,14 +80,31 @@
                                             [class]="getStatusColor(vehiculo.estado || 'Inactivo') + ' px-2 py-0.5 rounded-full text-lg font-medium border border-opacity-20'">
                                             {{ vehiculo.estado || 'Inactivo' }}
                                         </span>
+                                        <span *ngIf="calculateDistance(vehiculo)" class="ml-2 text-sm text-gray-500">
+                                            A {{ calculateDistance(vehiculo) }}
+                                        </span>
+                                        <span
+                                            *ngIf="!calculateDistance(vehiculo) && (vehiculo.estado === 'Activo' || vehiculo.estado === 'En carrera') && !vehiculo.ubicacionActual"
+                                            class="ml-2 text-xs text-red-400">
+                                            Sin ubicación
+                                        </span>
+                                        <span
+                                            *ngIf="!calculateDistance(vehiculo) && (vehiculo.estado === 'Activo' || vehiculo.estado === 'En carrera') && vehiculo.ubicacionActual && !userLocation"
+                                            class="ml-2 text-xs text-orange-400">
+                                            Calculando...
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="flex flex-col gap-2">
                                     <mg-icon-whatsapp *ngIf="vehiculo.celular" [phone]="vehiculo.celular"
                                         size="small"></mg-icon-whatsapp>
                                     <mg-icon-button *ngIf="vehiculo.celular" icon="call"
-                                        [link]="'tel:' + vehiculo.celular" variant="primary" size="small"
-                                        ></mg-icon-button>
+                                        [link]="'tel:' + vehiculo.celular" variant="primary"
+                                        size="small"></mg-icon-button>
+                                    <mg-icon-button *ngIf="vehiculo.ubicacionActual" icon="location_on"
+                                        [link]="'https://www.google.com/maps/search/?api=1&query=' + vehiculo.ubicacionActual.lat + ',' + vehiculo.ubicacionActual.lng"
+                                        variant="danger" size="small" target="_blank">
+                                    </mg-icon-button>
                                 </div>
                             </div>
                         </div>
@@ -135,7 +152,8 @@
                                     <mg-icon-whatsapp *ngIf="testigo.data.celular" [phone]="testigo.data.celular"
                                         size="small"></mg-icon-whatsapp>
                                     <mg-icon-button *ngIf="testigo.data.celular" icon="call"
-                                        [link]="'tel:' + testigo.data.celular" variant="primary" size="small" ></mg-icon-button>
+                                        [link]="'tel:' + testigo.data.celular" variant="primary"
+                                        size="small"></mg-icon-button>
                                 </div>
                             </div>
                         </div>

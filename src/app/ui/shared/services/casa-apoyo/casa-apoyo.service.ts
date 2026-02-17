@@ -56,14 +56,14 @@ export class CasaApoyoService {
 
     getCasasApoyoByIglesia(iglesiaId: string) {
         // Keeping this for backward compatibility if needed, though getCasasApoyoAprobadasByIglesia is preferred for the list
-        const q = query(collection(this.firestore, this._collection), where('data.iglesiaId', '==', iglesiaId));
+        const q = query(collection(this.firestore, this._collection), where('data.iglesia.id', '==', iglesiaId));
         return collectionData(q, { idField: 'id' }) as Observable<BaseModel<CasaApoyoModel>[]>;
     }
 
     getCasasApoyoAprobadasByIglesia(iglesiaId: string) {
         const q = query(
             collection(this.firestore, this._collection),
-            where('data.iglesiaId', '==', iglesiaId),
+            where('data.iglesia.id', '==', iglesiaId),
             where('data.aprobado', '==', true)
         );
         return collectionData(q, { idField: 'id' }) as Observable<BaseModel<CasaApoyoModel>[]>;

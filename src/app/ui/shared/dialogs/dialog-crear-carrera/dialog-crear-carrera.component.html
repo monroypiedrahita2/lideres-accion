@@ -34,11 +34,8 @@
             </mat-checkbox>
         </div>
 
-        <mg-input-select id="municipio" label="Municipio a recoger" formControlName="municipio"
-            [items]="municipiosOptions" [required]="!usarUbicacionActual" placeholder="Municipio"></mg-input-select>
-
         <mg-input-text id="lugarRecogida" label="Lugar de recogida" formControlName="lugarRecogida"
-            [required]="!usarUbicacionActual" placeholder="Dirección o punto de referencia"></mg-input-text>
+            [required]="!usarUbicacionActual" placeholder="Barrio o punto de referencia"></mg-input-text>
 
         <mg-input-select id="puestoVotacionIr" label="Puesto de votación (destino)" formControlName="puestoVotacionIr"
             [items]="puestosVotacionOptions" [required]="true"

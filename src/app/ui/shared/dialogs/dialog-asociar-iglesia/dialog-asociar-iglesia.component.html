@@ -35,8 +35,8 @@
         [textInfo3]="perfilEncontrado.email.length > 25 ? (perfilEncontrado.email | slice:0:25) + '...' : perfilEncontrado.email">
       </lida-person-info>
 
-      <div class="mt-2 text-sm text-gray-500" *ngIf="perfilEncontrado.nameIglesia">
-        Zona actual: {{perfilEncontrado.nameIglesia}}
+      <div class="mt-2 text-sm text-gray-500" *ngIf="perfilEncontrado.iglesia">
+        Zona actual: {{perfilEncontrado.iglesia.nombre}}
       </div>
     </div>
   </div>

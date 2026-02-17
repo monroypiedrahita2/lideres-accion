@@ -42,17 +42,18 @@ export class ListaVehiculosAprobadosComponent implements OnInit {
       return;
     }
 
-    // Get approved vehicles from user's church using service method
-    this.vehiculoService.getVehiculosAprobadosByIglesia(this.usuario.iglesia).subscribe({
-      next: (data) => {
-        this.vehiculos = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.loading = false;
-      }
-    });
+    if (this.usuario.iglesia.id) {
+      this.vehiculoService.getVehiculosAprobadosByIglesia(this.usuario.iglesia?.id).subscribe({
+        next: (data) => {
+          this.vehiculos = data;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.loading = false;
+        }
+      });
+    }
   }
 
 
