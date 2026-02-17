@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MisCarrerasComponent } from './mis-carreras/mis-carreras.component';
-import { BuscarCarreraComponent } from './buscar-carrera/buscar-carrera.component';
-import { AprobacionesComponent } from './aprobaciones/aprobaciones.component';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
+import { MisCarrerasComponent } from '../../../../shared/components/modules/mis-carreras/mis-carreras.component';
+import { BuscarCarreraComponent } from '../../../../shared/components/modules/buscar-carrera/buscar-carrera.component';
+import { AprobacionesComponent } from '../../../../shared/components/modules/aprobaciones/aprobaciones.component';
 
 @Component({
   selector: 'app-tab-carreras',
@@ -14,8 +14,8 @@ import { PerfilModel } from '../../../../../models/perfil/perfil.model';
     MatTabsModule,
     MisCarrerasComponent,
     BuscarCarreraComponent,
-    AprobacionesComponent
-  ],
+    AprobacionesComponent,
+],
   templateUrl: './tab-carreras.component.html',
   styleUrls: ['./tab-carreras.component.scss']
 })

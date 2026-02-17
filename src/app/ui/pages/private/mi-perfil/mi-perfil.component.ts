@@ -201,10 +201,7 @@ export class MiPerfilComponent implements OnInit {
       apellidos: rawValue.apellidos,
       celular: rawValue.celular,
       email: rawValue.email,
-      rol: this.usuario.rol || null,
-      coordinadorCasaApoyo: rawValue.casaApoyo
-        ? this.usuario.coordinadorCasaApoyo || null
-        : null, // Clear if unchecked
+
       postulado: {
         casaApoyo: rawValue.casaApoyo,
         transporte: rawValue.transporte,
