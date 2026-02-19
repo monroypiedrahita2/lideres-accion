@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -9,6 +9,8 @@ import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { VehiculoModel } from '../../../../../models/vehiculo/vehiculo.model';
 import { BaseModel } from '../../../../../models/base/base.model';
 import { TestigoAsociadoModel } from '../../../../../models/testigo-asociado/testigo-asociado.model';
+import { DialogAsignarCarreraVehiculoComponent } from '../../../dialogs/dialog-crear-carrera copy/dialog-asignar-carrera-vehiculo.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-postulacion-card',
@@ -19,12 +21,15 @@ import { TestigoAsociadoModel } from '../../../../../models/testigo-asociado/tes
         MatExpansionModule,
         IconButtonComponent,
         IconWhatsappComponent,
-        ButtonComponent
+        ButtonComponent,
+        MatDialogModule
     ],
     templateUrl: './postulacion-card.component.html',
     styleUrls: []
 })
 export class PostulacionCardComponent {
+
+    private readonly dialog = inject(MatDialog);
     @Input() usuario: PerfilModel | null = null;
     @Input() vehiculoStatus: string | null = null;
 
@@ -122,5 +127,16 @@ export class PostulacionCardComponent {
             case 'En carrera': return 'bg-blue-100 text-blue-800';
             default: return 'bg-gray-100 text-gray-800';
         }
+    }
+
+    openModalAsignarCarrera(vehiculo: VehiculoModel) {
+        this.dialog.open(DialogAsignarCarreraVehiculoComponent, {
+            data: { vehiculo },
+            width: '400px',
+            height: 'auto',
+            panelClass: 'mat-dialog-md',
+            disableClose: true
+        });
+
     }
 }

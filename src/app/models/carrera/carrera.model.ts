@@ -38,6 +38,31 @@ export interface PostuladosIdsModel {
 }
 
 
+export interface AsignarCarreraModel {
+    id?: string;
+    puestoVotacionIr: { nombre: string, ubicacion: string };
+    telefonoVotante: string;
+    nombreVotante?: string;
+    estado: 'En ruta' | 'Finalizada';
+    horaCreacion: string;
+    municipio: string;
+    creadaPor: string;
+    datosConductorAprobado: {
+        nombre: string;
+        telefono: string;
+        foto?: string;
+        placaVehiculo: string;
+        modeloVehiculo: string;
+        colorVehiculo: string;
+    };
+
+
+
+
+
+}
+
+
 
 
 

@@ -32,8 +32,6 @@ export class AprobacionesComponent implements OnInit {
 
     constructor(
         private carreraService: CarreraService,
-        private authService: AuthService, // functionality moved to NotificationService but keeping for now if needed, though likely unused in this new flow? actually authService is used in loadAprobaciones but we are removing that.
-        // private vehiculoService: VehiculoService, // Removing as it is not used in the new flow
         private dialog: MatDialog,
         private notificationService: NotificationService
     ) { }

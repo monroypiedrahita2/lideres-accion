@@ -42,8 +42,8 @@ export class InputTextComponent implements ControlValueAccessor, ErrorStateMatch
     this.errorMessages.set('required', () => `El dato es obligatorio.`);
     this.errorMessages.set('minlength', () => `El número de carácteres debe ser mayor a ${this.minlength}.`);
     this.errorMessages.set('maxlength', () => `El número de carácteres debe ser menor a${this.maxlength}.`);
-    this.errorMessages.set('min', () => `The value should not be less than ${this.min}.`);
-    this.errorMessages.set('max', () => `The value should not be more than ${this.max}.`);
+    this.errorMessages.set('min', () => `El valor debe ser mayor a ${this.min}.`);
+    this.errorMessages.set('max', () => `El valor debe ser menor a ${this.max}.`);
   }
 
   public get invalid(): boolean {

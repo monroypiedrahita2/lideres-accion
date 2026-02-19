@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Firestore, addDoc, collection, doc, setDoc, query, where, collectionData, updateDoc, arrayUnion, arrayRemove, deleteDoc } from '@angular/fire/firestore';
-import { CreateCarreraModel } from '../../../../models/carrera/carrera.model';
+import { AsignarCarreraModel, CreateCarreraModel } from '../../../../models/carrera/carrera.model';
 import { environment } from '../../../../../environment';
 import { Observable } from 'rxjs';
 import { VehiculoService } from '../vehiculo/vehiculo.service';
@@ -16,7 +16,7 @@ export class CarreraService {
         private readonly vehiculoService: VehiculoService
     ) { }
 
-    createCarrera(carrera: CreateCarreraModel) {
+    createCarrera(carrera: CreateCarreraModel | AsignarCarreraModel) {
         const collectionRef = collection(this.firestore, this._collection);
         return addDoc(collectionRef, carrera);
     }
