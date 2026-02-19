@@ -156,7 +156,6 @@ export class ListarVoluntariosComponent implements AfterViewInit {
         try {
             // 1. Delete associated Vehicles
             const vehiculos = await firstValueFrom(this.vehiculoService.getVehiculoByConductor(id));
-            console.log(vehiculos);
             if (vehiculos && vehiculos.length > 0) {
                 for (const vehiculo of vehiculos) {
                     if (vehiculo.id) {

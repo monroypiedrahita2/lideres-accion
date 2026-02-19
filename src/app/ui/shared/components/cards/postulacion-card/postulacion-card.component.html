@@ -69,7 +69,7 @@
 
                     <div class="flex flex-col gap-2 mt-2">
                         <div *ngFor="let vehiculo of casaApoyoVehiculos"
-                            class="flex flex-col bg-white p-2 rounded border border-gray-100 shadow-sm">
+                            class="flex flex-col bg-white p-2 rounded border border-gray-300 shadow-sm">
                             <div class="flex justify-between items-start">
                                 <div>
                                     <p class="text-md font-bold text-black">{{ vehiculo.tipoVehiculo }} - {{
@@ -107,6 +107,13 @@
                                     </mg-icon-button>
                                 </div>
                             </div>
+                            <button (click)="openModalAsignarCarrera(vehiculo)" *ngIf="vehiculo.estado === 'Activo'"
+                                class="mt-1 rounded-full relative inline-flex items-center justify-center overflow-hidden text-sm font-medium text-heading group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none">
+                                <span
+                                    class=" relative px-4 py-0.5 transition-all ease-in duration-75 bg-neutral-primary-soft rounded-full group-hover:bg-transparent group-hover:dark:bg-transparent leading-5">
+                                    Asignar carrera
+                                </span>
+                            </button>
                         </div>
                     </div>
 
