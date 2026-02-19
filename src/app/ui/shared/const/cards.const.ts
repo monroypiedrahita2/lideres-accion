@@ -114,6 +114,13 @@ export const CARDS_HOME: CardModel[] = [
     action: 'casa-apoyo',
     requiresPostulacion: 'casaApoyo'
   },
+  {
+    goTo: '/private/listar-carreras',
+    title: 'Carreras en ruta',
+    description: 'Administra tus carreras en ruta',
+    icon: 'directions_run',
+    showIf: ['Todos'],
+  },
   // {
   //   goTo: '',
   //   title: 'Coordinación de testigos',

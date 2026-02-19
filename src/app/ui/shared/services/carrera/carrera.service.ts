@@ -37,6 +37,23 @@ export class CarreraService {
         return collectionData(q, { idField: 'id' }) as Observable<CreateCarreraModel[]>;
     }
 
+    getCarrerasEnRuta(municipio?: string) {
+        let q;
+        if (municipio) {
+            q = query(
+                collection(this.firestore, this._collection),
+                where('estado', '==', 'En ruta'),
+                where('municipio', '==', municipio)
+            );
+        } else {
+            q = query(
+                collection(this.firestore, this._collection),
+                where('estado', '==', 'En ruta')
+            );
+        }
+        return collectionData(q, { idField: 'id' }) as Observable<CreateCarreraModel[]>;
+    }
+
     getCarrerasDisponibles(tipoVehiculo: string | string[], municipio: string) {
         let q;
         if (Array.isArray(tipoVehiculo)) {
