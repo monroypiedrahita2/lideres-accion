@@ -12,6 +12,7 @@ import { PuestoVotacionService } from '../../services/puesto-votacion/puesto-vot
 import { CarreraService } from '../../services/carrera/carrera.service';
 import { DialogNotificationComponent } from '../dialog-notification/dialog-nofication.component';
 import { AuthService } from '../../services/auth/auth.service';
+import { VehiculoService } from '../../services/vehiculo/vehiculo.service';
 import { TIPOS_VEHICULOS } from '../../const/marcas.const';
 import { CasaApoyoModel } from '../../../../models/casa-apoyo/casa-apoyo.model';
 import { MUNICIPIOS } from '../../const/municipios.const';
@@ -56,7 +57,8 @@ export class DialogAsignarCarreraVehiculoComponent implements OnInit {
         private puestoVotacionService: PuestoVotacionService,
         private carreraService: CarreraService,
         private dialog: MatDialog,
-        private authService: AuthService
+        private authService: AuthService,
+        private vehiculoService: VehiculoService
     ) {
         this.form = this.fb.group({
             telefonoVotante: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]*$')]],
@@ -156,12 +158,15 @@ export class DialogAsignarCarreraVehiculoComponent implements OnInit {
         }
 
         // Add additional data if needed, e.g. status
-         const newCarrera: AsignarCarreraModel = {
+        const newCarrera: AsignarCarreraModel = {
             ...carreraData,
             estado: 'En ruta',
             creadaPor: this.authService.uidUser(),
             horaCreacion: new Date().toISOString(),
             municipio: this.casaApoyo.iglesia?.municipio || this.usuario.iglesia?.municipio,
+            vehiculoIdAprobado: this.data.vehiculo.id,
+            telefonoSolicitante: this.usuario.celular,
+            nombreSolicitante: this.usuario.nombres + ' ' + this.usuario.apellidos,
             datosConductorAprobado: {
                 nombre: this.data.vehiculo.nombre + ' ' + (this.data.vehiculo.apellidos || ''),
                 telefono: this.data.vehiculo.celular,
@@ -174,6 +179,7 @@ export class DialogAsignarCarreraVehiculoComponent implements OnInit {
         console.log(newCarrera);
 
         this.carreraService.createCarrera(newCarrera).then(() => {
+            this.vehiculoService.updateStatus(this.data.vehiculo.id, 'En carrera');
             this.loading = false;
             this.dialog.open(DialogNotificationComponent, {
                 data: {

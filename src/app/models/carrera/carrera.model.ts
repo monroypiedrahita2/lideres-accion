@@ -47,6 +47,7 @@ export interface AsignarCarreraModel {
     horaCreacion: string;
     municipio: string;
     creadaPor: string;
+    vehiculoIdAprobado?: string;
     datosConductorAprobado: {
         nombre: string;
         telefono: string;
