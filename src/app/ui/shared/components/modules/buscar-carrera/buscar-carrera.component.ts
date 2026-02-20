@@ -12,6 +12,7 @@ import { VehiculoService } from '../../../services/vehiculo/vehiculo.service';
 import { VehiculoModel } from '../../../../../models/vehiculo/vehiculo.model';
 import { firstValueFrom } from 'rxjs';
 import { DialogNotificationComponent } from '../../../dialogs/dialog-notification/dialog-nofication.component';
+import { LocationService } from '../../../services/location/location.service';
 
 // Local interface to extend model with display properties without modifying global model
 interface CarreraWithDistance extends CreateCarreraModel {
@@ -50,59 +51,37 @@ export class BuscarCarreraComponent implements OnInit {
         private carreraService: CarreraService,
         private authService: AuthService,
         private vehiculoService: VehiculoService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private locationService: LocationService
     ) { }
 
     ngOnInit(): void {
-        this.getUserLocation();
+        this.getLocation();
         this.checkVehiculoAndLoadDisponibles();
     }
 
-    getUserLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    this.userLocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    if (this.carrerasDisponibles.length > 0) {
-                        this.calculateDistances();
-                    }
-                },
-                (error) => {
-                    console.error('Error getting location', error);
-                    let message = 'No se pudo obtener tu ubicación.';
-                    if (error.code === 1) {
-                        message = 'Permiso denegado. Por favor habilita la ubicación en tu navegador.';
-                    } else if (error.code === 2) {
-                        message = 'Tu ubicación no está disponible actualmente.';
-                    } else if (error.code === 3) {
-                        message = 'Se agotó el tiempo para obtener tu ubicación.';
-                    }
-
-                    this.dialog.open(DialogNotificationComponent, {
-                        width: '400px',
-                        data: {
-                            title: 'Error de Ubicación',
-                            message: message,
-                            type: 'error',
-                            bottons: 'one'
-                        }
-                    });
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0
-                }
-            );
-        } else {
+    async getLocation() {
+        try {
+            this.userLocation = await this.locationService.getUserLocation();
+            if (this.carrerasDisponibles.length > 0) {
+                this.calculateDistances();
+            }
+        } catch (error: any) {
+            let message = 'No se pudo obtener tu ubicación.';
+            if (error.code === 1) {
+                message = 'Permiso denegado. Por favor habilita la ubicación en tu navegador.';
+            } else if (error.code === 2) {
+                message = 'Tu ubicación no está disponible actualmente.';
+            } else if (error.code === 3) {
+                message = 'Se agotó el tiempo para obtener tu ubicación.';
+            }
+            // Don't show error dialog if it's just a timeout/unavailable, maybe?
+            // Keeping original behavior of showing dialog for errors.
             this.dialog.open(DialogNotificationComponent, {
                 width: '400px',
                 data: {
-                    title: 'Error',
-                    message: 'La geolocalización no es soportada por este navegador.',
+                    title: 'Error de Ubicación',
+                    message: message,
                     type: 'error',
                     bottons: 'one'
                 }

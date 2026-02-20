@@ -22,7 +22,7 @@
             placeholder="Ingrese el nombre completo"></mg-input-text>
 
         <mg-input-text id="telefonoVotante" label="Teléfono votante" formControlName="telefonoVotante" type="tel"
-            [required]="true" placeholder="Ingrese número de celular" [minlength]="10" [maxlength]="10"></mg-input-text>
+            [required]="true" placeholder="Ingrese número de celular" [minlength]="10" [maxlength]="10" [textError]="'Solo números y 10 dígitos'"></mg-input-text>
 
         <mg-input-select id="tipoVehiculo" label="Tipo de vehículo" formControlName="tipoVehiculo"
             [items]="tipoVehiculoOptions" [required]="true"
