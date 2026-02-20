@@ -79,13 +79,14 @@ export class CasaApoyoService {
     getCasasApoyoByResponsable(uid: string) {
         if (!this.casaApoyoCache$ || this.currentUid !== uid) {
             this.currentUid = uid;
-            const q = query(collection(this.firestore, this._collection), where('data.responsableId', '==', uid));
+            const q = query(collection(this.firestore, this._collection));
             this.casaApoyoCache$ = (collectionData(q, { idField: 'id' }) as Observable<BaseModel<CasaApoyoModel>[]>).pipe(
                 shareReplay(1)
             );
         }
         return this.casaApoyoCache$;
     }
+    
 
     addVehiculoToCasa(casaId: string, vehiculo: any): Promise<void> {
         const docRef = doc(this.firestore, this._collection, casaId);
