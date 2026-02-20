@@ -103,8 +103,7 @@ export class MiCasaDeApoyoComponent implements OnInit {
             barrio: this.form.value.barrio,
             direccion: this.form.value.direccion,
             nombreHabitante: this.form.value.nombreHabitante,
-            telefonoHabitante: this.form.value.telefonoHabitante,
-            responsableId: this.authService.uidUser(),
+            telefonoHabitante: this.form.value.telefonoHabitante,   
             responsableNombre: this.usuario.nombres,
             responsableApellido: this.usuario.apellidos,
             responsableTelefono: this.usuario.celular || '',
@@ -127,7 +126,7 @@ export class MiCasaDeApoyoComponent implements OnInit {
                 // If I pass { data: casaData }, it creates doc with `data` field.
                 // Looking at BaseModel definition might help, but typically we wrap in { data: ... }
 
-                await this.casaApoyoService.createCasaApoyo({ data: casaData } as any);
+                await this.casaApoyoService.createCasaApoyo({ data: casaData } as BaseModel<CasaApoyoModel>);
                 this.openNotification('Guardado', 'Casa de apoyo creada correctamente', 'success');
             }
             this.router.navigate(['/private/home']);

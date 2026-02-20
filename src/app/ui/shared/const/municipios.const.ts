@@ -5,4 +5,5 @@ export const MUNICIPIOS: SelectOptionModel<any>[] = [
     { label: 'Dosquebradas', value: 'Dosquebradas' },
     { label: 'Santa Rosa', value: 'Santa Rosa' },
     { label: 'Cuba', value: 'Cuba' },
+    { label: 'Medellín', value: 'Medellín' },
 ];

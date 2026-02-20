@@ -176,7 +176,6 @@ export class DialogAsignarCarreraVehiculoComponent implements OnInit {
                 colorVehiculo: this.data.vehiculo.color
             }
         };
-        console.log(newCarrera);
 
         this.carreraService.createCarrera(newCarrera).then(() => {
             this.vehiculoService.updateStatus(this.data.vehiculo.id, 'En carrera');

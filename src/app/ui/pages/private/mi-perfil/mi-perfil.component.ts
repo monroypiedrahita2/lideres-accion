@@ -20,6 +20,7 @@ import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-noti
 import { MatDialog } from '@angular/material/dialog';
 import { TestigoService } from '../../../shared/services/testigo/testigo.service';
 import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
+import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -55,7 +56,8 @@ export class MiPerfilComponent implements OnInit {
     private readonly toast: ToastrService,
     public dialog: MatDialog,
     private readonly testigoService: TestigoService,
-    private readonly vehiculoService: VehiculoService
+    private readonly vehiculoService: VehiculoService,
+    private readonly casaApoyoService: CasaApoyoService
   ) {
     this.form = this.fb.group({
 
@@ -157,8 +159,12 @@ export class MiPerfilComponent implements OnInit {
 
     // Check Casa Apoyo
     if (this.usuario.postulado?.casaApoyo && !this.form.value.casaApoyo) {
-      // Logic handled in updateUser data construction (clearing coordinadorCasaApoyo)
-      notificationNeeded = true;
+      try {
+        await this.casaApoyoService.deleteCasaApoyo(uid);
+        notificationNeeded = true;
+      } catch (e) {
+        console.error('Error deleting casa apoyo', e);
+      }
     }
 
     if (notificationNeeded) {
