@@ -1,5 +1,5 @@
 <div class="p-1" *ngIf="usuario?.postulado">
-    <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-3">
+    <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
         <!-- Vehiculo Status -->
         <div *ngIf="usuario?.postulado?.transporte" class="p-4 rounded-lg bg-gray-50 border-l-4"
             [ngClass]="getBorderColor(vehiculoStatus)">
