@@ -1,5 +1,5 @@
 <div class="p-1" *ngIf="usuario?.postulado">
-    <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-3">
+    <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
         <!-- Vehiculo Status -->
         <div *ngIf="usuario?.postulado?.transporte" class="p-4 rounded-lg bg-gray-50 border-l-4"
             [ngClass]="getBorderColor(vehiculoStatus)">
@@ -50,7 +50,7 @@
         <div *ngIf="usuario?.postulado?.casaApoyo" class="p-4 rounded-lg bg-gray-50 border-l-4"
             [ngClass]="getBorderColor(casaApoyoStatus)">
             <div class="flex justify-between items-center mb-2">
-                <span class="font-semibold text-lg text-black">Casa de Apoyo</span>
+                <span class="font-semibold text-lg text-black">Casa de apoyo</span>
                 <mat-icon [class]="getTextColor(casaApoyoStatus)">home</mat-icon>
             </div>
             <p class="text-lg font-semibold" [class]="getTextColor(casaApoyoStatus)">

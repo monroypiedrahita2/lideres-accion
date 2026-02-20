@@ -5,7 +5,6 @@ export interface CasaApoyoModel {
     direccion: string;
     nombreHabitante: string;
     telefonoHabitante: string;
-    responsableId: string;
     responsableNombre: string;
     responsableApellido: string;
     responsableTelefono: string;

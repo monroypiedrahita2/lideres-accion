@@ -91,7 +91,11 @@ export class CrearPastorComponent implements OnInit {
         distinctUntilChanged(),
         switchMap((value) => {
           if (value) {
-            return this.perfilService.getPerfilByNoCuenta(value);
+            if (value.length === 4) {
+              return this.perfilService.getPerfilByNoCuenta(value);
+            } else {
+              return of([]);
+            }
           } else {
             this.perfilSeleted = undefined;
             this.form.patchValue({ pastor: '' });
