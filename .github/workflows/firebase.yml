@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - medellin
 
 jobs:
   build_and_deploy:
@@ -89,12 +90,47 @@ jobs:
             },
             alerts: { timeOut: 3000, preventDuplicates: true },
           };
+      - name: Generate medellin environment from secrets (when medellin)
+        if: github.ref_name == 'medellin'
+        run: |
+          cat > src/environment.medellin.ts <<EOF
+          export const environment = {
+            production: false,
+            firebase: {
+              apiKey: "${{ secrets.FIREBASE_API_KEY_MEDELLIN }}",
+              authDomain: "${{ secrets.FIREBASE_AUTH_DOMAIN_MEDELLIN }}",
+              projectId: "${{ secrets.FIREBASE_PROJECT_ID_MEDELLIN }}",
+              storageBucket: "${{ secrets.FIREBASE_STORAGE_BUCKET_MEDELLIN }}",
+              messagingSenderId: "${{ secrets.FIREBASE_MESSAGING_SENDER_ID_MEDELLIN }}",
+              appId: "${{ secrets.FIREBASE_APP_ID_MEDELLIN }}",
+              measurementId: "${{ secrets.FIREBASE_MEASUREMENT_ID_MEDELLIN }}",
+            },
+            collections: {
+              comunas: 'Comunas',
+              referidos: 'Referidos',
+              iglesias: 'Iglesias',
+              roles: 'Roles',
+              lideres: 'Lideres',
+              barrios: 'Barrios',
+              perfil: 'Perfiles',
+              vehiculos: 'Vehiculos',
+              casasApoyo: 'Casas',
+              coordinadorTestigos: 'CoordinadorTestigos',
+              testigosAsociados: 'TestigosAsociados',
+              puestosVotacion: 'PuestosVotacion',
+              cuentavotos: 'Cuentavotos',
+              carreras: 'Carreras',
+            },
+            alerts: { timeOut: 3000, preventDuplicates: true },
+          };
           EOF
 
       - name: Build Angular
         run: |
           if [ "${GITHUB_REF_NAME}" = "main" ]; then
             npm run build -- --configuration=production
+          elif [ "${GITHUB_REF_NAME}" = "medellin" ]; then
+            npm run build -- --configuration=medellin
           else
             npm run build -- --configuration=development
           fi
@@ -102,6 +138,6 @@ jobs:
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          projectId: ${{ github.ref_name == 'main' && 'lida-f59df' || 'lida-dev-f9291' }}
-          firebaseServiceAccount: ${{ github.ref_name == 'main' && secrets.FIREBASE_SERVICE_ACCOUNT_PROD || secrets.FIREBASE_SERVICE_ACCOUNT_DEV }}
+          projectId: ${{ github.ref_name == 'main' && secrets.FIREBASE_PROJECT_ID_PROD || (github.ref_name == 'medellin' && secrets.FIREBASE_PROJECT_ID_MEDELLIN || secrets.FIREBASE_PROJECT_ID_DEV) }}
+          firebaseServiceAccount: ${{ github.ref_name == 'main' && secrets.FIREBASE_SERVICE_ACCOUNT_PROD || (github.ref_name == 'medellin' && secrets.FIREBASE_SERVICE_ACCOUNT_MEDELLIN || secrets.FIREBASE_SERVICE_ACCOUNT_DEV) }}
           channelId: live
