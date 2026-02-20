@@ -29,7 +29,7 @@
         <p *ngIf="person.rol" class="text-sm text-gray-600 flex items-center gap-2">
           <mat-icon
             class="!text-[18px] !w-[18px] !h-[18px] text-gray-400 flex items-center justify-center leading-none">verified_user</mat-icon>
-          <span class="truncate font-medium text-blue-700">{{ person.rol }}</span>
+          <span class="truncate font-medium text-blue-700">{{ person.rol == 'Pastor' ? 'Administrador Zona' : person.rol }}</span>
         </p>
 
         <!-- Sub Roles Codes (Coordinadores) -->
