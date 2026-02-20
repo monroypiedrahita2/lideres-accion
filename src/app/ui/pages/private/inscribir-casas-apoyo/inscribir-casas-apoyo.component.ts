@@ -57,12 +57,13 @@ export class InscribirCasasApoyoComponent {
     }
 
     asignar(casa: BaseModel<CasaApoyoModel>) {
-        if (casa.data.id) {
+        // Check if already assigned based on responsible data, not just ID existence (since all docs have IDs)
+        if (casa.data.responsableNombre) {
             this.dialog.open(DialogNotificationComponent, {
                 data: {
                     title: 'Error',
-                    message: casa.data.id === this.usuario.uid ? 'Esta casa ya está asignada a ti.' : 'Esta casa ya tiene un responsable asignado.',
-                    type: casa.data.id === this.usuario.uid ? 'warning' : 'error'
+                    message: casa.id === this.usuario.uid ? 'Esta casa ya está asignada a ti.' : 'Esta casa ya tiene un responsable asignado.',
+                    type: casa.id === this.usuario.uid ? 'warning' : 'error'
                 }
             });
             return;

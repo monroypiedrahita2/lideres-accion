@@ -108,7 +108,7 @@ export class AprobarCasasApoyoComponent implements OnInit {
                     this.dialog.open(DialogNotificationComponent, {
                         data: {
                             title: 'No se puede desaprobar',
-                            message: 'No se puede desaprobar la Casa de Apoyo hasta que quite los vehículos asociados.',
+                            message: 'No se puede desaprobar la Casa de apoyo hasta que quite los vehículos asociados.',
                             type: 'error'
                         }
                     }).afterClosed().subscribe(() => {
@@ -118,7 +118,7 @@ export class AprobarCasasApoyoComponent implements OnInit {
                     const dialogRef = this.dialog.open(DialogNotificationComponent, {
                         data: {
                             title: 'Confirmación',
-                            message: `¿Estás seguro de desaprobar esta Casa de Apoyo?`,
+                            message: `¿Estás seguro de desaprobar esta Casa de apoyo?`,
                             type: 'warning',
                             bottons: 'two',
                             actionText: 'Desaprobar'
