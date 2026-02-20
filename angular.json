@@ -65,6 +65,28 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "medellin": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environment.ts",
+                  "with": "src/environment.medellin.ts"
+                }
+              ],
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2000kb",
+                  "maximumError": "2mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all",
+              "serviceWorker": "ngsw-config.json"
             }
           },
           "defaultConfiguration": "production"
@@ -77,6 +99,9 @@
             },
             "development": {
               "buildTarget": "lideres-accion:build:development"
+            },
+            "medellin": {
+              "buildTarget": "lideres-accion:build:medellin"
             }
           },
           "defaultConfiguration": "development"
