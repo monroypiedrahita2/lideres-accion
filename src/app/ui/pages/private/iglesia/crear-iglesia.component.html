@@ -36,9 +36,6 @@
           <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
             Nombre
           </th>
-          <th scope="col" class="px-6 py-3 text-center whitespace-nowrap">
-            Acciones
-          </th>
         </tr>
       </thead>
       <tbody>
@@ -49,12 +46,6 @@
           </th>
           <td class="px-6 py-4 text-center whitespace-nowrap text-black">
             {{ iglesia.data.nombre }}
-          </td>
-          <td class="px-6 py-4 text-center whitespace-nowrap text-black">
-            <div class="flex justify-center gap-4">
-              <span class="material-icons text-primary hover:cursor-pointer" (click)="editarIglesia(iglesia)"
-                (keydown)="editarIglesia(iglesia)">edit</span>
-            </div>
           </td>
         </tr>
       </tbody>
