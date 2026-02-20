@@ -57,12 +57,12 @@ export class InscribirCasasApoyoComponent {
     }
 
     asignar(casa: BaseModel<CasaApoyoModel>) {
-        if (casa.data.responsableId) {
+        if (casa.data.id) {
             this.dialog.open(DialogNotificationComponent, {
                 data: {
                     title: 'Error',
-                    message: casa.data.responsableId === this.usuario.uid ? 'Esta casa ya está asignada a ti.' : 'Esta casa ya tiene un responsable asignado.',
-                    type: casa.data.responsableId === this.usuario.uid ? 'warning' : 'error'
+                    message: casa.data.id === this.usuario.uid ? 'Esta casa ya está asignada a ti.' : 'Esta casa ya tiene un responsable asignado.',
+                    type: casa.data.id === this.usuario.uid ? 'warning' : 'error'
                 }
             });
             return;

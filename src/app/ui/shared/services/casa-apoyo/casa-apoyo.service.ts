@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, deleteDoc, doc, updateDoc, query, where, arrayUnion, arrayRemove, getDoc } from '@angular/fire/firestore';
+import { inject, Injectable } from '@angular/core';
+import { Firestore, addDoc, collection, collectionData, deleteDoc, doc, updateDoc, query, where, arrayUnion, arrayRemove, getDoc, setDoc } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { BaseModel } from '../../../../models/base/base.model';
 import { CasaApoyoModel } from '../../../../models/casa-apoyo/casa-apoyo.model';
 import { environment } from '../../../../../environment';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,13 +14,15 @@ export class CasaApoyoService {
     private _collection: string = environment.collections.casasApoyo;
     private casaApoyoCache$: Observable<BaseModel<CasaApoyoModel>[]> | null = null;
     private currentUid: string | null = null;
+    private authService = inject(AuthService);
 
     constructor(private readonly firestore: Firestore) { }
 
     createCasaApoyo(casa: BaseModel<CasaApoyoModel>) {
-        const collectionRef = collection(this.firestore, this._collection);
-        return addDoc(collectionRef, casa);
+          const document = doc(this.firestore, this._collection, this.authService.uidUser());
+          return setDoc(document, casa);
     }
+
 
     getCasasApoyo(): Observable<BaseModel<CasaApoyoModel>[]> {
         const collectionRef = collection(this.firestore, this._collection);
