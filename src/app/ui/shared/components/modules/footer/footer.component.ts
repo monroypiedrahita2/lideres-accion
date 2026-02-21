@@ -18,6 +18,7 @@ import { BuscarCarreraComponent } from '../buscar-carrera/buscar-carrera.compone
 import { DialogCrearCarreraComponent } from '../../../dialogs/dialog-crear-carrera/dialog-crear-carrera.component';
 import { CasaApoyoService } from '../../../services/casa-apoyo/casa-apoyo.service';
 import { AuthService } from '../../../services/auth/auth.service';
+import { environment } from '../../../../../../environment';
 
 @Component({
   selector: 'mtt-footer',
@@ -39,6 +40,7 @@ export class FooterComponent implements OnInit, OnDestroy {
   private vehiculoSubscription: Subscription | undefined;
   currentVehiculo: VehiculoModel | null = null;
   isCasaApoyoApproved: boolean = false;
+  proyect: string = environment.firebase.projectId;
 
   constructor(
     private readonly dialog: MatDialog,

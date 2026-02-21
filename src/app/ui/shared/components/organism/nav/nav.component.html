@@ -1,6 +1,8 @@
 <nav [ngClass]="{
 'z-20 fixed w-full top-0 h-[64px]': true,
-'bg-primary': true,
+'bg-primary': proyect == 'lida-f59df',
+'bg-green-700': proyect == 'sistema-medellin',
+'bg-red-700': proyect == 'lida-dev-f9291',
 'shadow-xl': true
 }">
   <div class="flex justify-between items-center h-full px-4">
@@ -19,4 +21,4 @@
 </nav>
 
 <mg-sidenav [isOpen]="isMenuOpen" [usuario]="usuario" (close)="isMenuOpen = false">
-</mg-sidenav>
+</mg-sidenav>|
