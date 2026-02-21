@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { PerfilService } from '../../../services/perfil/perfil.service';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { SidenavComponent } from '../sidenav/sidenav.component';
+import { environment } from '../../../../../../environment';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class NavComponent implements OnInit, OnDestroy {
   nameApp = NAME_LONG_APP;
   sub!: Subscription;
   isMenuOpen = false;
+  proyect = environment.firebase.projectId;
 
   constructor(
     private readonly auth: AuthService,
