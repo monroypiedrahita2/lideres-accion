@@ -1,5 +1,5 @@
 <nav [ngClass]="{
-'z-20 fixed w-full top-0 h-[64px]': true,
+    'z-20 fixed w-full top-0 h-[64px]': true,
     'bg-primary': usuario.rol != 'Super usuario',
     'bg-orange-700': proyect == 'lida-f59df' && usuario.rol == 'Super usuario',
     'bg-green-700': proyect == 'sistema-medellin' && usuario.rol == 'Super usuario',
@@ -21,6 +21,5 @@
     <div class="w-6"></div> <!-- Spacer to balance layout if needed, or just empty -->
   </div>
 </nav>
-
 <mg-sidenav [isOpen]="isMenuOpen" [usuario]="usuario" (close)="isMenuOpen = false">
 </mg-sidenav>
