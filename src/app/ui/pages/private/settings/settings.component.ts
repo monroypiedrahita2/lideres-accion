@@ -40,7 +40,10 @@ export class SettingsComponent {
 
   showCard(rol: string[], requiresPostulacion?: string): boolean {
     // Role check
-    const roleAllowed = rol.includes(this.userRol) || rol.includes('Todos');
+    const isCoordinadorTransporte = rol.includes('Coordinador de transporte') && this.usuario.coordinadorTransporte;
+    const isCoordinadorCasaApoyo = rol.includes('Coordinador de casa de apoyo') && this.usuario.coordinadorCasaApoyo;
+
+    const roleAllowed = rol.includes(this.userRol) || rol.includes('Todos') || isCoordinadorTransporte || isCoordinadorCasaApoyo;
 
     if (!roleAllowed) return false;
 

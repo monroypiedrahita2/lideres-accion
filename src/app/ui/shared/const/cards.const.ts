@@ -119,7 +119,7 @@ export const CARDS_HOME: CardModel[] = [
     title: 'Carreras en ruta',
     description: 'Administra tus carreras en ruta',
     icon: 'directions_run',
-    showIf: ['Todos'],
+    showIf: ['Pastor', 'Super usuario', 'Coordinador de transporte', 'Coordinador de casa de apoyo'],
   },
   // {
   //   goTo: '',
