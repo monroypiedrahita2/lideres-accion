@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,7 +10,8 @@ import { CarreraService } from '../../../services/carrera/carrera.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { VehiculoService } from '../../../services/vehiculo/vehiculo.service';
 import { VehiculoModel } from '../../../../../models/vehiculo/vehiculo.model';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { DialogNotificationComponent } from '../../../dialogs/dialog-notification/dialog-nofication.component';
 import { LocationService } from '../../../services/location/location.service';
 
@@ -38,7 +39,9 @@ import { PerfilModel } from '../../../../../models/perfil/perfil.model';
     templateUrl: './buscar-carrera.component.html',
     styleUrls: ['./buscar-carrera.component.scss']
 })
-export class BuscarCarreraComponent implements OnInit {
+export class BuscarCarreraComponent implements OnInit, OnDestroy {
+    private destroy$ = new Subject<void>();
+    private carrerasSub: Subscription | null = null;
     carrerasDisponibles: CarreraWithDistance[] = [];
     loadingBuscar: boolean = false;
     vehiculoActivo: VehiculoModel | null = null;
@@ -58,6 +61,12 @@ export class BuscarCarreraComponent implements OnInit {
     ngOnInit(): void {
         this.getLocation();
         this.checkVehiculoAndLoadDisponibles();
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+        this.carrerasSub?.unsubscribe();
     }
 
     async getLocation() {
@@ -151,14 +160,18 @@ export class BuscarCarreraComponent implements OnInit {
             return;
         }
 
-        this.carreraService.getCarrerasDisponibles(tiposVehiculo, this.usuario.iglesia?.municipio || '').subscribe(carreras => {
-            // Filter out races created by me
-            this.carrerasDisponibles = carreras.filter(c => c.creadaPor !== uid);
+        // Always cancel the previous listener before creating a new one
+        this.carrerasSub?.unsubscribe();
+        this.carrerasSub = this.carreraService.getCarrerasDisponibles(tiposVehiculo, this.usuario.iglesia?.municipio || '')
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(carreras => {
+                // Filter out races created by me
+                this.carrerasDisponibles = carreras.filter(c => c.creadaPor !== uid);
 
-            if (this.userLocation) {
-                this.calculateDistances();
-            }
-        });
+                if (this.userLocation) {
+                    this.calculateDistances();
+                }
+            });
     }
 
     toggleType(type: string) {

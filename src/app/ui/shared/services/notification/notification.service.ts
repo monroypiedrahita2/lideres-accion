@@ -28,8 +28,8 @@ export class NotificationService {
     }
 
     init() {
-        // Listen to auth state changes
-        user(this.auth).pipe(
+        // Listen to auth state changes. Stored in this.subscription for lifecycle tracking.
+        this.subscription = user(this.auth).pipe(
             switchMap(user => {
                 if (user) {
                     // If logged in, get vehicle and then assigned races

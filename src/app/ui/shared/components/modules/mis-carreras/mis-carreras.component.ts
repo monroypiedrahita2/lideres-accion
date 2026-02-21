@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,7 +7,8 @@ import { VehiculoModel } from '../../../../../models/vehiculo/vehiculo.model';
 import { CarreraService } from '../../../services/carrera/carrera.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { VehiculoService } from '../../../services/vehiculo/vehiculo.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogNotificationComponent } from '../../../dialogs/dialog-notification/dialog-nofication.component';
 import { IconButtonComponent } from '../../atoms/icon-button/icon-button.component';
@@ -27,7 +28,8 @@ import { IconWhatsappComponent } from '../../atoms/icon-whatsapp/icon-whatsapp.c
     templateUrl: './mis-carreras.component.html',
     styleUrls: ['./mis-carreras.component.scss']
 })
-export class MisCarrerasComponent implements OnInit {
+export class MisCarrerasComponent implements OnInit, OnDestroy {
+    private destroy$ = new Subject<void>();
     misCarreras: CreateCarreraModel[] = [];
     postulantesData: Map<string, VehiculoModel> = new Map();
     loadingMisCarreras: boolean = false;
@@ -43,11 +45,16 @@ export class MisCarrerasComponent implements OnInit {
         this.loadMisCarreras();
     }
 
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+
     async loadMisCarreras() {
         this.loadingMisCarreras = true;
         const uid = this.authService.uidUser();
 
-        this.carreraService.getCarrerasCreadasPor(uid).subscribe(creadas => {
+        this.carreraService.getCarrerasCreadasPor(uid).pipe(takeUntil(this.destroy$)).subscribe(creadas => {
             this.misCarreras = creadas.sort((a, b) => {
                 const priority: { [key: string]: number } = {
                     'Abierto': 1,
@@ -66,20 +73,23 @@ export class MisCarrerasComponent implements OnInit {
         });
     }
 
-    loadPostulantesData() {
-        this.misCarreras.forEach(carrera => {
+    async loadPostulantesData() {
+        for (const carrera of this.misCarreras) {
             if (carrera.estado === 'Abierto' && carrera.postulados) {
-                carrera.postulados.forEach(postulado => {
+                for (const postulado of carrera.postulados) {
                     if (postulado.id && !this.postulantesData.has(postulado.id)) {
-                        this.vehiculoService.getVehiculoById(postulado.id).subscribe(vehiculo => {
+                        try {
+                            const vehiculo = await firstValueFrom(this.vehiculoService.getVehiculoById(postulado.id));
                             if (vehiculo) {
-                                this.postulantesData.set(postulado.id!, vehiculo);
+                                this.postulantesData.set(postulado.id, vehiculo);
                             }
-                        });
+                        } catch (e) {
+                            console.error('Error loading postulante vehicle', e);
+                        }
                     }
-                });
+                }
             }
-        });
+        }
     }
 
     async aprobarConductor(carrera: CreateCarreraModel, postulacion: PostuladosIdsModel) {
