@@ -1,8 +1,9 @@
 <nav [ngClass]="{
 'z-20 fixed w-full top-0 h-[64px]': true,
- 'bg-primary': usuario.rol != 'Super usuario',
- 'bg-green-700': proyect == 'sistema-medellin' && usuario.rol == 'Super usuario',
- 'bg-red-700': proyect == 'lida-dev-f9291' && usuario.rol == 'Super usuario',
+    'bg-primary': usuario.rol != 'Super usuario',
+    'bg-orange-700': proyect == 'lida-f59df' && usuario.rol == 'Super usuario',
+    'bg-green-700': proyect == 'sistema-medellin' && usuario.rol == 'Super usuario',
+    'bg-red-700': proyect == 'lida-dev-f9291' && usuario.rol == 'Super usuario',
 'shadow-xl': true
 }">
   <div class="flex justify-between items-center h-full px-4">|
