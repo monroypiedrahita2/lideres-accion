@@ -1,5 +1,11 @@
 <div
-  class="w-full h-16 flex gap-2 items-center z-40 fixed bottom-0 bg-primary pt-3 overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide">
+  class="w-full h-16 flex gap-2 items-center z-40 fixed bottom-0 bg-primary pt-3 overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide"
+  [ngClass]="{
+    'bg-primary': proyect == 'lida-f59df',
+    'bg-green-700': proyect == 'sistema-medellin',
+    'bg-red-700': proyect == 'lida-dev-f9291',
+    'shadow-xl': true
+  }">
   <app-button-footer class="flex-1 min-w-[80px] flex justify-center" [option]="'Home'" [icon]="'home'"
     [goTo]="'./home'"></app-button-footer>
 
