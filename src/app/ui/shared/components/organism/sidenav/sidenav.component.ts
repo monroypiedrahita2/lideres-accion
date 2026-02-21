@@ -41,8 +41,14 @@ export class SidenavComponent {
     showCard(rol: string[] | undefined, requiresPostulacion?: string): boolean {
         if (!rol) return false;
         if (!this.usuario) return false;
-        const roleAllowed = rol.includes(this.userRol) || rol.includes('Todos');
+
+        // Check if user is a coordinator if those roles are allowed
+        const isCoordinadorTransporte = rol.includes('Coordinador de transporte') && this.usuario.coordinadorTransporte;
+        const isCoordinadorCasaApoyo = rol.includes('Coordinador de casa de apoyo') && this.usuario.coordinadorCasaApoyo;
+
+        const roleAllowed = rol.includes(this.userRol) || rol.includes('Todos') || isCoordinadorTransporte || isCoordinadorCasaApoyo;
         if (!roleAllowed) return false;
+
         if (requiresPostulacion) {
             // Admin roles that override postulado requirement
             const adminRoles = ['Pastor', 'Super usuario'];
