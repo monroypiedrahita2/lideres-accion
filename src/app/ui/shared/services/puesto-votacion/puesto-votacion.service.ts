@@ -15,19 +15,16 @@ export class PuestoVotacionService {
     constructor(private readonly firestore: Firestore) { }
 
     createPuestoVotacion(puesto: BaseModel<PuestoVotacionModel>) {
-        console.log('[PuestoVotacionService] createPuestoVotacion →', { puesto });
         const puestoRef = collection(this.firestore, this._collection);
         return addDoc(puestoRef, puesto);
     }
 
     getPuestosVotacion() {
-        console.log('[PuestoVotacionService] getPuestosVotacion → (all)');
         const collectionRef = collection(this.firestore, this._collection);
         return collectionData(collectionRef, { idField: 'id' }) as Observable<BaseModel<PuestoVotacionModel>[]>;
     }
 
     getPuestosByIglesia(iglesiaId: string) {
-        console.log('[PuestoVotacionService] getPuestosByIglesia →', { iglesiaId });
         const q = query(
             collection(this.firestore, this._collection),
             where('data.iglesia', '==', iglesiaId),
@@ -36,7 +33,6 @@ export class PuestoVotacionService {
         return collectionData(q, { idField: 'id' }) as Observable<BaseModel<PuestoVotacionModel>[]>;
     }
     getPuestosByMunicipio(municipio: string) {
-        console.log('[PuestoVotacionService] getPuestosByMunicipio →', { municipio });
         const q = query(
             collection(this.firestore, this._collection),
             where('data.municipio', '==', municipio),
@@ -46,14 +42,12 @@ export class PuestoVotacionService {
     }
 
     getPuestoVotacionByMunicipio(value: string) {
-        console.log('[PuestoVotacionService] getPuestoVotacionByMunicipio →', { municipio: value });
         const q = query(collection(this.firestore, this._collection), where('data.municipio', '==', value));
         const response = collectionData(q, { idField: 'id' }) as Observable<BaseModel<PuestoVotacionModel>[]>;
         return response;
     }
 
     async getFirstPage(municipio: string) {
-        console.log('[PuestoVotacionService] getFirstPage →', { municipio });
         const pageSize = 5;
         const colRef = collection(this.firestore, this._collection);
         const q = query(
@@ -198,13 +192,11 @@ export class PuestoVotacionService {
     }
 
     async deletePuestoVotacion(id: string) {
-        console.log('[PuestoVotacionService] deletePuestoVotacion →', { id });
         const docRef = doc(this.firestore, `${this._collection}/${id}`);
         await deleteDoc(docRef);
     }
 
     getPuestoVotacion(id: string): Promise<any> {
-        console.log('[PuestoVotacionService] getPuestoVotacion →', { id });
         const docRef = doc(this.firestore, this._collection, id);
         return getDoc(docRef).then((docSnap) => {
             if (docSnap.exists()) {
@@ -216,7 +208,6 @@ export class PuestoVotacionService {
     }
 
     updatePuestoVotacion(id: string, newData: BaseModel<PuestoVotacionModel>) {
-        console.log('[PuestoVotacionService] updatePuestoVotacion →', { id, newData });
         const document = doc(this.firestore, this._collection, id);
         return updateDoc(document, { ...newData });
     }

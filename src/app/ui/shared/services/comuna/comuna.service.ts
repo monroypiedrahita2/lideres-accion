@@ -17,26 +17,22 @@ export class ComunaService {
 
 
   createComuna(comuna: BaseModel<ComunaModel>) {
-    console.log('[ComunaService] createComuna →', { comuna });
     const collectionRef = collection(this.firestore, this._collection);
     return addDoc(collectionRef, comuna);
   }
 
   getComunas() {
-    console.log('[ComunaService] getComunas → (all)');
     const collectionRef = collection(this.firestore, this._collection);
     return collectionData(collectionRef, { idField: 'id' }) as Observable<BaseModel<ComunaModel>[]>;
   }
 
   getComunaByMunicipio(value: string) {
-    console.log('[ComunaService] getComunaByMunicipio →', { municipio: value });
     const q = query(collection(this.firestore, this._collection), where('data.municipio', '==', value));
     const response = collectionData(q, { idField: 'id' }) as Observable<BaseModel<ComunaModel>[]>;
     return response;
   }
 
   async getFirstPage(municipio: string) {
-    console.log('[ComunaService] getFirstPage →', { municipio });
     const pageSize = 5;
     const colRef = collection(this.firestore, this._collection);
     const q = query(
@@ -104,7 +100,6 @@ export class ComunaService {
   }
 
   async countByMunicipio(municipio: string) {
-    console.log('[ComunaService] countByMunicipio →', { municipio });
     const colRef = collection(this.firestore, this._collection);
     const q = query(colRef, where('data.municipio', '==', municipio));
     const snapshot = await getCountFromServer(q);
@@ -199,13 +194,11 @@ export class ComunaService {
   }
 
   async deleteComuna(id: string) {
-    console.log('[ComunaService] deleteComuna →', { id });
     const docRef = doc(this.firestore, `${this._collection}/${id}`);
     await deleteDoc(docRef);
   }
 
   getComuna(id: string): Promise<any> {
-    console.log('[ComunaService] getComuna →', { id });
     const docRef = doc(this.firestore, this._collection, id);
     return getDoc(docRef).then((docSnap) => {
       if (docSnap.exists()) {
@@ -217,7 +210,6 @@ export class ComunaService {
   }
 
   updateComuna(id: string, newData: BaseModel<ComunaModel>) {
-    console.log('[ComunaService] updateComuna →', { id, newData });
     const document = doc(this.firestore, this._collection, id);
     return updateDoc(document, { ...newData });
   }
