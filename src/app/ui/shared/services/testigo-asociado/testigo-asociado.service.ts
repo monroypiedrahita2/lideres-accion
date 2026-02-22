@@ -24,6 +24,7 @@ export class TestigoAsociadoService {
     crearTestigoAsociado(
         data: BaseModel<TestigoAsociadoModel>
     ): Promise<void> {
+        console.log('[TestigoAsociadoService] crearTestigoAsociado →', { data });
         const id = doc(collection(this.firestore, this._collection)).id;
         const dataRef = doc(this.firestore, this._collection, id);
         return setDoc(dataRef, data);
@@ -32,6 +33,7 @@ export class TestigoAsociadoService {
     getTestigosByCoordinador(
         coordinadorId: string
     ): Observable<BaseModel<TestigoAsociadoModel>[]> {
+        console.log('[TestigoAsociadoService] getTestigosByCoordinador →', { coordinadorId });
         const q = query(
             collection(this.firestore, this._collection),
             where('data.coordinadorId', '==', coordinadorId)
@@ -40,11 +42,13 @@ export class TestigoAsociadoService {
     }
 
     async deleteTestigoAsociado(id: string) {
+        console.log('[TestigoAsociadoService] deleteTestigoAsociado →', { id });
         const docRef = doc(this.firestore, `${this._collection}/${id}`);
         await deleteDoc(docRef);
     }
 
     updateTestigoAsociado(id: string, newData: BaseModel<TestigoAsociadoModel>) {
+        console.log('[TestigoAsociadoService] updateTestigoAsociado →', { id, newData });
         const document = doc(this.firestore, this._collection, id);
         return updateDoc(document, { ...newData });
     }

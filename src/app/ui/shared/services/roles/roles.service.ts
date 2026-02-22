@@ -23,11 +23,13 @@ export class RolesService {
   constructor(private readonly firestore: Firestore) { }
 
   createRole(data: any, id: string): Promise<void> {
+    console.log('[RolesService] createRole →', { id, data });
     const dataRef = doc(this.firestore, this._collection, id);
     return setDoc(dataRef, data);
   }
 
   getRoles() {
+    console.log('[RolesService] getRoles → (all)');
     const collectionRef = collection(this.firestore, this._collection);
     return collectionData(collectionRef, { idField: 'id' }) as Observable<
       RolesModel[]
@@ -35,6 +37,7 @@ export class RolesService {
   }
 
   async deleteRole(id: string) {
+    console.log('[RolesService] deleteRole →', { id });
     const docRef = doc(this.firestore, `${this._collection}/${id}`);
     await deleteDoc(docRef);
   }
