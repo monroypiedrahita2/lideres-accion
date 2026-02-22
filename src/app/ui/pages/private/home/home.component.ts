@@ -357,12 +357,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     };
 
     if (this.currentVehiculo.estado === 'Activo') {
-      // Update once when Activo
+      // Update immediately then every 2 minutes when Activo
       updateLocation();
+      this.locationInterval = setInterval(updateLocation, 2 * 60 * 1000);
     } else if (this.currentVehiculo.estado === 'En carrera') {
       // Update immediately then every 5 minutes when En carrera
       updateLocation();
-      this.locationInterval = setInterval(updateLocation, 5 * 60 * 1000);
+      this.locationInterval = setInterval(updateLocation, 1 * 60 * 1000);
     }
   }
 
