@@ -33,11 +33,13 @@ export class TestigoService {
         data: BaseModel<TestigoModel>,
         id: string
     ): Promise<void> {
+        console.log('[TestigoService] crearTestigo →', { id, data });
         const dataRef = doc(this.firestore, this._collection, id);
         return setDoc(dataRef, data);
     }
 
     async existeTestigo(documento: string): Promise<boolean> {
+        console.log('[TestigoService] existeTestigo →', { documento });
         const docRef = doc(this.firestore, this._collection, documento);
         return getDoc(docRef).then((docSnap) => {
             if (docSnap.exists()) {
@@ -49,11 +51,13 @@ export class TestigoService {
     }
 
     getAllTestigos(): Observable<BaseModel<TestigoModel>[]> {
+        console.log('[TestigoService] getAllTestigos → (all)');
         const _collection = collection(this.firestore, this._collection);
         return collectionData(_collection, { idField: 'id' }) as Observable<BaseModel<TestigoModel>[]>;
     }
 
     getTestigoBySearch(criterio: string, value: string | boolean) {
+        console.log('[TestigoService] getTestigoBySearch →', { criterio, value });
         const q = query(
             collection(this.firestore, this._collection),
             where(criterio, '==', value)
@@ -63,6 +67,7 @@ export class TestigoService {
     }
 
     getTestigoByDocument(value: string) {
+        console.log('[TestigoService] getTestigoByDocument →', { value });
         const docRef = doc(this.firestore, this._collection, value);
         return getDoc(docRef).then((docSnap) => {
             if (docSnap.exists()) {
@@ -76,6 +81,7 @@ export class TestigoService {
     getTestigosByIglesia(
         iglesia: string
     ): Observable<BaseModel<TestigoModel>[]> {
+        console.log('[TestigoService] getTestigosByIglesia →', { iglesiaId: iglesia });
         const q = query(
             collection(this.firestore, this._collection),
             where('data.iglesiaId', '==', iglesia)
@@ -84,6 +90,7 @@ export class TestigoService {
     }
 
     getTestigo(id: string): Promise<any> {
+        console.log('[TestigoService] getTestigo →', { id });
         const docRef = doc(this.firestore, this._collection, id);
         return getDoc(docRef).then((docSnap) => {
             if (docSnap.exists()) {
@@ -95,16 +102,19 @@ export class TestigoService {
     }
 
     async deleteTestigo(id: string) {
+        console.log('[TestigoService] deleteTestigo →', { id });
         const docRef = doc(this.firestore, `${this._collection}/${id}`);
         await deleteDoc(docRef);
     }
 
     updateTestigo(id: string, newData: BaseModel<TestigoModel>) {
+        console.log('[TestigoService] updateTestigo →', { id, newData });
         const document = doc(this.firestore, this._collection, id);
         return updateDoc(document, { ...newData });
     }
 
     async getFirstPage(iglesia: string) {
+        console.log('[TestigoService] getFirstPage →', { iglesia });
         const pageSize = 5;
         const colRef = collection(this.firestore, this._collection);
         const q = query(
@@ -126,6 +136,7 @@ export class TestigoService {
     }
 
     async getNextPage(iglesia: string) {
+        console.log('[TestigoService] getNextPage →', { iglesia });
         const pageSize = 5;
         if (!this.lastDoc) return { items: [], hasMore: false };
 
@@ -149,6 +160,7 @@ export class TestigoService {
     }
 
     async getPreviousPage(iglesia: string) {
+        console.log('[TestigoService] getPreviousPage →', { iglesia });
         const pageSize = 5;
         if (!this.lastDoc) return { items: [], hasMore: false };
 
@@ -172,6 +184,7 @@ export class TestigoService {
     }
 
     async getFirstPageByName(nombre: string, iglesia: string) {
+        console.log('[TestigoService] getFirstPageByName →', { nombre, iglesia });
         const pageSize = 5;
         const colRef = collection(this.firestore, this._collection);
         const q = query(
@@ -242,6 +255,7 @@ export class TestigoService {
     }
 
     async countByIglesia(iglesia: string) {
+        console.log('[TestigoService] countByIglesia →', { iglesia });
         const colRef = collection(this.firestore, this._collection);
         const q = query(colRef, where('data.iglesiaId', '==', iglesia));
         const snapshot = await getCountFromServer(q);

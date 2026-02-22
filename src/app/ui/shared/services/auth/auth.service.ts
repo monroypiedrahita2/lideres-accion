@@ -21,6 +21,7 @@ export class AuthService {
   constructor(private readonly auth: Auth, private readonly router: Router) { }
 
   createUserWithEmailAndPassword(email: string, password: string) {
+    console.log('[AuthService] createUserWithEmailAndPassword →', { email });
     return createUserWithEmailAndPassword(
       this.auth,
       email,
@@ -29,20 +30,24 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
+    console.log('[AuthService] login →', { email });
     return signInWithEmailAndPassword(this.auth, email, password);
   }
 
   logout() {
+    console.log('[AuthService] logout →');
     localStorage.clear();
     this.router.navigate(['/public/login']);
     return signOut(this.auth);
   }
 
   loginWithGoogle() {
+    console.log('[AuthService] loginWithGoogle →');
     return signInWithPopup(this.auth, new GoogleAuthProvider());
   }
 
   resetPassword(email: string) {
+    console.log('[AuthService] resetPassword →', { email });
     return sendPasswordResetEmail(this.auth, email);
   }
 

@@ -32,6 +32,7 @@ export class CuentavotosService {
      * @returns Promise<void>
      */
     async crearCuentavotos(data: BaseModel<CuentavotosModel>): Promise<string> {
+        console.log('[CuentavotosService] crearCuentavotos →', { data });
         const colRef = collection(this.firestore, this._collection);
         const docRef = await addDoc(colRef, data);
         return docRef.id;
@@ -45,6 +46,7 @@ export class CuentavotosService {
     getCuentavotosByReportadoPor(
         reportadoPor: string
     ): Observable<BaseModel<CuentavotosModel>[]> {
+        console.log('[CuentavotosService] getCuentavotosByReportadoPor →', { reportadoPor });
         const q = query(
             collection(this.firestore, this._collection),
             where('data.reportadoPor', '==', reportadoPor)
@@ -64,6 +66,7 @@ export class CuentavotosService {
         puesto: string,
         mesa: string
     ): Observable<BaseModel<CuentavotosModel>[]> {
+        console.log('[CuentavotosService] getCuentavotosByPuestoYMesa →', { puesto, mesa });
         const q = query(
             collection(this.firestore, this._collection),
             where('data.puestoVotacion', '==', puesto),
@@ -79,6 +82,7 @@ export class CuentavotosService {
      * @returns Observable con todos los registros
      */
     getAllCuentavotos(): Observable<BaseModel<CuentavotosModel>[]> {
+        console.log('[CuentavotosService] getAllCuentavotos → (all)');
         const _collection = collection(this.firestore, this._collection);
         return collectionData(_collection, { idField: 'id' }) as Observable<
             BaseModel<CuentavotosModel>[]
@@ -91,6 +95,7 @@ export class CuentavotosService {
      * @returns Promise con el registro
      */
     getCuentavotosById(id: string): Promise<BaseModel<CuentavotosModel>> {
+        console.log('[CuentavotosService] getCuentavotosById →', { id });
         const docRef = doc(this.firestore, this._collection, id);
         return getDoc(docRef).then((docSnap) => {
             if (docSnap.exists()) {
@@ -111,6 +116,7 @@ export class CuentavotosService {
         id: string,
         newData: BaseModel<CuentavotosModel>
     ): Promise<void> {
+        console.log('[CuentavotosService] updateCuentavotos →', { id, newData });
         const document = doc(this.firestore, this._collection, id);
         return updateDoc(document, { ...newData });
     }
@@ -121,6 +127,7 @@ export class CuentavotosService {
      * @returns Promise<void>
      */
     async deleteCuentavotos(id: string): Promise<void> {
+        console.log('[CuentavotosService] deleteCuentavotos →', { id });
         const docRef = doc(this.firestore, `${this._collection}/${id}`);
         await deleteDoc(docRef);
     }

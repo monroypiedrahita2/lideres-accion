@@ -1,6 +1,6 @@
 import { IglesiaService } from '../../../shared/services/iglesia/iglesia.service';
 import { IglesiaModel } from './../../../../models/iglesia/iglesia.model';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 
 import { CommonModule } from '@angular/common';
@@ -14,6 +14,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { ContainerAlertInformationComponent } from '../../../shared/components/modules/container-alert-information/container-alert-information.component';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
 import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
 import { TestigoService } from '../../../shared/services/testigo/testigo.service';
@@ -44,7 +46,8 @@ import { PostulacionCardComponent } from '../../../shared/components/cards/postu
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   skeleton: boolean = true;
   nameLong: string = NAME_LONG_APP;
   usuario: PerfilModel = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -164,7 +167,7 @@ export class HomeComponent implements OnInit {
       this.vehiculoService.loadVehiculo(uid);
 
       // Subscribe to the state (which is now updated by loadVehiculo)
-      this.vehiculoService.currentVehiculo$.subscribe(vehiculo => {
+      this.vehiculoService.currentVehiculo$.pipe(takeUntil(this.destroy$)).subscribe(vehiculo => {
         if (vehiculo) {
           this.currentVehiculo = vehiculo;
           this.vehiculoStatus = vehiculo.aprobado ? 'Aprobado' : 'Pendiente';
@@ -190,7 +193,7 @@ export class HomeComponent implements OnInit {
     }
 
     if (this.usuario.postulado?.casaApoyo && uid) {
-      this.casaApoyoService.getCasasApoyoByResponsable(uid).subscribe(casas => {
+      this.casaApoyoService.getCasasApoyoByResponsable(uid).pipe(takeUntil(this.destroy$)).subscribe(casas => {
         if (casas && casas.length > 0) {
           // Accessing data property since it returns BaseModel
           const casa = casas[0].data;
@@ -199,7 +202,7 @@ export class HomeComponent implements OnInit {
           localStorage.setItem('casaApoyo', JSON.stringify(casa));
 
           if (casa.aprobado && casaId) {
-            this.vehiculoService.getVehiculosByCasaApoyo(casaId).subscribe(vehiculos => {
+            this.vehiculoService.getVehiculosByCasaApoyo(casaId).pipe(takeUntil(this.destroy$)).subscribe(vehiculos => {
               this.casaApoyoVehiculos = vehiculos;
             });
           }
@@ -227,7 +230,7 @@ export class HomeComponent implements OnInit {
             }
 
             // Fetch associated witnesses for Coordinador
-            this.testigoAsociadoService.getTestigosByCoordinador(uid).subscribe(witnesses => {
+            this.testigoAsociadoService.getTestigosByCoordinador(uid).pipe(takeUntil(this.destroy$)).subscribe(witnesses => {
               this.misTestigos = witnesses;
             });
 
@@ -300,6 +303,8 @@ export class HomeComponent implements OnInit {
   locationInterval: any = null;
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     if (this.locationInterval) {
       clearInterval(this.locationInterval);
     }
