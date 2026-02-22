@@ -19,19 +19,16 @@ export class CasaApoyoService {
     constructor(private readonly firestore: Firestore) { }
 
     createCasaApoyo(casa: BaseModel<CasaApoyoModel>) {
-        console.log('[CasaApoyoService] createCasaApoyo →', { casa });
         const document = doc(this.firestore, this._collection, this.authService.uidUser());
         return setDoc(document, casa);
     }
 
     getCasasApoyo(): Observable<BaseModel<CasaApoyoModel>[]> {
-        console.log('[CasaApoyoService] getCasasApoyo → (all)');
         const collectionRef = collection(this.firestore, this._collection);
         return collectionData(collectionRef, { idField: 'id' }) as Observable<BaseModel<CasaApoyoModel>[]>;
     }
 
     getCasaApoyo(id: string): Promise<any> {
-        console.log('[CasaApoyoService] getCasaApoyo →', { id });
         const docRef = doc(this.firestore, this._collection, id);
         return getDoc(docRef).then((docSnap) => {
             if (docSnap.exists()) {
@@ -43,13 +40,11 @@ export class CasaApoyoService {
     }
 
     deleteCasaApoyo(id: string): Promise<void> {
-        console.log('[CasaApoyoService] deleteCasaApoyo →', { id });
         const docRef = doc(this.firestore, this._collection, id);
         return deleteDoc(docRef);
     }
 
     async assignResponsable(oldCasaId: string, responsableId?: string, responsableNombre?: string, responsableCedula?: string): Promise<void> {
-        console.log('[CasaApoyoService] assignResponsable →', { oldCasaId, responsableId, responsableNombre });
         const oldDocRef = doc(this.firestore, this._collection, oldCasaId);
         const oldDocSnap = await getDoc(oldDocRef);
 
@@ -104,19 +99,16 @@ export class CasaApoyoService {
     }
 
     getCasaApoyoByDireccion(direccion: string) {
-        console.log('[CasaApoyoService] getCasaApoyoByDireccion →', { direccion });
         const q = query(collection(this.firestore, this._collection), where('data.direccion', '==', direccion));
         return collectionData(q, { idField: 'id' }) as Observable<BaseModel<CasaApoyoModel>[]>;
     }
 
     getCasasApoyoByIglesia(iglesiaId: string) {
-        console.log('[CasaApoyoService] getCasasApoyoByIglesia →', { iglesiaId });
         const q = query(collection(this.firestore, this._collection), where('data.iglesia.id', '==', iglesiaId));
         return collectionData(q, { idField: 'id' }) as Observable<BaseModel<CasaApoyoModel>[]>;
     }
 
     getCasasApoyoAprobadasByIglesia(iglesiaId: string) {
-        console.log('[CasaApoyoService] getCasasApoyoAprobadasByIglesia →', { iglesiaId });
         const q = query(
             collection(this.firestore, this._collection),
             where('data.iglesia.id', '==', iglesiaId),
@@ -126,7 +118,6 @@ export class CasaApoyoService {
     }
 
     getCasasApoyoByResponsable(uid: string): Observable<BaseModel<CasaApoyoModel>[]> {
-        console.log('[CasaApoyoService] getCasasApoyoByResponsable →', { uid });
         const docRef = doc(this.firestore, this._collection, uid);
         return new Observable<BaseModel<CasaApoyoModel>[]>(observer => {
             const unsubscribe = import('@angular/fire/firestore').then(m => {
@@ -150,7 +141,6 @@ export class CasaApoyoService {
     }
 
     addVehiculoToCasa(casaId: string, vehiculo: any): Promise<void> {
-        console.log('[CasaApoyoService] addVehiculoToCasa →', { casaId, vehiculo });
         const docRef = doc(this.firestore, this._collection, casaId);
         return updateDoc(docRef, {
             'data.vehiculos': arrayUnion(vehiculo),
@@ -159,7 +149,6 @@ export class CasaApoyoService {
     }
 
     removeVehiculoFromCasa(casaId: string, vehiculo: any): Promise<void> {
-        console.log('[CasaApoyoService] removeVehiculoFromCasa →', { casaId, vehiculo });
         const docRef = doc(this.firestore, this._collection, casaId);
         return updateDoc(docRef, {
             'data.vehiculos': arrayRemove(vehiculo),
@@ -168,7 +157,6 @@ export class CasaApoyoService {
     }
 
     updateCasaApoyo(id: string, data: CasaApoyoModel): Promise<void> {
-        console.log('[CasaApoyoService] updateCasaApoyo →', { id, data });
         const docRef = doc(this.firestore, this._collection, id);
         return updateDoc(docRef, {
             data: data

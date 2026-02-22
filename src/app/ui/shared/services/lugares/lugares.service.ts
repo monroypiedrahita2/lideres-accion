@@ -12,11 +12,9 @@ export class LugaresService {
   constructor(private readonly http: HttpClient) { }
 
   getDepartamentos(): Observable<any> {
-    console.log('[LugaresService] getDepartamentos →');
     return this.http.get<any>(this.apiUrlDepartamentos);
   }
   getMunicipios(departamento_id: string): Observable<any> {
-    console.log('[LugaresService] getMunicipios →', { departamento_id });
     return this.http.get<any>(`${this.apiUrlMunicipios}${departamento_id}/cities`);
   }
 }
