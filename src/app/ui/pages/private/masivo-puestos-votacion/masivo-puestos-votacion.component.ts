@@ -12,26 +12,26 @@ import { PuestoVotacionService } from '../../../shared/services/puesto-votacion/
 import { PuestoVotacionModel } from '../../../../models/puesto-votacion/puesto-votacion.model';
 import { BaseModel } from '../../../../models/base/base.model';
 import { AuthService } from '../../../shared/services/auth/auth.service';
-import { InputSelectComponent } from '../../../shared/components/atoms/input-select/input-select.component';
-import { IglesiaService } from '../../../shared/services/iglesia/iglesia.service';
 import { SelectOptionModel } from '../../../../models/base/select-options.model';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MgPaginatorComponent } from '../../../shared/components/modules/paginator/paginator.component';
+import { MgPaginatorComponent, PageEvent } from '../../../shared/components/modules/paginator/paginator.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { DialogNotificationModel } from '../../../../models/base/dialog-notification.model';
+import { MUNICIPIOS } from '../../../shared/const/municipios.const';
+import { InputSelectComponent } from '../../../shared/components/atoms/input-select/input-select.component';
 
 @Component({
     selector: 'app-masivo-puestos-votacion',
     templateUrl: './masivo-puestos-votacion.component.html',
     standalone: true,
-    imports: [CommonModule, ButtonComponent, ContainerAlertInformationComponent, InputSelectComponent, ReactiveFormsModule, MgPaginatorComponent],
+    imports: [CommonModule, ButtonComponent, ContainerAlertInformationComponent, ReactiveFormsModule, MgPaginatorComponent, InputSelectComponent],
 })
 export class MasivoPuestosVotacionComponent implements OnInit {
     loading: boolean = false;
     puestos: any[] = [];
     contador: number = 0;
-    iglesias: SelectOptionModel<string>[] = [];
+    municipios: SelectOptionModel<string>[] = MUNICIPIOS;
     form: FormGroup;
 
     puestosExistentes: any[] = [];
@@ -43,23 +43,21 @@ export class MasivoPuestosVotacionComponent implements OnInit {
         private readonly puestoService: PuestoVotacionService,
         private readonly toast: ToastrService,
         private readonly auth: AuthService,
-        private readonly iglesiaService: IglesiaService,
         private readonly fb: FormBuilder,
         private readonly dialog: MatDialog
     ) {
         this.form = this.fb.group({
-            iglesia: ['', Validators.required]
+            municipio: ['', Validators.required]
         });
 
-        this.form.get('iglesia')?.valueChanges.subscribe((iglesiaId) => {
-            if (iglesiaId) {
-                this.pageIndex = 0;
-                this.puestoService.countByIglesia(iglesiaId).then((count) => {
-                    this.totalRecords = count;
-                });
-                this.puestoService.getFirstPageByIglesia(iglesiaId, this.pageSize).then((res) => {
-                    this.puestosExistentes = res.items;
-                });
+        // Cargar puestos cuando cambie el municipio seleccionado
+
+    }
+
+    ngOnInit(): void {
+        this.form.get('municipio')!.valueChanges.subscribe((municipio) => {
+            if (municipio) {
+                this.loadPuestos();
             } else {
                 this.puestosExistentes = [];
                 this.totalRecords = 0;
@@ -67,14 +65,10 @@ export class MasivoPuestosVotacionComponent implements OnInit {
         });
     }
 
-    ngOnInit(): void {
-        this.getIglesias();
-    }
-
     onNextPage() {
-        const iglesiaId = this.form.get('iglesia')?.value;
-        if (iglesiaId) {
-            this.puestoService.getNextPageByIglesia(iglesiaId, this.pageSize).then((res) => {
+        const municipio = this.form.get('municipio')?.value;
+        if (municipio) {
+            this.puestoService.getNextPageByMunicipio(municipio, this.pageSize).then((res) => {
                 if (res.items.length > 0) {
                     this.puestosExistentes = res.items;
                     this.pageIndex++;
@@ -84,9 +78,9 @@ export class MasivoPuestosVotacionComponent implements OnInit {
     }
 
     onPreviousPage() {
-        const iglesiaId = this.form.get('iglesia')?.value;
-        if (iglesiaId && this.pageIndex > 0) {
-            this.puestoService.getPreviousPageByIglesia(iglesiaId, this.pageSize).then((res) => {
+        const municipio = this.form.get('municipio')?.value;
+        if (municipio && this.pageIndex > 0) {
+            this.puestoService.getPreviousPageByMunicipio(municipio, this.pageSize).then((res) => {
                 if (res.items.length > 0) {
                     this.puestosExistentes = res.items;
                     this.pageIndex--;
@@ -113,7 +107,7 @@ export class MasivoPuestosVotacionComponent implements OnInit {
             if (result) {
                 this.puestoService.deletePuestoVotacion(puesto.id!).then(() => {
                     this.toast.success('Puesto eliminado correctamente');
-                    this.loadPuestos(); // Refresh list
+                    this.loadPuestos();
                 }).catch((error) => {
                     this.toast.error('Error al eliminar el puesto');
                     console.error(error);
@@ -122,33 +116,29 @@ export class MasivoPuestosVotacionComponent implements OnInit {
         });
     }
 
+    onPageChange(event: PageEvent) {
+        if (event.pageSize !== this.pageSize) {
+            this.pageSize = event.pageSize;
+            this.loadPuestos();
+        }
+    }
+
     loadPuestos() {
-        const iglesiaId = this.form.get('iglesia')?.value;
-        if (iglesiaId) {
-            // Simplification: Reload first page or current page logic could be complex with cursors.
-            // For now, reloading first page is safest to reset state properly.
+        const municipio = this.form.get('municipio')?.value;
+        if (municipio) {
             this.pageIndex = 0;
-            this.puestoService.countByIglesia(iglesiaId).then((count) => {
+            this.puestoService.countByMunicipio(municipio).then((count) => {
                 this.totalRecords = count;
             });
-            this.puestoService.getFirstPageByIglesia(iglesiaId, this.pageSize).then((res) => {
+            this.puestoService.getFirstPageByMunicipio(municipio, this.pageSize).then((res) => {
                 this.puestosExistentes = res.items;
             });
         }
     }
 
-    getIglesias() {
-        this.iglesiaService.getIglesias().subscribe((res) => {
-            this.iglesias = res.map((item: any) => ({
-                label: item.data.nombre,
-                value: item.id,
-            }));
-        });
-    }
-
     onFileChange(event: any): void {
         if (this.form.invalid) {
-            this.toast.error('Debe seleccionar una iglesia antes de cargar el archivo');
+            this.toast.error('Debe seleccionar un municipio antes de cargar el archivo');
             return;
         }
 
@@ -175,12 +165,12 @@ export class MasivoPuestosVotacionComponent implements OnInit {
     }
 
     processExcelData(data: any[][]): void {
+        const municipio = this.form.value.municipio;
         const registros = data.slice(1).map((row) => ({
             nombre: String(row[0] ?? ''),
             mesastotales: Number(row[1] ?? 0),
-            municipio: String(row[2] ?? ''),
-            ubicacion: String(row[3] ?? ''),
-            iglesia: this.form.value.iglesia,
+            ubicacion: String(row[2] ?? ''),
+            municipio: municipio,
             guardado: false
         }));
         this.puestos = registros;
@@ -203,17 +193,15 @@ export class MasivoPuestosVotacionComponent implements OnInit {
 
     save() {
         if (this.form.invalid) {
-            this.toast.error('Debe seleccionar una iglesia');
+            this.toast.error('Debe seleccionar un municipio');
             return;
         }
         this.loading = true;
-        const promises = this.puestos.map((puesto) => {
-            this.guardarPuesto(puesto);
-            return Promise.resolve();
-        });
+        const promises = this.puestos.map((puesto) => this.guardarPuesto(puesto));
         Promise.all(promises)
             .then(() => {
                 this.toast.info('Proceso de guardado finalizado');
+                this.loadPuestos();
             })
             .catch((error) => {
                 this.toast.error('Error durante el guardado');
@@ -229,17 +217,12 @@ export class MasivoPuestosVotacionComponent implements OnInit {
             data: {
                 nombre: puestoItem.nombre,
                 mesastotales: puestoItem.mesastotales,
-                iglesia: puestoItem.iglesia,
                 municipio: puestoItem.municipio,
                 ubicacion: puestoItem.ubicacion,
             } as PuestoVotacionModel,
             fechaCreacion: new Date().toISOString(),
             creadoPor: this.auth.uidUser() ?? '',
         };
-
-        // Correction: PuestoVotacionModel interface had `id: string`. 
-        // Usually detailed models separate ID logic. 
-        // Let's follow the pattern but `createPuestoVotacion` uses `addDoc`.
 
         try {
             await this.puestoService.createPuestoVotacion(puestoModel);

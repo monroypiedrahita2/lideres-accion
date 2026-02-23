@@ -47,37 +47,12 @@ export class PuestoVotacionService {
         return response;
     }
 
-    async getFirstPage(municipio: string) {
-        const pageSize = 5;
+    async getFirstPageByMunicipio(municipio: string, pageSize: number = 5) {
         const colRef = collection(this.firestore, this._collection);
         const q = query(
             colRef,
-            orderBy('data.puesto'),
             where('data.municipio', '==', municipio),
-            limit(pageSize + 1)
-        );
-        const snapshot = await getDocs(q);
-
-        const docs = snapshot.docs;
-        const hasMore = docs.length > pageSize;
-        const returned = docs.slice(0, pageSize);
-
-        // Guardamos el último doc (el que se mostró) para la siguiente página
-        this.lastDoc = returned.at(-1) || null;
-
-        return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
-    }
-
-    async getNextPage(municipio: string) {
-        const pageSize = 5;
-        if (!this.lastDoc) return { items: [], hasMore: false };
-
-        const colRef = collection(this.firestore, this._collection);
-        const q = query(
-            colRef,
-            orderBy('data.puesto'),
-            where('data.municipio', '==', municipio),
-            startAfter(this.lastDoc), // empieza después del último
+            orderBy('data.nombre'),
             limit(pageSize + 1)
         );
         const snapshot = await getDocs(q);
@@ -91,16 +66,37 @@ export class PuestoVotacionService {
         return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
     }
 
-    async getPreviousPage(municipio: string) {
-        const pageSize = 5;
+    async getNextPageByMunicipio(municipio: string, pageSize: number = 5) {
         if (!this.lastDoc) return { items: [], hasMore: false };
 
         const colRef = collection(this.firestore, this._collection);
         const q = query(
             colRef,
-            orderBy('data.puesto'),
             where('data.municipio', '==', municipio),
-            endBefore(this.lastDoc), // empieza antes del último
+            orderBy('data.nombre'),
+            startAfter(this.lastDoc),
+            limit(pageSize + 1)
+        );
+        const snapshot = await getDocs(q);
+
+        const docs = snapshot.docs;
+        const hasMore = docs.length > pageSize;
+        const returned = docs.slice(0, pageSize);
+
+        this.lastDoc = returned.at(-1) || null;
+
+        return { items: returned.map((doc) => ({ id: doc.id, ...(doc.data() as any) })), hasMore };
+    }
+
+    async getPreviousPageByMunicipio(municipio: string, pageSize: number = 5) {
+        if (!this.lastDoc) return { items: [], hasMore: false };
+
+        const colRef = collection(this.firestore, this._collection);
+        const q = query(
+            colRef,
+            where('data.municipio', '==', municipio),
+            orderBy('data.nombre'),
+            endBefore(this.lastDoc),
             limit(pageSize + 1)
         );
         const snapshot = await getDocs(q);
