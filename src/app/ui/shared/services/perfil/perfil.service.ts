@@ -22,10 +22,8 @@ import { IglesiaModel } from '../../../../models/iglesia/iglesia.model';
 export class PerfilService {
   _collection: string = environment.collections.perfil;
 
-
   private currentUserSubject: BehaviorSubject<PerfilModel | null>;
   public currentUser$: Observable<PerfilModel | null>;
-
 
   constructor(
     private readonly firestore: Firestore,
@@ -73,11 +71,11 @@ export class PerfilService {
     );
     return collectionData(q, { idField: 'id' }) as Observable<PerfilModel[]>;
   }
+
   getPerfilesByIglesia(value: string) {
     const q = query(collection(this.firestore, this._collection), where('iglesia.id', '==', value));
     const response = collectionData(q, { idField: 'id' }) as Observable<PerfilModel[]>;
     return response;
-
   }
 
   getPostuladosCasasApoyoByIglesia(iglesiaId: string) {
@@ -89,10 +87,6 @@ export class PerfilService {
     const response = collectionData(q, { idField: 'id' }) as Observable<PerfilModel[]>;
     return response;
   }
-
-
-
-
 
   getMiPerfil(id: string): Promise<any> {
     const docRef = doc(this.firestore, this._collection, id);

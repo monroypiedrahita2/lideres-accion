@@ -15,7 +15,17 @@ export interface PerfilModel {
   noCuenta: string; // dato random alfanumerico de 6 caracteres no editable
   foto?: string | null; // foto se toma de authService de foto
   apruebaUsodeDatos?: boolean; // campo para aprobar uso de datos
+  puestoVotacionResponsableId?: string | null;  // id   del puesto de votacion responsable   
 }
+
+
+
+export interface PostuladoModel {
+  casaApoyo: boolean;
+  transporte: boolean;
+  testigo: boolean;
+}
+
 
 export interface AsigmentRolePerfilModel {
   rol: 'Pastor' | 'Super Usuario' | string | null;
@@ -23,12 +33,6 @@ export interface AsigmentRolePerfilModel {
   coordinadorTransporte?: boolean | null;
   administradorTestigos?: boolean | null;
   coordinadorCasaApoyo?: boolean | null;
-}
-
-export interface PostuladoModel {
-  casaApoyo: boolean;
-  transporte: boolean;
-  testigo: boolean;
 }
 
 

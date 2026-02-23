@@ -77,11 +77,9 @@ export class ActivarTestigoComponent implements OnInit {
                     const testigoData: TestigoModel = {
                         nombre: perfil.nombres,
                         apellido: perfil.apellidos,
-                        iglesia: perfil.iglesia || null,
-                        celular: perfil.celular || '',
-                        puestodevotacion: result.puestodevotacion,
-                        mesadevotacion: result.mesadevotacion,
-                        puestoId: result.puestoId,
+                        celular: perfil.celular,
+                        mesa: result.mesa,
+                        uidLider: result.puestoId,
                     };
 
                     const baseData: BaseModel<TestigoModel> = {
@@ -93,7 +91,9 @@ export class ActivarTestigoComponent implements OnInit {
                     try {
                         if (perfil.id) {
                             await this.testigoService.crearTestigo(baseData, perfil.id);
+                            await this.perfilService.updatePerfil(perfil.id, { puestoVotacionResponsableId: result.puestoId } as any);
                             this.existingTestigosIds.add(perfil.id);
+                            perfil.puestoVotacionResponsableId = result.puestoId;
                             this.dialog.open(DialogNotificationComponent, {
                                 data: {
                                     title: 'Éxito',
@@ -130,7 +130,9 @@ export class ActivarTestigoComponent implements OnInit {
                     try {
                         if (perfil.id) {
                             await this.testigoService.deleteTestigo(perfil.id);
+                            await this.perfilService.updatePerfil(perfil.id, { puestoVotacionResponsableId: null } as any);
                             this.existingTestigosIds.delete(perfil.id);
+                            perfil.puestoVotacionResponsableId = null;
                             this.dialog.open(DialogNotificationComponent, {
                                 data: {
                                     title: 'Éxito',
@@ -156,7 +158,7 @@ export class ActivarTestigoComponent implements OnInit {
     }
 
     isChecked(perfil: PerfilModel): boolean {
-        return perfil.id ? this.existingTestigosIds.has(perfil.id) : false;
+        return !!perfil.puestoVotacionResponsableId;
     }
 
     openGestionWitnessDialog(coordinador: PerfilModel) {

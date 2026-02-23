@@ -61,7 +61,7 @@ export class CarreraService {
                 collection(this.firestore, this._collection),
                 where('estado', '==', 'Abierto'),
                 where('municipio', '==', municipio),
-                where('tipoVehiculo', 'in', tipoVehiculo) // Use 'in' for arrays
+                where('tipoVehiculo', 'in', tipoVehiculo)
             );
         } else {
             q = query(
@@ -71,7 +71,6 @@ export class CarreraService {
                 where('tipoVehiculo', '==', tipoVehiculo)
             );
         }
-
         return collectionData(q, { idField: 'id' }) as Observable<CreateCarreraModel[]>;
     }
 
@@ -89,18 +88,16 @@ export class CarreraService {
             seleccionadoId: vehiculoId,
             estado: 'En ruta'
         };
-
         if (datosConductor) {
             dataToUpdate.datosConductorAprobado = datosConductor;
         }
-
         return updateDoc(docRef, dataToUpdate);
     }
 
     async cancelarPostulacion(carreraId: string, postulacion: any) {
         const docRef = doc(this.firestore, this._collection, carreraId);
         return updateDoc(docRef, {
-            postulados: arrayRemove(postulacion) // Requires arrayRemove import
+            postulados: arrayRemove(postulacion)
         });
     }
 
@@ -123,7 +120,6 @@ export class CarreraService {
         await updateDoc(docRef, {
             estado: 'Finalizada'
         });
-
         if (vehiculoId) {
             return this.vehiculoService.updateStatus(vehiculoId, 'Activo');
         }

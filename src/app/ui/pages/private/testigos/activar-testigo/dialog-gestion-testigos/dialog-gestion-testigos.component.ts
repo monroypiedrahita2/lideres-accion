@@ -1,5 +1,5 @@
 
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
     MAT_DIALOG_DATA,
@@ -17,11 +17,12 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { PerfilModel } from '../../../../../../models/perfil/perfil.model';
 import { BaseModel } from '../../../../../../models/base/base.model';
-import { TestigoAsociadoModel } from '../../../../../../models/testigo-asociado/testigo-asociado.model';
 import { TestigoAsociadoService } from '../../../../../shared/services/testigo-asociado/testigo-asociado.service';
 import { ButtonComponent } from '../../../../../shared/components/atoms/button/button.component';
 import { InputTextComponent } from '../../../../../shared/components/atoms/input-text/input-text.component';
 import { TitleComponent } from '../../../../../shared/components/atoms/title/title.component';
+import { TestigoModel } from '../../../../../../models/testigo/testigo.model';
+import { AuthService } from '../../../../../shared/services/auth/auth.service';
 
 @Component({
     selector: 'app-dialog-gestion-testigos',
@@ -39,8 +40,9 @@ import { TitleComponent } from '../../../../../shared/components/atoms/title/tit
 })
 export class DialogGestionTestigosComponent implements OnInit {
     form!: FormGroup;
-    testigos$: Observable<BaseModel<TestigoAsociadoModel>[]>;
+    testigos$: Observable<BaseModel<TestigoModel>[]>;
     loading: boolean = false;
+    private readonly authService: AuthService = inject(AuthService);
 
     constructor(
         public dialogRef: MatDialogRef<DialogGestionTestigosComponent>,
@@ -55,8 +57,8 @@ export class DialogGestionTestigosComponent implements OnInit {
         );
 
         this.form = this.fb.group({
-            nombres: ['', Validators.required],
-            apellidos: ['', Validators.required],
+            nombre: ['', Validators.required],
+            apellido: ['', Validators.required],
             celular: [
                 '',
                 [
@@ -66,6 +68,7 @@ export class DialogGestionTestigosComponent implements OnInit {
                     Validators.maxLength(10),
                 ],
             ],
+            mesa: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
         });
     }
 
@@ -78,17 +81,16 @@ export class DialogGestionTestigosComponent implements OnInit {
         this.loading = true;
         const rawValue = this.form.getRawValue();
 
-        const newTestigo: BaseModel<TestigoAsociadoModel> = {
+        const newTestigo: BaseModel<TestigoModel> = {
             data: {
-                nombres: rawValue.nombres,
-                apellidos: rawValue.apellidos,
+                nombre: rawValue.nombre,
+                apellido: rawValue.apellido,
                 celular: rawValue.celular,
-                puestoVotacion: 'Asignado por Admin', // Default or empty
-                mesa: '0', // Default or empty
-                coordinadorId: this.data.coordinador.id || '',
+                uidLider: this.data.coordinador.id || '',
+                mesa: rawValue.mesa,
             },
             fechaCreacion: new Date().toISOString(),
-            creadoPor: 'ADMIN', // Or current user ID, but distinguishing helps
+            creadoPor: this.authService.uidUser(),
         };
 
         try {
@@ -114,5 +116,28 @@ export class DialogGestionTestigosComponent implements OnInit {
 
     close() {
         this.dialogRef.close();
+    }
+
+    textErrormsn() {
+        if (this.form.get('celular')?.hasError('required')) {
+            return 'El campo celular es requerido';
+        }
+        if (this.form.get('celular')?.hasError('pattern')) {
+            return 'El campo celular debe ser un número';
+        }
+        if (this.form.get('celular')?.hasError('minlength')) {
+            return 'El campo celular debe tener 10 caracteres';
+        }
+        if (this.form.get('celular')?.hasError('maxlength')) {
+            return 'El campo celular debe tener 10 caracteres';
+        }
+        return 'Error al agregar número';
+    }
+
+    textErrormsnMesa() {
+        if (this.form.get('mesa')?.hasError('required')) {
+            return 'El campo mesa es requerido';
+        }
+        return 'Error al agregar número';
     }
 }

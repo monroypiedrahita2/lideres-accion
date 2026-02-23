@@ -13,7 +13,7 @@ import {
 import { Observable } from 'rxjs';
 import { environment } from '../../../../../environment';
 import { BaseModel } from '../../../../models/base/base.model';
-import { TestigoAsociadoModel } from '../../../../models/testigo-asociado/testigo-asociado.model';
+import { TestigoModel } from '../../../../models/testigo/testigo.model';
 
 @Injectable({ providedIn: 'root' })
 export class TestigoAsociadoService {
@@ -22,7 +22,7 @@ export class TestigoAsociadoService {
     constructor(private readonly firestore: Firestore) { }
 
     crearTestigoAsociado(
-        data: BaseModel<TestigoAsociadoModel>
+        data: BaseModel<TestigoModel>
     ): Promise<void> {
         const id = doc(collection(this.firestore, this._collection)).id;
         const dataRef = doc(this.firestore, this._collection, id);
@@ -31,7 +31,7 @@ export class TestigoAsociadoService {
 
     getTestigosByCoordinador(
         coordinadorId: string
-    ): Observable<BaseModel<TestigoAsociadoModel>[]> {
+    ): Observable<BaseModel<TestigoModel>[]> {
         const q = query(
             collection(this.firestore, this._collection),
             where('data.coordinadorId', '==', coordinadorId)
@@ -44,7 +44,7 @@ export class TestigoAsociadoService {
         await deleteDoc(docRef);
     }
 
-    updateTestigoAsociado(id: string, newData: BaseModel<TestigoAsociadoModel>) {
+    updateTestigoAsociado(id: string, newData: BaseModel<TestigoModel>) {
         const document = doc(this.firestore, this._collection, id);
         return updateDoc(document, { ...newData });
     }

@@ -84,7 +84,7 @@ export class CrearPastorComponent implements OnInit {
 
   ngOnInit(): void {
     this.getIglesias();
-    this.getAllPerfiles();
+    // this.getAllPerfiles();
     this.noCuentaSearch.valueChanges
       .pipe(
         debounceTime(300),
@@ -143,21 +143,21 @@ export class CrearPastorComponent implements OnInit {
       });
   }
 
-  getAllPerfiles() {
-    this.perfilService.getPerfiles()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (response: PerfilModel[]) => {
-          this.usuarios = response;
-          this.length = this.usuarios.length;
-          this.updatePaginatedUsers();
+  // getAllPerfiles() {
+  //   this.perfilService.getPerfiles()
+  //     .pipe(takeUntilDestroyed(this.destroyRef))
+  //     .subscribe({
+  //       next: (response: PerfilModel[]) => {
+  //         this.usuarios = response;
+  //         this.length = this.usuarios.length;
+  //         this.updatePaginatedUsers();
 
-          this.perfiles = response.map((item: any) => {
-            return { label: `${item.noCuenta} - ${item.nombres} ${item.apellidos}`, value: item.id };
-          });
-        },
-      });
-  }
+  //         this.perfiles = response.map((item: any) => {
+  //           return { label: `${item.noCuenta} - ${item.nombres} ${item.apellidos}`, value: item.id };
+  //         });
+  //       },
+  //     });
+  // }
 
   handlePageEvent(e: any) {
     this.pageSize = e.pageSize;

@@ -1,4 +1,6 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,7 +28,8 @@ import { NotificationService } from '../../../services/notification/notification
     templateUrl: './aprobaciones.component.html',
     styleUrls: ['./aprobaciones.component.scss']
 })
-export class AprobacionesComponent implements OnInit {
+export class AprobacionesComponent implements OnInit, OnDestroy {
+    private destroy$ = new Subject<void>();
     aprobaciones: CreateCarreraModel[] = [];
     loading: boolean = false;
 
@@ -38,11 +41,16 @@ export class AprobacionesComponent implements OnInit {
 
     ngOnInit(): void {
         this.loading = true;
-        this.notificationService.aprobaciones$.subscribe(aprobaciones => {
+        this.notificationService.aprobaciones$.pipe(takeUntil(this.destroy$)).subscribe(aprobaciones => {
             this.aprobaciones = aprobaciones;
             this.checkActiveRace();
             this.loading = false;
         });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     // loadAprobaciones is no longer needed as the service handles it

@@ -47,7 +47,6 @@ export class PwaService {
             window.addEventListener('appinstalled', () => {
                 this.showInstallButton = false;
                 this.deferredPrompt = null;
-                console.log('PWA was installed');
             });
         }
     }

@@ -22,7 +22,6 @@ export class VehiculoService {
     return addDoc(collectionRef, vehiculo);
   }
 
-
   getVehiculos() {
     const collectionRef = collection(this.firestore, this._collection);
     return collectionData(collectionRef, { idField: 'id' }) as Observable<BaseModel<VehiculoModel>[]>;
@@ -85,8 +84,6 @@ export class VehiculoService {
     return docData(docRef, { idField: 'id' }) as Observable<VehiculoModel>;
   }
 
-
-
   updateVehiculo(id: string, newData: VehiculoModel) {
     const document = doc(this.firestore, this._collection, id);
     return updateDoc(document, { ...newData });
@@ -123,4 +120,3 @@ export class VehiculoService {
     return this.currentVehiculoSubject.value;
   }
 }
-
