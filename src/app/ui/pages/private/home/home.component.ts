@@ -23,9 +23,9 @@ import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TestigoAsociadoService } from '../../../shared/services/testigo-asociado/testigo-asociado.service';
 import { BaseModel } from '../../../../models/base/base.model';
-import { TestigoAsociadoModel } from '../../../../models/testigo-asociado/testigo-asociado.model';
 import { DialogCrearCarreraComponent } from '../../../shared/dialogs/dialog-crear-carrera/dialog-crear-carrera.component';
 import { PostulacionCardComponent } from '../../../shared/components/cards/postulacion-card/postulacion-card.component';
+import { TestigoModel } from '../../../../models/testigo/testigo.model';
 
 @Component({
   selector: 'app-home',
@@ -158,7 +158,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   // Details info
   testigoInfo: { puesto: string, mesa: string } | null = null;
   vehiculoInfo: { casaApoyo: string; direccion?: string; barrio?: string; responsableTelefono?: string } | null = null;
-  misTestigos: BaseModel<TestigoAsociadoModel>[] = [];
+  misTestigos: BaseModel<TestigoModel>[] = [];
 
   loadPostulacionesInfo() {
     const uid = this.auth.uidUser();
