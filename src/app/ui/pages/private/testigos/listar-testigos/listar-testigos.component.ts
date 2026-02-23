@@ -87,8 +87,7 @@ export class ListarTestigosComponent implements OnInit {
     onClean(referido: BaseModel<TestigoModel>) {
         if (!referido.id) return;
         const testigo = { ...referido };
-        testigo.data.puestodevotacion = '';
-        testigo.data.mesadevotacion = '';
+        testigo.data.uidLider = '';
         this.testigoService.updateTestigo(referido.id, testigo).then(() => {
             this.toast.success('Asignación eliminada correctamente');
             this.getTestigos();

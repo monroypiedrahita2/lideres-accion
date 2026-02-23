@@ -87,18 +87,14 @@ export class DialogAsignarCarreraVehiculoComponent implements OnInit {
     }
 
     loadPuestosVotacion() {
-        const terminales = [
-            { label: 'Terminal Dosquebradas', value: { nombre: 'Terminal Dosquebradas', ubicacion: 'Terminal Dosquebradas' } },
-            { label: 'Terminal Pereira', value: { nombre: 'Terminal Pereira', ubicacion: 'Terminal Pereira' } }
-        ];
         if (!this.usuario.iglesia?.municipio) return;
         this.puestoVotacionService.getPuestosByMunicipio(this.usuario.iglesia?.municipio).subscribe(puestos => {
-            this.puestosVotacionOptions = terminales.concat(puestos
+            this.puestosVotacionOptions = puestos
                 .map(p => ({
                     label: p.data.nombre,
                     value: { nombre: p.data.nombre, ubicacion: p.data.ubicacion }
                 }))
-                .sort((a, b) => a.label.localeCompare(b.label)));
+                .sort((a, b) => a.label.localeCompare(b.label));
         });
     }
 

@@ -10,7 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { BaseModel } from '../../../../models/base/base.model';
-import { TestigoAsociadoModel } from '../../../../models/testigo-asociado/testigo-asociado.model';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { TestigoAsociadoService } from '../../../shared/services/testigo-asociado/testigo-asociado.service';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
@@ -19,6 +18,7 @@ import { TitleComponent } from '../../../shared/components/atoms/title/title.com
 import { InputSelectComponent } from '../../../shared/components/atoms/input-select/input-select.component';
 import { PuestoVotacionService } from '../../../shared/services/puesto-votacion/puesto-votacion.service';
 import { PerfilService } from '../../../shared/services/perfil/perfil.service';
+import { TestigoModel } from '../../../../models/testigo/testigo.model';
 
 @Component({
     selector: 'app-gestion-testigos',
@@ -36,7 +36,7 @@ import { PerfilService } from '../../../shared/services/perfil/perfil.service';
 })
 export class GestionTestigosComponent implements OnInit {
     form!: FormGroup;
-    testigos$: Observable<BaseModel<TestigoAsociadoModel>[]>;
+    testigos$: Observable<BaseModel<TestigoModel>[]>;
     loading: boolean = false;
     puestosVotacion: any[] = [];
     iglesiaId: string = '';
@@ -102,14 +102,13 @@ export class GestionTestigosComponent implements OnInit {
         const puestoName = selectedPuesto ? selectedPuesto.label : rawValue.puestoVotacion;
 
 
-        const newTestigo: BaseModel<TestigoAsociadoModel> = {
+        const newTestigo: BaseModel<TestigoModel> = {
             data: {
-                nombres: rawValue.nombres,
-                apellidos: rawValue.apellidos,
+                nombre: rawValue.nombres,
+                apellido: rawValue.apellidos,
                 celular: rawValue.celular,
-                puestoVotacion: puestoName,
                 mesa: rawValue.mesa,
-                coordinadorId: this.auth.uidUser(),
+                uidLider: this.auth.uidUser(),
             },
             fechaCreacion: new Date().toISOString(),
             creadoPor: this.auth.uidUser(),

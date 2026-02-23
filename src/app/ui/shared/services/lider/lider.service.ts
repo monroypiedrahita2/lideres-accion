@@ -38,18 +38,14 @@ export class LiderService {
         collection(this.firestore, this._collection),
         where('email', '==', value)
       );
-      const response = collectionData(q, { idField: 'id' }) as Observable<
-        any[]
-      >;
+      const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
       return response;
     } else {
       const q = query(
         collection(this.firestore, this._collection),
         where('documento', '==', value)
       );
-      const response = collectionData(q, { idField: 'id' }) as Observable<
-        any[]
-      >;
+      const response = collectionData(q, { idField: 'id' }) as Observable<any[]>;
       return response;
     }
   }

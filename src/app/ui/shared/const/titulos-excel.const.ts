@@ -59,14 +59,12 @@ export const DESCRIPCION_EXCEL_COMUNAS: string[] = [
 export const TITULOS_EXCEL_PUESTOS: string[] = [
   'NOMBRE PUESTO',
   'MESAS TOTALES',
-  'MUNICIPIO',
   'UBICACION',
 ];
 
 export const DESCRIPCION_EXCEL_PUESTOS: string[] = [
   'Nombre completo del puesto de votación',
   'Número total de mesas en el puesto',
-  'Municipio del puesto',
   'Dirección o ubicación del puesto',
 ];
 

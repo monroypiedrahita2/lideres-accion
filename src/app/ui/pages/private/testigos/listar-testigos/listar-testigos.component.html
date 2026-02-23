@@ -8,7 +8,6 @@
 <lida-person-info [title]="referido.data.nombre + ' ' + referido.data.apellido" (eventEdit)="edit(referido)"
   [textInfo2]="''" [canDelete]="false"
   (eventDelete)="openModal({name: referido.data.nombre + ' ' + referido.data.apellido, id: referido.id!})"
-  [puestodevotacion]="referido.data.puestodevotacion" [mesadevotacion]="referido.data.mesadevotacion"
   [showWhatsApp]="true" [showCall]="true" [showEdit]="false" (eventWhatsApp)="onWhatsApp(referido.data.celular)"
   (eventCall)="onCall(referido.data.celular)"></lida-person-info>
 }
