@@ -8,9 +8,9 @@ import { ButtonComponent } from '../../atoms/button/button.component';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
 import { VehiculoModel } from '../../../../../models/vehiculo/vehiculo.model';
 import { BaseModel } from '../../../../../models/base/base.model';
-import { TestigoAsociadoModel } from '../../../../../models/testigo-asociado/testigo-asociado.model';
 import { DialogAsignarCarreraVehiculoComponent } from '../../../dialogs/dialog-crear-carrera copy/dialog-asignar-carrera-vehiculo.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { TestigoModel } from '../../../../../models/testigo/testigo.model';
 
 @Component({
     selector: 'app-postulacion-card',
@@ -53,7 +53,7 @@ export class PostulacionCardComponent {
 
     @Input() testigoStatus: string | null = null;
     @Input() testigoInfo: { puesto: string, mesa: string } | null = null;
-    @Input() misTestigos: BaseModel<TestigoAsociadoModel>[] = [];
+    @Input() misTestigos: BaseModel<TestigoModel>[] = [];
 
     @Input() userLocation: { lat: number, lng: number } | null = null;
 

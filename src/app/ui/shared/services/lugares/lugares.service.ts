@@ -9,7 +9,7 @@ export class LugaresService {
   private apiUrlDepartamentos = 'https://api-colombia.com/api/v1/Department';
   private readonly apiUrlMunicipios = 'https://api-colombia.com/api/v1/Department/';
 
-  constructor (private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) { }
 
   getDepartamentos(): Observable<any> {
     return this.http.get<any>(this.apiUrlDepartamentos);

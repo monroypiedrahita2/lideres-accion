@@ -80,7 +80,7 @@ export class ListarVoluntariosComponent implements AfterViewInit {
     cargarVoluntarios() {
         if (this.usuario.rol === 'Super usuario') {
             this.perfilService.getPerfiles().subscribe(data => {
-                this.dataSource.data = data;
+                this.dataSource.data = data.filter(perfil => perfil.rol !== 'Super usuario');
                 this.updatePaginatedList();
                 if (this.searchControl.value) {
                     this.applyFilter(this.searchControl.value);

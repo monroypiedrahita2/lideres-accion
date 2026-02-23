@@ -18,9 +18,9 @@ import { UserPhotoComponent } from '../../../shared/components/atoms/user-photo/
 import { PerfilModel } from '../../../../models/perfil/perfil.model';
 import { DialogNotificationComponent } from '../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { MatDialog } from '@angular/material/dialog';
-import { TestigoService } from '../../../shared/services/testigo/testigo.service';
-import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
-import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
+// import { TestigoService } from '../../../shared/services/testigo/testigo.service';
+// import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
+// import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -55,9 +55,9 @@ export class MiPerfilComponent implements OnInit {
     private readonly auth: AuthService,
     private readonly toast: ToastrService,
     public dialog: MatDialog,
-    private readonly testigoService: TestigoService,
-    private readonly vehiculoService: VehiculoService,
-    private readonly casaApoyoService: CasaApoyoService
+    // private readonly testigoService: TestigoService,
+    // private readonly vehiculoService: VehiculoService,
+    // private readonly casaApoyoService: CasaApoyoService
   ) {
     this.form = this.fb.group({
 
@@ -132,40 +132,40 @@ export class MiPerfilComponent implements OnInit {
     const uid = this.auth.uidUser();
 
     // Check Testigo
-    if (this.usuario.postulado?.testigo && !this.form.value.testigo) {
-      try {
-        await this.testigoService.deleteTestigo(uid);
-        notificationNeeded = true;
-      } catch (e) {
-        console.error('Error deleting testigo', e);
-      }
-    }
+    // if (this.usuario.postulado?.testigo && !this.form.value.testigo) {
+    //   try {
+    //     await this.testigoService.deleteTestigo(uid);
+    //     notificationNeeded = true;
+    //   } catch (e) {
+    //     console.error('Error deleting testigo', e);
+    //   }
+    // }
 
     // Check Transporte (Vehiculo)
-    if (this.usuario.postulado?.transporte && !this.form.value.transporte) {
-      try {
-        const vehicles$ = this.vehiculoService.getVehiculoByConductor(uid);
-        const vehicles = await firstValueFrom(vehicles$);
-        if (vehicles && vehicles.length > 0) {
-          for (const vehicle of vehicles) {
-            if (vehicle.id) await this.vehiculoService.deleteVehiculo(vehicle.id);
-          }
-        }
-        notificationNeeded = true;
-      } catch (e) {
-        console.error('Error deleting vehiculo', e);
-      }
-    }
+    // if (this.usuario.postulado?.transporte && !this.form.value.transporte) {
+    //   try {
+    //     const vehicles$ = this.vehiculoService.getVehiculoByConductor(uid);
+    //     const vehicles = await firstValueFrom(vehicles$);
+    //     if (vehicles && vehicles.length > 0) {
+    //       for (const vehicle of vehicles) {
+    //         if (vehicle.id) await this.vehiculoService.deleteVehiculo(vehicle.id);
+    //       }
+    //     }
+    //     notificationNeeded = true;
+    //   } catch (e) {
+    //     console.error('Error deleting vehiculo', e);
+    //   }
+    // }
 
     // Check Casa Apoyo
-    if (this.usuario.postulado?.casaApoyo && !this.form.value.casaApoyo) {
-      try {
-        await this.casaApoyoService.deleteCasaApoyo(uid);
-        notificationNeeded = true;
-      } catch (e) {
-        console.error('Error deleting casa apoyo', e);
-      }
-    }
+    // if (this.usuario.postulado?.casaApoyo && !this.form.value.casaApoyo) {
+    //   try {
+    //     await this.casaApoyoService.deleteCasaApoyo(uid);
+    //     notificationNeeded = true;
+    //   } catch (e) {
+    //     console.error('Error deleting casa apoyo', e);
+    //   }
+    // }
 
     if (notificationNeeded) {
       this.openDialogNotificaciones(
