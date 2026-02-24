@@ -41,7 +41,7 @@ import { PuestoVotacionService } from '../../../../../shared/services/puesto-vot
 })
 export class DialogGestionTestigosComponent implements OnInit {
     form!: FormGroup;
-    testigos$: Observable<BaseModel<TestigoModel>[]>;
+    testigos: BaseModel<TestigoModel>[] = [];
     loading: boolean = false;
     puestosVotacionMap: Map<string, string> = new Map();
     private readonly authService: AuthService = inject(AuthService);
@@ -54,11 +54,6 @@ export class DialogGestionTestigosComponent implements OnInit {
         private readonly testigoAsociadoService: TestigoAsociadoService,
         private readonly toast: ToastrService
     ) {
-        // Initialize with empty observable, will be set in ngOnInit or constructor
-        this.testigos$ = this.testigoAsociadoService.getTestigosByCoordinador(
-            this.data.coordinador.id || ''
-        );
-
         this.form = this.fb.group({
             nombre: ['', Validators.required],
             apellido: ['', Validators.required],
@@ -77,6 +72,15 @@ export class DialogGestionTestigosComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadPuestosVotacion();
+        this.listarTestigos();
+    }
+
+    listarTestigos() {
+        this.testigoAsociadoService.getTestigosByCoordinador(
+            this.data.coordinador.id || ''
+        ).subscribe((testigos) => {
+            this.testigos = testigos;
+        });
     }
 
     loadPuestosVotacion() {

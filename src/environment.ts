@@ -20,7 +20,7 @@ export const environment = {
     vehiculos: 'Vehiculos',
     casasApoyo: 'Casas',
     coordinadorTestigos: 'CoordinadorTestigos',
-    testigosAsociados: 'TestigosAsociados',
+    testigos: 'Testigos',
     puestosVotacion: 'PuestosVotacion',
     cuentavotos: 'Cuentavotos',
     carreras: 'Carreras',
