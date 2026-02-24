@@ -6,7 +6,7 @@
   <mg-button mat-dialog-close size="big" text="Líderes de testigos" class="w-full" icon="person_add"
     routerLink="/private/activar-testigo"></mg-button>
 
-  @if(this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super usuario' || this.usuario.rol === 'Coordinador de iglesia' || this.usuario.administradorTestigos) {
+  @if(this.usuario.rol === 'Pastor' || this.usuario.rol === 'Super usuario' || this.usuario.rol === 'Coordinador de iglesia') {
   <mg-button mat-dialog-close size="big" text="Listar testigos" class="w-full" icon="list"
     routerLink="/private/listar-testigos"></mg-button>
   <mg-button mat-dialog-close size="big" text="Enviar Resultados" class="w-full" icon="how_to_vote"

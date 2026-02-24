@@ -23,6 +23,7 @@ import { InputTextComponent } from '../../../../../shared/components/atoms/input
 import { TitleComponent } from '../../../../../shared/components/atoms/title/title.component';
 import { TestigoModel } from '../../../../../../models/testigo/testigo.model';
 import { AuthService } from '../../../../../shared/services/auth/auth.service';
+import { PuestoVotacionService } from '../../../../../shared/services/puesto-votacion/puesto-votacion.service';
 
 @Component({
     selector: 'app-dialog-gestion-testigos',
@@ -42,7 +43,9 @@ export class DialogGestionTestigosComponent implements OnInit {
     form!: FormGroup;
     testigos$: Observable<BaseModel<TestigoModel>[]>;
     loading: boolean = false;
+    puestosVotacionMap: Map<string, string> = new Map();
     private readonly authService: AuthService = inject(AuthService);
+    private readonly puestoVotacionService: PuestoVotacionService = inject(PuestoVotacionService);
 
     constructor(
         public dialogRef: MatDialogRef<DialogGestionTestigosComponent>,
@@ -73,6 +76,23 @@ export class DialogGestionTestigosComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loadPuestosVotacion();
+    }
+
+    loadPuestosVotacion() {
+        this.puestoVotacionService.getPuestosVotacion().subscribe((puestos) => {
+            this.puestosVotacionMap.clear();
+            puestos.forEach(p => {
+                if (p.id) {
+                    this.puestosVotacionMap.set(p.id, p.data.nombre);
+                }
+            });
+        });
+    }
+
+    getPuestoVotacionName(id?: string | null): string {
+        if (!id) return 'Sin asignar';
+        return this.puestosVotacionMap.get(id) || 'Sin asignar';
     }
 
     async onSubmit() {
