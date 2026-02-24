@@ -26,6 +26,7 @@ import { BaseModel } from '../../../../models/base/base.model';
 import { DialogCrearCarreraComponent } from '../../../shared/dialogs/dialog-crear-carrera/dialog-crear-carrera.component';
 import { PostulacionCardComponent } from '../../../shared/components/cards/postulacion-card/postulacion-card.component';
 import { TestigoModel } from '../../../../models/testigo/testigo.model';
+import { PuestoVotacionService } from '../../../shared/services/puesto-votacion/puesto-votacion.service';
 
 @Component({
   selector: 'app-home',
@@ -80,6 +81,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private readonly casaApoyoService: CasaApoyoService,
     private readonly testigoService: TestigoService,
     private readonly testigoAsociadoService: TestigoAsociadoService,
+    private readonly puestoVotacionService: PuestoVotacionService,
     private readonly router: Router
   ) { }
 
@@ -214,33 +216,28 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     if (this.usuario.postulado?.testigo && uid) {
-      this.testigoService.getTestigoByDocument(uid)
-        .then((testigo: any) => {
-          if (testigo) {
-            // Check if data is wrapped in 'data' property (BaseModel) or direct
-            const testigoData = testigo.data ? testigo.data : testigo;
-            const asignado = testigoData.puestodevotacion && testigoData.mesadevotacion;
-
-            this.testigoStatus = asignado ? 'Asignado' : 'Pendiente de asignación';
-            if (asignado) {
-              this.testigoInfo = {
-                puesto: testigoData.puestodevotacion,
-                mesa: testigoData.mesadevotacion
-              };
-            }
-
-            // Fetch associated witnesses for Coordinador
-            this.testigoAsociadoService.getTestigosByCoordinador(uid).pipe(takeUntil(this.destroy$)).subscribe(witnesses => {
-              this.misTestigos = witnesses;
-            });
-
-          } else {
-            this.testigoStatus = 'No registrado';
+      if (this.usuario.puestoVotacionResponsableId) {
+        this.testigoStatus = 'Aprobado';
+        this.puestoVotacionService.getPuestoVotacion(this.usuario.puestoVotacionResponsableId).then(puesto => {
+          if (puesto && puesto.data) {
+            this.testigoStatus = 'Aprobado';
+            this.testigoInfo = {
+              puesto: puesto.data.nombre,
+              mesa: ''
+            };
           }
-        })
-        .catch(() => {
-          this.testigoStatus = 'No registrado';
+        }).catch(() => {
+          this.testigoStatus = 'Pendiente';
         });
+      } else {
+        this.testigoStatus = 'Pendiente';
+        this.testigoInfo = null;
+      }
+
+      // Fetch associated witnesses for Coordinador
+      this.testigoAsociadoService.getTestigosByCoordinador(uid).pipe(takeUntil(this.destroy$)).subscribe(witnesses => {
+        this.misTestigos = witnesses;
+      });
     }
   }
 

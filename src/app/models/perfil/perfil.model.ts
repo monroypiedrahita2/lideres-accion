@@ -14,7 +14,7 @@ export interface PerfilModel {
   noCuenta: string; // dato random alfanumerico de 6 caracteres no editable
   foto?: string | null; // foto se toma de authService de foto
   apruebaUsodeDatos?: boolean; // campo para aprobar uso de datos
-  puestoVotacionResponsableId?: string | null;  // id   del puesto de votacion responsable   
+  puestoVotacionResponsableId?: string | null   | '';  // id   del puesto de votacion responsable   
 }
 
 
