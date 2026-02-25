@@ -71,10 +71,6 @@ export const routes: Routes = [
         loadComponent: () => import('./testigos/activar-testigo/activar-testigo.component').then(m => m.ActivarTestigoComponent),
       },
       {
-        path: 'listar-testigos',
-        loadComponent: () => import('./testigos/listar-testigos/listar-testigos.component').then(m => m.ListarTestigosComponent),
-      },
-      {
         path: 'estadisticas',
         loadComponent: () => import('./estadisticas/estadisticas.component').then(m => m.EstadisticasComponent),
       },

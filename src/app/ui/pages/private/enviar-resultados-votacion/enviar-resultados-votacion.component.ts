@@ -14,7 +14,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CuentavotosService } from '../../../shared/services/cuentavotos/cuentavotos.service';
-import { TestigoService } from '../../../shared/services/testigo/testigo.service';
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { InputTextComponent } from '../../../shared/components/atoms/input-text/input-text.component';
 import { ButtonComponent } from '../../../shared/components/atoms/button/button.component';
@@ -49,7 +48,6 @@ export class EnviarResultadosVotacionComponent {
 
     private fb = inject(FormBuilder);
     private cuentavotosService = inject(CuentavotosService);
-    private testigoService = inject(TestigoService);
     private authService = inject(AuthService);
     private dialog = inject(MatDialog);
     private router = inject(Router);
@@ -72,22 +70,7 @@ export class EnviarResultadosVotacionComponent {
                 return;
             }
 
-            const testigo = await this.testigoService.getTestigo(uid);
-
-            if (testigo) {
-                // Check if witness data exists and has required fields
-                if (!testigo.data?.puestodevotacion || !testigo.data?.mesadevotacion) {
-                    this.showNotification('warning', 'Atención', 'No tienes puesto o mesa de votación asignados.');
-                    // Optional: redirect or stay on page with error
-                } else {
-                    this.testigoEncontrado = { id: uid, ...testigo };
-                    this.form.patchValue({
-                        mesa: testigo.data.mesadevotacion
-                    });
-                }
-            } else {
-                this.showNotification('warning', 'Atención', 'No estás registrado como testigo.');
-            }
+       
 
         } catch (error) {
             console.error('Error fetching witness:', error);
@@ -122,7 +105,7 @@ export class EnviarResultadosVotacionComponent {
             const mesaValue = this.form.get('mesa')?.value;
 
             const votosData: CuentavotosModel = {
-                puestoVotacion: this.testigoEncontrado.data.puestodevotacion,
+                puestoVotacionId: this.testigoEncontrado.data.puestodevotacion,
                 mesaVotacion: mesaValue,
                 senado: Number(this.form.get('senado')?.value),
                 camara: Number(this.form.get('camara')?.value),

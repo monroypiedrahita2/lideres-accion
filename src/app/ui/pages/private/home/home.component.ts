@@ -18,7 +18,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { VehiculoService } from '../../../shared/services/vehiculo/vehiculo.service';
 import { CasaApoyoService } from '../../../shared/services/casa-apoyo/casa-apoyo.service';
-import { TestigoService } from '../../../shared/services/testigo/testigo.service';
 import { VehiculoModel } from '../../../../models/vehiculo/vehiculo.model';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TestigoAsociadoService } from '../../../shared/services/testigo-asociado/testigo-asociado.service';
@@ -79,7 +78,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private readonly vehiculoService: VehiculoService,
     private readonly casaApoyoService: CasaApoyoService,
-    private readonly testigoService: TestigoService,
     private readonly testigoAsociadoService: TestigoAsociadoService,
     private readonly puestoVotacionService: PuestoVotacionService,
     private readonly router: Router

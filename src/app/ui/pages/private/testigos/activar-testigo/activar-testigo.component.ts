@@ -5,15 +5,13 @@ import { TitleComponent } from '../../../../shared/components/atoms/title/title.
 import { CardAprobacionComponent } from '../../../../shared/components/cards/card-aprobacion/card-aprobacion.component';
 import { MgPaginatorComponent, PageEvent } from '../../../../shared/components/modules/paginator/paginator.component';
 import { PerfilService } from '../../../../shared/services/perfil/perfil.service';
-import { TestigoService } from '../../../../shared/services/testigo/testigo.service';
 import { DialogNotificationComponent } from '../../../../shared/dialogs/dialog-notification/dialog-nofication.component';
 import { PerfilModel } from '../../../../../models/perfil/perfil.model';
-import { TestigoModel } from '../../../../../models/testigo/testigo.model';
 import { BaseModel } from '../../../../../models/base/base.model';
 import { DialogAsignarPuestoMesaComponent } from './dialog-asignar-puesto-mesa/dialog-asignar-puesto-mesa.component';
-import { DialogGestionTestigosComponent } from './dialog-gestion-testigos/dialog-gestion-testigos.component';
 import { PuestoVotacionService } from '../../../../shared/services/puesto-votacion/puesto-votacion.service';
 import { PuestoVotacionModel } from '../../../../../models/puesto-votacion/puesto-votacion.model';
+import { DialogGestionTestigosComponent } from './dialog-gestion-testigos/dialog-gestion-testigos.component';
 
 @Component({
     selector: 'app-activar-testigo',
@@ -37,7 +35,6 @@ export class ActivarTestigoComponent implements OnInit {
 
     constructor(
         private readonly perfilService: PerfilService,
-        private readonly testigoService: TestigoService,
         private readonly dialog: MatDialog,
         private readonly puestoVotacionService: PuestoVotacionService
     ) { }
@@ -51,10 +48,6 @@ export class ActivarTestigoComponent implements OnInit {
         this.perfilService.getPostuladosTestigos().subscribe((perfiles) => {
             this.testigos = perfiles;
             this.updatePagination();
-        });
-
-        this.testigoService.getAllTestigos().subscribe((witnesses) => {
-            this.existingTestigosIds = new Set(witnesses.map((w) => w.id!));
         });
     }
 

@@ -19,7 +19,6 @@ export const environment = {
     perfil: 'Perfiles',
     vehiculos: 'Vehiculos',
     casasApoyo: 'Casas',
-    coordinadorTestigos: 'CoordinadorTestigos',
     testigos: 'Testigos',
     puestosVotacion: 'PuestosVotacion',
     cuentavotos: 'Cuentavotos',
