@@ -26,6 +26,7 @@ import { DialogCrearCarreraComponent } from '../../../shared/dialogs/dialog-crea
 import { PostulacionCardComponent } from '../../../shared/components/cards/postulacion-card/postulacion-card.component';
 import { TestigoModel } from '../../../../models/testigo/testigo.model';
 import { PuestoVotacionService } from '../../../shared/services/puesto-votacion/puesto-votacion.service';
+import { EnviarResultadosVotacionComponent } from '../enviar-resultados-votacion/enviar-resultados-votacion.component';
 
 @Component({
   selector: 'app-home',
@@ -390,7 +391,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   goToResultados() {
-    this.router.navigate(['/private/enviar-resultados-votacion']);
+    this.dialog.open(EnviarResultadosVotacionComponent, {
+      width: '500px',
+      height: 'auto',
+      panelClass: 'mat-dialog-md',
+      data: {
+        puestoVotacionId: this.usuario.puestoVotacionResponsableId,
+        puestoNombre: this.testigoInfo?.puesto || 'Puesto de votación'
+      },
+      disableClose: true
+    });
   }
 
   openDialogCrearCarrera() {

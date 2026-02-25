@@ -110,10 +110,7 @@ export const routes: Routes = [
         path: 'listar-voluntarios',
         loadComponent: () => import('./listar-voluntarios/listar-voluntarios.component').then(m => m.ListarVoluntariosComponent),
       },
-      {
-        path: 'enviar-resultados-votacion',
-        loadComponent: () => import('./enviar-resultados-votacion/enviar-resultados-votacion.component').then(m => m.EnviarResultadosVotacionComponent),
-      },
+
       {
         path: 'listar-carreras',
         loadComponent: () => import('./listar-carreras/listar-carreras.component').then(m => m.ListarCarrerasComponent),
