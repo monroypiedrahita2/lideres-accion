@@ -10,13 +10,11 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideToastr } from 'ngx-toastr';
 import { environment } from '../environment';
 import { provideServiceWorker } from '@angular/service-worker';
-import { GlobalErrorHandler } from './shared/errors/global-error-handler';
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     provideToastr(environment.alerts),
     provideClientHydration(),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
@@ -25,7 +23,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
-      registrationStrategy: 'registerImmediately'
+      registrationStrategy: 'registerWhenStable:30000'
     })
   ],
 };
