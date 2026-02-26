@@ -127,7 +127,7 @@ jobs:
           if [ "${GITHUB_REF_NAME}" = "main" ]; then
             npm run build -- --configuration=production
           elif [ "${GITHUB_REF_NAME}" = "medellin" ]; then
-            npm run build -- --configuration=production
+            npm run build -- --configuration=medellin
           else
             npm run build -- --configuration=development
           fi
