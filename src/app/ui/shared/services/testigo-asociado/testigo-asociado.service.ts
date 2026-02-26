@@ -17,7 +17,7 @@ import { TestigoModel } from '../../../../models/testigo/testigo.model';
 
 @Injectable({ providedIn: 'root' })
 export class TestigoAsociadoService {
-    _collection: string = environment.collections.testigosAsociados;
+    _collection: string = environment.collections.testigos;
 
     constructor(private readonly firestore: Firestore) { }
 
@@ -34,7 +34,7 @@ export class TestigoAsociadoService {
     ): Observable<BaseModel<TestigoModel>[]> {
         const q = query(
             collection(this.firestore, this._collection),
-            where('data.coordinadorId', '==', coordinadorId)
+            where('data.uidLider', '==', coordinadorId)
         );
         return collectionData(q, { idField: 'id' }) as Observable<any[]>;
     }
