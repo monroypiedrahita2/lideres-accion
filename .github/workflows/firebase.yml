@@ -128,8 +128,10 @@ jobs:
             npm run build -- --configuration=production
           elif [ "${GITHUB_REF_NAME}" = "medellin" ]; then
             npm run build -- --configuration=medellin
+          elif [ "${GITHUB_REF_NAME}" = "develop" ]; then
+            npm run build -- --configuration=develop
           else
-            npm run build -- --configuration=development
+            npm run build -- --configuration=production
           fi
 
       - name: Deploy to Firebase
