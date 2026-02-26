@@ -20,40 +20,52 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // 1. Verificar que el Service Worker esté habilitado
     if (this.swUpdate.isEnabled) {
+      console.log('Service Worker enabled');
 
-      // 2. Suscribirse al evento 'available'
       this.swUpdate.versionUpdates.subscribe((event: VersionEvent) => {
-
-        // El evento VersionReadyEvent (parte de VersionEvent) es cuando la nueva versión está lista.
+        console.log('Service Worker event:', event.type);
         if (event.type === 'VERSION_READY') {
-          // 3. Notificar al usuario y forzar la actualización
           this.promptUpdate();
         }
       });
 
-      // Opcional: Esto fuerza al Service Worker a verificar actualizaciones de inmediato,
-      // útil en entornos donde las verificaciones automáticas no son lo suficientemente rápidas.
-      this.swUpdate.checkForUpdate();
+      // Check for update immediately on load
+      this.swUpdate.checkForUpdate().then(hasUpdate => {
+        console.log('Initial update check:', hasUpdate ? 'Update available' : 'No update');
+      }).catch(err => {
+        console.error('Error checking for update:', err);
+      });
+
+      // Optional: Periodic check every hour (3,600,000 ms)
+      setInterval(() => {
+        if (this.swUpdate.isEnabled) {
+          this.swUpdate.checkForUpdate().then(hasUpdate => {
+            if (hasUpdate) console.log('Periodic check: Update found');
+          });
+        }
+      }, 3600000);
     }
   }
 
   private promptUpdate(): void {
-    const message = 'Actualizando aplicación a la nueva versión...';
+    const message = 'Hay una nueva versión disponible. Actualizando...';
 
-    this.toastr.info(message, 'Actualización Obligatoria', {
-      timeOut: 3000,
+    this.toastr.info(message, 'Actualización', {
+      timeOut: 5000,
       progressBar: true,
-      closeButton: false, // Prevent closing
+      closeButton: false,
       disableTimeOut: false,
-      tapToDismiss: false // Prevent dismissing
+      tapToDismiss: false
     });
 
-    // Wait 3 seconds for the user to read the message, then force update
+    // Wait 5 seconds for the user to see the toast, then activate and reload
     setTimeout(() => {
-      this.swUpdate.activateUpdate().then(() => document.location.reload());
-    }, 3000);
+      this.swUpdate.activateUpdate().then(() => {
+        console.log('Update activated, reloading...');
+        document.location.reload();
+      });
+    }, 5000);
   }
 }
 
