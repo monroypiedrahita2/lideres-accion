@@ -1,4 +1,4 @@
-import { ApplicationConfig, isDevMode } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -10,11 +10,13 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideToastr } from 'ngx-toastr';
 import { environment } from '../environment';
 import { provideServiceWorker } from '@angular/service-worker';
+import { GlobalErrorHandler } from './shared/errors/global-error-handler';
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     provideToastr(environment.alerts),
     provideClientHydration(),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
