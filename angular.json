@@ -62,17 +62,6 @@
               "serviceWorker": "ngsw-config.json"
             },
             "development": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environment.ts",
-                  "with": "src/environment.dev.ts"
-                }
-              ],
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true
-            },
-            "local": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
@@ -113,12 +102,9 @@
             },
             "medellin": {
               "buildTarget": "lideres-accion:build:medellin"
-            },
-            "local": {
-              "buildTarget": "lideres-accion:build:local"
             }
           },
-          "defaultConfiguration": "local"
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
