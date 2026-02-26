@@ -72,6 +72,11 @@
               "extractLicenses": false,
               "sourceMap": true
             },
+            "local": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            },
             "medellin": {
               "fileReplacements": [
                 {
@@ -108,9 +113,12 @@
             },
             "medellin": {
               "buildTarget": "lideres-accion:build:medellin"
+            },
+            "local": {
+              "buildTarget": "lideres-accion:build:local"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "local"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

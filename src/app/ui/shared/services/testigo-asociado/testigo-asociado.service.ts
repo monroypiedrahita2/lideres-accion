@@ -11,9 +11,9 @@ import {
     where,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../../environment';
 import { BaseModel } from '../../../../models/base/base.model';
 import { TestigoModel } from '../../../../models/testigo/testigo.model';
+import { environment } from '../../../../../environment';
 
 @Injectable({ providedIn: 'root' })
 export class TestigoAsociadoService {
