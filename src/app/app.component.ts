@@ -1,9 +1,11 @@
 import { HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate, VersionEvent } from '@angular/service-worker';
 import { ToastrService } from 'ngx-toastr';
 import { NotificationService } from './ui/shared/services/notification/notification.service';
+
+const UPDATE_CHECK_INTERVAL = 2 * 60 * 1000; // 2 minutos
 
 @Component({
   selector: 'app-root',
@@ -12,7 +14,10 @@ import { NotificationService } from './ui/shared/services/notification/notificat
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+  private updateCheckTimer: ReturnType<typeof setInterval> | null = null;
+  private readonly onVisibilityChange = () => this.handleVisibilityChange();
+
   constructor(
     private readonly swUpdate: SwUpdate,
     private readonly toastr: ToastrService,
@@ -20,23 +25,54 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // 1. Verificar que el Service Worker esté habilitado
-    if (this.swUpdate.isEnabled) {
-
-      // 2. Suscribirse al evento 'available'
-      this.swUpdate.versionUpdates.subscribe((event: VersionEvent) => {
-
-        // El evento VersionReadyEvent (parte de VersionEvent) es cuando la nueva versión está lista.
-        if (event.type === 'VERSION_READY') {
-          // 3. Notificar al usuario y forzar la actualización
-          this.promptUpdate();
-        }
-      });
-
-      // Opcional: Esto fuerza al Service Worker a verificar actualizaciones de inmediato,
-      // útil en entornos donde las verificaciones automáticas no son lo suficientemente rápidas.
-      this.swUpdate.checkForUpdate();
+    if (!this.swUpdate.isEnabled) {
+      return;
     }
+
+    // 1. Suscribirse a todos los eventos de versión
+    this.swUpdate.versionUpdates.subscribe((event: VersionEvent) => {
+      switch (event.type) {
+        case 'VERSION_READY':
+          this.promptUpdate();
+          break;
+        case 'VERSION_INSTALLATION_FAILED':
+          console.error('SW: Falló la instalación de la nueva versión:', event.error);
+          // Reintentar en el siguiente ciclo de polling
+          break;
+      }
+    });
+
+    // 2. Verificación inmediata al iniciar
+    this.safeCheckForUpdate();
+
+    // 3. Polling periódico: detectar deploys mientras la app está abierta
+    this.updateCheckTimer = setInterval(() => this.safeCheckForUpdate(), UPDATE_CHECK_INTERVAL);
+
+    // 4. Verificar al volver a la pestaña (usuario regresa después de un rato)
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', this.onVisibilityChange);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.updateCheckTimer) {
+      clearInterval(this.updateCheckTimer);
+    }
+    if (typeof document !== 'undefined') {
+      document.removeEventListener('visibilitychange', this.onVisibilityChange);
+    }
+  }
+
+  private handleVisibilityChange(): void {
+    if (document.visibilityState === 'visible') {
+      this.safeCheckForUpdate();
+    }
+  }
+
+  private safeCheckForUpdate(): void {
+    this.swUpdate.checkForUpdate().catch((err: unknown) =>
+      console.error('SW: Error al verificar actualizaciones:', err)
+    );
   }
 
   private promptUpdate(): void {
@@ -45,12 +81,11 @@ export class AppComponent implements OnInit {
     this.toastr.info(message, 'Actualización Obligatoria', {
       timeOut: 3000,
       progressBar: true,
-      closeButton: false, // Prevent closing
+      closeButton: false,
       disableTimeOut: false,
-      tapToDismiss: false // Prevent dismissing
+      tapToDismiss: false
     });
 
-    // Wait 3 seconds for the user to read the message, then force update
     setTimeout(() => {
       this.swUpdate.activateUpdate().then(() => document.location.reload());
     }, 3000);
