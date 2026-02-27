@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate, VersionEvent } from '@angular/service-worker';
 import { ToastrService } from 'ngx-toastr';
@@ -12,7 +12,9 @@ import { NotificationService } from './ui/shared/services/notification/notificat
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+  private updateCheckInterval: ReturnType<typeof setInterval> | null = null;
+
   constructor(
     private readonly swUpdate: SwUpdate,
     private readonly toastr: ToastrService,
@@ -33,9 +35,19 @@ export class AppComponent implements OnInit {
         }
       });
 
-      // Opcional: Esto fuerza al Service Worker a verificar actualizaciones de inmediato,
-      // útil en entornos donde las verificaciones automáticas no son lo suficientemente rápidas.
+      // Verificar actualizaciones de inmediato
       this.swUpdate.checkForUpdate();
+
+      // Verificar actualizaciones periódicamente (cada 30 segundos)
+      this.updateCheckInterval = setInterval(() => {
+        this.swUpdate.checkForUpdate();
+      }, 30 * 1000);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.updateCheckInterval) {
+      clearInterval(this.updateCheckInterval);
     }
   }
 
