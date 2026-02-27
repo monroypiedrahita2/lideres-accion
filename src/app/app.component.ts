@@ -79,8 +79,14 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     // Esperar 3 segundos para que el usuario lea el mensaje, luego forzar actualización
-    setTimeout(() => {
-      this.swUpdate.activateUpdate().then(() => document.location.reload());
+    setTimeout(async () => {
+      await this.swUpdate.activateUpdate();
+      // Limpiar caches del SW para garantizar que index.html se traiga fresco del servidor
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(key => caches.delete(key)));
+      }
+      document.location.reload();
     }, 3000);
   }
 }
