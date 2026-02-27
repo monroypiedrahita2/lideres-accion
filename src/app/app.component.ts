@@ -79,7 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
     const message = 'Actualizando aplicación a la nueva versión...';
 
     this.toastr.info(message, 'Actualización Obligatoria', {
-      timeOut: 3000,
+      timeOut: 2000,
       progressBar: true,
       closeButton: false,
       disableTimeOut: false,
