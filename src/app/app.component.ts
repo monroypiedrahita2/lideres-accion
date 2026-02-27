@@ -25,22 +25,39 @@ export class AppComponent implements OnInit, OnDestroy {
     // 1. Verificar que el Service Worker esté habilitado
     if (this.swUpdate.isEnabled) {
 
-      // 2. Suscribirse al evento 'available'
+      // 2. Suscribirse a eventos de versión
       this.swUpdate.versionUpdates.subscribe((event: VersionEvent) => {
-
-        // El evento VersionReadyEvent (parte de VersionEvent) es cuando la nueva versión está lista.
         if (event.type === 'VERSION_READY') {
-          // 3. Notificar al usuario y forzar la actualización
+          // Nueva versión lista: notificar y forzar actualización
           this.promptUpdate();
+        }
+
+        if (event.type === 'VERSION_INSTALLATION_FAILED') {
+          console.error('SW: Falló la instalación de la nueva versión', event);
         }
       });
 
+      // 3. Manejar estado irrecuperable del Service Worker
+      this.swUpdate.unrecoverable.subscribe((event: { reason: string }) => {
+        console.error('SW: Estado irrecuperable', event.reason);
+        this.toastr.error(
+          'La aplicación necesita recargarse para funcionar correctamente.',
+          'Error de caché',
+          { disableTimeOut: true, closeButton: false, tapToDismiss: false }
+        );
+        setTimeout(() => document.location.reload(), 3000);
+      });
+
       // Verificar actualizaciones de inmediato
-      this.swUpdate.checkForUpdate();
+      this.swUpdate.checkForUpdate().catch((err: unknown) =>
+        console.error('SW: Error al verificar actualización', err)
+      );
 
       // Verificar actualizaciones periódicamente (cada 30 segundos)
       this.updateCheckInterval = setInterval(() => {
-        this.swUpdate.checkForUpdate();
+        this.swUpdate.checkForUpdate().catch((err: unknown) =>
+          console.error('SW: Error al verificar actualización periódica', err)
+        );
       }, 30 * 1000);
     }
   }
@@ -55,14 +72,13 @@ export class AppComponent implements OnInit, OnDestroy {
     const message = 'Actualizando aplicación a la nueva versión...';
 
     this.toastr.info(message, 'Actualización Obligatoria', {
-      timeOut: 2000,
+      disableTimeOut: true,
       progressBar: true,
-      closeButton: false, // Prevent closing
-      disableTimeOut: false,
-      tapToDismiss: false // Prevent dismissing
+      closeButton: false,
+      tapToDismiss: false
     });
 
-    // Wait 3 seconds for the user to read the message, then force update
+    // Esperar 3 segundos para que el usuario lea el mensaje, luego forzar actualización
     setTimeout(() => {
       this.swUpdate.activateUpdate().then(() => document.location.reload());
     }, 3000);
