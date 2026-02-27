@@ -47,8 +47,7 @@ jobs:
               perfil: 'Perfiles',
               vehiculos: 'Vehiculos',
               casasApoyo: 'Casas',
-              coordinadorTestigos: 'CoordinadorTestigos',
-              testigosAsociados: 'TestigosAsociados',
+              testigos: 'Testigos',
               puestosVotacion: 'PuestosVotacion',
               cuentavotos: 'Cuentavotos',
               carreras: 'Carreras',
@@ -62,7 +61,7 @@ jobs:
         run: |
           cat > src/environment.dev.ts <<EOF
           export const environment = {
-            production: false,
+            production: true,
             firebase: {
               apiKey: "${{ secrets.FIREBASE_API_KEY_DEV }}",
               authDomain: "${{ secrets.FIREBASE_AUTH_DOMAIN_DEV }}",
@@ -82,8 +81,7 @@ jobs:
               perfil: 'Perfiles',
               vehiculos: 'Vehiculos',
               casasApoyo: 'Casas',
-              coordinadorTestigos: 'CoordinadorTestigos',
-              testigosAsociados: 'TestigosAsociados',
+              testigos: 'Testigos',
               puestosVotacion: 'PuestosVotacion',
               cuentavotos: 'Cuentavotos',
               carreras: 'Carreras',
@@ -95,7 +93,7 @@ jobs:
         run: |
           cat > src/environment.medellin.ts <<EOF
           export const environment = {
-            production: false,
+            production: true,
             firebase: {
               apiKey: "${{ secrets.FIREBASE_API_KEY_MEDELLIN }}",
               authDomain: "${{ secrets.FIREBASE_AUTH_DOMAIN_MEDELLIN }}",
@@ -115,8 +113,7 @@ jobs:
               perfil: 'Perfiles',
               vehiculos: 'Vehiculos',
               casasApoyo: 'Casas',
-              coordinadorTestigos: 'CoordinadorTestigos',
-              testigosAsociados: 'TestigosAsociados',
+              testigos: 'Testigos',
               puestosVotacion: 'PuestosVotacion',
               cuentavotos: 'Cuentavotos',
               carreras: 'Carreras',
@@ -124,6 +121,10 @@ jobs:
             alerts: { timeOut: 3000, preventDuplicates: true },
           };
           EOF
+
+      - name: Inject version
+        run: |
+          sed -i "s|__APP_VERSION__|1.0.${{ github.run_number }}|g" src/index.html
 
       - name: Build Angular
         run: |

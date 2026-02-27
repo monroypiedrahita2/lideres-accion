@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   firebase: {
     apiKey: process.env['FIREBASE_API_KEY_DEV'],
     authDomain: process.env['FIREBASE_AUTH_DOMAIN_DEV'],
@@ -17,10 +17,9 @@ export const environment = {
     lideres: 'Lideres',
     barrios: 'Barrios',
     perfil: 'Perfiles',
-    vehiculos: 'Vehiculos',
+    vehiculos: 'Vehiculos', 
     casasApoyo: 'Casas',
-    coordinadorTestigos: 'CoordinadorTestigos',
-    testigosAsociados: 'TestigosAsociados',
+    testigos: 'Testigos',
     puestosVotacion: 'PuestosVotacion',
     cuentavotos: 'Cuentavotos',
     carreras: 'Carreras',
