@@ -17,7 +17,7 @@ export const environment = {
     lideres: 'Lideres',
     barrios: 'Barrios',
     perfil: 'Perfiles',
-    vehiculos: 'Vehiculos', 
+    vehiculos: 'Vehiculos',
     casasApoyo: 'Casas',
     testigos: 'Testigos',
     puestosVotacion: 'PuestosVotacion',
