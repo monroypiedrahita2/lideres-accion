@@ -26,6 +26,7 @@ export class LoginComponent {
   nameApp = NAME_LONG_APP;
   loading = false
   showPasswordLogin = false;
+  appVersion = (window as any).APP_VERSION || '__APP_VERSION__';
 
   constructor(
     private readonly formBuilder: FormBuilder,
