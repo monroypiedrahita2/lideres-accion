@@ -61,7 +61,7 @@ jobs:
         run: |
           cat > src/environment.dev.ts <<EOF
           export const environment = {
-            production: false,
+            production: true,
             firebase: {
               apiKey: "${{ secrets.FIREBASE_API_KEY_DEV }}",
               authDomain: "${{ secrets.FIREBASE_AUTH_DOMAIN_DEV }}",
@@ -93,7 +93,7 @@ jobs:
         run: |
           cat > src/environment.medellin.ts <<EOF
           export const environment = {
-            production: false,
+            production: true,
             firebase: {
               apiKey: "${{ secrets.FIREBASE_API_KEY_MEDELLIN }}",
               authDomain: "${{ secrets.FIREBASE_AUTH_DOMAIN_MEDELLIN }}",

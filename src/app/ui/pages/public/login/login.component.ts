@@ -18,7 +18,7 @@ import { DialogInstallGuideComponent } from '../../../../ui/shared/dialogs/dialo
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.component.html',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, LogoComponent, InputTextComponent, MatIconModule, MatDialogModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, InputTextComponent, MatIconModule, MatDialogModule],
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {

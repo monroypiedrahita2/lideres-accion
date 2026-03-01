@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SwUpdate, VersionEvent } from '@angular/service-worker';
 import { ToastrService } from 'ngx-toastr';
-import { NotificationService } from './ui/shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +15,6 @@ export class AppComponent implements OnInit {
   constructor(
     private readonly swUpdate: SwUpdate,
     private readonly toastr: ToastrService,
-    private readonly notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
