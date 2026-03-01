@@ -1,8 +1,9 @@
 <button (click)="submit()" [disabled]="disabled || loading" [ngClass]="{
   'w-full h-10': size == 'big',
-'bg-yellow-600': type == 'submit' && !disabled && !loading,
-'hover:bg-yellow-800': type == 'submit' && !disabled && !loading,
-'text-white': type == 'submit' && !disabled && !loading,
+'bg-yellow-400': type == 'submit' && !disabled && !loading,
+'border-2 border-black': type == 'submit' && !disabled && !loading,
+'hover:bg-yellow-500': type == 'submit' && !disabled && !loading,
+'text-gray-900': type == 'submit' && !disabled && !loading,
 
 'hover:bg-gray-300': type == 'reset' && !disabled && !loading,
 'bg-white border border-gray-300': type == 'reset' && !disabled && !loading,
@@ -18,6 +19,6 @@
       progress_activity
     </span>
     <span *ngIf="!loading" [ngClass]="{'text-lg': size == 'big', 'text-sm': size == 'small'}"
-      class="font-primary text-center w-full">{{text}}</span>
+      class="font-primary text-center w-full font-semibold">{{text}}</span>
   </div>
 </button>
